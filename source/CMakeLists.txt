@@ -9,7 +9,6 @@ target_link_libraries(EAGine::OGLplus INTERFACE eagine-oglplus-headers)
 target_link_libraries(
 	EAGine::OGLplus
 	INTERFACE
-		GLEW::GLEW
 		EAGine::Core
 		eagine-oglplus-headers
 )

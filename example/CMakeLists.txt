@@ -7,7 +7,7 @@
 function(eagine_install_example TARGET_NAME)
 	install(
 		TARGETS ${TARGET_NAME}
-		DESTINATION share/eagine/examples/eglplus
+		DESTINATION share/eagine/examples/oglplus
 	)
 endfunction()
 

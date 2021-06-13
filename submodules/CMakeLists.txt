@@ -16,3 +16,16 @@ if(NOT TARGET EAGine::Core)
 	)
 	add_subdirectory(eagine-core EXCLUDE_FROM_ALL)
 endif()
+
+if(NOT TARGET EAGine::Shapes)
+	if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/eagine-shapes/CMakeLists.txt")
+		unset(SUBMODULE_INIT_ARG)
+	else()
+		set(SUBMODULE_INIT_ARG --init)
+	endif()
+	execute_process(
+		COMMAND git submodule update ${SUBMODULE_INIT_ARG}
+		WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/eagine-shapes"
+	)
+	add_subdirectory(eagine-shapes EXCLUDE_FROM_ALL)
+endif()
