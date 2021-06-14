@@ -5,7 +5,7 @@
 #
 cmake_minimum_required(VERSION 3.10)
 
-project(EAGineShapes)
+project(EAGineOGLplus)
 if(NOT EAGINE_CORE_ROOT)
 	set(EAGINE_CORE_ROOT ${PROJECT_SOURCE_DIR}/submodules/eagine-core)
 endif()
