@@ -1,4 +1,4 @@
-/// @example oglplus/001_glfw3_glew_info.cpp
+/// @example oglplus/001_info.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.

@@ -9,12 +9,6 @@
 #define EAGINE_OGLPLUS_GL_HPP
 
 #include <eagine/oglplus/gl_def.hpp>
-#if __has_include(<eagine/oglplus/config/fix_gl_version.hpp>)
-#include <eagine/oglplus/config/fix_gl_version.hpp>
-#endif
-#if __has_include(<eagine/oglplus/config/fix_gl_extension.hpp>)
-#include <eagine/oglplus/config/fix_gl_extension.hpp>
-#endif
 
 #ifndef GL_SHADER
 #define GL_SHADER 0x82E1

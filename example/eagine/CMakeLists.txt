@@ -20,10 +20,7 @@ function(eagine_example_common EXAMPLE_NAME)
 	add_dependencies(eagine-oglplus-examples oglplus-${EXAMPLE_NAME})
 	target_link_libraries(
 		oglplus-${EXAMPLE_NAME}
-		PUBLIC
-			GLEW::GLEW
-			GLFW3::GLFW3
-			EAGine::OGLplus
+		PUBLIC EAGine::OGLplus
 		PRIVATE ${ARGN}
 	)
 

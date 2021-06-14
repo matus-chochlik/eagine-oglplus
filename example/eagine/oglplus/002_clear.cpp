@@ -1,12 +1,12 @@
-/// @example oglplus/001_glfw3_glew_clear.cpp
+/// @example oglplus/001_clear.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
-#include <GL/glew.h>
 
+#include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
 #include <eagine/scope_exit.hpp>
@@ -81,14 +81,9 @@ static void init_and_run() {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);
-            glewExperimental = GL_TRUE;
-            GLenum init_result = glewInit();
+            eagine::oglp::api_initializer gl_api;
             glGetError();
-            if(init_result != GLEW_OK) {
-                throw std::runtime_error("OpenGL/GLEW initialization error.");
-            } else {
-                run_loop(window, width, height);
-            }
+            run_loop(window, width, height);
         }
     }
 }

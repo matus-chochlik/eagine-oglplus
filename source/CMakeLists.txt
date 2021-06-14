@@ -9,12 +9,16 @@ target_link_libraries(EAGine::OGLplus INTERFACE eagine-oglplus-headers)
 target_link_libraries(
 	EAGine::OGLplus
 	INTERFACE
+		GLEW::GLEW
+		GLFW3::GLFW3
 		EAGine::Core
+		eagine-oglplus-generated-headers
 		eagine-oglplus-headers
 )
 
 install(
 	TARGETS
+		eagine-oglplus-generated-headers
 		eagine-oglplus-headers
 		EXPORT OGLplus
 	LIBRARY DESTINATION lib
