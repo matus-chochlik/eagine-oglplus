@@ -11,15 +11,15 @@ set_target_properties(
 
 function(eagine_example_common EXAMPLE_NAME)
 	add_executable(
-		eagine-${EXAMPLE_NAME}
+		oglplus-${EXAMPLE_NAME}
 		EXCLUDE_FROM_ALL
 		"${EXAMPLE_NAME}.cpp"
 		${ARGN}
 	)
-	eagine_add_exe_analysis(eagine-${EXAMPLE_NAME})
-	add_dependencies(eagine-oglplus-examples eagine-${EXAMPLE_NAME})
+	eagine_add_exe_analysis(oglplus-${EXAMPLE_NAME})
+	add_dependencies(eagine-oglplus-examples oglplus-${EXAMPLE_NAME})
 	target_link_libraries(
-		eagine-${EXAMPLE_NAME}
+		oglplus-${EXAMPLE_NAME}
 		PUBLIC
 			GLEW::GLEW
 			GLFW3::GLFW3
@@ -28,10 +28,10 @@ function(eagine_example_common EXAMPLE_NAME)
 	)
 
 	set_target_properties(
-		eagine-${EXAMPLE_NAME}
+		oglplus-${EXAMPLE_NAME}
 		PROPERTIES FOLDER "Example/EAGine/OGLplus"
 	)
-	eagine_install_example(eagine-${EXAMPLE_NAME})
+	eagine_install_example(oglplus-${EXAMPLE_NAME})
 endfunction()
 
 add_subdirectory(oglplus)
