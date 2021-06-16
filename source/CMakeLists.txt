@@ -3,6 +3,8 @@
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
 
+add_subdirectory(tools)
+
 add_library(EAGine::OGLplus INTERFACE IMPORTED GLOBAL)
 target_link_libraries(EAGine::OGLplus INTERFACE eagine-oglplus-headers)
 
@@ -20,6 +22,8 @@ install(
 	TARGETS
 		eagine-oglplus-generated-headers
 		eagine-oglplus-headers
+		oglplus-bake_shader_source
+		oglplus-bake_program_source
 		EXPORT OGLplus
 	LIBRARY DESTINATION lib
 	ARCHIVE DESTINATION lib
