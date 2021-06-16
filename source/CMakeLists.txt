@@ -22,6 +22,9 @@ install(
 	TARGETS
 		eagine-oglplus-generated-headers
 		eagine-oglplus-headers
+		oglplus-bake_noise_image
+		oglplus-bake_checker_image
+		oglplus-bake_png_image
 		oglplus-bake_shader_source
 		oglplus-bake_program_source
 		EXPORT OGLplus

@@ -18,6 +18,7 @@ list(APPEND CMAKE_MODULE_PATH ${EAGINE_CORE_ROOT}/config)
 add_subdirectory(submodules)
 
 include(EAGineCoreCommon)
+find_package(EAGinePNG)
 find_package(EAGineGLEW)
 find_package(EAGineGLFW3)
 
