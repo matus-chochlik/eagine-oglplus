@@ -24,7 +24,8 @@ function(oglplus_add_texture TEX_NAME)
 			COMMAND oglplus-bake_${CMAKE_MATCH_1}_image
 			PREFIX oglp
 			RES_KIND tex
-			RES_NAME ${TEX_NAME}.${CMAKE_MATCH_1}
+			RES_NAME ${TEX_NAME}
+			SUFFIX .${CMAKE_MATCH_1}
 			PACKED
 		)
 	else()
