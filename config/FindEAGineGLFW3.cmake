@@ -3,4 +3,9 @@
 #  See accompanying file LICENSE_1_0.txt or copy at
 #   http://www.boost.org/LICENSE_1_0.txt
 #
-eagine_common_import_lib(GLFW3 glfw3 GLFW/glfw3.h glfw3)
+eagine_common_import_lib(
+	PREFIX GLFW3
+	PKGCONFIG glfw3
+	HEADER GLFW/glfw3.h
+	LIBRARY glfw3
+)

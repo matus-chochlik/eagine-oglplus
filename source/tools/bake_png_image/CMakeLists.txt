@@ -4,11 +4,11 @@
 #  http://www.boost.org/LICENSE_1_0.txt
 
 add_executable(oglplus-bake_png_image main.cpp)
-eagine_add_exe_analysis(oglplus-bake_png_image )
+eagine_add_exe_analysis(oglplus-bake_png_image)
 target_link_libraries(
 	oglplus-bake_png_image
 	PUBLIC
+		EAGine::Deps::PNG
 		EAGine::OGLplus
-		PNG::PNG
 )
 

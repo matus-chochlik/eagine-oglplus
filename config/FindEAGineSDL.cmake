@@ -3,4 +3,9 @@
 #  See accompanying file LICENSE_1_0.txt or copy at
 #   http://www.boost.org/LICENSE_1_0.txt
 #
-eagine_common_import_lib(SDL sdl SDL/SDL.h SDL)
+eagine_common_import_lib(
+	PREFIX SDL
+	PKGCONFIG sdl
+	HEADER SDL/SDL.h
+	LIBRARY SDL
+)
