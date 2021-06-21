@@ -1,4 +1,4 @@
-/// @example oglplus/001_clear.cpp
+/// @example oglplus/002_clear.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
