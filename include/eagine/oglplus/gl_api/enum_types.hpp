@@ -10,7 +10,7 @@
 
 #include "enum_class.hpp"
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Wrapper for true, false GL enums.
 /// @ingroup gl_api_wrap
@@ -879,6 +879,6 @@ struct path_transform_type_nv
     using enum_class::enum_class;
 };
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_ENUM_TYPES_HPP

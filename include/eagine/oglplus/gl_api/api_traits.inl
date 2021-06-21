@@ -8,11 +8,11 @@
 
 extern "C" {
 
-auto glXGetProcAddress(const eagine::oglp::gl_types::ubyte_type*) -> void*;
+auto glXGetProcAddress(const eagine::oglplus::gl_types::ubyte_type*) -> void*;
 
 } // extern "C"
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename Api, typename Tag, typename Signature>
 inline auto gl_api_traits::link_function(
@@ -33,5 +33,5 @@ inline auto gl_api_traits::link_function(
     return nullptr;
 }
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 

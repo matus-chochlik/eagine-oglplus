@@ -6,7 +6,7 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
 basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
@@ -571,5 +571,5 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , flush("flush", traits, *this)
   , finish("finish", traits, *this) {}
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 

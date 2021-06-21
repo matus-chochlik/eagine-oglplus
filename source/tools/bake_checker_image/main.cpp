@@ -69,7 +69,7 @@ struct options {
 };
 //------------------------------------------------------------------------------
 void write_output(std::ostream& output, const options& opts) {
-    oglp::image_data_header hdr(opts.width, opts.height, opts.depth, 3);
+    oglplus::image_data_header hdr(opts.width, opts.height, opts.depth, 3);
     hdr.format = GL_RGB;
 
     if(has_r3g3b2) {
@@ -86,7 +86,7 @@ void write_output(std::ostream& output, const options& opts) {
     const auto size = span_size(
       opts.width.value() * opts.height.value() * opts.depth.value() * channels);
 
-    oglp::write_and_pad_texture_image_data_header(output, hdr, size);
+    oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
     const GLsizei fd = opts.depth.value() / opts.rep_z.value();
     const GLsizei fh = opts.height.value() / opts.rep_y.value();

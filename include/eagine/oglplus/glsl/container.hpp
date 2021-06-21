@@ -11,7 +11,7 @@
 #include "string_ref.hpp"
 #include <string>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Base class typically storing GLSL source code strings.
 /// @ingroup glsl_utils
@@ -43,6 +43,6 @@ private:
 
 using glsl_string = glsl_container<std::string>;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GLSL_CONTAINER_HPP

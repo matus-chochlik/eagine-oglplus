@@ -10,7 +10,7 @@
 #include <stdexcept>
 #endif
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 #ifndef OGLPLUS_NO_GL
 //------------------------------------------------------------------------------
@@ -28,5 +28,5 @@ api_initializer::api_initializer(int, int) {
 #endif
 //------------------------------------------------------------------------------
 #endif // NO_GL
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 //------------------------------------------------------------------------------

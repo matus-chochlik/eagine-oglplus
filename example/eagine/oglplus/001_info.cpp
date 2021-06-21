@@ -17,7 +17,7 @@
 
 static void run() {
     using namespace eagine;
-    using namespace eagine::oglp;
+    using namespace eagine::oglplus;
 
     gl_api gl;
 

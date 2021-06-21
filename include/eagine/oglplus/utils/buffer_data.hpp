@@ -11,10 +11,10 @@
 #include <eagine/buffer_data.hpp>
 #include <eagine/oglplus/gl_api/config.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 using buffer_data_spec = eagine::buffer_data_spec<gl_types::sizeiptr_type>;
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_UTILS_BUFFER_DATA_HPP

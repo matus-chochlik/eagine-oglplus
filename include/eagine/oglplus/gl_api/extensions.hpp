@@ -10,7 +10,7 @@
 
 #include <eagine/string_span.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 template <typename ApiTraits>
 class basic_gl_operations;
@@ -42,6 +42,6 @@ private:
     string_view _name;
 };
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_EXTENSIONS_HPP

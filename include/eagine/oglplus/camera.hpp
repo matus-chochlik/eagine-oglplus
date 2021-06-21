@@ -16,7 +16,7 @@
 #include <eagine/units/common.hpp>
 #include <eagine/valid_if/positive.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 /// @brief Class representing a camera orbiting around its target.
 /// @ingroup gl_utils
@@ -156,7 +156,7 @@ protected:
     float _orbit_factor = 0.50F;
 };
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #if !OGLPLUS_LINK_LIBRARY || defined(OGLPLUS_IMPLEMENTING_LIBRARY)
 #include <eagine/oglplus/camera.inl>

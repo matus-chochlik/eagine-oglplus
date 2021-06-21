@@ -32,7 +32,7 @@ EAGINE_DIAG_OFF(reserved-id-macro)
 //------------------------------------------------------------------------------
 #ifndef OGLPLUS_NO_GL
 //------------------------------------------------------------------------------
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 struct api_initializer {
     ~api_initializer() noexcept = default;
@@ -44,7 +44,7 @@ struct api_initializer {
     explicit api_initializer(int /*gl_ver_major*/ = 3, int /*gl_ver_minor*/ = 3);
 };
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 //------------------------------------------------------------------------------
 #if OGLPLUS_USE_GLEW
 #include <GL/glew.h>

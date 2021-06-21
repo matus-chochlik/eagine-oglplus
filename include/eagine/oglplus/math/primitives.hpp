@@ -12,7 +12,7 @@
 #include <eagine/math/primitives.hpp>
 #include <eagine/oglplus/gl_api/config.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 /// @brief Alias for math::line instantiation.
 /// @ingroup gl_utils
@@ -26,6 +26,6 @@ using sphere = math::sphere<gl_types::float_type, math_use_simd>;
 /// @ingroup gl_utils
 using triangle = math::triangle<gl_types::float_type, math_use_simd>;
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_MATH_PRIMITIVES_HPP

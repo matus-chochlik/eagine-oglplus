@@ -11,7 +11,7 @@
 #include "source_ref.hpp"
 #include <eagine/memory/block.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Reference to a GLSL source code string.
 /// @ingroup glsl_utils
@@ -64,6 +64,6 @@ static inline auto operator"" _glsl(const char* src_str, std::size_t n) noexcept
     return {src_str, span_size(n)};
 }
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GLSL_STRING_REF_HPP

@@ -13,7 +13,7 @@
 #include <eagine/string_span.hpp>
 #include <cstddef>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Class referencing a set of GLSL source code strings.
 /// @ingroup glsl_utils
@@ -85,6 +85,6 @@ private:
     const int_type* _lengths{nullptr};
 };
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GLSL_SOURCE_REF_HPP

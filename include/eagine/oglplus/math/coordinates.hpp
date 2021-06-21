@@ -12,7 +12,7 @@
 #include <eagine/math/coordinates.hpp>
 #include <eagine/oglplus/gl_api/config.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 /// @brief Alias for math::unit_spherical_coordinate instantiation.
 /// @ingroup gl_utils
@@ -22,6 +22,6 @@ using unit_spherical_coordinate =
 using math::to_cartesian;
 using math::to_unit_spherical;
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_MATH_COORDINATES_HPP

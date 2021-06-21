@@ -10,7 +10,7 @@
 
 #include <eagine/math/interpolate.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 /// @brief Alias for math::smooth_lerp.
 /// @ingroup gl_utils
@@ -20,6 +20,6 @@ using math::smooth_lerp;
 /// @ingroup gl_utils
 using math::smooth_oscillate;
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_MATH_INTERPOLATE_HPP

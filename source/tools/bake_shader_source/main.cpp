@@ -125,18 +125,19 @@ void write_output(
   std::istream& input,
   std::ostream& output,
   const options& opts) {
-    oglp::shader_source_header hdr;
+    oglplus::shader_source_header hdr;
 
     memory::buffer source_text;
     read_stream_data(input, source_text);
 
     memory::buffer buf;
     buf.resize(
-      span_size(sizeof(oglp::shader_source_header)) + source_text.size() * 2);
+      span_size(sizeof(oglplus::shader_source_header)) +
+      source_text.size() * 2);
 
     data_bake_arena bakery(buf);
 
-    auto& shdr_src_hdr = bakery.make<oglp::shader_source_header>();
+    auto& shdr_src_hdr = bakery.make<oglplus::shader_source_header>();
 
     shdr_src_hdr.shader_type = opts.shader_type.value();
     shdr_src_hdr.source_text = bakery.copy_array(

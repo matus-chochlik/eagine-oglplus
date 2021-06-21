@@ -13,12 +13,12 @@
 #include <eagine/oglplus/gl_api/api.inl>
 // clang-format on
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 template class basic_gl_constants<gl_api_traits>;
 template class basic_gl_operations<gl_api_traits>;
 template class basic_gl_c_api<gl_api_traits>;
 template class basic_gl_api<gl_api_traits>;
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 

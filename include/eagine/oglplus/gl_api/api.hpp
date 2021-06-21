@@ -20,7 +20,7 @@
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 #define OGLPAFP(FUNC) decltype(c_api::FUNC), &c_api::FUNC
 //------------------------------------------------------------------------------
@@ -3055,7 +3055,7 @@ public:
       OGLPAFP(FramebufferRenderbuffer),
       void(
         framebuffer_target,
-        oglp::framebuffer_attachment,
+        oglplus::framebuffer_attachment,
         renderbuffer_target,
         renderbuffer_name)>
       framebuffer_renderbuffer;
@@ -3064,7 +3064,7 @@ public:
       OGLPAFP(NamedFramebufferRenderbuffer),
       void(
         framebuffer_name,
-        oglp::framebuffer_attachment,
+        oglplus::framebuffer_attachment,
         renderbuffer_target,
         renderbuffer_name)>
       named_framebuffer_renderbuffer;
@@ -3073,21 +3073,25 @@ public:
       OGLPAFP(FramebufferTexture),
       void(
         framebuffer_target,
-        oglp::framebuffer_attachment,
+        oglplus::framebuffer_attachment,
         texture_name,
         int_type)>
       framebuffer_texture;
 
     func<
       OGLPAFP(NamedFramebufferTexture),
-      void(framebuffer_name, oglp::framebuffer_attachment, texture_name, int_type)>
+      void(
+        framebuffer_name,
+        oglplus::framebuffer_attachment,
+        texture_name,
+        int_type)>
       named_framebuffer_texture;
 
     func<
       OGLPAFP(FramebufferTexture1D),
       void(
         framebuffer_target,
-        oglp::framebuffer_attachment,
+        oglplus::framebuffer_attachment,
         texture_name,
         int_type)>
       framebuffer_texture1d;
@@ -3096,8 +3100,8 @@ public:
       OGLPAFP(FramebufferTexture2D),
       void(
         framebuffer_target,
-        oglp::framebuffer_attachment,
-        oglp::texture_target,
+        oglplus::framebuffer_attachment,
+        oglplus::texture_target,
         texture_name,
         int_type)>
       framebuffer_texture2d;
@@ -3106,8 +3110,8 @@ public:
       OGLPAFP(FramebufferTexture3D),
       void(
         framebuffer_target,
-        oglp::framebuffer_attachment,
-        oglp::texture_target,
+        oglplus::framebuffer_attachment,
+        oglplus::texture_target,
         texture_name,
         int_type)>
       framebuffer_texture3d;
@@ -3116,7 +3120,7 @@ public:
       OGLPAFP(FramebufferTextureLayer),
       void(
         framebuffer_target,
-        oglp::framebuffer_attachment,
+        oglplus::framebuffer_attachment,
         texture_name,
         int_type,
         int_type)>
@@ -3126,7 +3130,7 @@ public:
       OGLPAFP(NamedFramebufferTextureLayer),
       void(
         framebuffer_name,
-        oglp::framebuffer_attachment,
+        oglplus::framebuffer_attachment,
         texture_name,
         int_type,
         int_type)>
@@ -3383,47 +3387,52 @@ public:
     func<OGLPAFP(FrontFace), void(face_orientation)> front_face;
     func<OGLPAFP(CullFace), void(face_mode)> cull_face;
 
-    func<OGLPAFP(PolygonMode), void(face_mode, oglp::polygon_mode)> polygon_mode;
+    func<OGLPAFP(PolygonMode), void(face_mode, oglplus::polygon_mode)>
+      polygon_mode;
 
     func<OGLPAFP(PolygonOffset)> polygon_offset;
     func<OGLPAFP(PolygonOffsetClamp)> polygon_offset_clamp;
 
-    func<OGLPAFP(BlendEquation), void(oglp::blend_equation)> blend_equation;
-    func<OGLPAFP(BlendEquation), void(oglp::blend_equation, oglp::blend_equation)>
+    func<OGLPAFP(BlendEquation), void(oglplus::blend_equation)> blend_equation;
+    func<
+      OGLPAFP(BlendEquation),
+      void(oglplus::blend_equation, oglplus::blend_equation)>
       blend_equation_separate;
 
-    func<OGLPAFP(BlendEquation), void(uint_type, oglp::blend_equation)>
+    func<OGLPAFP(BlendEquation), void(uint_type, oglplus::blend_equation)>
       blend_equationi;
     func<
       OGLPAFP(BlendEquation),
-      void(uint_type, oglp::blend_equation, oglp::blend_equation)>
+      void(uint_type, oglplus::blend_equation, oglplus::blend_equation)>
       blend_equation_separatei;
 
-    func<OGLPAFP(BlendFunc), void(oglp::blend_function, oglp::blend_function)>
+    func<
+      OGLPAFP(BlendFunc),
+      void(oglplus::blend_function, oglplus::blend_function)>
       blend_func;
 
     func<
       OGLPAFP(BlendFunc),
       void(
-        oglp::blend_function,
-        oglp::blend_function,
-        oglp::blend_function,
-        oglp::blend_function)>
+        oglplus::blend_function,
+        oglplus::blend_function,
+        oglplus::blend_function,
+        oglplus::blend_function)>
       blend_func_separate;
 
     func<
       OGLPAFP(BlendFunc),
-      void(uint_type, oglp::blend_function, oglp::blend_function)>
+      void(uint_type, oglplus::blend_function, oglplus::blend_function)>
       blend_funci;
 
     func<
       OGLPAFP(BlendFunc),
       void(
         uint_type,
-        oglp::blend_function,
-        oglp::blend_function,
-        oglp::blend_function,
-        oglp::blend_function)>
+        oglplus::blend_function,
+        oglplus::blend_function,
+        oglplus::blend_function,
+        oglplus::blend_function)>
       blend_func_separatei;
 
     func<OGLPAFP(SampleCoverage)> sample_coverage;
@@ -3866,6 +3875,6 @@ public:
 //------------------------------------------------------------------------------
 #undef OGLPAFP
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_API_HPP

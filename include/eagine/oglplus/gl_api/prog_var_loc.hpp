@@ -11,7 +11,7 @@
 #include "config.hpp"
 #include <eagine/identifier.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Class wrapping GL shader program variable location.
 /// @ingroup gl_api_wrap
@@ -169,6 +169,6 @@ using uniform_block_index = prog_var_location<EAGINE_ID_V(UniformBlk)>;
 /// @see uniform_block_index
 using shader_storage_block_index = prog_var_location<EAGINE_ID_V(ShdrStrBlk)>;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_PROG_VAR_LOC_HPP

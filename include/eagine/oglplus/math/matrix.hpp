@@ -12,7 +12,7 @@
 #include <eagine/math/tmat.hpp>
 #include <eagine/oglplus/gl_api/config.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 /// @brief Alias for math::matrix.
 /// @ingroup gl_utils
@@ -59,6 +59,6 @@ using mat4x3 = tmat<gl_types::float_type, 4, 3>;
 /// @ingroup gl_utils
 using mat4 = tmat<gl_types::float_type, 4, 4>;
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_MATH_MATRIX_HPP

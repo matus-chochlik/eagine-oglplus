@@ -25,7 +25,7 @@
 #endif
 #endif
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the C-functions from the GL API.
 /// @ingroup gl_api_wrap
@@ -5679,6 +5679,6 @@ public:
 /// @ingroup gl_api_wrap
 using gl_c_api = basic_gl_c_api<gl_api_traits>;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_C_API_HPP

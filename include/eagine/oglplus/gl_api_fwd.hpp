@@ -8,7 +8,7 @@
 #ifndef EAGINE_OGLPLUS_GL_API_FWD_HPP
 #define EAGINE_OGLPLUS_GL_API_FWD_HPP
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 class gl_api_traits;
 
@@ -19,6 +19,6 @@ class basic_gl_api;
 /// @ingroup gl_api_wrap
 using gl_api = basic_gl_api<gl_api_traits>;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_FWD_HPP

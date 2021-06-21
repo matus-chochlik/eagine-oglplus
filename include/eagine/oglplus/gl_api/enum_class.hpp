@@ -14,7 +14,7 @@
 #include <eagine/identifier.hpp>
 #include <eagine/logging/backend.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Typed wrapper class for GLenum constants/values.
 /// @ingroup gl_api_wrap
@@ -98,6 +98,6 @@ constexpr static bool is_enum_parameter_value_v =
     ? std::is_convertible_v<Value, ValueType>
     : is_enum_class_value_v<typename Parameter::tag_type, Value>;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_ENUM_CLASS_HPP

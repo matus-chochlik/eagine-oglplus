@@ -200,7 +200,7 @@ public:
 void do_convert_image(
   std::istream& input,
   std::ostream& output,
-  oglp::image_data_header& header,
+  oglplus::image_data_header& header,
   int layer) {
     auto match_value = [](auto& original, const auto& current, auto message) {
         if(original) {
@@ -235,7 +235,7 @@ void do_convert_image(
     auto size = reader.data_size();
 
     if(layer == 0) {
-        oglp::write_and_pad_texture_image_data_header(
+        oglplus::write_and_pad_texture_image_data_header(
           output, header, span_size(size));
     }
 
@@ -251,7 +251,7 @@ void do_convert_image(
 }
 //------------------------------------------------------------------------------
 void convert_image(std::istream& input, std::ostream& output) {
-    oglp::image_data_header header{};
+    oglplus::image_data_header header{};
     header.depth = 1;
     do_convert_image(input, output, header, 0);
 }
@@ -275,7 +275,7 @@ auto main(main_ctx& ctx) -> int {
             std::ofstream output_file(c_str(opts.output_path.value()));
             convert_image(std::cin, output_file);
         } else if(to_stdout) {
-            oglp::image_data_header header{};
+            oglplus::image_data_header header{};
             header.depth = limit_cast<int>(opts.input_paths.value().size());
             int layer = 0;
             for(auto& input_path : opts.input_paths.value()) {
@@ -283,7 +283,7 @@ auto main(main_ctx& ctx) -> int {
                 do_convert_image(input_file, std::cout, header, layer++);
             }
         } else {
-            oglp::image_data_header header{};
+            oglplus::image_data_header header{};
             header.depth = limit_cast<int>(opts.input_paths.value().size());
             std::ofstream output_file(c_str(opts.output_path.value()));
             int layer = 0;

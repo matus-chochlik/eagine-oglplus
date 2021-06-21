@@ -14,7 +14,7 @@
 #include <eagine/file_contents.hpp>
 #include <eagine/string_span.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 class texture_image_block {
 private:
@@ -82,6 +82,6 @@ public:
       : texture_image_file(string_view(path)) {}
 };
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_UTILS_IMAGE_FILE_HPP

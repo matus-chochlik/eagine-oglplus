@@ -14,7 +14,7 @@
 #include <eagine/shapes/drawing.hpp>
 #include <eagine/span.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Translates from shape primitive type to GL primitive type.
 /// @ingroup shapes
@@ -161,7 +161,7 @@ void draw_instanced_using_instructions(
   const shape_draw_subset& subs,
   gl_types::sizei_type inst_count) noexcept;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #include <eagine/oglplus/shapes/drawing.inl>
 

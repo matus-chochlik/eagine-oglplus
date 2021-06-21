@@ -172,10 +172,10 @@ void write_output(std::ostream& output, const options& opts) {
     slens.reserve(source_texts.size());
 
     auto required_size = span_size(
-      sizeof(oglp::program_source_header) +
+      sizeof(oglplus::program_source_header) +
       source_texts.size() *
-        (sizeof(memory::offset_ptr<oglp::shader_source_header>) +
-         sizeof(oglp::shader_source_header)));
+        (sizeof(memory::offset_ptr<oglplus::shader_source_header>) +
+         sizeof(oglplus::shader_source_header)));
 
     for(auto& source_text : source_texts) {
         slens.push_back(source_text.block().size());
@@ -187,16 +187,16 @@ void write_output(std::ostream& output, const options& opts) {
 
     data_bake_arena bakery(buf);
 
-    auto& prog_src_hdr = bakery.make<oglp::program_source_header>();
+    auto& prog_src_hdr = bakery.make<oglplus::program_source_header>();
 
     auto ssh_ptrs =
-      bakery.make_array<memory::offset_ptr<const oglp::shader_source_header>>(
+      bakery.make_array<memory::offset_ptr<const oglplus::shader_source_header>>(
         span_size(source_texts.size()));
 
     prog_src_hdr.shader_sources = ssh_ptrs;
 
     for(std_size_t i = 0; i < shader_types.size(); ++i) {
-        auto& shdr_src_hdr = bakery.make<oglp::shader_source_header>();
+        auto& shdr_src_hdr = bakery.make<oglplus::shader_source_header>();
 
         shdr_src_hdr.shader_type = shader_types[i];
         shdr_src_hdr.source_text = bakery.copy_array(

@@ -10,10 +10,10 @@
 
 #include <eagine/math/tvec.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 static constexpr const bool math_use_simd = true;
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_MATH_CONFIG_HPP

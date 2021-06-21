@@ -89,7 +89,7 @@ auto write_output(std::ostream& output, const options& opts) -> int {
         return 3;
     }
 
-    oglp::image_data_header hdr{
+    oglplus::image_data_header hdr{
       opts.width, opts.height, limit_cast<int>(input_paths.size()), 1};
     hdr.format = GL_RED_INTEGER;
     hdr.internal_format = GL_R8UI;
@@ -98,7 +98,7 @@ auto write_output(std::ostream& output, const options& opts) -> int {
     const auto size = span_size(opts.width.value() * opts.height.value()) *
                       span_size(input_paths.size());
 
-    oglp::write_and_pad_texture_image_data_header(output, hdr, size);
+    oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
     for(auto input_path : input_paths) {
         std::ifstream input{c_str(input_path)};

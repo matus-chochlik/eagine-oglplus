@@ -7,7 +7,7 @@
 ///
 #include <eagine/memory/null_ptr.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename A>
 inline auto
@@ -238,5 +238,5 @@ inline void draw_using_instructions(
     }
 }
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 //------------------------------------------------------------------------------

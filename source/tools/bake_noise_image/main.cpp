@@ -84,7 +84,7 @@ struct options {
 };
 //------------------------------------------------------------------------------
 void write_output(std::ostream& output, const options& opts) {
-    oglp::image_data_header hdr(
+    oglplus::image_data_header hdr(
       opts.width, opts.height, opts.depth, opts.components.value());
     switch(opts.components.value()) {
         case 1:
@@ -111,7 +111,7 @@ void write_output(std::ostream& output, const options& opts) {
       opts.width.value() * opts.height.value() * opts.depth.value() *
       opts.components.value());
 
-    oglp::write_and_pad_texture_image_data_header(output, hdr, size);
+    oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
     const unsigned mask = ((1U << unsigned(CHAR_BIT)) - 1U);
 

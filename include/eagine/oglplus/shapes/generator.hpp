@@ -18,7 +18,7 @@
 #include <eagine/span.hpp>
 #include <memory>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Class wrapping a generic shape loader/generator, adapting it for GL.
 /// @ingroup shapes
@@ -211,7 +211,7 @@ public:
     }
 };
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #include <eagine/oglplus/shapes/generator.inl>
 

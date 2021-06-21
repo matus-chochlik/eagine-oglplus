@@ -10,7 +10,7 @@
 
 #include "result.hpp"
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Policy customizing the generic C-API wrappers for the GL API
 /// @ingroup gl_api_wrap
@@ -45,6 +45,6 @@ private:
     std::string _full_name;
 };
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_API_TRAITS_HPP

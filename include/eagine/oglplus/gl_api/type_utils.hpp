@@ -14,7 +14,7 @@
 #include <eagine/type_identity.hpp>
 #include <type_traits>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Trait indicating that T is one of GL basic (pixel) data types.
 /// @ingroup gl_api_wrap
@@ -523,6 +523,6 @@ constexpr auto internal_format_of() noexcept -> pixel_internal_format {
     return pixel_internal_format{internal_format_of(type_identity<T>{})};
 }
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_TYPE_UTILS_HPP

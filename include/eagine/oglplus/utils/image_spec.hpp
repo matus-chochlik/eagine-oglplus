@@ -14,7 +14,7 @@
 #include <eagine/memory/block.hpp>
 #include <eagine/span.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 
 class image_dimensions {
 private:
@@ -132,6 +132,6 @@ public:
       , image_pixel_data(pix_data) {}
 };
 
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_UTILS_IMAGE_SPEC_HPP

@@ -17,7 +17,7 @@
 #include <stdexcept>
 
 static void run_loop(GLFWwindow* window, int width, int height) {
-    using namespace eagine::oglp;
+    using namespace eagine::oglplus;
 
     gl_api gl;
 
@@ -81,7 +81,7 @@ static void init_and_run() {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);
-            eagine::oglp::api_initializer gl_api;
+            eagine::oglplus::api_initializer gl_api;
             glGetError();
             run_loop(window, width, height);
         }

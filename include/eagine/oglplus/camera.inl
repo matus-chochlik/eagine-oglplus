@@ -9,7 +9,7 @@
 #include <eagine/math/matrix_inverse.hpp>
 #include <eagine/oglplus/math/coordinates.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 OGLPLUS_LIB_FUNC
 auto orbiting_camera::target_to_camera_direction() const noexcept -> vec3 {
@@ -52,4 +52,4 @@ auto orbiting_camera::grab_sphere() const noexcept -> sphere {
     return sphere(target(), grab_sphere_radius());
 }
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus

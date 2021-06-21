@@ -6,7 +6,7 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
 basic_gl_constants<ApiTraits>::basic_gl_constants(
@@ -1380,5 +1380,5 @@ basic_gl_constants<ApiTraits>::basic_gl_constants(
   , utf16_nv("UTF16_NV", traits, api)
   , none("NONE", traits, api) {}
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 

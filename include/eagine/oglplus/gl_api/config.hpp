@@ -24,7 +24,7 @@
 #include <cstdint>
 #endif
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Collection of aliases for GL types.
 /// @ingroup gl_api_wrap
@@ -143,6 +143,6 @@ struct gl_types {
     }
 };
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_CONFIG_HPP

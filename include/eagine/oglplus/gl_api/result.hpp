@@ -13,7 +13,7 @@
 #include <eagine/c_api_wrap.hpp>
 #include <eagine/string_span.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Class storing information about call result for unavailable GL functions.
 /// @ingroup gl_api_wrap
@@ -141,6 +141,6 @@ using gl_opt_result = api_opt_result<Result, gl_result_info>;
 template <typename Result>
 using gl_combined_result = api_combined_result<Result, gl_result_info>;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_RESULT_HPP

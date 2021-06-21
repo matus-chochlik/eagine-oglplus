@@ -12,7 +12,7 @@
 #include <eagine/handle.hpp>
 #include <eagine/message_id.hpp>
 
-namespace eagine::oglp {
+namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 /// @brief Alias for template wrapping GL object handles.
 /// @ingroup gl_api_wrap
@@ -296,6 +296,6 @@ using transform_feedback_name_array =
 template <std::size_t N>
 using vertex_array_name_array = gl_object_name_array<vertex_array_tag, N>;
 //------------------------------------------------------------------------------
-} // namespace eagine::oglp
+} // namespace eagine::oglplus
 
 #endif // EAGINE_OGLPLUS_GL_API_OBJECT_NAME_HPP
