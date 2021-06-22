@@ -1,0 +1,6 @@
+[submodule "submodules/eagine-core"]
+	path = submodules/eagine-core
+	url = https://github.com/matus-chochlik/eagine-core.git
+[submodule "submodules/eagine-shapes"]
+	path = submodules/eagine-shapes
+	url = https://github.com/matus-chochlik/eagine-shapes.git
