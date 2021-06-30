@@ -14,6 +14,7 @@ target_link_libraries(
 		EAGine::Deps::GLEW
 		EAGine::Deps::GLFW3
 		EAGine::Core
+		EAGine::Shapes
 		eagine-oglplus-generated-headers
 		eagine-oglplus-headers
 )
