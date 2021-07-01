@@ -9,8 +9,10 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
+#include <eagine/main.hpp>
 #include <eagine/math/functions.hpp>
 #include <eagine/oglplus/camera.hpp>
+#include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
@@ -44,7 +46,8 @@ void main() {
 }
 )"};
 
-static void run_loop(GLFWwindow* window, int width, int height) {
+static void
+run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
 
@@ -52,6 +55,12 @@ static void run_loop(GLFWwindow* window, int width, int height) {
     auto& [gl, GL] = glapi;
 
     if(gl.clear) {
+        gl_debug_logger gdl{ctx};
+
+        gl.debug_message_callback(gdl);
+        gl.debug_message_control(
+          GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
+
         memory::buffer buf;
 
         // vertex shader
@@ -183,7 +192,7 @@ static void run_loop(GLFWwindow* window, int width, int height) {
     }
 }
 
-static void init_and_run() {
+static void init_and_run(eagine::main_ctx& ctx) {
     if(!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     } else {
@@ -198,6 +207,7 @@ static void init_and_run() {
         glfwWindowHint(GLFW_STENCIL_BITS, 0);
 
         glfwWindowHint(GLFW_SAMPLES, GLFW_DONT_CARE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
         int width = 800, height = 600;
 
@@ -210,14 +220,16 @@ static void init_and_run() {
             glfwMakeContextCurrent(window);
             eagine::oglplus::api_initializer gl_api;
             glGetError();
-            run_loop(window, width, height);
+            run_loop(ctx, window, width, height);
         }
     }
 }
 
-auto main() -> int {
+namespace eagine {
+
+auto main(main_ctx& ctx) -> int {
     try {
-        init_and_run();
+        init_and_run(ctx);
         return 0;
     } catch(const std::runtime_error& sre) {
         std::cerr << "Runtime error: " << sre.what() << std::endl;
@@ -226,3 +238,5 @@ auto main() -> int {
     }
     return 1;
 }
+
+} // namespace eagine
