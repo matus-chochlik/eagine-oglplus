@@ -7,4 +7,5 @@
 eagine_example_common(001_info)
 eagine_example_common(002_clear)
 eagine_example_common(005_writing)
+eagine_example_common(006_metaballs)
 eagine_example_common(007_round_cube)
