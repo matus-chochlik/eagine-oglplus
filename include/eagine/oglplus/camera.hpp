@@ -58,6 +58,24 @@ public:
         return *this;
     }
 
+    /// @brief Set the factor for calculating the orbit between min and max.
+    auto set_orbit_factor(float factor) noexcept -> auto& {
+        _orbit_factor = factor;
+        return *this;
+    }
+
+    /// @brief Sets the azimuth angle (longitude)
+    auto set_azimuth(radians_t<float> turns) noexcept -> auto& {
+        _turns = turns;
+        return *this;
+    }
+
+    /// @brief Sets the elevation angle (latitude)
+    auto set_elevation(radians_t<float> pitch) noexcept -> auto& {
+        _pitch = pitch;
+        return *this;
+    }
+
     /// @brief Returns the y-axis FOV angle
     auto fov() const noexcept -> radians_t<float> {
         return _fov;

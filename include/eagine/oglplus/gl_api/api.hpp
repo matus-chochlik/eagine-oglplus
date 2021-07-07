@@ -3837,6 +3837,12 @@ public:
             return this->_chkcall(callback, user_data);
         }
 
+        constexpr auto operator()(
+          std::tuple<debug_callback_type*, const_void_ptr_type> callback)
+          const noexcept {
+            return this->_chkcall(std::get<0>(callback), std::get<1>(callback));
+        }
+
     } debug_message_callback;
 
     struct : func<OGLPAFP(PushDebugGroup)> {
