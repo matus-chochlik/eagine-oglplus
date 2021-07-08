@@ -6,6 +6,7 @@
 
 eagine_example_common(001_info)
 eagine_example_common(002_clear)
+eagine_example_common(003_mandelbrot)
 eagine_example_common(004_cartoon_sun)
 eagine_example_common(005_writing)
 eagine_example_common(006_metaballs)
