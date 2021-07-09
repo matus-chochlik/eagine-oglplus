@@ -178,11 +178,18 @@ public:
       : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
         using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
 
-    private:
-        template <typename Res>
-        constexpr auto _check(Res&& res) const noexcept {
-            res.error_code(this->api().GetError());
-            return std::forward<Res>(res);
+    public:
+        using base::base;
+
+        constexpr auto operator()(Params... params) const noexcept {
+            return this->_chkcall(_conv(params)...)
+              .cast_to(type_identity<RVC>{});
+        }
+
+        auto bind(Params... params) const noexcept {
+            return [=] {
+                return (*this)(params...);
+            };
         }
 
     protected:
@@ -209,18 +216,52 @@ public:
               .cast_to(type_identity<RVC>{});
         }
 
+    private:
+        template <typename Res>
+        constexpr auto _check(Res&& res) const noexcept {
+            res.error_code(this->api().GetError());
+            return std::forward<Res>(res);
+        }
+    };
+
+    template <typename W, W c_api::*F, typename Signature = typename W::signature>
+    class unck_func;
+
+    template <typename W, W c_api::*F, typename RVC, typename... Params>
+    class unck_func<W, F, RVC(Params...)>
+      : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
+        using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
+
     public:
         using base::base;
 
         constexpr auto operator()(Params... params) const noexcept {
-            return this->_chkcall(_conv(params)...)
-              .cast_to(type_identity<RVC>{});
+            return this->_call(_conv(params)...).cast_to(type_identity<RVC>{});
         }
 
         auto bind(Params... params) const noexcept {
             return [=] {
                 return (*this)(params...);
             };
+        }
+
+    protected:
+        using base::_conv;
+
+        template <identifier_t I>
+        static constexpr auto _conv(prog_var_location<I> loc) noexcept {
+            return loc.index();
+        }
+
+        template <typename T>
+        static constexpr auto _conv(degrees_t<T> angle) noexcept {
+            return angle.value();
+        }
+
+        template <typename... Args>
+        constexpr auto _cnvcall(Args&&... args) const noexcept {
+            return this->_call(_conv(std::forward<Args>(args))...)
+              .cast_to(type_identity<RVC>{});
         }
     };
 
@@ -3910,56 +3951,58 @@ public:
     } is_named_string;
 
     // arb compatibility
-    func<OGLPAFP(Begin), void(old_primitive_type)> begin;
+    unck_func<OGLPAFP(Begin), void(old_primitive_type)> begin;
     func<OGLPAFP(End)> end;
 
-    func<OGLPAFP(Vertex2i)> vertex2i;
-    func<OGLPAFP(Vertex3i)> vertex3i;
-    func<OGLPAFP(Vertex4i)> vertex4i;
-    func<OGLPAFP(Vertex2f)> vertex2f;
-    func<OGLPAFP(Vertex3f)> vertex3f;
-    func<OGLPAFP(Vertex4f)> vertex4f;
+    unck_func<OGLPAFP(Vertex2i)> vertex2i;
+    unck_func<OGLPAFP(Vertex3i)> vertex3i;
+    unck_func<OGLPAFP(Vertex4i)> vertex4i;
+    unck_func<OGLPAFP(Vertex2f)> vertex2f;
+    unck_func<OGLPAFP(Vertex3f)> vertex3f;
+    unck_func<OGLPAFP(Vertex4f)> vertex4f;
 
-    func<OGLPAFP(Color3i)> color3i;
-    func<OGLPAFP(Color4i)> color4i;
-    func<OGLPAFP(Color3f)> color3f;
-    func<OGLPAFP(Color4f)> color4f;
+    unck_func<OGLPAFP(Color3i)> color3i;
+    unck_func<OGLPAFP(Color4i)> color4i;
+    unck_func<OGLPAFP(Color3f)> color3f;
+    unck_func<OGLPAFP(Color4f)> color4f;
 
-    func<OGLPAFP(SecondaryColor3i)> secondary_color3i;
-    func<OGLPAFP(SecondaryColor4i)> secondary_color4i;
-    func<OGLPAFP(SecondaryColor3f)> secondary_color3f;
-    func<OGLPAFP(SecondaryColor4f)> secondary_color4f;
+    unck_func<OGLPAFP(SecondaryColor3i)> secondary_color3i;
+    unck_func<OGLPAFP(SecondaryColor4i)> secondary_color4i;
+    unck_func<OGLPAFP(SecondaryColor3f)> secondary_color3f;
+    unck_func<OGLPAFP(SecondaryColor4f)> secondary_color4f;
 
-    func<OGLPAFP(TexCoord1i)> tex_coord1i;
-    func<OGLPAFP(TexCoord2i)> tex_coord2i;
-    func<OGLPAFP(TexCoord3i)> tex_coord3i;
-    func<OGLPAFP(TexCoord4i)> tex_coord4i;
-    func<OGLPAFP(TexCoord1f)> tex_coord1f;
-    func<OGLPAFP(TexCoord2f)> tex_coord2f;
-    func<OGLPAFP(TexCoord3f)> tex_coord3f;
-    func<OGLPAFP(TexCoord4f)> tex_coord4f;
+    unck_func<OGLPAFP(TexCoord1i)> tex_coord1i;
+    unck_func<OGLPAFP(TexCoord2i)> tex_coord2i;
+    unck_func<OGLPAFP(TexCoord3i)> tex_coord3i;
+    unck_func<OGLPAFP(TexCoord4i)> tex_coord4i;
+    unck_func<OGLPAFP(TexCoord1f)> tex_coord1f;
+    unck_func<OGLPAFP(TexCoord2f)> tex_coord2f;
+    unck_func<OGLPAFP(TexCoord3f)> tex_coord3f;
+    unck_func<OGLPAFP(TexCoord4f)> tex_coord4f;
 
-    func<OGLPAFP(MultiTexCoord1i), void(texture_unit, int_type)>
+    unck_func<OGLPAFP(MultiTexCoord1i), void(texture_unit, int_type)>
       multi_tex_coord1i;
-    func<OGLPAFP(MultiTexCoord2i), void(texture_unit, int_type, int_type)>
+    unck_func<OGLPAFP(MultiTexCoord2i), void(texture_unit, int_type, int_type)>
       multi_tex_coord2i;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord3i),
       void(texture_unit, int_type, int_type, int_type)>
       multi_tex_coord3i;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord4i),
       void(texture_unit, int_type, int_type, int_type, int_type)>
       multi_tex_coord4i;
-    func<OGLPAFP(MultiTexCoord1f), void(texture_unit, float_type)>
+    unck_func<OGLPAFP(MultiTexCoord1f), void(texture_unit, float_type)>
       multi_tex_coord1f;
-    func<OGLPAFP(MultiTexCoord2f), void(texture_unit, float_type, float_type)>
+    unck_func<
+      OGLPAFP(MultiTexCoord2f),
+      void(texture_unit, float_type, float_type)>
       multi_tex_coord2f;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord3f),
       void(texture_unit, float_type, float_type, float_type)>
       multi_tex_coord3f;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord4f),
       void(texture_unit, float_type, float_type, float_type, float_type)>
       multi_tex_coord4f;
