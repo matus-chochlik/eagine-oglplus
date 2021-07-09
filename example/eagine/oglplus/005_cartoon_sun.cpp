@@ -1,4 +1,4 @@
-/// @example oglplus/cartoon_sun.cpp
+/// @example oglplus/005_cartoon_sun.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -9,7 +9,6 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
-#include <eagine/integer_range.hpp>
 #include <eagine/main.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
@@ -23,49 +22,36 @@
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 120
-attribute vec2 Position;
-attribute vec2 Coord;
-varying vec2 vertCoord;
+#version 140
+in vec2 Position;
+out vec2 vertCoord;
 void main() {
-	vertCoord = Position.xy * 1.41 - vec2(0.6, 0.0);
 	gl_Position = vec4(Position, 0.0, 1.0);
+	vertCoord = gl_Position.xy;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 120
-varying vec2 vertCoord;
-const int nclr = 5;
-uniform vec4 clrs[5] = vec4[5](
-  vec4(0.4, 0.2, 1.0f, 0.00),
-  vec4(1.0, 0.2, 0.2f, 0.30),
-  vec4(1.0, 1.0, 1.0f, 0.95),
-  vec4(1.0, 1.0, 1.0f, 0.98),
-  vec4(0.1, 0.1, 0.1f, 1.00)
-);
+#version 140
+uniform float time;
+uniform vec2 sunPos;
+const vec3 sun1 = vec3(0.95, 0.85, 0.60);
+const vec3 sun2 = vec3(0.90, 0.80, 0.20);
+const vec3 sky1 = vec3(0.90, 0.80, 0.50);
+const vec3 sky2 = vec3(0.80, 0.60, 0.40);
+
+in vec2 vertCoord;
+out vec3 fragColor;
 void main() {
-	vec2 z = vec2(0.0, 0.0);
-	vec2 c = vertCoord;
-	int i = 0, max = 128;
-	while((i != max) && (distance(z, c) < 2.0)) {
-		vec2 zn = vec2(
-			z.x * z.x - z.y * z.y + c.x,
-			2.0 * z.x * z.y + c.y
-		);
-		z = zn;
-		++i;
-	}
-	float a = sqrt(float(i) / float(max));
-	for(i = 0; i != (nclr - 1); ++i) {
-		if(a > clrs[i].a && a <= clrs[i+1].a) {
-			float m = (a - clrs[i].a) / (clrs[i+1].a - clrs[i].a);
-			gl_FragColor = vec4(
-				mix(clrs[i].rgb, clrs[i+1].rgb, m),
-				1.0
-			);
-			break;
-		}
+	vec2 v = vertCoord - sunPos;
+	float l = length(v);
+	float a = (sin(l)+atan(v.y, v.x)) / 3.1415;
+	if(l < 0.1) {
+		fragColor = sun1;
+	} else if(int(18 * (time * 0.1 + 1.0 + a)) % 2 == 0) {
+		fragColor = mix(sun1, sun2, l);
+	} else {
+		fragColor = mix(sky1, sky2, l);
 	}
 }
 )"};
@@ -144,6 +130,26 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
+        // uniforms
+        auto update_uniforms = [&glapi, &prog]() {
+            uniform_location sun_pos_loc;
+            glapi.get_uniform_location(prog, "sunPos") >> sun_pos_loc;
+
+            uniform_location time_loc;
+            glapi.get_uniform_location(prog, "time") >> time_loc;
+
+            return [&glapi, &prog, sun_pos_loc, time_loc, time{0.F}](
+                     float a) mutable {
+                const float d = 0.5F;
+                glapi.set_uniform(prog, time_loc, time);
+                glapi.set_uniform(
+                  prog,
+                  sun_pos_loc,
+                  oglplus::vec2(-a * d * std::cos(time), d * std::sin(time)));
+                time += 0.01F;
+            };
+        }();
+
         gl.disable(GL.depth_test);
 
         while(true) {
@@ -167,6 +173,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
             gl.viewport(width, height);
 
+            update_uniforms(float(width) / float(height));
             draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);

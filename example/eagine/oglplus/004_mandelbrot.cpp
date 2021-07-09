@@ -1,4 +1,4 @@
-/// @example oglplus/006_metaballs.cpp
+/// @example oglplus/004_mandelbrot.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -11,8 +11,6 @@
 
 #include <eagine/integer_range.hpp>
 #include <eagine/main.hpp>
-#include <eagine/math/curve.hpp>
-#include <eagine/math/functions.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
@@ -22,55 +20,52 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <random>
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 140
-in vec2 Position;
-out vec3 vertPosition;
+#version 120
+attribute vec2 Position;
+attribute vec2 Coord;
+varying vec2 vertCoord;
 void main() {
-	vertPosition = vec3(Position, 0.0);
-	gl_Position = vec4(vertPosition, 1.0);
+	vertCoord = Position.xy * 1.41 - vec2(0.6, 0.0);
+	gl_Position = vec4(Position, 0.0, 1.0);
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 140
-uniform sampler1D metaballs;
-in vec3 vertPosition;
-out vec3 fragColor;
-
-const vec3 diffuseColor = vec3(0.4, 0.9, 0.5);
-const vec3 lightDir = normalize(vec3(1.0, 1.0, 2.0));
-
+#version 120
+varying vec2 vertCoord;
+const int nclr = 5;
+uniform vec4 clrs[5] = vec4[5](
+  vec4(0.4, 0.2, 1.0f, 0.00),
+  vec4(1.0, 0.2, 0.2f, 0.30),
+  vec4(1.0, 1.0, 1.0f, 0.95),
+  vec4(1.0, 1.0, 1.0f, 0.98),
+  vec4(0.1, 0.1, 0.1f, 1.00)
+);
 void main() {
-	int i = 0, n = textureSize(metaballs, 0);
-
-	float invN = 1.0 / n;
-	float value = 0.0;
-	vec3 normal = vec3(0.0, 0.0, 0.0);
-
-	while(i != n) {
-		vec4 metaball = texelFetch(metaballs, i, 0);
-		float radius = metaball.w;
-		vec3 vect = vertPosition - metaball.xyz;
-		float tmp = pow(radius, 2.0) / dot(vect, vect) - 0.25;
-		value += tmp;
-		normal += max(tmp, 0.0) *
-			vec3(vect.xy, sqrt(abs(pow(radius, 2.0) - dot(vect.xy, vect.xy))));
+	vec2 z = vec2(0.0, 0.0);
+	vec2 c = vertCoord;
+	int i = 0, max = 128;
+	while((i != max) && (distance(z, c) < 2.0)) {
+		vec2 zn = vec2(
+			z.x * z.x - z.y * z.y + c.x,
+			2.0 * z.x * z.y + c.y
+		);
+		z = zn;
 		++i;
 	}
-
-	if(value > 0.0) {
-		float ld = dot(lightDir, normalize(normal));
-		float specular = min(pow(max(ld+0.001, 0.0), 64.0), 1.0);
-		float diffuse = clamp(ld, 0.0, 1.0) * 0.7;
-		float ambient = 0.3;
-
-		fragColor = (ambient + diffuse) * diffuseColor + vec3(specular);
-	} else {
-		fragColor = vec3(0.4, 0.4, 0.4);
+	float a = sqrt(float(i) / float(max));
+	for(i = 0; i != (nclr - 1); ++i) {
+		if(a > clrs[i].a && a <= clrs[i+1].a) {
+			float m = (a - clrs[i].a) / (clrs[i+1].a - clrs[i].a);
+			gl_FragColor = vec4(
+				mix(clrs[i].rgb, clrs[i+1].rgb, m),
+				1.0
+			);
+			break;
+		}
 	}
 }
 )"};
@@ -149,64 +144,6 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
-        std::vector<math::cubic_bezier_loop<oglplus::vec4, float>> loops;
-        std::vector<oglplus::vec4> cp_data;
-        std::default_random_engine rnd_eng{std::random_device{}()};
-        for(const auto l : integer_range(12)) {
-            EAGINE_MAYBE_UNUSED(l);
-            const auto n =
-              3U + std::uniform_int_distribution<unsigned>{0U, 4U}(rnd_eng);
-            cp_data.resize(n);
-            const auto rad =
-              std::uniform_real_distribution<float>{0.1F, 0.2F}(rnd_eng);
-            for(auto p : integer_range(n)) {
-                cp_data[p] = oglplus::vec4(
-                  std::uniform_real_distribution<float>{-0.7F, 0.7F}(rnd_eng),
-                  std::uniform_real_distribution<float>{-0.7F, 0.7F}(rnd_eng),
-                  0.F,
-                  rad);
-            }
-            loops.emplace_back(view(cp_data));
-        }
-        std::vector<float> metaball_data{};
-        metaball_data.resize(loops.size() * 4U);
-
-        // metaball parameters
-        owned_texture_name metaball_tex{};
-        gl.gen_textures() >> metaball_tex;
-        auto cleanup_metaballs = gl.delete_textures.raii(metaball_tex);
-        gl.active_texture(GL.texture0);
-        gl.bind_texture(GL.texture_1d, metaball_tex);
-        gl.tex_parameter_i(GL.texture_1d, GL.texture_min_filter, GL.nearest);
-        gl.tex_parameter_i(GL.texture_1d, GL.texture_mag_filter, GL.nearest);
-
-        auto update_metaballs =
-          [&glapi, &loops, &metaball_data, t{0.F}]() mutable {
-              auto& [gl_, GL_] = glapi;
-              for(const auto i : integer_range(loops.size())) {
-                  for(const auto c : integer_range(std_size(4))) {
-                      const auto p = loops[i].position(t);
-                      metaball_data[i * 4U + c] = p[c];
-                  }
-              }
-              gl_.tex_image1d(
-                GL_.texture_1d,
-                0,
-                GL_.rgba32f,
-                limit_cast<oglplus::gl_types::uint_type>(loops.size()),
-                0,
-                GL_.rgba,
-                GL_.float_,
-                as_bytes(view(metaball_data)));
-              t += 0.001F;
-          };
-        update_metaballs();
-
-        // uniform
-        uniform_location metaballs_loc;
-        gl.get_uniform_location(prog, "metaballs") >> metaballs_loc;
-        glapi.set_uniform(prog, metaballs_loc, 0);
-
         gl.disable(GL.depth_test);
 
         while(true) {
@@ -231,7 +168,6 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
             gl.viewport(width, height);
 
             draw_using_instructions(glapi, view(_ops));
-            update_metaballs();
 
             glfwSwapBuffers(window);
         }

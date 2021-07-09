@@ -1,4 +1,4 @@
-/// @example oglplus/008_metallic_torus.cpp
+/// @example oglplus/007_metaballs.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -9,56 +9,69 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
+#include <eagine/integer_range.hpp>
 #include <eagine/main.hpp>
 #include <eagine/math/curve.hpp>
 #include <eagine/math/functions.hpp>
-#include <eagine/memory/flatten.hpp>
-#include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
-#include <eagine/oglplus/math/matrix.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
-#include <eagine/shapes/twisted_torus.hpp>
+#include <eagine/shapes/screen.hpp>
 
 #include <GLFW/glfw3.h>
 
-#include <array>
 #include <iostream>
+#include <random>
 #include <stdexcept>
-#include <vector>
 
 static const eagine::string_view vs_source{R"(
 #version 140
-in vec3 Position;
-in vec3 Normal;
-out vec3 vertNormal;
-out vec3 vertViewDir;
-uniform vec3 cameraPos;
-uniform mat4 camera;
-uniform mat4 model;
-
+in vec2 Position;
+out vec3 vertPosition;
 void main() {
-    gl_Position = model * vec4(Position, 1.0);
-    vertNormal = mat3(model) * Normal;
-	vertViewDir = gl_Position.xyz - cameraPos;
-    gl_Position = camera * vec4(gl_Position.xyz, 1.0);
+	vertPosition = vec3(Position, 0.0);
+	gl_Position = vec4(vertPosition, 1.0);
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
 #version 140
-uniform sampler1D gradient;
-in vec3 vertNormal;
-in vec3 vertViewDir;
+uniform sampler1D metaballs;
+in vec3 vertPosition;
 out vec3 fragColor;
 
+const vec3 diffuseColor = vec3(0.4, 0.9, 0.5);
+const vec3 lightDir = normalize(vec3(1.0, 1.0, 2.0));
+
 void main() {
-	vec3 viewDir = normalize(vertViewDir);
-	vec3 normal = normalize(vertNormal);
-	vec3 reflected = reflect(viewDir, normal);
-	float coord = 0.5 + 0.5*reflected.y;
-    fragColor = vec3(texture(gradient, coord));
+	int i = 0, n = textureSize(metaballs, 0);
+
+	float invN = 1.0 / n;
+	float value = 0.0;
+	vec3 normal = vec3(0.0, 0.0, 0.0);
+
+	while(i != n) {
+		vec4 metaball = texelFetch(metaballs, i, 0);
+		float radius = metaball.w;
+		vec3 vect = vertPosition - metaball.xyz;
+		float tmp = pow(radius, 2.0) / dot(vect, vect) - 0.25;
+		value += tmp;
+		normal += max(tmp, 0.0) *
+			vec3(vect.xy, sqrt(abs(pow(radius, 2.0) - dot(vect.xy, vect.xy))));
+		++i;
+	}
+
+	if(value > 0.0) {
+		float ld = dot(lightDir, normalize(normal));
+		float specular = min(pow(max(ld+0.001, 0.0), 64.0), 1.0);
+		float diffuse = clamp(ld, 0.0, 1.0) * 0.7;
+		float ambient = 0.3;
+
+		fragColor = (ambient + diffuse) * diffuseColor + vec3(specular);
+	} else {
+		fragColor = vec3(0.4, 0.4, 0.4);
+	}
 }
 )"};
 
@@ -104,14 +117,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
         // geometry
         shape_generator shape(
-          glapi,
-          shapes::unit_twisted_torus(
-            shapes::vertex_attrib_kind::position |
-              shapes::vertex_attrib_kind::normal,
-            24,
-            64,
-            8,
-            0.6F));
+          glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -137,92 +143,71 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
           buf);
         gl.bind_attrib_location(prog, position_loc, "Position");
 
-        // normals
-        vertex_attrib_location normal_loc{1};
-        owned_buffer_name normals;
-        gl.gen_buffers() >> normals;
-        auto cleanup_normals = gl.delete_buffers.raii(normals);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          normals,
-          normal_loc,
-          shapes::vertex_attrib_kind::normal,
-          buf);
-        gl.bind_attrib_location(prog, normal_loc, "Normal");
-
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
-        // gradient
-
-        owned_texture_name gradient_tex{};
-        gl.gen_textures() >> gradient_tex;
-        auto cleanup_gradients = gl.delete_textures.raii(gradient_tex);
-        gl.active_texture(GL.texture0);
-        gl.bind_texture(GL.texture_1d, gradient_tex);
-        gl.tex_parameter_i(GL.texture_1d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_1d, GL.texture_mag_filter, GL.linear);
-        {
-            std::array<oglplus::vec3, 12> grad_curve_cps{
-              {{0.0F, 0.0F, 0.0F},
-               {0.0F, 0.0F, 0.0F},
-               {0.0F, 0.0F, 0.0F},
-               {0.0F, 0.0F, 0.0F},
-               {0.0F, 0.0F, 0.0F},
-               {0.8F, 0.5F, 0.3F},
-               {0.7F, 0.7F, 0.7F},
-               {0.3F, 0.3F, 0.6F},
-               {0.2F, 0.2F, 0.4F},
-               {0.1F, 0.1F, 0.2F},
-               {0.0F, 0.0F, 0.0F},
-               {0.0F, 0.0F, 0.0F}}};
-            math::bezier_curves<oglplus::vec3, float, 2> grad_curve{
-              view(grad_curve_cps)};
-            std::vector<oglplus::vec3> grad_colors;
-            grad_curve.approximate(grad_colors, 64);
-            std::vector<float> grad_data;
-            memory::flatten(view(grad_colors), grad_data);
-            gl.tex_image1d(
-              GL.texture_1d,
-              0,
-              GL.rgb,
-              limit_cast<oglplus::gl_types::uint_type>(grad_colors.size()),
-              0,
-              GL.rgb,
-              GL.float_,
-              as_bytes(view(grad_data)));
+        std::vector<math::cubic_bezier_loop<oglplus::vec4, float>> loops;
+        std::vector<oglplus::vec4> cp_data;
+        std::default_random_engine rnd_eng{std::random_device{}()};
+        for(const auto l : integer_range(12)) {
+            EAGINE_MAYBE_UNUSED(l);
+            const auto n =
+              3U + std::uniform_int_distribution<unsigned>{0U, 4U}(rnd_eng);
+            cp_data.resize(n);
+            const auto rad =
+              std::uniform_real_distribution<float>{0.1F, 0.2F}(rnd_eng);
+            for(auto p : integer_range(n)) {
+                cp_data[p] = oglplus::vec4(
+                  std::uniform_real_distribution<float>{-0.7F, 0.7F}(rnd_eng),
+                  std::uniform_real_distribution<float>{-0.7F, 0.7F}(rnd_eng),
+                  0.F,
+                  rad);
+            }
+            loops.emplace_back(view(cp_data));
         }
+        std::vector<float> metaball_data{};
+        metaball_data.resize(loops.size() * 4U);
 
-        // uniforms
-        uniform_location gradients_loc;
-        gl.get_uniform_location(prog, "gradients") >> gradients_loc;
-        glapi.set_uniform(prog, gradients_loc, 0);
+        // metaball parameters
+        owned_texture_name metaball_tex{};
+        gl.gen_textures() >> metaball_tex;
+        auto cleanup_metaballs = gl.delete_textures.raii(metaball_tex);
+        gl.active_texture(GL.texture0);
+        gl.bind_texture(GL.texture_1d, metaball_tex);
+        gl.tex_parameter_i(GL.texture_1d, GL.texture_min_filter, GL.nearest);
+        gl.tex_parameter_i(GL.texture_1d, GL.texture_mag_filter, GL.nearest);
 
-        uniform_location camera_pos_loc;
-        gl.get_uniform_location(prog, "cameraPos") >> camera_pos_loc;
+        auto update_metaballs =
+          [&glapi, &loops, &metaball_data, t{0.F}]() mutable {
+              auto& [gl_, GL_] = glapi;
+              for(const auto i : integer_range(loops.size())) {
+                  for(const auto c : integer_range(std_size(4))) {
+                      const auto p = loops[i].position(t);
+                      metaball_data[i * 4U + c] = p[c];
+                  }
+              }
+              gl_.tex_image1d(
+                GL_.texture_1d,
+                0,
+                GL_.rgba32f,
+                limit_cast<oglplus::gl_types::uint_type>(loops.size()),
+                0,
+                GL_.rgba,
+                GL_.float_,
+                as_bytes(view(metaball_data)));
+              t += 0.001F;
+          };
+        update_metaballs();
 
-        uniform_location camera_loc;
-        gl.get_uniform_location(prog, "camera") >> camera_loc;
+        // uniform
+        uniform_location metaballs_loc;
+        gl.get_uniform_location(prog, "metaballs") >> metaballs_loc;
+        glapi.set_uniform(prog, metaballs_loc, 0);
 
-        uniform_location model_loc;
-        gl.get_uniform_location(prog, "model") >> model_loc;
-
-        orbiting_camera camera;
-        camera.set_near(0.1F)
-          .set_far(50.F)
-          .set_fov(degrees_(70))
-          .set_orbit_min(1.F)
-          .set_orbit_max(2.F);
-
-        gl.clear_color(0.05F, 0.05F, 0.05F, 1.0F);
-        gl.clear_depth(1);
-        gl.enable(GL.depth_test);
-
-        float t = 0.F;
+        gl.disable(GL.depth_test);
 
         while(true) {
             glfwPollEvents();
@@ -245,18 +230,8 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
             gl.viewport(width, height);
 
-            gl.clear(GL.color_buffer_bit | GL.depth_buffer_bit);
-
-            t += 0.01F;
-            const auto aspect = float(width) / float(height);
-            camera.set_azimuth(radians_(t))
-              .set_elevation(radians_(std::sin(t)))
-              .set_orbit_factor(math::sine_wave01(t * 0.1F));
-            glapi.set_uniform(prog, camera_pos_loc, camera.position());
-            glapi.set_uniform(prog, camera_loc, camera.matrix(aspect));
-            glapi.set_uniform(
-              prog, model_loc, oglplus::matrix_rotation_x(right_angles_(t))());
             draw_using_instructions(glapi, view(_ops));
+            update_metaballs();
 
             glfwSwapBuffers(window);
         }
@@ -276,7 +251,7 @@ static void init_and_run(eagine::main_ctx& ctx) {
         glfwWindowHint(GLFW_BLUE_BITS, 8);
         glfwWindowHint(GLFW_GREEN_BITS, 8);
         glfwWindowHint(GLFW_ALPHA_BITS, 0);
-        glfwWindowHint(GLFW_DEPTH_BITS, 24);
+        glfwWindowHint(GLFW_DEPTH_BITS, 0);
         glfwWindowHint(GLFW_STENCIL_BITS, 0);
 
         glfwWindowHint(GLFW_SAMPLES, GLFW_DONT_CARE);
