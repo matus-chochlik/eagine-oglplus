@@ -440,6 +440,26 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_program_pipeline_i("get_program_pipeline_i", traits, *this)
   , get_program_pipeline_info_log("get_program_pipeline_info_log", traits, *this)
   , active_shader_program("active_shader_program", traits, *this)
+  , path_color_gen_nv("path_color_gen_nv", traits, *this)
+  , path_glyph_range_nv("path_glyph_range_nv", traits, *this)
+  , get_path_spacing_nv("get_path_spacing_nv", traits, *this)
+  , stencil_fill_path_nv("stencil_fill_path_nv", traits, *this)
+  , stencil_stroke_path_nv("stencil_stroke_path_nv", traits, *this)
+  , stencil_fill_path_instanced_nv(
+      "stencil_fill_path_instanced_nv",
+      traits,
+      *this)
+  , stencil_stroke_path_instanced_nv(
+      "stencil_stroke_path_instanced_nv",
+      traits,
+      *this)
+  , cover_fill_path_nv("cover_fill_path_nv", traits, *this)
+  , cover_stroke_path_nv("cover_stroke_path_nv", traits, *this)
+  , cover_fill_path_instanced_nv("cover_fill_path_instanced_nv", traits, *this)
+  , cover_stroke_path_instanced_nv(
+      "cover_stroke_path_instanced_nv",
+      traits,
+      *this)
   , primitive_restart_index("primitive_restart_index", traits, *this)
   , provoking_vertex("provoking_vertex", traits, *this)
   , point_size("point_size", traits, *this)

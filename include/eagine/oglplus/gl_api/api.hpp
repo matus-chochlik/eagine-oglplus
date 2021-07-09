@@ -384,8 +384,8 @@ public:
     struct : func<OGLPAFP(GenPathsNV)> {
         using func<OGLPAFP(GenPathsNV)>::func;
 
-        constexpr auto operator()() const noexcept {
-            return this->_chkcall(1).cast_to(
+        constexpr auto operator()(sizei_type count = 1) const noexcept {
+            return this->_chkcall(count).cast_to(
               type_identity<owned_path_nv_name>{});
         }
     } create_paths_nv;
@@ -521,18 +521,21 @@ public:
     struct : func<OGLPAFP(DeletePathsNV)> {
         using func<OGLPAFP(DeletePathsNV)>::func;
 
-        auto bind(owned_path_nv_name& name) const noexcept {
-            return [this, &name] {
-                (*this)(std::move(name));
+        auto
+        bind(owned_path_nv_name& name, sizei_type count = 1) const noexcept {
+            return [this, &name, count] {
+                (*this)(std::move(name), count);
             };
         }
 
-        constexpr auto operator()(owned_path_nv_name name) const noexcept {
-            return this->_chkcall(name.release(), 1);
+        constexpr auto operator()(owned_path_nv_name name, sizei_type count = 1)
+          const noexcept {
+            return this->_chkcall(name.release(), count);
         }
 
-        auto raii(owned_path_nv_name& name) const noexcept {
-            return eagine::finally(bind(name));
+        auto
+        raii(owned_path_nv_name& name, sizei_type count = 1) const noexcept {
+            return eagine::finally(bind(name, count));
         }
     } delete_paths_nv;
 
@@ -3363,6 +3366,214 @@ public:
 
     func<OGLPAFP(ActiveShaderProgram), void(program_pipeline_name, program_name)>
       active_shader_program;
+
+    // path NV ops
+    struct : func<OGLPAFP(PathColorGenNV)> {
+        using func<OGLPAFP(PathColorGenNV)>::func;
+
+        constexpr auto operator()(
+          path_color_nv clr,
+          path_gen_mode_nv mode,
+          path_color_format_nv fmt,
+          span<const float_type> coords) {
+            return this->_cnvchkcall(clr, mode, fmt, coords.data());
+        }
+    } path_color_gen_nv;
+
+    struct : func<OGLPAFP(PathGlyphRangeNV)> {
+        using func<OGLPAFP(PathGlyphRangeNV)>::func;
+
+        constexpr auto operator()(
+          path_nv_name pth,
+          path_font_target_nv tgt,
+          string_view font_name,
+          path_font_style_nv style,
+          uint_type first,
+          sizei_type count,
+          path_missing_glyph_nv missing,
+          uint_type param_tpl,
+          float_type em_scale) {
+            return this->_cnvchkcall(
+              pth,
+              tgt,
+              static_cast<const char*>(c_str(font_name)),
+              style,
+              first,
+              count,
+              missing,
+              param_tpl,
+              em_scale);
+        }
+    } path_glyph_range_nv;
+
+    struct : func<OGLPAFP(GetPathSpacingNV)> {
+        using func<OGLPAFP(GetPathSpacingNV)>::func;
+
+        constexpr auto operator()(
+          path_list_mode_nv mode,
+          string_view glyphs,
+          path_nv_name pth,
+          float_type advance_scale,
+          float_type kerning_scale,
+          path_transform_type_nv transf,
+          span<float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              mode,
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              advance_scale,
+              kerning_scale,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(advance_scale);
+            EAGINE_MAYBE_UNUSED(kerning_scale);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } get_path_spacing_nv;
+
+    func<
+      OGLPAFP(StencilFillPathNV),
+      void(path_nv_name, path_fill_mode_nv, uint_type)>
+      stencil_fill_path_nv;
+
+    func<OGLPAFP(StencilStrokePathNV), void(path_nv_name, int_type, uint_type)>
+      stencil_stroke_path_nv;
+
+    struct : func<OGLPAFP(StencilFillPathInstancedNV)> {
+        using func<OGLPAFP(StencilFillPathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          path_fill_mode_nv mode,
+          uint_type mask,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              mode,
+              mask,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(mask);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } stencil_fill_path_instanced_nv;
+
+    struct : func<OGLPAFP(StencilStrokePathInstancedNV)> {
+        using func<OGLPAFP(StencilStrokePathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          int_type reference,
+          uint_type mask,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              reference,
+              mask,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(reference);
+            EAGINE_MAYBE_UNUSED(mask);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } stencil_stroke_path_instanced_nv;
+
+    func<OGLPAFP(CoverFillPathNV), void(path_nv_name, path_fill_cover_mode_nv)>
+      cover_fill_path_nv;
+
+    func<
+      OGLPAFP(CoverStrokePathNV),
+      void(path_nv_name, path_stroke_cover_mode_nv)>
+      cover_stroke_path_nv;
+
+    struct : func<OGLPAFP(CoverFillPathInstancedNV)> {
+        using func<OGLPAFP(CoverFillPathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          path_fill_cover_mode_nv mode,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              mode,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } cover_fill_path_instanced_nv;
+
+    struct : func<OGLPAFP(CoverStrokePathInstancedNV)> {
+        using func<OGLPAFP(CoverStrokePathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          path_stroke_cover_mode_nv mode,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              mode,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } cover_stroke_path_instanced_nv;
 
     // draw parameters
     func<OGLPAFP(PrimitiveRestartIndex)> primitive_restart_index;
