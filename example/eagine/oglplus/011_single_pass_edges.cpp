@@ -62,33 +62,33 @@ void main() {
 	geomNormal = normalize(vertNormal[0] + vertNormal[1] + vertNormal[2]);
 	geomColor = normalize(abs(vec3(1.0) - geomNormal ));
 
-	vec2 ScreenPos[3];
+	vec2 screenPos[3];
 	for(int i = 0; i != 3; ++i) {
-		ScreenPos[i] = viewportDimensions *
+		screenPos[i] = viewportDimensions *
 			gl_in[i].gl_Position.xy / gl_in[i].gl_Position.w;
 	}
 
-	vec2 TmpVect[3];
+	vec2 tmpVect[3];
 	for(int i = 0; i != 3; ++i) {
-		TmpVect[i] = ScreenPos[(i + 2) % 3] - ScreenPos[(i + 1) % 3];
+		tmpVect[i] = screenPos[(i + 2) % 3] - screenPos[(i + 1) % 3];
 	}
 
-	const vec3 EdgeMask[3] = vec3[3](
+	const vec3 edgeMask[3] = vec3[3](
 		vec3(1.0, 0.0, 0.0),
 		vec3(0.0, 1.0, 0.0),
 		vec3(0.0, 0.0, 1.0)
 	);
 
 	for(int i = 0; i != 3; ++i) {
-		float Dist = abs(
-			TmpVect[(i + 1) % 3].x * TmpVect[(i + 2) % 3].y-
-			TmpVect[(i + 1) % 3].y * TmpVect[(i + 2) % 3].x
-		) / length(TmpVect[i]);
-		vec3 DistVect = vec3(Dist);
+		float dist = abs(
+			tmpVect[(i + 1) % 3].x * tmpVect[(i + 2) % 3].y-
+			tmpVect[(i + 1) % 3].y * tmpVect[(i + 2) % 3].x
+		) / length(tmpVect[i]);
+		vec3 distVect = vec3(dist);
 
 		gl_Position = gl_in[i].gl_Position;
 		geomLightDir = vertLightDir[i];
-		geomDist = EdgeMask[i] * DistVect;
+		geomDist = edgeMask[i] * distVect;
 		EmitVertex();
 	}
 	EndPrimitive();
