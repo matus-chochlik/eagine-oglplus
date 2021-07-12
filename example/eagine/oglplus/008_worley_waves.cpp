@@ -1,4 +1,4 @@
-/// @example oglplus/008_round_cube.cpp
+/// @example oglplus/004_mandelbrot.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -9,14 +9,14 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
+#include <eagine/integer_range.hpp>
 #include <eagine/main.hpp>
-#include <eagine/math/functions.hpp>
-#include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
-#include <eagine/shapes/round_cube.hpp>
+#include <eagine/random_bytes.hpp>
+#include <eagine/shapes/screen.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -25,24 +25,76 @@
 
 static const eagine::string_view vs_source{R"(
 #version 140
-in vec3 Position;
-in vec3 Normal;
-out vec3 vertColor;
-uniform mat4 Camera;
+
+vec2 scale = vec2(10.0);
+
+in vec4 Position;
+
+out vec2 vertTexCoord;
 
 void main() {
-    gl_Position = Camera * vec4(Position, 1.0);
-    vertColor = normalize(vec3(1.0) + Normal);
+    gl_Position = Position;
+    vertTexCoord = scale * Position.xy;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
 #version 140
-in vec3 vertColor;
+
+uniform sampler2D noise;
+uniform float time;
+
+in vec2 vertTexCoord;
+
 out vec3 fragColor;
 
+const vec2 offs[9] = vec2[9](
+  vec2(-1, -1),
+  vec2(-1, 0),
+  vec2(-1, 1),
+  vec2(0, -1),
+  vec2(0, 0),
+  vec2(0, 1),
+  vec2(1, -1),
+  vec2(1, 0),
+  vec2(1, 1));
+
+vec2 point(vec2 tc, vec2 ofs) {
+    vec2 cc = floor(tc + ofs);
+	float phase0 = texture(noise, cc / textureSize(noise, 0)).x * 2.0 * 3.14159;
+	float phase1 = sin((2.0 * cc.x + cc.y) + time) + 1.618 * time;
+    return cc + vec2(cos(phase0 + phase1), sin(phase0 + phase1)) * 0.5 + vec2(0.5);
+}
+
+float dist(vec2 tc, vec2 ofs) {
+    vec2 cp = point(tc, ofs);
+    return distance(tc, cp);
+}
+
+vec3 worley(vec2 tc) {
+	float ds[9];
+    for(int c = 0; c < 9; ++c) {
+		ds[c] = dist(tc, offs[c]);
+    }
+	float md = ds[0];
+	int mc = 0;
+    for(int c = 1; c < 9; ++c) {
+		if(md > ds[c]) {
+			md = ds[c];
+			mc = c;
+		}
+    }
+	float nd = 4;
+    for(int c = 0; c < 9; ++c) {
+		if(c != mc) {
+			nd = min(nd, ds[c]);
+		}
+    }
+    return vec3(pow(nd-md, 0.618));
+}
+
 void main() {
-    fragColor = mix(vertColor, vec3(1), 0.5);
+    fragColor = worley(vertTexCoord);
 }
 )"};
 
@@ -53,6 +105,8 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
     gl_api glapi;
     auto& [gl, GL] = glapi;
+
+    float time = 0.F;
 
     if(gl.clear) {
         gl_debug_logger gdl{ctx};
@@ -88,10 +142,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
         // geometry
         shape_generator shape(
-          glapi,
-          shapes::unit_round_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal));
+          glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -117,39 +168,48 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
           buf);
         gl.bind_attrib_location(prog, position_loc, "Position");
 
-        // normals
-        vertex_attrib_location normal_loc{1};
-        owned_buffer_name normals;
-        gl.gen_buffers() >> normals;
-        auto cleanup_normals = gl.delete_buffers.raii(normals);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          normals,
-          normal_loc,
-          shapes::vertex_attrib_kind::normal,
-          buf);
-        gl.bind_attrib_location(prog, normal_loc, "Normal");
-
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
+        // noise texture
+        owned_texture_name noise_tex{};
+        gl.gen_textures() >> noise_tex;
+        auto cleanup_gradients = gl.delete_textures.raii(noise_tex);
+        gl.active_texture(GL.texture0);
+        gl.bind_texture(GL.texture_2d, noise_tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.repeat);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.repeat);
+        {
+            auto random_data =
+              GL.unsigned_byte_.array(size_constant<256 * 256>{});
+            fill_with_random_bytes(cover(random_data));
+            gl.tex_image2d(
+              GL.texture_2d,
+              0,
+              GL.red,
+              256,
+              256,
+              0,
+              GL.red,
+              GL.unsigned_byte_,
+              as_bytes(view(random_data)));
+        }
+
         // uniform
-        uniform_location camera_loc;
-        gl.get_uniform_location(prog, "Camera") >> camera_loc;
+        uniform_location time_loc;
+        gl.get_uniform_location(prog, "time") >> time_loc;
+        glapi.set_uniform(prog, time_loc, 0);
 
-        orbiting_camera camera;
-        camera.set_near(0.1F).set_far(50.F).set_fov(right_angle_());
+        uniform_location noise_loc;
+        gl.get_uniform_location(prog, "noise") >> noise_loc;
+        glapi.set_uniform(prog, noise_loc, 0);
 
-        gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
-        gl.clear_depth(1);
-        gl.enable(GL.depth_test);
-        gl.polygon_mode(GL.front_and_back, GL.line);
-
-        float t = 0.F;
+        gl.disable(GL.depth_test);
 
         while(true) {
             glfwPollEvents();
@@ -172,20 +232,11 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
             gl.viewport(width, height);
 
-            gl.clear(GL.color_buffer_bit | GL.depth_buffer_bit);
-
-            t += 0.02F;
-            const auto aspect = float(width) / float(height);
-            glapi.set_uniform(
-              prog,
-              camera_loc,
-              camera.set_azimuth(radians_(t))
-                .set_elevation(radians_(std::sin(t)))
-                .set_orbit_factor(math::sine_wave01(t * 0.1F))
-                .matrix(aspect));
+            glapi.set_uniform(prog, time_loc, time);
             draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);
+            time += 0.01F;
         }
     } else {
         std::cout << "missing required API" << std::endl;
@@ -203,7 +254,7 @@ static void init_and_run(eagine::main_ctx& ctx) {
         glfwWindowHint(GLFW_BLUE_BITS, 8);
         glfwWindowHint(GLFW_GREEN_BITS, 8);
         glfwWindowHint(GLFW_ALPHA_BITS, 0);
-        glfwWindowHint(GLFW_DEPTH_BITS, 24);
+        glfwWindowHint(GLFW_DEPTH_BITS, 0);
         glfwWindowHint(GLFW_STENCIL_BITS, 0);
 
         glfwWindowHint(GLFW_SAMPLES, GLFW_DONT_CARE);

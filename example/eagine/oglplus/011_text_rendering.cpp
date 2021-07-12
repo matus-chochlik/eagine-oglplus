@@ -1,4 +1,4 @@
-/// @example oglplus/010_text_rendering.cpp
+/// @example oglplus/011_text_rendering.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.

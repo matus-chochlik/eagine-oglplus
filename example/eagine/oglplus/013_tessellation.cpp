@@ -1,4 +1,4 @@
-/// @example oglplus/011_single_pass_edges.cpp
+/// @example oglplus/013_tessellation.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -18,6 +18,7 @@
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
 #include <eagine/shapes/icosahedron.hpp>
+#include <eagine/shapes/to_patches.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -25,33 +26,87 @@
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 150
+#version 400
 
-const vec3 lightPosition = vec3(10.0, 10.0, 7.0);
-
-uniform mat4 perspectiveMatrix, cameraMatrix, modelMatrix;
+uniform vec3 viewPosition;
 
 in vec3 Position;
 
-out vec3 vertNormal;
-out vec3 vertLightDir;
+out vec3 vertPosition;
+out float vertDistance;
 
 void main() {
-	gl_Position = modelMatrix * vec4(Position, 1.0);
-	vertNormal = mat3(modelMatrix) * Position;
-	vertLightDir = lightPosition - gl_Position.xyz;
-	gl_Position = perspectiveMatrix * cameraMatrix * gl_Position;
+	vertPosition = Position;
+	vertDistance = length(viewPosition - vertPosition);
+}
+)"};
+
+static const eagine::string_view cs_source{R"(
+#version 400
+
+layout(vertices = 3) out;
+
+in vec3 vertPosition[];
+in float vertDistance[];
+
+out vec3 tecoPosition[];
+
+int tessLevel(float dist) {
+	return int(9.0 / sqrt(dist+0.1));
+}
+
+void main() {
+	tecoPosition[gl_InvocationID] = vertPosition[gl_InvocationID];
+
+	if(gl_InvocationID == 0) {
+		gl_TessLevelInner[0] = tessLevel(
+			(vertDistance[0] + vertDistance[1] + vertDistance[2]) * 0.333);
+		gl_TessLevelOuter[0] = tessLevel(
+			(vertDistance[1] + vertDistance[2]) * 0.5);
+		gl_TessLevelOuter[1] = tessLevel(
+			(vertDistance[2] + vertDistance[0]) * 0.5);
+		gl_TessLevelOuter[2] = tessLevel(
+			(vertDistance[0] + vertDistance[1]) * 0.5);
+        }
+}
+)"};
+
+static const eagine::string_view es_source{R"(
+#version 400
+
+layout(triangles, equal_spacing, ccw) in;
+
+const vec3 lightPosition = vec3(12.0, 10.0, 7.0);
+
+uniform mat4 perspectiveMatrix, cameraMatrix, modelMatrix;
+
+in vec3 tecoPosition[];
+
+out vec3 teevNormal;
+out vec3 teevLightDir;
+
+void main() {
+	vec3 p0 = gl_TessCoord.x * tecoPosition[0];
+   	vec3 p1 = gl_TessCoord.y * tecoPosition[1];
+   	vec3 p2 = gl_TessCoord.z * tecoPosition[2];
+
+   	vec4 tempPosition = vec4(normalize(p0+p1+p2), 0.0);
+   	teevNormal = mat3(modelMatrix) * tempPosition.xyz;
+   	tempPosition.w = 1.0;
+   	tempPosition = modelMatrix * tempPosition;
+   	teevLightDir = lightPosition - tempPosition.xyz;
+   	gl_Position = perspectiveMatrix * cameraMatrix * tempPosition;
 }
 )"};
 
 static const eagine::string_view gs_source{R"(
-#version 150
+#version 400
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
 uniform vec2 viewportDimensions;
 
-in vec3 vertNormal[], vertLightDir[];
+in vec3 teevNormal[], teevLightDir[];
 
 noperspective out vec3 geomDist;
 flat out vec3 geomNormal;
@@ -59,7 +114,7 @@ flat out vec3 geomColor;
 out vec3 geomLightDir;
 
 void main() {
-	geomNormal = normalize(vertNormal[0] + vertNormal[1] + vertNormal[2]);
+	geomNormal = normalize(teevNormal[0] + teevNormal[1] + teevNormal[2]);
 	geomColor = normalize(abs(vec3(1.0) - geomNormal ));
 
 	vec2 screenPos[3];
@@ -87,7 +142,7 @@ void main() {
 		vec3 distVect = vec3(dist);
 
 		gl_Position = gl_in[i].gl_Position;
-		geomLightDir = vertLightDir[i];
+		geomLightDir = teevLightDir[i];
 		geomDist = edgeMask[i] * distVect;
 		EmitVertex();
 	}
@@ -96,9 +151,9 @@ void main() {
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 150
+#version 400
 
-const float edgeWidth = 3.0;
+const float edgeWidth = 2.0;
 
 noperspective in vec3 geomDist;
 flat in vec3 geomNormal;
@@ -147,6 +202,20 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
+        // tess control shader
+        owned_shader_name cs;
+        gl.create_shader(GL.tess_control_shader) >> cs;
+        auto cleanup_cs = gl.delete_shader.raii(cs);
+        gl.shader_source(cs, glsl_string_ref(cs_source));
+        gl.compile_shader(cs);
+
+        // tess evaluation shader
+        owned_shader_name es;
+        gl.create_shader(GL.tess_evaluation_shader) >> es;
+        auto cleanup_es = gl.delete_shader.raii(es);
+        gl.shader_source(es, glsl_string_ref(es_source));
+        gl.compile_shader(es);
+
         // geometry shader
         owned_shader_name gs;
         gl.create_shader(GL.geometry_shader) >> gs;
@@ -166,6 +235,8 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.create_program() >> prog;
         auto cleanup_prog = gl.delete_program.raii(prog);
         gl.attach_shader(prog, vs);
+        gl.attach_shader(prog, cs);
+        gl.attach_shader(prog, es);
         gl.attach_shader(prog, gs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
@@ -174,7 +245,8 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         // geometry
         shape_generator shape(
           glapi,
-          shapes::unit_icosahedron(shapes::vertex_attrib_kind::position));
+          shapes::to_patches(
+            shapes::unit_icosahedron(shapes::vertex_attrib_kind::position)));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -206,7 +278,10 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
-        // uniform
+        // uniforms
+        uniform_location view_position_loc;
+        gl.get_uniform_location(prog, "viewPosition") >> view_position_loc;
+
         uniform_location viewport_dimensions_loc;
         gl.get_uniform_location(prog, "viewportDimensions") >>
           viewport_dimensions_loc;
@@ -224,9 +299,9 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         orbiting_camera camera;
         camera.set_near(0.1F)
           .set_far(50.F)
-          .set_fov(right_angle_())
-          .set_orbit_min(2.F)
-          .set_orbit_max(3.F);
+          .set_fov(degrees_(65))
+          .set_orbit_min(1.5F)
+          .set_orbit_max(12.0F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
@@ -264,6 +339,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
             glapi.set_uniform(
               prog, viewport_dimensions_loc, oglplus::vec2(width, height));
+            glapi.set_uniform(prog, view_position_loc, camera.position());
             glapi.set_uniform(
               prog, perspective_matrix_loc, camera.perspective_matrix(aspect));
             glapi.set_uniform(
@@ -276,7 +352,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
             draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);
-            t += 0.02F;
+            t += 0.01F;
         }
     } else {
         std::cout << "missing required API" << std::endl;
