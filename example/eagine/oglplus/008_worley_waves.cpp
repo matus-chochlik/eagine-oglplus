@@ -26,7 +26,7 @@
 static const eagine::string_view vs_source{R"(
 #version 140
 
-vec2 scale = vec2(10.0);
+uniform vec2 viewSize;
 
 in vec4 Position;
 
@@ -34,7 +34,7 @@ out vec2 vertTexCoord;
 
 void main() {
     gl_Position = Position;
-    vertTexCoord = scale * Position.xy;
+    vertTexCoord = min(viewSize * 0.01, vec2(25.0)) * Position.xy;
 }
 )"};
 
@@ -61,8 +61,9 @@ const vec2 offs[9] = vec2[9](
 
 vec2 point(vec2 tc, vec2 ofs) {
     vec2 cc = floor(tc + ofs);
-	float phase0 = texture(noise, cc / textureSize(noise, 0)).x * 2.0 * 3.14159;
-	float phase1 = sin((2.0 * cc.x + cc.y) + time) + 1.618 * time;
+	vec2 pa = texture(noise, cc / textureSize(noise, 0)).xy;
+	float phase0 = pa.x * 2.0 * 3.14159;
+	float phase1 = sin((2.0 * cc.x + cc.y) + time) + 1.618 * time * sign(pa.y - 0.5);
     return cc + vec2(cos(phase0 + phase1), sin(phase0 + phase1)) * 0.5 + vec2(0.5);
 }
 
@@ -186,16 +187,16 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.repeat);
         {
             auto random_data =
-              GL.unsigned_byte_.array(size_constant<256 * 256>{});
+              GL.unsigned_byte_.array(size_constant<256 * 256 * 2>{});
             fill_with_random_bytes(cover(random_data));
             gl.tex_image2d(
               GL.texture_2d,
               0,
-              GL.red,
+              GL.rg,
               256,
               256,
               0,
-              GL.red,
+              GL.rg,
               GL.unsigned_byte_,
               as_bytes(view(random_data)));
         }
@@ -204,6 +205,10 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         uniform_location time_loc;
         gl.get_uniform_location(prog, "time") >> time_loc;
         glapi.set_uniform(prog, time_loc, 0);
+
+        uniform_location view_size_loc;
+        gl.get_uniform_location(prog, "viewSize") >> view_size_loc;
+        glapi.set_uniform(prog, view_size_loc, 0);
 
         uniform_location noise_loc;
         gl.get_uniform_location(prog, "noise") >> noise_loc;
@@ -232,6 +237,8 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
             gl.viewport(width, height);
 
+            glapi.set_uniform(
+              prog, view_size_loc, oglplus::vec2(width, height));
             glapi.set_uniform(prog, time_loc, time);
             draw_using_instructions(glapi, view(_ops));
 
