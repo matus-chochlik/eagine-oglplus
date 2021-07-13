@@ -10,6 +10,7 @@
 
 #include "config.hpp"
 #include <eagine/identifier.hpp>
+#include <array>
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
@@ -168,6 +169,63 @@ using uniform_block_index = prog_var_location<EAGINE_ID_V(UniformBlk)>;
 /// @see frag_data_location
 /// @see uniform_block_index
 using shader_storage_block_index = prog_var_location<EAGINE_ID_V(ShdrStrBlk)>;
+//------------------------------------------------------------------------------
+template <std::size_t N = 1U>
+struct subroutine_bindings;
+
+template <>
+struct subroutine_bindings<1U> {
+    constexpr subroutine_bindings(
+      subroutine_uniform_location su,
+      subroutine_location s) noexcept
+      : _bindings{{{su, s}}} {}
+
+    std::array<std::tuple<subroutine_uniform_location, subroutine_location>, 1U>
+      _bindings;
+};
+
+template <std::size_t N>
+struct subroutine_bindings {
+public:
+    constexpr subroutine_bindings(
+      const subroutine_bindings<N - 1U>& head,
+      subroutine_uniform_location su,
+      subroutine_location s) noexcept
+      : _bindings{concat(std::make_index_sequence<N - 1U>{}, head, {su, s})} {}
+
+    constexpr subroutine_bindings(
+      const subroutine_bindings<N - 1U>& head,
+      const subroutine_bindings<1U>& tail) noexcept
+      : _bindings{
+          concat(std::make_index_sequence<N - 1U>{}, head, tail._bindings)} {}
+
+private:
+    template <std::size_t... I>
+    static constexpr auto _concat(
+      std::index_sequence<I...>,
+      const subroutine_bindings<N - 1U>& head,
+      std::tuple<subroutine_uniform_location, subroutine_location> tail) noexcept
+      -> std::
+        array<std::tuple<subroutine_uniform_location, subroutine_location>, N> {
+        return {{head[I]..., tail}};
+    }
+
+    std::array<std::tuple<subroutine_uniform_location, subroutine_location>, N>
+      _bindings;
+};
+
+static inline auto
+operator/(subroutine_uniform_location su, subroutine_location s) noexcept
+  -> subroutine_bindings<> {
+    return {su, s};
+}
+
+template <std::size_t N>
+static inline auto operator+(
+  const subroutine_bindings<N>& head,
+  const subroutine_bindings<1U>& tail) noexcept -> subroutine_bindings<N + 1U> {
+    return {head, tail};
+}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

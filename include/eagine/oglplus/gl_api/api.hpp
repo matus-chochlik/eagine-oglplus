@@ -1009,6 +1009,29 @@ public:
         }
     } get_active_subroutine_name;
 
+    struct : func<OGLPAFP(UniformSubroutinesuiv)> {
+        using func<OGLPAFP(UniformSubroutinesuiv)>::func;
+
+        constexpr auto operator()(
+          shader_type shdr_type,
+          subroutine_location subr) const noexcept {
+            const uint_type idx{subr.index()};
+            return this->_cnvchkcall(shdr_type, 1, &idx);
+        }
+
+        template <std::size_t N>
+        constexpr auto operator()(
+          shader_type shdr_type,
+          const subroutine_bindings<N>& subrs) const noexcept {
+            std::array<uint_type, N> idcs{};
+            for(const auto [su, s] : subrs._bindings) {
+                idcs[su.index()] = s.index();
+            }
+            return this->_cnvchkcall(
+              shdr_type, limit_cast<sizei_type>(idcs.size()), idcs.data());
+        }
+    } uniform_subroutines;
+
     // uniform
     // uint
     func<OGLPAFP(Uniform1ui), void(uniform_location, uint_type)> uniform1ui;
