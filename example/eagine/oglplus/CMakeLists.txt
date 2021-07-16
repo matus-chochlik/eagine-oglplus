@@ -18,3 +18,12 @@ eagine_example_common(011_text_rendering)
 eagine_example_common(012_single_pass_edges)
 eagine_example_common(013_subroutines)
 eagine_example_common(014_tessellation)
+eagine_example_common(015_wooden_crate)
+
+eagine_embed_target_resources(
+	TARGET oglplus-015_wooden_crate
+	INPUT_TARGETS
+	wooden_crate-diff
+	wooden_crate-hmap
+	wooden_crate-nmap
+)
