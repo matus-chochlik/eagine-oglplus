@@ -141,7 +141,7 @@ void write_output(
 
     shdr_src_hdr.shader_type = opts.shader_type.value();
     shdr_src_hdr.source_text = bakery.copy_array(
-      memory::accomodate<const GLchar>(memory::const_block(source_text)));
+      memory::accommodate<const GLchar>(memory::const_block(source_text)));
 
     write_to_stream(output, bakery.baked_data());
 }

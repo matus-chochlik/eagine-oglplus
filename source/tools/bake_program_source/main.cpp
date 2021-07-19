@@ -200,7 +200,7 @@ void write_output(std::ostream& output, const options& opts) {
 
         shdr_src_hdr.shader_type = shader_types[i];
         shdr_src_hdr.source_text = bakery.copy_array(
-          memory::accomodate<const GLchar>(source_texts[i].block()));
+          memory::accommodate<const GLchar>(source_texts[i].block()));
 
         ssh_ptrs[i] = &shdr_src_hdr;
     }

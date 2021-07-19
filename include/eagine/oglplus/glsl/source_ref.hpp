@@ -39,7 +39,7 @@ public:
     /// @brief Construction from a string_view.
     constexpr glsl_source_ref(string_view source_str) noexcept
       : glsl_source_ref(
-          memory::accomodate<const char_type>(source_str).data(),
+          memory::accommodate<const char_type>(source_str).data(),
           eagine::limit_cast<int_type>(source_str.size())) {}
 
     /// @brief Construction from C-string array and lengths array.
