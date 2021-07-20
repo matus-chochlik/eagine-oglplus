@@ -6,6 +6,24 @@
 
 eagine_example_common(001_info)
 eagine_example_common(002_clear)
-eagine_example_common(005_writing)
-eagine_example_common(006_metaballs)
-eagine_example_common(007_round_cube)
+eagine_example_common(003_spectrum)
+eagine_example_common(004_mandelbrot)
+eagine_example_common(005_cartoon_sun)
+eagine_example_common(006_writing)
+eagine_example_common(007_metaballs)
+eagine_example_common(008_worley_waves)
+eagine_example_common(009_round_cube)
+eagine_example_common(010_metallic_torus)
+eagine_example_common(011_text_rendering)
+eagine_example_common(012_single_pass_edges)
+eagine_example_common(013_subroutines)
+eagine_example_common(014_tessellation)
+eagine_example_common(015_wooden_crate)
+
+eagine_embed_target_resources(
+	TARGET oglplus-015_wooden_crate
+	INPUT_TARGETS
+	wooden_crate-diff
+	wooden_crate-hmap
+	wooden_crate-nmap
+)

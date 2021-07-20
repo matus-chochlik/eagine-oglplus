@@ -18,10 +18,12 @@ list(APPEND CMAKE_MODULE_PATH ${EAGINE_CORE_ROOT}/config)
 add_subdirectory(submodules)
 
 include(EAGineCoreCommon)
+include(OGLplusBaking)
 find_package(EAGinePNG)
 find_package(EAGineGLEW)
 find_package(EAGineGLFW3)
 
 add_subdirectory(include)
 add_subdirectory(source)
+add_subdirectory(assets)
 add_subdirectory(example)

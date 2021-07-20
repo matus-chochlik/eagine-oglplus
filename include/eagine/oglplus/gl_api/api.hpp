@@ -178,11 +178,18 @@ public:
       : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
         using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
 
-    private:
-        template <typename Res>
-        constexpr auto _check(Res&& res) const noexcept {
-            res.error_code(this->api().GetError());
-            return std::forward<Res>(res);
+    public:
+        using base::base;
+
+        constexpr auto operator()(Params... params) const noexcept {
+            return this->_chkcall(_conv(params)...)
+              .cast_to(type_identity<RVC>{});
+        }
+
+        auto bind(Params... params) const noexcept {
+            return [=] {
+                return (*this)(params...);
+            };
         }
 
     protected:
@@ -209,18 +216,52 @@ public:
               .cast_to(type_identity<RVC>{});
         }
 
+    private:
+        template <typename Res>
+        constexpr auto _check(Res&& res) const noexcept {
+            res.error_code(this->api().GetError());
+            return std::forward<Res>(res);
+        }
+    };
+
+    template <typename W, W c_api::*F, typename Signature = typename W::signature>
+    class unck_func;
+
+    template <typename W, W c_api::*F, typename RVC, typename... Params>
+    class unck_func<W, F, RVC(Params...)>
+      : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
+        using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
+
     public:
         using base::base;
 
         constexpr auto operator()(Params... params) const noexcept {
-            return this->_chkcall(_conv(params)...)
-              .cast_to(type_identity<RVC>{});
+            return this->_call(_conv(params)...).cast_to(type_identity<RVC>{});
         }
 
         auto bind(Params... params) const noexcept {
             return [=] {
                 return (*this)(params...);
             };
+        }
+
+    protected:
+        using base::_conv;
+
+        template <identifier_t I>
+        static constexpr auto _conv(prog_var_location<I> loc) noexcept {
+            return loc.index();
+        }
+
+        template <typename T>
+        static constexpr auto _conv(degrees_t<T> angle) noexcept {
+            return angle.value();
+        }
+
+        template <typename... Args>
+        constexpr auto _cnvcall(Args&&... args) const noexcept {
+            return this->_call(_conv(std::forward<Args>(args))...)
+              .cast_to(type_identity<RVC>{});
         }
     };
 
@@ -384,8 +425,8 @@ public:
     struct : func<OGLPAFP(GenPathsNV)> {
         using func<OGLPAFP(GenPathsNV)>::func;
 
-        constexpr auto operator()() const noexcept {
-            return this->_chkcall(1).cast_to(
+        constexpr auto operator()(sizei_type count = 1) const noexcept {
+            return this->_chkcall(count).cast_to(
               type_identity<owned_path_nv_name>{});
         }
     } create_paths_nv;
@@ -521,18 +562,21 @@ public:
     struct : func<OGLPAFP(DeletePathsNV)> {
         using func<OGLPAFP(DeletePathsNV)>::func;
 
-        auto bind(owned_path_nv_name& name) const noexcept {
-            return [this, &name] {
-                (*this)(std::move(name));
+        auto
+        bind(owned_path_nv_name& name, sizei_type count = 1) const noexcept {
+            return [this, &name, count] {
+                (*this)(std::move(name), count);
             };
         }
 
-        constexpr auto operator()(owned_path_nv_name name) const noexcept {
-            return this->_chkcall(name.release(), 1);
+        constexpr auto operator()(owned_path_nv_name name, sizei_type count = 1)
+          const noexcept {
+            return this->_chkcall(name.release(), count);
         }
 
-        auto raii(owned_path_nv_name& name) const noexcept {
-            return eagine::finally(bind(name));
+        auto
+        raii(owned_path_nv_name& name, sizei_type count = 1) const noexcept {
+            return eagine::finally(bind(name, count));
         }
     } delete_paths_nv;
 
@@ -964,6 +1008,29 @@ public:
               .replaced_with(head(dest, span_size(real_len)));
         }
     } get_active_subroutine_name;
+
+    struct : func<OGLPAFP(UniformSubroutinesuiv)> {
+        using func<OGLPAFP(UniformSubroutinesuiv)>::func;
+
+        constexpr auto operator()(
+          shader_type shdr_type,
+          subroutine_location subr) const noexcept {
+            const uint_type idx{subr.index()};
+            return this->_cnvchkcall(shdr_type, 1, &idx);
+        }
+
+        template <std::size_t N>
+        constexpr auto operator()(
+          shader_type shdr_type,
+          const subroutine_bindings<N>& subrs) const noexcept {
+            std::array<uint_type, N> idcs{};
+            for(const auto [su, s] : subrs._bindings) {
+                idcs[su.index()] = s.index();
+            }
+            return this->_cnvchkcall(
+              shdr_type, limit_cast<sizei_type>(idcs.size()), idcs.data());
+        }
+    } uniform_subroutines;
 
     // uniform
     // uint
@@ -3364,6 +3431,214 @@ public:
     func<OGLPAFP(ActiveShaderProgram), void(program_pipeline_name, program_name)>
       active_shader_program;
 
+    // path NV ops
+    struct : func<OGLPAFP(PathColorGenNV)> {
+        using func<OGLPAFP(PathColorGenNV)>::func;
+
+        constexpr auto operator()(
+          path_color_nv clr,
+          path_gen_mode_nv mode,
+          path_color_format_nv fmt,
+          span<const float_type> coords) {
+            return this->_cnvchkcall(clr, mode, fmt, coords.data());
+        }
+    } path_color_gen_nv;
+
+    struct : func<OGLPAFP(PathGlyphRangeNV)> {
+        using func<OGLPAFP(PathGlyphRangeNV)>::func;
+
+        constexpr auto operator()(
+          path_nv_name pth,
+          path_font_target_nv tgt,
+          string_view font_name,
+          path_font_style_nv style,
+          uint_type first,
+          sizei_type count,
+          path_missing_glyph_nv missing,
+          uint_type param_tpl,
+          float_type em_scale) {
+            return this->_cnvchkcall(
+              pth,
+              tgt,
+              static_cast<const char*>(c_str(font_name)),
+              style,
+              first,
+              count,
+              missing,
+              param_tpl,
+              em_scale);
+        }
+    } path_glyph_range_nv;
+
+    struct : func<OGLPAFP(GetPathSpacingNV)> {
+        using func<OGLPAFP(GetPathSpacingNV)>::func;
+
+        constexpr auto operator()(
+          path_list_mode_nv mode,
+          string_view glyphs,
+          path_nv_name pth,
+          float_type advance_scale,
+          float_type kerning_scale,
+          path_transform_type_nv transf,
+          span<float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              mode,
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              advance_scale,
+              kerning_scale,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(advance_scale);
+            EAGINE_MAYBE_UNUSED(kerning_scale);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } get_path_spacing_nv;
+
+    func<
+      OGLPAFP(StencilFillPathNV),
+      void(path_nv_name, path_fill_mode_nv, uint_type)>
+      stencil_fill_path_nv;
+
+    func<OGLPAFP(StencilStrokePathNV), void(path_nv_name, int_type, uint_type)>
+      stencil_stroke_path_nv;
+
+    struct : func<OGLPAFP(StencilFillPathInstancedNV)> {
+        using func<OGLPAFP(StencilFillPathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          path_fill_mode_nv mode,
+          uint_type mask,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              mode,
+              mask,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(mask);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } stencil_fill_path_instanced_nv;
+
+    struct : func<OGLPAFP(StencilStrokePathInstancedNV)> {
+        using func<OGLPAFP(StencilStrokePathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          int_type reference,
+          uint_type mask,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              reference,
+              mask,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(reference);
+            EAGINE_MAYBE_UNUSED(mask);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } stencil_stroke_path_instanced_nv;
+
+    func<OGLPAFP(CoverFillPathNV), void(path_nv_name, path_fill_cover_mode_nv)>
+      cover_fill_path_nv;
+
+    func<
+      OGLPAFP(CoverStrokePathNV),
+      void(path_nv_name, path_stroke_cover_mode_nv)>
+      cover_stroke_path_nv;
+
+    struct : func<OGLPAFP(CoverFillPathInstancedNV)> {
+        using func<OGLPAFP(CoverFillPathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          path_fill_cover_mode_nv mode,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              mode,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } cover_fill_path_instanced_nv;
+
+    struct : func<OGLPAFP(CoverStrokePathInstancedNV)> {
+        using func<OGLPAFP(CoverStrokePathInstancedNV)>::func;
+        constexpr auto operator()(
+          string_view glyphs,
+          path_nv_name pth,
+          path_stroke_cover_mode_nv mode,
+          path_transform_type_nv transf,
+          span<const float_type> dst) {
+#ifdef GL_UTF8_NV
+            return this->_cnvchkcall(
+              glyphs.size(),
+              GL_UTF8_NV,
+              static_cast<const char*>(c_str(glyphs)),
+              pth,
+              mode,
+              transf,
+              dst.data());
+#else
+            EAGINE_MAYBE_UNUSED(glyphs);
+            EAGINE_MAYBE_UNUSED(pth);
+            EAGINE_MAYBE_UNUSED(mode);
+            EAGINE_MAYBE_UNUSED(transf);
+            EAGINE_MAYBE_UNUSED(dst);
+            return this->_fake();
+#endif
+        }
+    } cover_stroke_path_instanced_nv;
+
     // draw parameters
     func<OGLPAFP(PrimitiveRestartIndex)> primitive_restart_index;
 
@@ -3699,56 +3974,58 @@ public:
     } is_named_string;
 
     // arb compatibility
-    func<OGLPAFP(Begin), void(old_primitive_type)> begin;
+    unck_func<OGLPAFP(Begin), void(old_primitive_type)> begin;
     func<OGLPAFP(End)> end;
 
-    func<OGLPAFP(Vertex2i)> vertex2i;
-    func<OGLPAFP(Vertex3i)> vertex3i;
-    func<OGLPAFP(Vertex4i)> vertex4i;
-    func<OGLPAFP(Vertex2f)> vertex2f;
-    func<OGLPAFP(Vertex3f)> vertex3f;
-    func<OGLPAFP(Vertex4f)> vertex4f;
+    unck_func<OGLPAFP(Vertex2i)> vertex2i;
+    unck_func<OGLPAFP(Vertex3i)> vertex3i;
+    unck_func<OGLPAFP(Vertex4i)> vertex4i;
+    unck_func<OGLPAFP(Vertex2f)> vertex2f;
+    unck_func<OGLPAFP(Vertex3f)> vertex3f;
+    unck_func<OGLPAFP(Vertex4f)> vertex4f;
 
-    func<OGLPAFP(Color3i)> color3i;
-    func<OGLPAFP(Color4i)> color4i;
-    func<OGLPAFP(Color3f)> color3f;
-    func<OGLPAFP(Color4f)> color4f;
+    unck_func<OGLPAFP(Color3i)> color3i;
+    unck_func<OGLPAFP(Color4i)> color4i;
+    unck_func<OGLPAFP(Color3f)> color3f;
+    unck_func<OGLPAFP(Color4f)> color4f;
 
-    func<OGLPAFP(SecondaryColor3i)> secondary_color3i;
-    func<OGLPAFP(SecondaryColor4i)> secondary_color4i;
-    func<OGLPAFP(SecondaryColor3f)> secondary_color3f;
-    func<OGLPAFP(SecondaryColor4f)> secondary_color4f;
+    unck_func<OGLPAFP(SecondaryColor3i)> secondary_color3i;
+    unck_func<OGLPAFP(SecondaryColor4i)> secondary_color4i;
+    unck_func<OGLPAFP(SecondaryColor3f)> secondary_color3f;
+    unck_func<OGLPAFP(SecondaryColor4f)> secondary_color4f;
 
-    func<OGLPAFP(TexCoord1i)> tex_coord1i;
-    func<OGLPAFP(TexCoord2i)> tex_coord2i;
-    func<OGLPAFP(TexCoord3i)> tex_coord3i;
-    func<OGLPAFP(TexCoord4i)> tex_coord4i;
-    func<OGLPAFP(TexCoord1f)> tex_coord1f;
-    func<OGLPAFP(TexCoord2f)> tex_coord2f;
-    func<OGLPAFP(TexCoord3f)> tex_coord3f;
-    func<OGLPAFP(TexCoord4f)> tex_coord4f;
+    unck_func<OGLPAFP(TexCoord1i)> tex_coord1i;
+    unck_func<OGLPAFP(TexCoord2i)> tex_coord2i;
+    unck_func<OGLPAFP(TexCoord3i)> tex_coord3i;
+    unck_func<OGLPAFP(TexCoord4i)> tex_coord4i;
+    unck_func<OGLPAFP(TexCoord1f)> tex_coord1f;
+    unck_func<OGLPAFP(TexCoord2f)> tex_coord2f;
+    unck_func<OGLPAFP(TexCoord3f)> tex_coord3f;
+    unck_func<OGLPAFP(TexCoord4f)> tex_coord4f;
 
-    func<OGLPAFP(MultiTexCoord1i), void(texture_unit, int_type)>
+    unck_func<OGLPAFP(MultiTexCoord1i), void(texture_unit, int_type)>
       multi_tex_coord1i;
-    func<OGLPAFP(MultiTexCoord2i), void(texture_unit, int_type, int_type)>
+    unck_func<OGLPAFP(MultiTexCoord2i), void(texture_unit, int_type, int_type)>
       multi_tex_coord2i;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord3i),
       void(texture_unit, int_type, int_type, int_type)>
       multi_tex_coord3i;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord4i),
       void(texture_unit, int_type, int_type, int_type, int_type)>
       multi_tex_coord4i;
-    func<OGLPAFP(MultiTexCoord1f), void(texture_unit, float_type)>
+    unck_func<OGLPAFP(MultiTexCoord1f), void(texture_unit, float_type)>
       multi_tex_coord1f;
-    func<OGLPAFP(MultiTexCoord2f), void(texture_unit, float_type, float_type)>
+    unck_func<
+      OGLPAFP(MultiTexCoord2f),
+      void(texture_unit, float_type, float_type)>
       multi_tex_coord2f;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord3f),
       void(texture_unit, float_type, float_type, float_type)>
       multi_tex_coord3f;
-    func<
+    unck_func<
       OGLPAFP(MultiTexCoord4f),
       void(texture_unit, float_type, float_type, float_type, float_type)>
       multi_tex_coord4f;

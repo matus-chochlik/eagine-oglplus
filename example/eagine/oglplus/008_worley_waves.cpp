@@ -1,4 +1,4 @@
-/// @example oglplus/006_metaballs.cpp
+/// @example oglplus/004_mandelbrot.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -11,67 +11,91 @@
 
 #include <eagine/integer_range.hpp>
 #include <eagine/main.hpp>
-#include <eagine/math/curve.hpp>
-#include <eagine/math/functions.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/random_bytes.hpp>
 #include <eagine/shapes/screen.hpp>
 
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <random>
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
 #version 140
-in vec2 Position;
-out vec3 vertPosition;
+
+uniform vec2 viewSize;
+
+in vec4 Position;
+
+out vec2 vertTexCoord;
+
 void main() {
-	vertPosition = vec3(Position, 0.0);
-	gl_Position = vec4(vertPosition, 1.0);
+    gl_Position = Position;
+    vertTexCoord = min(viewSize * 0.01, vec2(25.0)) * Position.xy;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
 #version 140
-uniform sampler1D metaballs;
-in vec3 vertPosition;
+
+uniform sampler2D noise;
+uniform float time;
+
+in vec2 vertTexCoord;
+
 out vec3 fragColor;
 
-const vec3 diffuseColor = vec3(0.4, 0.9, 0.5);
-const vec3 lightDir = normalize(vec3(1.0, 1.0, 2.0));
+const vec2 offs[9] = vec2[9](
+  vec2(-1, -1),
+  vec2(-1, 0),
+  vec2(-1, 1),
+  vec2(0, -1),
+  vec2(0, 0),
+  vec2(0, 1),
+  vec2(1, -1),
+  vec2(1, 0),
+  vec2(1, 1));
+
+vec2 point(vec2 tc, vec2 ofs) {
+    vec2 cc = floor(tc + ofs);
+	vec2 pa = texture(noise, cc / textureSize(noise, 0)).xy;
+	float phase0 = pa.x * 2.0 * 3.14159;
+	float phase1 = sin((2.0 * cc.x + cc.y) + time) + 1.618 * time * sign(pa.y - 0.5);
+    return cc + vec2(cos(phase0 + phase1), sin(phase0 + phase1)) * 0.5 + vec2(0.5);
+}
+
+float dist(vec2 tc, vec2 ofs) {
+    vec2 cp = point(tc, ofs);
+    return distance(tc, cp);
+}
+
+vec3 worley(vec2 tc) {
+	float ds[9];
+    for(int c = 0; c < 9; ++c) {
+		ds[c] = dist(tc, offs[c]);
+    }
+	float md = ds[0];
+	int mc = 0;
+    for(int c = 1; c < 9; ++c) {
+		if(md > ds[c]) {
+			md = ds[c];
+			mc = c;
+		}
+    }
+	float nd = 4;
+    for(int c = 0; c < 9; ++c) {
+		if(c != mc) {
+			nd = min(nd, ds[c]);
+		}
+    }
+    return vec3(pow(nd-md, 0.618));
+}
 
 void main() {
-	int i = 0, n = textureSize(metaballs, 0);
-
-	float invN = 1.0 / n;
-	float value = 0.0;
-	vec3 normal = vec3(0.0, 0.0, 0.0);
-
-	while(i != n) {
-		vec4 metaball = texelFetch(metaballs, i, 0);
-		float radius = metaball.w;
-		vec3 vect = vertPosition - metaball.xyz;
-		float tmp = pow(radius, 2.0) / dot(vect, vect) - 0.25;
-		value += tmp;
-		normal += max(tmp, 0.0) *
-			vec3(vect.xy, sqrt(abs(pow(radius, 2.0) - dot(vect.xy, vect.xy))));
-		++i;
-	}
-
-	if(value > 0.0) {
-		float ld = dot(lightDir, normalize(normal));
-		float specular = min(pow(max(ld+0.001, 0.0), 64.0), 1.0);
-		float diffuse = clamp(ld, 0.0, 1.0) * 0.7;
-		float ambient = 0.3;
-
-		fragColor = (ambient + diffuse) * diffuseColor + vec3(specular);
-	} else {
-		fragColor = vec3(0.4, 0.4, 0.4);
-	}
+    fragColor = worley(vertTexCoord);
 }
 )"};
 
@@ -82,6 +106,8 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
     gl_api glapi;
     auto& [gl, GL] = glapi;
+
+    float time = 0.F;
 
     if(gl.clear) {
         gl_debug_logger gdl{ctx};
@@ -149,63 +175,44 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
-        std::vector<math::cubic_bezier_loop<oglplus::vec4, float>> loops;
-        std::vector<oglplus::vec4> cp_data;
-        std::default_random_engine rnd_eng{std::random_device{}()};
-        for(const auto l : integer_range(12)) {
-            EAGINE_MAYBE_UNUSED(l);
-            const auto n =
-              3U + std::uniform_int_distribution<unsigned>{0U, 4U}(rnd_eng);
-            cp_data.resize(n);
-            const auto rad =
-              std::uniform_real_distribution<float>{0.1F, 0.2F}(rnd_eng);
-            for(auto p : integer_range(n)) {
-                cp_data[p] = oglplus::vec4(
-                  std::uniform_real_distribution<float>{-0.7F, 0.7F}(rnd_eng),
-                  std::uniform_real_distribution<float>{-0.7F, 0.7F}(rnd_eng),
-                  0.F,
-                  rad);
-            }
-            loops.emplace_back(view(cp_data));
-        }
-        std::vector<float> metaball_data{};
-        metaball_data.resize(loops.size() * 4U);
-
-        // metaball parameters
-        owned_texture_name metaball_tex{};
-        gl.gen_textures() >> metaball_tex;
-        auto cleanup_metaballs = gl.delete_textures.raii(metaball_tex);
+        // noise texture
+        owned_texture_name noise_tex{};
+        gl.gen_textures() >> noise_tex;
+        auto cleanup_gradients = gl.delete_textures.raii(noise_tex);
         gl.active_texture(GL.texture0);
-        gl.bind_texture(GL.texture_1d, metaball_tex);
-        gl.tex_parameter_i(GL.texture_1d, GL.texture_min_filter, GL.nearest);
-        gl.tex_parameter_i(GL.texture_1d, GL.texture_mag_filter, GL.nearest);
-
-        auto update_metaballs =
-          [&glapi, &loops, &metaball_data, t{0.F}]() mutable {
-              auto& [gl_, GL_] = glapi;
-              for(const auto i : integer_range(loops.size())) {
-                  for(const auto c : integer_range(std_size(4))) {
-                      const auto p = loops[i].position(t);
-                      metaball_data[i * 4U + c] = p[c];
-                  }
-              }
-              gl_.tex_image1d(
-                GL_.texture_1d,
-                0,
-                GL_.rgba32f,
-                limit_cast<oglplus::gl_types::uint_type>(loops.size()),
-                0,
-                GL_.rgba,
-                GL_.float_,
-                as_bytes(view(metaball_data)));
-              t += 0.001F;
-          };
-        update_metaballs();
+        gl.bind_texture(GL.texture_2d, noise_tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.repeat);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.repeat);
+        {
+            auto random_data =
+              GL.unsigned_byte_.array(size_constant<256 * 256 * 2>{});
+            fill_with_random_bytes(cover(random_data));
+            gl.tex_image2d(
+              GL.texture_2d,
+              0,
+              GL.rg,
+              256,
+              256,
+              0,
+              GL.rg,
+              GL.unsigned_byte_,
+              as_bytes(view(random_data)));
+        }
 
         // uniform
-        uniform_location metaballs_loc;
-        gl.get_uniform_location(prog, "metaballs") >> metaballs_loc;
-        glapi.set_uniform(prog, metaballs_loc, 0);
+        uniform_location time_loc;
+        gl.get_uniform_location(prog, "time") >> time_loc;
+        glapi.set_uniform(prog, time_loc, 0);
+
+        uniform_location view_size_loc;
+        gl.get_uniform_location(prog, "viewSize") >> view_size_loc;
+        glapi.set_uniform(prog, view_size_loc, 0);
+
+        uniform_location noise_loc;
+        gl.get_uniform_location(prog, "noise") >> noise_loc;
+        glapi.set_uniform(prog, noise_loc, 0);
 
         gl.disable(GL.depth_test);
 
@@ -230,10 +237,13 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
             gl.viewport(width, height);
 
+            glapi.set_uniform(
+              prog, view_size_loc, oglplus::vec2(width, height));
+            glapi.set_uniform(prog, time_loc, time);
             draw_using_instructions(glapi, view(_ops));
-            update_metaballs();
 
             glfwSwapBuffers(window);
+            time += 0.01F;
         }
     } else {
         std::cout << "missing required API" << std::endl;
@@ -255,6 +265,9 @@ static void init_and_run(eagine::main_ctx& ctx) {
         glfwWindowHint(GLFW_STENCIL_BITS, 0);
 
         glfwWindowHint(GLFW_SAMPLES, GLFW_DONT_CARE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
         int width = 800, height = 600;

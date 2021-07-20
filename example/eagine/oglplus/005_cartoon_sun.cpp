@@ -1,4 +1,4 @@
-/// @example oglplus/007_round_cube.cpp
+/// @example oglplus/005_cartoon_sun.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -10,13 +10,11 @@
 #include <eagine/oglplus/gl_api.hpp>
 
 #include <eagine/main.hpp>
-#include <eagine/main_ctx_object.hpp>
-#include <eagine/math/curve.hpp>
-#include <eagine/math/functions.hpp>
-#include <eagine/memory/flatten.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
+#include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/shapes/screen.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -24,42 +22,37 @@
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 330
-
+#version 140
 in vec2 Position;
-
+out vec2 vertCoord;
 void main() {
-    gl_Position = vec4(Position, 0.0, 1.0);
-}
-)"};
-
-static const eagine::string_view gs_source{R"(
-#version 330
-
-layout(lines) in;
-layout(triangle_strip, max_vertices = 4) out;
-
-void main() {
-	vec4 offs = vec4(0.02, 0.01, 0.0, 0.0);
-   	gl_Position = gl_in[0].gl_Position - offs;
-   	EmitVertex();
-   	gl_Position = gl_in[0].gl_Position + offs;
-   	EmitVertex();
-   	gl_Position = gl_in[1].gl_Position - offs;
-   	EmitVertex();
-   	gl_Position = gl_in[1].gl_Position + offs;
-   	EmitVertex();
-   	EndPrimitive();
+	gl_Position = vec4(Position, 0.0, 1.0);
+	vertCoord = gl_Position.xy;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 330
+#version 140
+uniform float time;
+uniform vec2 sunPos;
+const vec3 sun1 = vec3(0.95, 0.85, 0.60);
+const vec3 sun2 = vec3(0.90, 0.80, 0.20);
+const vec3 sky1 = vec3(0.90, 0.80, 0.50);
+const vec3 sky2 = vec3(0.80, 0.60, 0.40);
 
-out vec4 fragColor;
-
+in vec2 vertCoord;
+out vec3 fragColor;
 void main() {
-    fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+	vec2 v = vertCoord - sunPos;
+	float l = length(v);
+	float a = (sin(l)+atan(v.y, v.x)) / 3.1415;
+	if(l < 0.1) {
+		fragColor = sun1;
+	} else if(int(18 * (time * 0.1 + 1.0 + a)) % 2 == 0) {
+		fragColor = mix(sun1, sun2, l);
+	} else {
+		fragColor = mix(sky1, sky2, l);
+	}
 }
 )"};
 
@@ -78,24 +71,19 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
+        memory::buffer buf;
+
         // vertex shader
         owned_shader_name vs;
-        const auto cleanup_vs = gl.delete_shader.raii(vs);
         gl.create_shader(GL.vertex_shader) >> vs;
+        auto cleanup_vs = gl.delete_shader.raii(vs);
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
-        // geometry shader
-        owned_shader_name gs;
-        const auto cleanup_gs = gl.delete_shader.raii(gs);
-        gl.create_shader(GL.geometry_shader) >> gs;
-        gl.shader_source(gs, glsl_string_ref(gs_source));
-        gl.compile_shader(gs);
-
         // fragment shader
         owned_shader_name fs;
-        const auto cleanup_fs = gl.delete_shader.raii(fs);
         gl.create_shader(GL.fragment_shader) >> fs;
+        auto cleanup_fs = gl.delete_shader.raii(fs);
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
@@ -104,54 +92,65 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.create_program() >> prog;
         auto cleanup_prog = gl.delete_program.raii(prog);
         gl.attach_shader(prog, vs);
-        gl.attach_shader(prog, gs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
         gl.use_program(prog);
 
         // geometry
-        const std::array<oglplus::vec2, 34> control_points{
-          {{-0.33F, +0.50F}, {-0.45F, +0.70F}, {-0.66F, +0.70F},
-           {-0.66F, +0.30F}, {-0.66F, -0.20F}, {-0.35F, -0.15F},
-           {-0.30F, +0.05F}, {-0.20F, +0.50F}, {-0.30F, +0.50F},
-           {-0.33F, +0.50F}, {-0.50F, +0.45F}, {-0.10F, +0.40F},
-           {+0.10F, +0.55F}, {-0.20F, +0.40F}, {-0.30F, -0.10F},
-           {+0.00F, -0.10F}, {+0.10F, -0.10F}, {+0.20F, -0.10F},
-           {+0.10F, +0.55F}, {+0.20F, +0.00F}, {+0.30F, -0.70F},
-           {+0.00F, -0.75F}, {-0.40F, -0.75F}, {+0.00F, +0.00F},
-           {+0.40F, +0.10F}, {+0.60F, +0.10F}, {+0.70F, +0.90F},
-           {+0.55F, +0.90F}, {+0.35F, +0.90F}, {+0.10F, -0.10F},
-           {+0.55F, +0.00F}, {+0.90F, +0.10F}, {+0.70F, +0.10F},
-           {+0.90F, +0.20F}}};
+        shape_generator shape(
+          glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
 
-        math::bezier_curves<oglplus::vec2, float, 3> curve(
-          view(control_points));
-        std::vector<oglplus::vec2> curve_points;
-        curve.approximate(curve_points, 20);
-        std::vector<float> position_data;
-        memory::flatten(view(curve_points), position_data);
-        const auto point_count =
-          limit_cast<gl_types::sizei_type>(curve_points.size());
+        std::vector<shape_draw_operation> _ops;
+        _ops.resize(std_size(shape.operation_count()));
+        shape.instructions(glapi, cover(_ops));
 
         // vao
         owned_vertex_array_name vao;
-        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
         gl.gen_vertex_arrays() >> vao;
+        auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
         gl.bind_vertex_array(vao);
 
         // positions
+        vertex_attrib_location position_loc{0};
         owned_buffer_name positions;
-        const auto cleanup_positions = gl.delete_buffers.raii(positions);
         gl.gen_buffers() >> positions;
-        gl.bind_buffer(GL.array_buffer, positions);
-        gl.buffer_data(GL.array_buffer, view(position_data), GL.static_draw);
+        auto cleanup_positions = gl.delete_buffers.raii(positions);
+        shape.attrib_setup(
+          glapi,
+          vao,
+          positions,
+          position_loc,
+          shapes::vertex_attrib_kind::position,
+          buf);
+        gl.bind_attrib_location(prog, position_loc, "Position");
 
-        vertex_attrib_location position_loc;
-        gl.get_attrib_location(prog, "Position") >> position_loc;
-        gl.vertex_attrib_pointer(position_loc, 2, GL.float_, GL.false_);
-        gl.enable_vertex_attrib_array(position_loc);
+        // indices
+        owned_buffer_name indices;
+        gl.gen_buffers() >> indices;
+        auto cleanup_indices = gl.delete_buffers.raii(indices);
+        shape.index_setup(glapi, indices, buf);
 
-        gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
+        // uniforms
+        auto update_uniforms = [&glapi, &prog]() {
+            uniform_location sun_pos_loc;
+            glapi.get_uniform_location(prog, "sunPos") >> sun_pos_loc;
+
+            uniform_location time_loc;
+            glapi.get_uniform_location(prog, "time") >> time_loc;
+
+            return [&glapi, &prog, sun_pos_loc, time_loc, time{0.F}](
+                     float a) mutable {
+                const float d = 0.5F;
+                glapi.set_uniform(prog, time_loc, time);
+                glapi.set_uniform(
+                  prog,
+                  sun_pos_loc,
+                  oglplus::vec2(-a * d * std::cos(time), d * std::sin(time)));
+                time += 0.01F;
+            };
+        }();
+
+        gl.disable(GL.depth_test);
 
         while(true) {
             glfwPollEvents();
@@ -173,8 +172,9 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
             }
 
             gl.viewport(width, height);
-            gl.clear(GL.color_buffer_bit);
-            gl.draw_arrays(GL.line_strip, 0, point_count);
+
+            update_uniforms(float(width) / float(height));
+            draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);
         }
@@ -187,7 +187,7 @@ static void init_and_run(eagine::main_ctx& ctx) {
     if(!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     } else {
-        const auto ensure_glfw_cleanup = eagine::finally(glfwTerminate);
+        auto ensure_glfw_cleanup = eagine::finally(glfwTerminate);
 
         glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
         glfwWindowHint(GLFW_RED_BITS, 8);
@@ -198,6 +198,9 @@ static void init_and_run(eagine::main_ctx& ctx) {
         glfwWindowHint(GLFW_STENCIL_BITS, 0);
 
         glfwWindowHint(GLFW_SAMPLES, GLFW_DONT_CARE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
         int width = 800, height = 600;

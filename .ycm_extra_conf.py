@@ -97,9 +97,11 @@ system_include_dirs = scan_for_system_include_dirs()
 #------------------------------------------------------------------------------#
 project_include_dirs = [
     os.path.join(binaryDir(), "include"),
-    'include',
-    'submodules/eagine-shapes/include',
-    'submodules/eagine-core/include'
+    os.path.join(os.path.pardir, "eagine-core", "include"),
+    os.path.join(os.path.pardir, "eagine-shapes", "include"),
+    os.path.join("submodules", "eagine-core", "include"),
+    os.path.join("submodules", "eagine-shapes", "include"),
+    'include'
 ]
 #------------------------------------------------------------------------------#
 def FlagsForFile(filename, ** kwargs):
