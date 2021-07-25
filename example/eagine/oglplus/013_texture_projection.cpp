@@ -1,4 +1,4 @@
-/// @example oglplus/015_wooden_crate.cpp
+/// @example oglplus/013_texture_projection.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -15,6 +15,7 @@
 #include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
+#include <eagine/oglplus/math/matrix.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
 #include <eagine/shapes/cube.hpp>
@@ -28,41 +29,39 @@ static const eagine::string_view vs_source{R"(
 #version 150
 in vec3 Position;
 in vec3 Normal;
-in vec3 Tangent;
-in vec2 TexCoord;
 
-out mat3 vertNormalMatrix;
+out vec3 vertLightDir;
+out vec3 vertNormal;
 out vec2 vertTexCoord;
 
-uniform mat4 camera;
+uniform mat4 model, camera, projector;
+uniform vec3 lightPos;
 
 void main() {
-	gl_Position = camera * vec4(Position, 1.0);
-	vertNormalMatrix[0] = Tangent;
-	vertNormalMatrix[1] = cross(Normal, Tangent);
-	vertNormalMatrix[2] = Normal;
-	vertTexCoord = TexCoord;
+	gl_Position = model * vec4(Position, 1.0);
+	vertLightDir = lightPos - Position.xyz;
+	vertNormal = mat3(model) * -Normal;
+	vertTexCoord = (projector * gl_Position).xy;
+	gl_Position = camera * gl_Position;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
 #version 150
-in mat3 vertNormalMatrix;
+in vec3 vertLightDir;
+in vec3 vertNormal;
 in vec2 vertTexCoord;
 out vec3 fragColor;
 
 uniform vec3 lightDir;
 uniform sampler2D colorTex;
-uniform sampler2D normalTex;
-uniform sampler2D lightTex;
 
 void main() {
-	vec3 finalNormal = vertNormalMatrix * texture(normalTex, vertTexCoord).xyz;
-	float d = max(dot(normalize(lightDir), finalNormal), 0.0);
-	float l = texture(lightTex, vertTexCoord).r;
-	float diff = 0.2 + 0.8 * d;
-	float spec = 1.2 * pow(d+0.01, mix(1.0, 32.0, l)) * l;
-	fragColor = texture(colorTex, vertTexCoord).rgb * diff + vec3(spec);
+	float ld = dot(vertNormal, normalize(vertLightDir));
+	fragColor = (abs(ld) * 0.6 + 0.4) * mix(
+		vec3(1.0),
+		texture(colorTex, vertTexCoord).rgb,
+		sqrt(max(ld, 0.0)));
 }
 )"};
 
@@ -152,34 +151,6 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
           shapes::vertex_attrib_kind::normal,
           buf);
 
-        // tangentials
-        vertex_attrib_location tangential_loc{2};
-        gl.get_attrib_location(prog, "Tangent") >> tangential_loc;
-        owned_buffer_name tangentials;
-        gl.gen_buffers() >> tangentials;
-        auto cleanup_tangentials = gl.delete_buffers.raii(tangentials);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          tangentials,
-          tangential_loc,
-          shapes::vertex_attrib_kind::tangential,
-          buf);
-
-        // tex coords
-        vertex_attrib_location tex_coord_loc{3};
-        gl.get_attrib_location(prog, "TexCoord") >> tex_coord_loc;
-        owned_buffer_name tex_coords;
-        gl.gen_buffers() >> tex_coords;
-        auto cleanup_tex_coords = gl.delete_buffers.raii(tex_coords);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          tex_coords,
-          tex_coord_loc,
-          shapes::vertex_attrib_kind::face_coord,
-          buf);
-
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
@@ -187,8 +158,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         shape.index_setup(glapi, indices, buf);
 
         // color texture
-        const auto color_tex_src{
-          embed(EAGINE_ID(ColorTex), "wooden_crate-diff")};
+        const auto color_tex_src{embed(EAGINE_ID(ColorTex), "oglplus")};
 
         owned_texture_name color_tex;
         gl.gen_textures() >> color_tex;
@@ -200,6 +170,10 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
           GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
         gl.tex_parameter_i(
           GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
+        gl.tex_parameter_fv(
+          GL.texture_2d,
+          GL.texture_border_color,
+          element_view(oglplus::vec3{1.F}));
         glapi.spec_tex_image2d(
           GL.texture_2d,
           0,
@@ -209,58 +183,18 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
         glapi.set_uniform(prog, color_tex_loc, 0);
 
-        // normal texture
-        const auto normal_tex_src{
-          embed(EAGINE_ID(NormalTex), "wooden_crate-nmap")};
-
-        owned_texture_name normal_tex;
-        gl.gen_textures() >> normal_tex;
-        gl.active_texture(GL.texture0 + 1);
-        gl.bind_texture(GL.texture_2d, normal_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(normal_tex_src.unpack(ctx)));
-        oglplus::uniform_location normal_tex_loc;
-        gl.get_uniform_location(prog, "normalTex") >> normal_tex_loc;
-        glapi.set_uniform(prog, normal_tex_loc, 1);
-
-        // light texture
-        const auto light_tex_src{
-          embed(EAGINE_ID(LightTex), "wooden_crate-hmap")};
-
-        owned_texture_name light_tex;
-        gl.gen_textures() >> light_tex;
-        gl.active_texture(GL.texture0 + 2);
-        gl.bind_texture(GL.texture_2d, light_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(light_tex_src.unpack(ctx)));
-        oglplus::uniform_location light_tex_loc;
-        gl.get_uniform_location(prog, "lightTex") >> light_tex_loc;
-        glapi.set_uniform(prog, light_tex_loc, 2);
-
         // uniform
+        uniform_location model_loc;
+        gl.get_uniform_location(prog, "model") >> model_loc;
+
         uniform_location camera_loc;
         gl.get_uniform_location(prog, "camera") >> camera_loc;
 
-        uniform_location light_dir_loc;
-        gl.get_uniform_location(prog, "lightDir") >> light_dir_loc;
+        uniform_location projector_loc;
+        gl.get_uniform_location(prog, "projector") >> projector_loc;
+
+        uniform_location light_pos_loc;
+        gl.get_uniform_location(prog, "lightPos") >> light_pos_loc;
 
         orbiting_camera camera;
         camera.set_near(0.1F)
@@ -269,9 +203,18 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
           .set_orbit_min(1.9F)
           .set_orbit_max(2.1F);
 
+        orbiting_camera projector;
+        projector.set_near(0.1F)
+          .set_far(50.F)
+          .set_fov(degrees_(65))
+          .set_orbit_min(2.0F)
+          .set_orbit_max(9.0F);
+
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
+        gl.enable(GL.cull_face);
+        gl.cull_face(GL.front);
 
         float t = 0.F;
 
@@ -300,20 +243,21 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
             t += 0.02F;
             const auto aspect = float(width) / float(height);
+
+            camera.set_azimuth(radians_(t))
+              .set_elevation(radians_(std::sin(t)))
+              .set_orbit_factor(math::sine_wave01(t * 0.1F));
+            glapi.set_uniform(prog, camera_loc, camera.matrix(aspect));
+
+            projector.set_azimuth(radians_(t * 0.1618F))
+              .set_elevation(radians_(std::sin(t * 0.2F) * 0.618F))
+              .set_orbit_factor(math::sine_wave01(t * 0.2F));
+            glapi.set_uniform(prog, projector_loc, projector.matrix(1.F));
+            glapi.set_uniform(prog, light_pos_loc, projector.position());
+
             glapi.set_uniform(
-              prog,
-              camera_loc,
-              camera.set_azimuth(radians_(t))
-                .set_elevation(radians_(std::sin(t)))
-                .set_orbit_factor(math::sine_wave01(t * 0.1F))
-                .matrix(aspect));
-            glapi.set_uniform(
-              prog,
-              light_dir_loc,
-              oglplus::vec3(
-                sin(degrees_(3.0F * t * 2.718F)),
-                cos(degrees_(3.0F * t * 2.718F)),
-                sin(degrees_(3.0F * t * 1.618F))));
+              prog, model_loc, matrix_rotation_x(right_angles_(t))());
+
             draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);
