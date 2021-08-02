@@ -111,7 +111,7 @@ auto write_output(std::ostream& output, const options& opts) -> int {
                               << std::endl;
                     return 4;
                 }
-                output.put(translate(c, opts));
+                output.put(char(translate(c, opts)));
             }
         }
     }

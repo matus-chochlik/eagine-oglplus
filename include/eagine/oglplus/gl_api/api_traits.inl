@@ -34,4 +34,3 @@ inline auto gl_api_traits::link_function(
 }
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
-

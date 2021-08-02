@@ -269,8 +269,8 @@ constexpr auto internal_format_of(type_identity<gl_types::ubyte_type>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::ubyte_type, 2, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::ubyte_type, 2, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RG8UI
     return GL_RG8UI;
@@ -280,8 +280,8 @@ internal_format_of(type_identity<vector<gl_types::ubyte_type, 2, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::ubyte_type, 4, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::ubyte_type, 4, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGBA8UI
     return GL_RGBA8UI;
@@ -300,8 +300,8 @@ constexpr auto internal_format_of(type_identity<gl_types::byte_type>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::byte_type, 2, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::byte_type, 2, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RG8I
     return GL_RG8I;
@@ -311,8 +311,8 @@ internal_format_of(type_identity<vector<gl_types::byte_type, 2, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::byte_type, 4, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::byte_type, 4, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGBA8I
     return GL_RGBA8I;
@@ -331,8 +331,8 @@ constexpr auto internal_format_of(type_identity<gl_types::ushort_type>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::ushort_type, 2, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::ushort_type, 2, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RG16UI
     return GL_RG16UI;
@@ -342,8 +342,8 @@ internal_format_of(type_identity<vector<gl_types::ushort_type, 2, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::ushort_type, 4, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::ushort_type, 4, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGBA16UI
     return GL_RGBA16UI;
@@ -362,8 +362,8 @@ constexpr auto internal_format_of(type_identity<gl_types::short_type>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::short_type, 2, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::short_type, 2, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RG16I
     return GL_RG16I;
@@ -373,8 +373,8 @@ internal_format_of(type_identity<vector<gl_types::short_type, 2, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::short_type, 4, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::short_type, 4, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGBA16I
     return GL_RGBA16I;
@@ -393,8 +393,8 @@ constexpr auto internal_format_of(type_identity<gl_types::uint_type>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::uint_type, 2, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::uint_type, 2, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RG32UI
     return GL_RG32UI;
@@ -404,8 +404,8 @@ internal_format_of(type_identity<vector<gl_types::uint_type, 2, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::uint_type, 3, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::uint_type, 3, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGB32UI
     return GL_RGB32UI;
@@ -415,8 +415,8 @@ internal_format_of(type_identity<vector<gl_types::uint_type, 3, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::uint_type, 4, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::uint_type, 4, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGBA32UI
     return GL_RGBA32UI;
@@ -435,8 +435,8 @@ constexpr auto internal_format_of(type_identity<gl_types::int_type>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::int_type, 2, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::int_type, 2, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RG32I
     return GL_RG32I;
@@ -446,8 +446,8 @@ internal_format_of(type_identity<vector<gl_types::int_type, 2, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::int_type, 3, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::int_type, 3, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGB32I
     return GL_RGB32I;
@@ -457,8 +457,8 @@ internal_format_of(type_identity<vector<gl_types::int_type, 3, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::int_type, 4, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::int_type, 4, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGBA32I
     return GL_RGBA32I;
@@ -477,8 +477,8 @@ constexpr auto internal_format_of(type_identity<gl_types::float_type>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::float_type, 2, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::float_type, 2, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RG32F
     return GL_RG32F;
@@ -488,8 +488,8 @@ internal_format_of(type_identity<vector<gl_types::float_type, 2, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::float_type, 3, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::float_type, 3, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGB32F
     return GL_RGB32F;
@@ -499,8 +499,8 @@ internal_format_of(type_identity<vector<gl_types::float_type, 3, V>>) noexcept
 }
 //------------------------------------------------------------------------------
 template <bool V>
-constexpr auto
-internal_format_of(type_identity<vector<gl_types::float_type, 4, V>>) noexcept
+constexpr auto internal_format_of(
+  type_identity<vector<gl_types::float_type, 4, V>>) noexcept
   -> gl_types::enum_type {
 #ifdef GL_RGBA32F
     return GL_RGBA32F;

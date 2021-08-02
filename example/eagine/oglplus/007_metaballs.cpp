@@ -75,8 +75,11 @@ void main() {
 }
 )"};
 
-static void
-run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
+static void run_loop(
+  eagine::main_ctx& ctx,
+  GLFWwindow* window,
+  int width,
+  int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
 
@@ -186,14 +189,14 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
               for(const auto i : integer_range(loops.size())) {
                   for(const auto c : integer_range(std_size(4))) {
                       const auto p = loops[i].position(t);
-                      metaball_data[i * 4U + c] = p[c];
+                      metaball_data[i * 4U + c] = p[limit_cast<int>(c)];
                   }
               }
               gl_.tex_image1d(
                 GL_.texture_1d,
                 0,
                 GL_.rgba32f,
-                limit_cast<oglplus::gl_types::uint_type>(loops.size()),
+                limit_cast<oglplus::gl_types::int_type>(loops.size()),
                 0,
                 GL_.rgba,
                 GL_.float_,

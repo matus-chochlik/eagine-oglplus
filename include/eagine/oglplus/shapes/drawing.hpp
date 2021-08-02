@@ -68,7 +68,7 @@ public:
 
     /// @brief Moves the first index by the specified offset.
     auto offset_first(span_size_t offs) noexcept -> auto& {
-        _first += offs;
+        _first += limit_cast<gl_types::int_type>(offs);
         return *this;
     }
 

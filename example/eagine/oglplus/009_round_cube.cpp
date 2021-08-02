@@ -46,8 +46,11 @@ void main() {
 }
 )"};
 
-static void
-run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
+static void run_loop(
+  eagine::main_ctx& ctx,
+  GLFWwindow* window,
+  int width,
+  int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
 

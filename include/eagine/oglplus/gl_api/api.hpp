@@ -467,8 +467,8 @@ public:
             return (*this)(names.raw_handles());
         }
 
-        constexpr auto
-        operator()(gl_owned_object_name<ObjTag> name) const noexcept {
+        constexpr auto operator()(
+          gl_owned_object_name<ObjTag> name) const noexcept {
             auto n = name.release();
             return this->_chkcall(1, &n);
         }
@@ -562,8 +562,8 @@ public:
     struct : func<OGLPAFP(DeletePathsNV)> {
         using func<OGLPAFP(DeletePathsNV)>::func;
 
-        auto
-        bind(owned_path_nv_name& name, sizei_type count = 1) const noexcept {
+        auto bind(owned_path_nv_name& name, sizei_type count = 1)
+          const noexcept {
             return [this, &name, count] {
                 (*this)(std::move(name), count);
             };
@@ -574,8 +574,8 @@ public:
             return this->_chkcall(name.release(), count);
         }
 
-        auto
-        raii(owned_path_nv_name& name, sizei_type count = 1) const noexcept {
+        auto raii(owned_path_nv_name& name, sizei_type count = 1)
+          const noexcept {
             return eagine::finally(bind(name, count));
         }
     } delete_paths_nv;
@@ -643,13 +643,13 @@ public:
             return base::operator()(0, 0, w, h);
         }
 
-        constexpr auto
-        operator()(std::tuple<sizei_type, sizei_type> wh) const noexcept {
+        constexpr auto operator()(
+          std::tuple<sizei_type, sizei_type> wh) const noexcept {
             return base::operator()(0, 0, std::get<0>(wh), std::get<1>(wh));
         }
 
-        constexpr auto
-        operator()(std::tuple<int_type, int_type, sizei_type, sizei_type> c)
+        constexpr auto operator()(
+          std::tuple<int_type, int_type, sizei_type, sizei_type> c)
           const noexcept {
             return base::operator()(
               std::get<0>(c), std::get<1>(c), std::get<2>(c), std::get<3>(c));
@@ -737,8 +737,8 @@ public:
     struct : func<OGLPAFP(GetShaderInfoLog)> {
         using func<OGLPAFP(GetShaderInfoLog)>::func;
 
-        constexpr auto
-        operator()(shader_name shdr, span<char_type> dest) const noexcept {
+        constexpr auto operator()(shader_name shdr, span<char_type> dest)
+          const noexcept {
             sizei_type real_len{0};
             return this
               ->_chkcall(
@@ -765,8 +765,8 @@ public:
     struct : func<OGLPAFP(GetProgramInfoLog)> {
         using func<OGLPAFP(GetProgramInfoLog)>::func;
 
-        constexpr auto
-        operator()(program_name prog, span<char_type> dest) const noexcept {
+        constexpr auto operator()(program_name prog, span<char_type> dest)
+          const noexcept {
             sizei_type real_len{0};
             return this
               ->_chkcall(
@@ -784,8 +784,8 @@ public:
 
     struct : func<OGLPAFP(GetProgramResourceIndex)> {
         using func<OGLPAFP(GetProgramResourceIndex)>::func;
-        constexpr auto
-        operator()(program_name prog, string_view name) const noexcept {
+        constexpr auto operator()(program_name prog, string_view name)
+          const noexcept {
 #ifdef GL_SHADER_STORAGE_BLOCK
             return this
               ->_cnvchkcall(name_type(prog), GL_SHADER_STORAGE_BLOCK, name)
@@ -1662,8 +1662,8 @@ public:
             return this->_cnvchkcall(tgt, size, data, flags);
         }
 
-        constexpr auto
-        operator()(buffer_target tgt, sizeiptr_type size) const noexcept {
+        constexpr auto operator()(buffer_target tgt, sizeiptr_type size)
+          const noexcept {
             return (*this)(tgt, size, nullptr, {});
         }
 
@@ -1680,8 +1680,8 @@ public:
             return this->_cnvchkcall(buf, size, data, flags);
         }
 
-        constexpr auto
-        operator()(buffer_name buf, sizeiptr_type size) const noexcept {
+        constexpr auto operator()(buffer_name buf, sizeiptr_type size)
+          const noexcept {
             return (*this)(buf, size, nullptr, {});
         }
     } named_buffer_storage;
@@ -1751,13 +1751,13 @@ public:
           buffer_target tgt,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (*this)(
-              tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
+            return (
+              *this)(tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
         }
 
         template <typename T>
-        constexpr auto
-        operator()(buffer_target tgt, const T& value) const noexcept {
+        constexpr auto operator()(buffer_target tgt, const T& value)
+          const noexcept {
             return (*this)(tgt, internal_format_of<T>(), &value);
         }
 
@@ -1766,13 +1766,13 @@ public:
           buffer_target tgt,
           pixel_internal_format ifmt,
           type_identity<T>) const noexcept {
-            return (*this)(
-              tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), nullptr);
+            return (
+              *this)(tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), nullptr);
         }
 
         template <typename T>
-        constexpr auto
-        operator()(buffer_target tgt, type_identity<T> tid) const noexcept {
+        constexpr auto operator()(buffer_target tgt, type_identity<T> tid)
+          const noexcept {
             return (*this)(tgt, internal_format_of<T>(), tid);
         }
     } clear_buffer_data;
@@ -1794,13 +1794,13 @@ public:
           buffer_name buf,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (*this)(
-              buf, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
+            return (
+              *this)(buf, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
         }
 
         template <typename T>
-        constexpr auto
-        operator()(buffer_name buf, const T& value) const noexcept {
+        constexpr auto operator()(buffer_name buf, const T& value)
+          const noexcept {
             return (*this)(buf, internal_format_of<T>(), &value);
         }
 
@@ -1814,8 +1814,8 @@ public:
         }
 
         template <typename T>
-        constexpr auto
-        operator()(buffer_name buf, type_identity<T> tid) const noexcept {
+        constexpr auto operator()(buffer_name buf, type_identity<T> tid)
+          const noexcept {
             return (*this)(buf, internal_format_of<T>(), tid);
         }
     } clear_named_buffer_data;
@@ -1841,14 +1841,8 @@ public:
           sizeiptr_type count,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (*this)(
-              tgt,
-              ifmt,
-              offs,
-              count * span_size_of<T>(),
-              pixel_format_of<T>(),
-              pixel_data_type_of<T>(),
-              &value);
+            return (
+              *this)(tgt, ifmt, offs, count * span_size_of<T>(), pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
         }
 
         template <typename T>
@@ -1882,14 +1876,8 @@ public:
           sizeiptr_type count,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (*this)(
-              buf,
-              ifmt,
-              offs,
-              count * span_size_of<T>(),
-              pixel_format_of<T>(),
-              pixel_data_type_of<T>(),
-              &value);
+            return (
+              *this)(buf, ifmt, offs, count * span_size_of<T>(), pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
         }
 
         template <typename T>
@@ -2172,8 +2160,8 @@ public:
 
         using base::base;
 
-        constexpr auto
-        operator()(uint_type first, span<const name_type> texs) const noexcept {
+        constexpr auto operator()(uint_type first, span<const name_type> texs)
+          const noexcept {
             return base::operator()(
               first, sizei_type(texs.size()), texs.data());
         }
@@ -2755,8 +2743,10 @@ public:
           typename Value,
           typename = std::enable_if_t<
             is_enum_parameter_value_v<texture_parameter, TexParam, int_type, Value>>>
-        constexpr auto
-        operator()(texture_name tex, TexParam param, Value value) noexcept {
+        constexpr auto operator()(
+          texture_name tex,
+          TexParam param,
+          Value value) noexcept {
             return this->_chkcall(
               name_type(tex), enum_type(param), enum_type(value));
         }

@@ -345,8 +345,9 @@ png_header_validator::png_header_validator(std::istream& input) {
     }
 }
 //------------------------------------------------------------------------------
-[[noreturn]] void
-png_read_struct::_handle_error(::png_structp, const char* message) {
+[[noreturn]] void png_read_struct::_handle_error(
+  ::png_structp,
+  const char* message) {
     throw ::std::runtime_error(message);
 }
 //------------------------------------------------------------------------------

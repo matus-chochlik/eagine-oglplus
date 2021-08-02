@@ -62,8 +62,11 @@ void main() {
 }
 )"};
 
-static void
-run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
+static void run_loop(
+  eagine::main_ctx& ctx,
+  GLFWwindow* window,
+  int width,
+  int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
 
@@ -190,7 +193,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
               GL.texture_1d,
               0,
               GL.rgb,
-              limit_cast<oglplus::gl_types::uint_type>(grad_colors.size()),
+              limit_cast<oglplus::gl_types::int_type>(grad_colors.size()),
               0,
               GL.rgb,
               GL.float_,

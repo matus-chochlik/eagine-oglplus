@@ -61,20 +61,23 @@ public:
     }
 
     /// @brief Equality comparison (compares the location numeric value).
-    friend constexpr auto
-    operator==(prog_var_location a, prog_var_location b) noexcept {
+    friend constexpr auto operator==(
+      prog_var_location a,
+      prog_var_location b) noexcept {
         return a._location == b._location;
     }
 
     /// @brief Nonequality comparison (compares the location numeric value).
-    friend constexpr auto
-    operator!=(prog_var_location a, prog_var_location b) noexcept {
+    friend constexpr auto operator!=(
+      prog_var_location a,
+      prog_var_location b) noexcept {
         return a._location != b._location;
     }
 
     /// @brief Less-than comparison (compares the location numeric value).
-    friend constexpr auto
-    operator<(prog_var_location a, prog_var_location b) noexcept {
+    friend constexpr auto operator<(
+      prog_var_location a,
+      prog_var_location b) noexcept {
         return a._location < b._location;
     }
 
@@ -214,9 +217,9 @@ private:
       _bindings;
 };
 
-static inline auto
-operator/(subroutine_uniform_location su, subroutine_location s) noexcept
-  -> subroutine_bindings<> {
+static inline auto operator/(
+  subroutine_uniform_location su,
+  subroutine_location s) noexcept -> subroutine_bindings<> {
     return {su, s};
 }
 

@@ -820,4 +820,3 @@ basic_gl_c_api<ApiTraits>::basic_gl_c_api(api_traits& traits)
   , Finish{"Finish", traits, *this} {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
-

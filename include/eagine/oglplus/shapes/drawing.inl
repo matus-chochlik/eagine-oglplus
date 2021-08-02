@@ -10,9 +10,9 @@
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename A>
-inline auto
-translate(const basic_gl_api<A>& api, shapes::primitive_type mode) noexcept
-  -> primitive_type {
+inline auto translate(
+  const basic_gl_api<A>& api,
+  shapes::primitive_type mode) noexcept -> primitive_type {
     auto& GL = api.constants();
 
     switch(mode) {
@@ -43,9 +43,9 @@ translate(const basic_gl_api<A>& api, shapes::primitive_type mode) noexcept
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline auto
-translate(const basic_gl_api<A>& api, shapes::attrib_data_type type) noexcept
-  -> data_type {
+inline auto translate(
+  const basic_gl_api<A>& api,
+  shapes::attrib_data_type type) noexcept -> data_type {
     auto& GL = api.constants();
 
     switch(type) {
@@ -68,9 +68,9 @@ translate(const basic_gl_api<A>& api, shapes::attrib_data_type type) noexcept
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline auto
-translate(const basic_gl_api<A>& api, shapes::index_data_type type) noexcept
-  -> index_data_type {
+inline auto translate(
+  const basic_gl_api<A>& api,
+  shapes::index_data_type type) noexcept -> index_data_type {
     auto& GL = api.constants();
 
     switch(type) {
@@ -140,8 +140,8 @@ inline auto shape_draw_operation::_idx_ptr() const noexcept
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline void
-shape_draw_operation::_prepare(const basic_gl_api<A>& api) const noexcept {
+inline void shape_draw_operation::_prepare(
+  const basic_gl_api<A>& api) const noexcept {
     auto& [gl, GL] = api;
 
     if(_cw_face_winding) {
@@ -167,8 +167,8 @@ shape_draw_operation::_prepare(const basic_gl_api<A>& api) const noexcept {
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline void
-shape_draw_operation::draw(const basic_gl_api<A>& api) const noexcept {
+inline void shape_draw_operation::draw(
+  const basic_gl_api<A>& api) const noexcept {
     _prepare(api);
     auto& [gl, GL] = api;
 

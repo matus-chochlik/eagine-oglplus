@@ -160,9 +160,8 @@ private:
 
 public:
     // int
-    auto
-    set_uniform(program_name prog, uniform_location loc, int_type value) const
-      -> combined_result<void> {
+    auto set_uniform(program_name prog, uniform_location loc, int_type value)
+      const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform1i, this->uniform1i, prog, loc, value);
     }
@@ -204,9 +203,8 @@ public:
     }
 
     // float
-    auto
-    set_uniform(program_name prog, uniform_location loc, float_type value) const
-      -> combined_result<void> {
+    auto set_uniform(program_name prog, uniform_location loc, float_type value)
+      const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform1f, this->uniform1f, prog, loc, value);
     }
@@ -248,8 +246,8 @@ public:
     }
 
     template <typename T>
-    auto
-    set_uniform(program_name prog, uniform_location loc, const T& value) const
+    auto set_uniform(program_name prog, uniform_location loc, const T& value)
+      const
       -> std::enable_if_t<is_known_vector_type_v<T>, combined_result<void>> {
         return set_uniform(
           prog, loc, element_view(value), canonical_compound_type<T>());
@@ -392,8 +390,8 @@ public:
     }
 
     template <typename T>
-    auto
-    set_uniform(program_name prog, uniform_location loc, const T& value) const
+    auto set_uniform(program_name prog, uniform_location loc, const T& value)
+      const
       -> std::enable_if_t<is_known_matrix_type_v<T>, combined_result<void>> {
         return set_uniform_matrix(
           prog,
