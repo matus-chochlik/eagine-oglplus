@@ -124,7 +124,7 @@ struct gl_types {
     using name_type = uint_type;
 
     /// @brief Converts bool_type value to native bool,
-    static constexpr auto bool_true(bool_type b) noexcept -> bool {
+    static constexpr auto bool_true(const bool_type b) noexcept -> bool {
 #if OGLPLUS_HAS_GL
         return b == GL_TRUE;
 #else
@@ -133,7 +133,8 @@ struct gl_types {
     }
 
     /// @brief Tests if the specified error code represents no-error value.
-    static constexpr auto error_code_no_error(enum_type ec) noexcept -> bool {
+    static constexpr auto error_code_no_error(const enum_type ec) noexcept
+      -> bool {
 #if OGLPLUS_HAS_GL
         return ec == GL_NO_ERROR;
 #else

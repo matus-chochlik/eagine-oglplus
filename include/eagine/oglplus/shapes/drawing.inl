@@ -5,6 +5,7 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
+#include <eagine/integer_range.hpp>
 #include <eagine/memory/null_ptr.hpp>
 
 namespace eagine::oglplus {
@@ -12,7 +13,7 @@ namespace eagine::oglplus {
 template <typename A>
 inline auto translate(
   const basic_gl_api<A>& api,
-  shapes::primitive_type mode) noexcept -> primitive_type {
+  const shapes::primitive_type mode) noexcept -> primitive_type {
     auto& GL = api.constants();
 
     switch(mode) {
@@ -45,7 +46,7 @@ inline auto translate(
 template <typename A>
 inline auto translate(
   const basic_gl_api<A>& api,
-  shapes::attrib_data_type type) noexcept -> data_type {
+  const shapes::attrib_data_type type) noexcept -> data_type {
     auto& GL = api.constants();
 
     switch(type) {
@@ -70,7 +71,7 @@ inline auto translate(
 template <typename A>
 inline auto translate(
   const basic_gl_api<A>& api,
-  shapes::index_data_type type) noexcept -> index_data_type {
+  const shapes::index_data_type type) noexcept -> index_data_type {
     auto& GL = api.constants();
 
     switch(type) {
@@ -86,7 +87,8 @@ inline auto translate(
     return GL.none;
 }
 //------------------------------------------------------------------------------
-inline auto type_size(shapes::attrib_data_type type) noexcept -> span_size_t {
+inline auto type_size(const shapes::attrib_data_type type) noexcept
+  -> span_size_t {
     switch(type) {
         case shapes::attrib_data_type::ubyte:
             return span_size(sizeof(gl_types::ubyte_type));
@@ -106,7 +108,8 @@ inline auto type_size(shapes::attrib_data_type type) noexcept -> span_size_t {
     return 1;
 }
 //------------------------------------------------------------------------------
-inline auto type_size(shapes::index_data_type type) noexcept -> span_size_t {
+inline auto type_size(const shapes::index_data_type type) noexcept
+  -> span_size_t {
     switch(type) {
         case shapes::index_data_type::unsigned_8:
             return span_size(sizeof(gl_types::ubyte_type));
@@ -182,7 +185,7 @@ inline void shape_draw_operation::draw(
 template <typename A>
 inline void shape_draw_operation::draw_instanced(
   const basic_gl_api<A>& api,
-  gl_types::sizei_type inst_count) const noexcept {
+  const gl_types::sizei_type inst_count) const noexcept {
     _prepare(api);
     auto& [gl, GL] = api;
 
@@ -197,7 +200,7 @@ inline void shape_draw_operation::draw_instanced(
 template <typename A>
 inline void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops) noexcept {
+  const span<const shape_draw_operation> ops) noexcept {
     for(const auto& op : ops) {
         op.draw(api);
     }
@@ -206,8 +209,8 @@ inline void draw_using_instructions(
 template <typename A>
 inline void draw_instanced_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
-  gl_types::sizei_type inst_count) noexcept {
+  const span<const shape_draw_operation> ops,
+  const gl_types::sizei_type inst_count) noexcept {
     for(const auto& op : ops) {
         op.draw_instanced(api, inst_count);
     }
@@ -216,10 +219,10 @@ inline void draw_instanced_using_instructions(
 template <typename A>
 inline void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
+  const span<const shape_draw_operation> ops,
   const shape_draw_subset& subs) noexcept {
-    for(span_size_t i = subs.first; i < subs.first + subs.count; ++i) {
-        if(i < ops.size()) {
+    for(const auto i : integer_range(subs.first, subs.first + subs.count)) {
+        if(EAGINE_LIKELY(i < ops.size())) {
             ops[i].draw(api);
         }
     }
@@ -228,11 +231,11 @@ inline void draw_using_instructions(
 template <typename A>
 inline void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
+  const span<const shape_draw_operation> ops,
   const shape_draw_subset& subs,
-  gl_types::sizei_type inst_count) noexcept {
-    for(span_size_t i = subs.first; i < subs.first + subs.count; ++i) {
-        if(i < ops.size()) {
+  const gl_types::sizei_type inst_count) noexcept {
+    for(const auto i : integer_range(subs.first, subs.first + subs.count)) {
+        if(EAGINE_LIKELY(i < ops.size())) {
             ops[i].draw_instanced(api, inst_count);
         }
     }

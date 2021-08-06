@@ -17,22 +17,16 @@
 namespace eagine::oglplus {
 
 class image_dimensions {
-private:
-    gl_types::sizei_type _width{1};
-    gl_types::sizei_type _height{1};
-    gl_types::sizei_type _depth{1};
-    gl_types::sizei_type _channels{1};
-
 public:
     image_dimensions(
-      gl_types::sizei_type w,
-      gl_types::sizei_type h,
-      gl_types::sizei_type d,
-      gl_types::sizei_type c) noexcept
-      : _width(w)
-      , _height(h)
-      , _depth(d)
-      , _channels(c) {
+      const gl_types::sizei_type w,
+      const gl_types::sizei_type h,
+      const gl_types::sizei_type d,
+      const gl_types::sizei_type c) noexcept
+      : _width{w}
+      , _height{h}
+      , _depth{d}
+      , _channels{c} {
         EAGINE_ASSERT(_width > 0 && _height > 0 && _depth > 0);
     }
 
@@ -63,21 +57,25 @@ public:
     auto channels() const noexcept -> gl_types::sizei_type {
         return _channels;
     }
+
+private:
+    gl_types::sizei_type _width{1};
+    gl_types::sizei_type _height{1};
+    gl_types::sizei_type _depth{1};
+    gl_types::sizei_type _channels{1};
 };
 
 class image_pixel_format {
-private:
-    pixel_format _format;
-    pixel_internal_format _internal_format;
-
 public:
-    image_pixel_format(pixel_format fmt, pixel_internal_format ifmt) noexcept
-      : _format(fmt)
-      , _internal_format(ifmt) {}
+    image_pixel_format(
+      const pixel_format fmt,
+      const pixel_internal_format ifmt) noexcept
+      : _format{fmt}
+      , _internal_format{ifmt} {}
 
-    image_pixel_format(pixel_format fmt) noexcept
-      : _format(fmt)
-      , _internal_format(pixel_internal_format(GLenum(fmt))) {}
+    image_pixel_format(const pixel_format fmt) noexcept
+      : _format{fmt}
+      , _internal_format{pixel_internal_format(gl_types::enum_type(fmt))} {}
 
     auto format() const noexcept -> pixel_format {
         return _format;
@@ -86,22 +84,21 @@ public:
     auto internal_format() const noexcept -> pixel_internal_format {
         return _internal_format;
     }
+
+private:
+    pixel_format _format;
+    pixel_internal_format _internal_format;
 };
 
 class image_pixel_data {
-private:
-    pixel_data_type _type;
-    memory::const_block _pixels;
-    span_size_t _elem_size;
-
 public:
     image_pixel_data(
-      pixel_data_type pix_type,
-      memory::const_block pix_data,
-      span_size_t type_size) noexcept
-      : _type(pix_type)
-      , _pixels(pix_data)
-      , _elem_size(type_size) {
+      const pixel_data_type pix_type,
+      const memory::const_block pix_data,
+      const span_size_t type_size) noexcept
+      : _type{pix_type}
+      , _pixels{pix_data}
+      , _elem_size{type_size} {
         EAGINE_ASSERT(_elem_size > 0);
     }
 
@@ -116,6 +113,11 @@ public:
     auto elem_size() const noexcept -> span_size_t {
         return _elem_size;
     }
+
+private:
+    pixel_data_type _type;
+    memory::const_block _pixels;
+    span_size_t _elem_size;
 };
 
 class image_spec

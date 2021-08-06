@@ -27,7 +27,7 @@ public:
     constexpr prog_var_location() noexcept = default;
 
     /// @brief Explicit location initialization.
-    explicit constexpr prog_var_location(int_type init) noexcept
+    explicit constexpr prog_var_location(const int_type init) noexcept
       : _location{init} {}
 
     /// @brief Indicates if this instance wraps an active program variable.
@@ -62,22 +62,22 @@ public:
 
     /// @brief Equality comparison (compares the location numeric value).
     friend constexpr auto operator==(
-      prog_var_location a,
-      prog_var_location b) noexcept {
+      const prog_var_location a,
+      const prog_var_location b) noexcept {
         return a._location == b._location;
     }
 
     /// @brief Nonequality comparison (compares the location numeric value).
     friend constexpr auto operator!=(
-      prog_var_location a,
-      prog_var_location b) noexcept {
+      const prog_var_location a,
+      const prog_var_location b) noexcept {
         return a._location != b._location;
     }
 
     /// @brief Less-than comparison (compares the location numeric value).
     friend constexpr auto operator<(
-      prog_var_location a,
-      prog_var_location b) noexcept {
+      const prog_var_location a,
+      const prog_var_location b) noexcept {
         return a._location < b._location;
     }
 
@@ -179,8 +179,8 @@ struct subroutine_bindings;
 template <>
 struct subroutine_bindings<1U> {
     constexpr subroutine_bindings(
-      subroutine_uniform_location su,
-      subroutine_location s) noexcept
+      const subroutine_uniform_location su,
+      const subroutine_location s) noexcept
       : _bindings{{{su, s}}} {}
 
     std::array<std::tuple<subroutine_uniform_location, subroutine_location>, 1U>
@@ -192,8 +192,8 @@ struct subroutine_bindings {
 public:
     constexpr subroutine_bindings(
       const subroutine_bindings<N - 1U>& head,
-      subroutine_uniform_location su,
-      subroutine_location s) noexcept
+      const subroutine_uniform_location su,
+      const subroutine_location s) noexcept
       : _bindings{concat(std::make_index_sequence<N - 1U>{}, head, {su, s})} {}
 
     constexpr subroutine_bindings(
@@ -205,11 +205,11 @@ public:
 private:
     template <std::size_t... I>
     static constexpr auto _concat(
-      std::index_sequence<I...>,
+      const std::index_sequence<I...>,
       const subroutine_bindings<N - 1U>& head,
-      std::tuple<subroutine_uniform_location, subroutine_location> tail) noexcept
-      -> std::
-        array<std::tuple<subroutine_uniform_location, subroutine_location>, N> {
+      const std::tuple<subroutine_uniform_location, subroutine_location>
+        tail) noexcept -> std::
+      array<std::tuple<subroutine_uniform_location, subroutine_location>, N> {
         return {{head[I]..., tail}};
     }
 
@@ -218,8 +218,8 @@ private:
 };
 
 static inline auto operator/(
-  subroutine_uniform_location su,
-  subroutine_location s) noexcept -> subroutine_bindings<> {
+  const subroutine_uniform_location su,
+  const subroutine_location s) noexcept -> subroutine_bindings<> {
     return {su, s};
 }
 

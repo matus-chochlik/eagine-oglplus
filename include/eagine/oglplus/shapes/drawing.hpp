@@ -20,35 +20,35 @@ namespace eagine::oglplus {
 /// @ingroup shapes
 /// @see shapes::primitive_type
 template <typename A>
-auto translate(const basic_gl_api<A>&, shapes::primitive_type) noexcept
+auto translate(const basic_gl_api<A>&, const shapes::primitive_type) noexcept
   -> primitive_type;
 //------------------------------------------------------------------------------
 /// @brief Translates from shape attribute data type to GL data type.
 /// @ingroup shapes
 /// @see shapes::attrib_data_type
 template <typename A>
-auto translate(const basic_gl_api<A>&, shapes::attrib_data_type) noexcept
+auto translate(const basic_gl_api<A>&, const shapes::attrib_data_type) noexcept
   -> data_type;
 //------------------------------------------------------------------------------
 /// @brief Translates from shape index data type to GL data type.
 /// @ingroup shapes
 /// @see shapes::index_data_type
 template <typename A>
-auto translate(const basic_gl_api<A>&, shapes::index_data_type) noexcept
+auto translate(const basic_gl_api<A>&, const shapes::index_data_type) noexcept
   -> index_data_type;
 //------------------------------------------------------------------------------
 /// @brief Returns the byte size of a shape attribute data type.
 /// @ingroup shapes
 /// @see shapes::attrib_data_type
 template <typename A>
-auto type_size(const basic_gl_api<A>&, shapes::attrib_data_type) noexcept
+auto type_size(const basic_gl_api<A>&, const shapes::attrib_data_type) noexcept
   -> span_size_t;
 //------------------------------------------------------------------------------
 /// @brief Returns the byte size of a shape index data type.
 /// @ingroup shapes
 /// @see shapes::index_data_type
 template <typename A>
-auto type_size(const basic_gl_api<A>&, shapes::index_data_type) noexcept
+auto type_size(const basic_gl_api<A>&, const shapes::index_data_type) noexcept
   -> span_size_t;
 //------------------------------------------------------------------------------
 /// @brief Shape draw operation parameters, translated to GL representation.
@@ -67,7 +67,7 @@ public:
       const shapes::draw_operation& draw_op) noexcept;
 
     /// @brief Moves the first index by the specified offset.
-    auto offset_first(span_size_t offs) noexcept -> auto& {
+    auto offset_first(const span_size_t offs) noexcept -> auto& {
         _first += limit_cast<gl_types::int_type>(offs);
         return *this;
     }
@@ -92,7 +92,7 @@ public:
     template <typename A>
     void draw_instanced(
       const basic_gl_api<A>& api,
-      gl_types::sizei_type inst_count) const noexcept;
+      const gl_types::sizei_type inst_count) const noexcept;
 
 private:
     primitive_type _mode{0};
@@ -128,7 +128,7 @@ struct shape_draw_subset {
 template <typename A>
 void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops) noexcept;
+  const span<const shape_draw_operation> ops) noexcept;
 //------------------------------------------------------------------------------
 /// @brief Takes a sequence of draw operations from a shape generator and draws them.
 /// @ingroup shapes
@@ -137,8 +137,8 @@ void draw_using_instructions(
 template <typename A>
 void draw_instanced_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
-  gl_types::sizei_type inst_count) noexcept;
+  const span<const shape_draw_operation> ops,
+  const gl_types::sizei_type inst_count) noexcept;
 //------------------------------------------------------------------------------
 /// @brief Takes a sequence of draw operations from a shape generator and draws them.
 /// @ingroup shapes
@@ -147,7 +147,7 @@ void draw_instanced_using_instructions(
 template <typename A>
 void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
+  const span<const shape_draw_operation> ops,
   const shape_draw_subset& subs) noexcept;
 //------------------------------------------------------------------------------
 /// @brief Takes a sequence of draw operations from a shape generator and draws them.
@@ -157,9 +157,9 @@ void draw_using_instructions(
 template <typename A>
 void draw_instanced_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
+  const span<const shape_draw_operation> ops,
   const shape_draw_subset& subs,
-  gl_types::sizei_type inst_count) noexcept;
+  const gl_types::sizei_type inst_count) noexcept;
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

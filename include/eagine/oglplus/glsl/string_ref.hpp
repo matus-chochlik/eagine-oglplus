@@ -24,16 +24,16 @@ public:
     using int_type = gl_types::int_type;
 
     /// @brief Construction from a C-string and a length value.
-    glsl_string_ref(const char* src_str, span_size_t n) noexcept
-      : _src_str(static_cast<const char_type*>(src_str))
-      , _length(int_type(n == 0 ? 0 : (src_str[n - 1] == '\0' ? n - 1 : n))) {}
+    glsl_string_ref(const char* src_str, const span_size_t n) noexcept
+      : _src_str{static_cast<const char_type*>(src_str)}
+      , _length{int_type(n == 0 ? 0 : (src_str[n - 1] == '\0' ? n - 1 : n))} {}
 
     /// @brief Explicit construction from a string_view.
-    explicit glsl_string_ref(string_view str) noexcept
+    explicit glsl_string_ref(const string_view str) noexcept
       : glsl_string_ref(str.data(), str.size()) {}
 
     /// @brief Explicit construction from a memory const_block.
-    explicit glsl_string_ref(memory::const_block blk) noexcept
+    explicit glsl_string_ref(const memory::const_block blk) noexcept
       : glsl_string_ref(as_chars(blk)) {}
 
     /// @brief Conversion to glsl_source_ref
@@ -59,8 +59,9 @@ public:
 //------------------------------------------------------------------------------
 /// @brief User defined literal for GLSL source code strings.
 /// @ingroup glsl_utils
-static inline auto operator"" _glsl(const char* src_str, std::size_t n) noexcept
-  -> glsl_string_ref {
+static inline auto operator"" _glsl(
+  const char* src_str,
+  const std::size_t n) noexcept -> glsl_string_ref {
     return {src_str, span_size(n)};
 }
 //------------------------------------------------------------------------------

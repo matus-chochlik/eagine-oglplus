@@ -21,7 +21,7 @@ private:
     structured_memory_block<const image_data_header> _header;
 
 public:
-    texture_image_block(memory::const_block blk)
+    texture_image_block(const memory::const_block blk)
       : _header(blk) {}
 
     texture_image_block(const image_data_header* ptr)
@@ -42,7 +42,7 @@ public:
           pixel_internal_format(_header->internal_format));
     }
 
-    auto format(pixel_internal_format ifmt) const noexcept
+    auto format(const pixel_internal_format ifmt) const noexcept
       -> image_pixel_format {
         return image_pixel_format(pixel_format(_header->format), ifmt);
     }
@@ -58,7 +58,7 @@ public:
         return {dimensions(), format(), pixel_data()};
     }
 
-    auto spec(pixel_internal_format ifmt) const noexcept {
+    auto spec(const pixel_internal_format ifmt) const noexcept {
         return image_spec(dimensions(), format(ifmt), pixel_data());
     }
 
@@ -75,7 +75,7 @@ public:
       : protected_member<file_contents>(std::move(fc))
       , texture_image_block(get_the_member()) {}
 
-    texture_image_file(string_view path)
+    texture_image_file(const string_view path)
       : texture_image_file(file_contents(path)) {}
 
     texture_image_file(const std::string& path)
