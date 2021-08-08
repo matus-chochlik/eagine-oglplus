@@ -1751,8 +1751,8 @@ public:
           buffer_target tgt,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (
-              *this)(tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
+            return (*this)(
+              tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
         }
 
         template <typename T>
@@ -1766,8 +1766,8 @@ public:
           buffer_target tgt,
           pixel_internal_format ifmt,
           type_identity<T>) const noexcept {
-            return (
-              *this)(tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), nullptr);
+            return (*this)(
+              tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), nullptr);
         }
 
         template <typename T>
@@ -1794,8 +1794,8 @@ public:
           buffer_name buf,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (
-              *this)(buf, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
+            return (*this)(
+              buf, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
         }
 
         template <typename T>
@@ -1841,8 +1841,14 @@ public:
           sizeiptr_type count,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (
-              *this)(tgt, ifmt, offs, count * span_size_of<T>(), pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
+            return (*this)(
+              tgt,
+              ifmt,
+              offs,
+              count * span_size_of<T>(),
+              pixel_format_of<T>(),
+              pixel_data_type_of<T>(),
+              &value);
         }
 
         template <typename T>
@@ -1876,8 +1882,14 @@ public:
           sizeiptr_type count,
           pixel_internal_format ifmt,
           const T& value) const noexcept {
-            return (
-              *this)(buf, ifmt, offs, count * span_size_of<T>(), pixel_format_of<T>(), pixel_data_type_of<T>(), &value);
+            return (*this)(
+              buf,
+              ifmt,
+              offs,
+              count * span_size_of<T>(),
+              pixel_format_of<T>(),
+              pixel_data_type_of<T>(),
+              &value);
         }
 
         template <typename T>
@@ -2743,10 +2755,8 @@ public:
           typename Value,
           typename = std::enable_if_t<
             is_enum_parameter_value_v<texture_parameter, TexParam, int_type, Value>>>
-        constexpr auto operator()(
-          texture_name tex,
-          TexParam param,
-          Value value) noexcept {
+        constexpr auto operator()(texture_name tex, TexParam param, Value value)
+          const noexcept {
             return this->_chkcall(
               name_type(tex), enum_type(param), enum_type(value));
         }
@@ -2758,7 +2768,7 @@ public:
         constexpr auto operator()(
           texture_target tgt,
           texture_parameter param,
-          span<const float_type> values) noexcept {
+          span<const float_type> values) const noexcept {
             return this->_cnvchkcall(tgt, param, values.data());
         }
     } tex_parameter_fv;
@@ -2769,7 +2779,7 @@ public:
         constexpr auto operator()(
           texture_name tex,
           texture_parameter param,
-          span<const float_type> values) noexcept {
+          span<const float_type> values) const noexcept {
             return this->_cnvchkcall(tex, param, values.data());
         }
     } texture_parameter_fv;
@@ -2780,7 +2790,7 @@ public:
         constexpr auto operator()(
           texture_target tgt,
           texture_parameter param,
-          span<const int_type> values) noexcept {
+          span<const int_type> values) const noexcept {
             return this->_cnvchkcall(tgt, param, values.data());
         }
     } tex_parameter_iv;
@@ -2791,7 +2801,7 @@ public:
         constexpr auto operator()(
           texture_name tex,
           texture_parameter param,
-          span<const int_type> values) noexcept {
+          span<const int_type> values) const noexcept {
             return this->_cnvchkcall(tex, param, values.data());
         }
     } texture_parameter_iv;
@@ -2802,7 +2812,7 @@ public:
         constexpr auto operator()(
           texture_target tgt,
           texture_parameter param,
-          span<const int_type> values) noexcept {
+          span<const int_type> values) const noexcept {
             return this->_cnvchkcall(tgt, param, values.data());
         }
     } tex_parameter_iiv;
@@ -2813,7 +2823,7 @@ public:
         constexpr auto operator()(
           texture_name tex,
           texture_parameter param,
-          span<const int_type> values) noexcept {
+          span<const int_type> values) const noexcept {
             return this->_cnvchkcall(tex, param, values.data());
         }
     } texture_parameter_iiv;
@@ -2824,7 +2834,7 @@ public:
         constexpr auto operator()(
           texture_target tgt,
           texture_parameter param,
-          span<const uint_type> values) noexcept {
+          span<const uint_type> values) const noexcept {
             return this->_cnvchkcall(tgt, param, values.data());
         }
     } tex_parameter_iuiv;
@@ -2835,7 +2845,7 @@ public:
         constexpr auto operator()(
           texture_name tex,
           texture_parameter param,
-          span<const uint_type> values) noexcept {
+          span<const uint_type> values) const noexcept {
             return this->_cnvchkcall(tex, param, values.data());
         }
     } texture_parameter_iuiv;
@@ -2928,7 +2938,7 @@ public:
         constexpr auto operator()(
           sampler_name sam,
           sampler_parameter param,
-          span<const float_type> values) noexcept {
+          span<const float_type> values) const noexcept {
             return this->_cnvchkcall(sam, param, values.data());
         }
     } sampler_parameter_fv;
@@ -2939,7 +2949,7 @@ public:
         constexpr auto operator()(
           sampler_name sam,
           sampler_parameter param,
-          span<const int_type> values) noexcept {
+          span<const int_type> values) const noexcept {
             return this->_cnvchkcall(sam, param, values.data());
         }
     } sampler_parameter_iv;
@@ -2950,7 +2960,7 @@ public:
         constexpr auto operator()(
           sampler_name sam,
           sampler_parameter param,
-          span<const int_type> values) noexcept {
+          span<const int_type> values) const noexcept {
             return this->_cnvchkcall(sam, param, values.data());
         }
     } sampler_parameter_iiv;
@@ -2961,7 +2971,7 @@ public:
         constexpr auto operator()(
           sampler_name sam,
           sampler_parameter param,
-          span<const uint_type> values) noexcept {
+          span<const uint_type> values) const noexcept {
             return this->_cnvchkcall(sam, param, values.data());
         }
     } sampler_parameter_iuiv;
@@ -3429,7 +3439,7 @@ public:
           path_color_nv clr,
           path_gen_mode_nv mode,
           path_color_format_nv fmt,
-          span<const float_type> coords) {
+          span<const float_type> coords) const noexcept {
             return this->_cnvchkcall(clr, mode, fmt, coords.data());
         }
     } path_color_gen_nv;
@@ -3446,7 +3456,7 @@ public:
           sizei_type count,
           path_missing_glyph_nv missing,
           uint_type param_tpl,
-          float_type em_scale) {
+          float_type em_scale) const noexcept {
             return this->_cnvchkcall(
               pth,
               tgt,
@@ -3470,7 +3480,7 @@ public:
           float_type advance_scale,
           float_type kerning_scale,
           path_transform_type_nv transf,
-          span<float_type> dst) {
+          span<float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               mode,
@@ -3511,7 +3521,7 @@ public:
           path_fill_mode_nv mode,
           uint_type mask,
           path_transform_type_nv transf,
-          span<const float_type> dst) {
+          span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               glyphs.size(),
@@ -3542,7 +3552,7 @@ public:
           int_type reference,
           uint_type mask,
           path_transform_type_nv transf,
-          span<const float_type> dst) {
+          span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               glyphs.size(),
@@ -3580,7 +3590,7 @@ public:
           path_nv_name pth,
           path_fill_cover_mode_nv mode,
           path_transform_type_nv transf,
-          span<const float_type> dst) {
+          span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               glyphs.size(),
@@ -3608,7 +3618,7 @@ public:
           path_nv_name pth,
           path_stroke_cover_mode_nv mode,
           path_transform_type_nv transf,
-          span<const float_type> dst) {
+          span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               glyphs.size(),
@@ -3904,7 +3914,7 @@ public:
     } get_string;
 
     // get_strings
-    auto get_strings(string_query query, char separator) noexcept {
+    auto get_strings(string_query query, char separator) const noexcept {
         return get_string(query).transformed([separator](auto src) {
             return split_into_string_list(src, separator);
         });

@@ -28,7 +28,7 @@ static void run_loop(
     using namespace eagine::oglplus;
 
     gl_api glapi;
-    auto& [gl, GL] = glapi;
+    const auto& [gl, GL] = glapi;
 
     const bool has_requirements =
       gl.clear && gl.create_paths_nv && gl.delete_paths_nv;
@@ -59,36 +59,37 @@ static void run_loop(
           ~oglplus::gl_types::uint_type{0},
           font_size);
 
-        auto render_text = [&](float x, float y, std::string text) {
-            auto& [gl_, GL_] = glapi;
+        const auto render_text =
+          [&](float px, float py, const std::string& text) {
+              const auto& [gl_, GL_] = glapi;
 
-            glyph_spacings.resize(std_size(text.size() + 1));
-            gl_.get_path_spacing_nv(
-              GL_.accum_adjacent_pairs_nv,
-              text,
-              text_glyphs,
-              1.F,
-              1.F,
-              GL_.translate_x_nv,
-              cover(glyph_spacings));
-            glyph_spacings.insert(glyph_spacings.begin(), 0.F);
+              glyph_spacings.resize(std_size(text.size() + 1));
+              gl_.get_path_spacing_nv(
+                GL_.accum_adjacent_pairs_nv,
+                text,
+                text_glyphs,
+                1.F,
+                1.F,
+                GL_.translate_x_nv,
+                cover(glyph_spacings));
+              glyph_spacings.insert(glyph_spacings.begin(), 0.F);
 
-            gl_.load_identity();
-            gl_.translate_f(x, y, 0.F);
-            gl_.stencil_fill_path_instanced_nv(
-              text,
-              text_glyphs,
-              GL_.count_up_nv,
-              0xFFU,
-              GL_.translate_x_nv,
-              view(glyph_spacings));
-            gl_.cover_fill_path_instanced_nv(
-              text,
-              text_glyphs,
-              GL_.bounding_box_of_bounding_boxes_nv,
-              GL_.translate_x_nv,
-              view(glyph_spacings));
-        };
+              gl_.load_identity();
+              gl_.translate_f(px, py, 0.F);
+              gl_.stencil_fill_path_instanced_nv(
+                text,
+                text_glyphs,
+                GL_.count_up_nv,
+                0xFFU,
+                GL_.translate_x_nv,
+                view(glyph_spacings));
+              gl_.cover_fill_path_instanced_nv(
+                text,
+                text_glyphs,
+                GL_.bounding_box_of_bounding_boxes_nv,
+                GL_.translate_x_nv,
+                view(glyph_spacings));
+          };
 
         const oglplus::gl_types::float_type color_gen_coeffs[9] = {
           -0.6F, 0.0F, 0.8F, 0.0F, 0.0F, 0.0F, 0.5F, 0.0F, 0.5F};

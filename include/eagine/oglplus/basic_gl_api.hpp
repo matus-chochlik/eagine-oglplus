@@ -49,17 +49,7 @@ public:
       : basic_gl_api{ApiTraits{}} {}
 
     /// @brief Returns a reference to the wrapped operations.
-    auto operations() noexcept -> basic_gl_operations<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped operations.
     auto operations() const noexcept -> const basic_gl_operations<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped operations.
-    auto operator()() noexcept -> basic_gl_operations<ApiTraits>& {
         return *this;
     }
 
@@ -69,17 +59,7 @@ public:
     }
 
     /// @brief Returns a reference to the wrapped constants.
-    auto constants() noexcept -> basic_gl_constants<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped constants.
     auto constants() const noexcept -> const basic_gl_constants<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped constants.
-    auto operator~() noexcept -> basic_gl_constants<ApiTraits>& {
         return *this;
     }
 
@@ -95,7 +75,7 @@ public:
 
     /// @brief Builds a shader program from the specified sources.
     auto build_program(
-      program_name prog,
+      const program_name prog,
       const program_source_block& prog_src_blk) const -> combined_result<void> {
         if(prog_src_blk.is_valid()) {
             const span_size_t n = prog_src_blk.shader_source_count();
@@ -462,12 +442,6 @@ public:
           image.data());
     }
 };
-
-template <std::size_t I, typename ApiTraits>
-auto get(basic_gl_api<ApiTraits>& x) noexcept ->
-  typename std::tuple_element<I, basic_gl_api<ApiTraits>>::type& {
-    return x;
-}
 
 template <std::size_t I, typename ApiTraits>
 auto get(const basic_gl_api<ApiTraits>& x) noexcept -> const

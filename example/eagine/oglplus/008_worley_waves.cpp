@@ -108,7 +108,7 @@ static void run_loop(
     using namespace eagine::oglplus;
 
     gl_api glapi;
-    auto& [gl, GL] = glapi;
+    const auto& [gl, GL] = glapi;
 
     float time = 0.F;
 
