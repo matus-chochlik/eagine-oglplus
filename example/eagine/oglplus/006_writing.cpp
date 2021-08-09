@@ -71,7 +71,7 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
-    gl_api glapi;
+    const gl_api glapi;
     const auto& [gl, GL] = glapi;
 
     if(gl.clear) {
@@ -105,7 +105,7 @@ static void run_loop(
         // program
         owned_program_name prog;
         gl.create_program() >> prog;
-        auto cleanup_prog = gl.delete_program.raii(prog);
+        const auto cleanup_prog = gl.delete_program.raii(prog);
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, gs);
         gl.attach_shader(prog, fs);
@@ -215,7 +215,7 @@ static void init_and_run(eagine::main_ctx& ctx) {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);
-            eagine::oglplus::api_initializer gl_api;
+            eagine::oglplus::api_initializer gl_api_init;
             glGetError();
             run_loop(ctx, window, width, height);
         }

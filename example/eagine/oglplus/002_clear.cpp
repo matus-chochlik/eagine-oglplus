@@ -19,7 +19,7 @@
 static void run_loop(GLFWwindow* window, int width, int height) {
     using namespace eagine::oglplus;
 
-    gl_api gl;
+    const gl_api gl;
 
     if(gl.operations().clear) {
 
@@ -60,7 +60,7 @@ static void init_and_run() {
     if(!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     } else {
-        auto ensure_glfw_cleanup = eagine::finally(glfwTerminate);
+        const auto ensure_glfw_cleanup = eagine::finally(glfwTerminate);
 
         glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
         glfwWindowHint(GLFW_RED_BITS, 8);
@@ -83,7 +83,7 @@ static void init_and_run() {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);
-            eagine::oglplus::api_initializer gl_api;
+            const eagine::oglplus::api_initializer gl_api_init;
             glGetError();
             run_loop(window, width, height);
         }
