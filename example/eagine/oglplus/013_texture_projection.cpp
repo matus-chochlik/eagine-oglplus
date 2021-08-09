@@ -19,6 +19,8 @@
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
 #include <eagine/shapes/cube.hpp>
+#include <eagine/shapes/sphere.hpp>
+#include <eagine/shapes/torus.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -109,12 +111,19 @@ static void run_loop(
         gl.use_program(prog);
 
         // geometry
-        shape_generator shape(
-          glapi,
-          shapes::unit_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal |
-            shapes::vertex_attrib_kind::face_coord));
+        auto [shape, inv_cull] =
+          [&ctx, &glapi]() -> std::tuple<shape_generator, bool> {
+            const auto attribs = shapes::vertex_attrib_kind::position |
+                                 shapes::vertex_attrib_kind::normal |
+                                 shapes::vertex_attrib_kind::face_coord;
+            if(ctx.args().find("--torus")) {
+                return {{glapi, shapes::unit_torus(attribs)}, false};
+            }
+            if(ctx.args().find("--sphere")) {
+                return {{glapi, shapes::unit_sphere(attribs)}, false};
+            }
+            return {{glapi, shapes::unit_cube(attribs)}, true};
+        }();
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -204,8 +213,8 @@ static void run_loop(
         camera.set_near(0.1F)
           .set_far(50.F)
           .set_fov(degrees_(75))
-          .set_orbit_min(1.9F)
-          .set_orbit_max(2.1F);
+          .set_orbit_min(shape.bounding_sphere().radius() * 1.5F)
+          .set_orbit_max(shape.bounding_sphere().radius() * 2.1F);
 
         orbiting_camera projector;
         projector.set_near(0.1F)
@@ -218,7 +227,11 @@ static void run_loop(
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
         gl.enable(GL.cull_face);
-        gl.cull_face(GL.front);
+        if(inv_cull) {
+            gl.cull_face(GL.front);
+        } else {
+            gl.cull_face(GL.back);
+        }
 
         float t = 0.F;
 
@@ -253,7 +266,7 @@ static void run_loop(
               .set_orbit_factor(math::sine_wave01(t * 0.1F));
             glapi.set_uniform(prog, camera_loc, camera.matrix(aspect));
 
-            projector.set_azimuth(radians_(t * 0.1618F))
+            projector.set_azimuth(radians_(t * -0.1618F))
               .set_elevation(radians_(std::sin(t * 0.2F) * 0.618F))
               .set_orbit_factor(math::sine_wave01(t * 0.2F));
             glapi.set_uniform(prog, projector_loc, projector.matrix(1.F));
