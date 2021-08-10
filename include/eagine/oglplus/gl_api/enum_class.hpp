@@ -82,8 +82,9 @@ using gl_any_enum_class = any_enum_class<EAGINE_ID_V(GL)>;
 /// @ingroup gl_api_wrap
 using gl_any_enum_value = any_enum_value<EAGINE_ID_V(GL)>;
 
-static constexpr auto
-same_enum_class(gl_any_enum_class a, gl_any_enum_class b) noexcept -> bool {
+static constexpr auto same_enum_class(
+  const gl_any_enum_class a,
+  const gl_any_enum_class b) noexcept -> bool {
     return ::eagine::same_enum_class(a, b);
 }
 //------------------------------------------------------------------------------

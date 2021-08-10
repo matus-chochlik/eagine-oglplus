@@ -19,6 +19,8 @@
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
 #include <eagine/shapes/cube.hpp>
+#include <eagine/shapes/sphere.hpp>
+#include <eagine/shapes/torus.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -65,13 +67,16 @@ void main() {
 }
 )"};
 
-static void
-run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
+static void run_loop(
+  eagine::main_ctx& ctx,
+  GLFWwindow* window,
+  int width,
+  int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
 
-    gl_api glapi;
-    auto& [gl, GL] = glapi;
+    const gl_api glapi;
+    const auto& [gl, GL] = glapi;
 
     if(gl.clear) {
         gl_debug_logger gdl{ctx};
@@ -85,33 +90,40 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         // vertex shader
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
-        auto cleanup_vs = gl.delete_shader.raii(vs);
+        const auto cleanup_vs = gl.delete_shader.raii(vs);
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
         // fragment shader
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
-        auto cleanup_fs = gl.delete_shader.raii(fs);
+        const auto cleanup_fs = gl.delete_shader.raii(fs);
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
         // program
         owned_program_name prog;
         gl.create_program() >> prog;
-        auto cleanup_prog = gl.delete_program.raii(prog);
+        const auto cleanup_prog = gl.delete_program.raii(prog);
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
         gl.use_program(prog);
 
         // geometry
-        shape_generator shape(
-          glapi,
-          shapes::unit_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal |
-            shapes::vertex_attrib_kind::face_coord));
+        auto [shape, inv_cull] =
+          [&ctx, &glapi]() -> std::tuple<shape_generator, bool> {
+            const auto attribs = shapes::vertex_attrib_kind::position |
+                                 shapes::vertex_attrib_kind::normal |
+                                 shapes::vertex_attrib_kind::face_coord;
+            if(ctx.args().find("--torus")) {
+                return {{glapi, shapes::unit_torus(attribs)}, false};
+            }
+            if(ctx.args().find("--sphere")) {
+                return {{glapi, shapes::unit_sphere(attribs)}, false};
+            }
+            return {{glapi, shapes::unit_cube(attribs)}, true};
+        }();
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -120,7 +132,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         // vao
         owned_vertex_array_name vao;
         gl.gen_vertex_arrays() >> vao;
-        auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
+        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
         gl.bind_vertex_array(vao);
 
         // positions
@@ -128,7 +140,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.get_attrib_location(prog, "Position") >> position_loc;
         owned_buffer_name positions;
         gl.gen_buffers() >> positions;
-        auto cleanup_positions = gl.delete_buffers.raii(positions);
+        const auto cleanup_positions = gl.delete_buffers.raii(positions);
         shape.attrib_setup(
           glapi,
           vao,
@@ -142,7 +154,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.get_attrib_location(prog, "Normal") >> normal_loc;
         owned_buffer_name normals;
         gl.gen_buffers() >> normals;
-        auto cleanup_normals = gl.delete_buffers.raii(normals);
+        const auto cleanup_normals = gl.delete_buffers.raii(normals);
         shape.attrib_setup(
           glapi,
           vao,
@@ -154,7 +166,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
-        auto cleanup_indices = gl.delete_buffers.raii(indices);
+        const auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
         // color texture
@@ -162,6 +174,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
 
         owned_texture_name color_tex;
         gl.gen_textures() >> color_tex;
+        const auto cleanup_color_tex = gl.delete_textures.raii(color_tex);
         gl.active_texture(GL.texture0 + 0);
         gl.bind_texture(GL.texture_2d, color_tex);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
@@ -200,8 +213,8 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         camera.set_near(0.1F)
           .set_far(50.F)
           .set_fov(degrees_(75))
-          .set_orbit_min(1.9F)
-          .set_orbit_max(2.1F);
+          .set_orbit_min(shape.bounding_sphere().radius() * 1.5F)
+          .set_orbit_max(shape.bounding_sphere().radius() * 2.1F);
 
         orbiting_camera projector;
         projector.set_near(0.1F)
@@ -214,7 +227,11 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
         gl.enable(GL.cull_face);
-        gl.cull_face(GL.front);
+        if(inv_cull) {
+            gl.cull_face(GL.front);
+        } else {
+            gl.cull_face(GL.back);
+        }
 
         float t = 0.F;
 
@@ -249,7 +266,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
               .set_orbit_factor(math::sine_wave01(t * 0.1F));
             glapi.set_uniform(prog, camera_loc, camera.matrix(aspect));
 
-            projector.set_azimuth(radians_(t * 0.1618F))
+            projector.set_azimuth(radians_(t * -0.1618F))
               .set_elevation(radians_(std::sin(t * 0.2F) * 0.618F))
               .set_orbit_factor(math::sine_wave01(t * 0.2F));
             glapi.set_uniform(prog, projector_loc, projector.matrix(1.F));
@@ -296,7 +313,7 @@ static void init_and_run(eagine::main_ctx& ctx) {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);
-            eagine::oglplus::api_initializer gl_api;
+            eagine::oglplus::api_initializer gl_api_init;
             glGetError();
             run_loop(ctx, window, width, height);
         }

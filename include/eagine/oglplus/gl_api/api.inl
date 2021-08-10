@@ -593,4 +593,3 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , finish{"finish", traits, *this} {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
-

@@ -1381,4 +1381,3 @@ basic_gl_constants<ApiTraits>::basic_gl_constants(
   , none("NONE", traits, api) {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
-

@@ -20,15 +20,12 @@
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 class shader_source_block {
-private:
-    structured_memory_block<const shader_source_header> _header;
-
 public:
-    shader_source_block(memory::const_block blk)
-      : _header(blk) {}
+    shader_source_block(const memory::const_block blk)
+      : _header{blk} {}
 
     shader_source_block(const shader_source_header* ptr)
-      : _header(as_bytes(view_one(ptr))) {}
+      : _header{as_bytes(view_one(ptr))} {}
 
     auto is_valid() const noexcept -> bool {
         return _header->magic.is_valid();
@@ -49,6 +46,9 @@ public:
         EAGINE_ASSERT(is_valid());
         return glsl_source_ref(_header->source_text);
     }
+
+private:
+    structured_memory_block<const shader_source_header> _header;
 };
 //------------------------------------------------------------------------------
 class shader_source_file
@@ -56,22 +56,19 @@ class shader_source_file
   , public shader_source_block {
 public:
     shader_source_file(file_contents&& fc)
-      : protected_member<file_contents>(std::move(fc))
-      , shader_source_block(get_the_member()) {}
+      : protected_member<file_contents>{std::move(fc)}
+      , shader_source_block{get_the_member()} {}
 
-    shader_source_file(string_view path)
-      : shader_source_file(file_contents(path)) {}
+    shader_source_file(const string_view path)
+      : shader_source_file{file_contents(path)} {}
 
     shader_source_file(const std::string& path)
-      : shader_source_file(string_view(path)) {}
+      : shader_source_file{string_view(path)} {}
 };
 //------------------------------------------------------------------------------
 class program_source_block {
-private:
-    structured_memory_block<const program_source_header> _header;
-
 public:
-    program_source_block(memory::const_block blk)
+    program_source_block(const memory::const_block blk)
       : _header(blk) {}
 
     auto is_valid() const noexcept -> bool {
@@ -83,12 +80,15 @@ public:
         return _header->shader_sources.size();
     }
 
-    auto shader_source(span_size_t index) const noexcept
+    auto shader_source(const span_size_t index) const noexcept
       -> shader_source_block {
         EAGINE_ASSERT(is_valid());
         EAGINE_ASSERT(index < _header->shader_sources.size());
         return {_header->shader_sources[index]};
     }
+
+private:
+    structured_memory_block<const program_source_header> _header;
 };
 //------------------------------------------------------------------------------
 class program_source_file
@@ -97,13 +97,13 @@ class program_source_file
 public:
     program_source_file(file_contents&& fc)
       : protected_member<file_contents>(std::move(fc))
-      , program_source_block(get_the_member()) {}
+      , program_source_block{get_the_member()} {}
 
-    program_source_file(string_view path)
-      : program_source_file(file_contents(path)) {}
+    program_source_file(const string_view path)
+      : program_source_file{file_contents(path)} {}
 
     program_source_file(const std::string& path)
-      : program_source_file(string_view(path)) {}
+      : program_source_file{string_view(path)} {}
 };
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus

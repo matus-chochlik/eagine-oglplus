@@ -21,7 +21,7 @@ namespace eagine::oglplus {
 /// @see gl_result_info
 class gl_no_result_info {
 public:
-    constexpr auto error_code(anything) noexcept -> auto& {
+    constexpr auto error_code(const anything) noexcept -> auto& {
         return *this;
     }
 
@@ -44,7 +44,7 @@ public:
         return gl_types::error_code_no_error(_error_code);
     }
 
-    constexpr auto error_code(gl_types::enum_type ec) noexcept -> auto& {
+    constexpr auto error_code(const gl_types::enum_type ec) noexcept -> auto& {
         _error_code = ec;
         return *this;
     }

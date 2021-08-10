@@ -29,7 +29,9 @@ public:
     using sizei_type = gl_types::sizei_type;
 
     /// @brief Construction from a single C-string and length value.
-    constexpr glsl_source_ref(const char_type* part, int_type length) noexcept
+    constexpr glsl_source_ref(
+      const char_type* part,
+      const int_type length) noexcept
       : _part{part}
       , _length{length}
       , _count{1}
@@ -44,7 +46,7 @@ public:
 
     /// @brief Construction from C-string array and lengths array.
     glsl_source_ref(
-      span_size_t n,
+      const span_size_t n,
       const char_type** ps,
       const int_type* ls) noexcept
       : _count{eagine::limit_cast<sizei_type>(n)}

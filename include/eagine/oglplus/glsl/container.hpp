@@ -23,8 +23,8 @@ public:
 
     /// @brief Construction from the storage container.
     glsl_container(Container storage) noexcept
-      : _storage(std::move(storage))
-      , _str_ref(_storage.data(), _storage.size()) {}
+      : _storage{std::move(storage)}
+      , _str_ref{_storage.data(), _storage.size()} {}
 
     /// @brief Returns a reference to the storage container.
     auto storage() noexcept -> Container& {

@@ -49,17 +49,7 @@ public:
       : basic_gl_api{ApiTraits{}} {}
 
     /// @brief Returns a reference to the wrapped operations.
-    auto operations() noexcept -> basic_gl_operations<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped operations.
     auto operations() const noexcept -> const basic_gl_operations<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped operations.
-    auto operator()() noexcept -> basic_gl_operations<ApiTraits>& {
         return *this;
     }
 
@@ -69,17 +59,7 @@ public:
     }
 
     /// @brief Returns a reference to the wrapped constants.
-    auto constants() noexcept -> basic_gl_constants<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped constants.
     auto constants() const noexcept -> const basic_gl_constants<ApiTraits>& {
-        return *this;
-    }
-
-    /// @brief Returns a reference to the wrapped constants.
-    auto operator~() noexcept -> basic_gl_constants<ApiTraits>& {
         return *this;
     }
 
@@ -89,13 +69,13 @@ public:
     }
 
     // convenience functions
-    constexpr auto true_or_false(bool b) const noexcept -> true_false {
+    constexpr auto true_or_false(const bool b) const noexcept -> true_false {
         return b ? true_false(this->true_) : true_false(this->false_);
     }
 
     /// @brief Builds a shader program from the specified sources.
     auto build_program(
-      program_name prog,
+      const program_name prog,
       const program_source_block& prog_src_blk) const -> combined_result<void> {
         if(prog_src_blk.is_valid()) {
             const span_size_t n = prog_src_blk.shader_source_count();
@@ -113,8 +93,9 @@ public:
     }
 
     /// @brief Builds a shader program from the sources in a baked memory block.
-    auto build_program(program_name prog, memory::const_block prog_src_blk) const
-      -> combined_result<void> {
+    auto build_program(
+      const program_name prog,
+      const memory::const_block prog_src_blk) const -> combined_result<void> {
         return build_program(prog, program_source_block(prog_src_blk));
     }
 
@@ -124,8 +105,8 @@ private:
     auto _set_uniform(
       ProgramUniformFunc& program_uniform_func,
       UniformFunc& uniform_func,
-      program_name prog,
-      uniform_location loc,
+      const program_name prog,
+      const uniform_location loc,
       T&& value) const -> combined_result<void> {
         if(program_uniform_func) {
             return program_uniform_func(prog, loc, std::forward<T>(value));
@@ -142,8 +123,8 @@ private:
     auto _set_uniform_matrix(
       ProgramUniformFunc& program_uniform_func,
       UniformFunc& uniform_func,
-      program_name prog,
-      uniform_location loc,
+      const program_name prog,
+      const uniform_location loc,
       T&& value,
       true_false transpose) const -> combined_result<void> {
         if(program_uniform_func) {
@@ -160,96 +141,100 @@ private:
 
 public:
     // int
-    auto
-    set_uniform(program_name prog, uniform_location loc, int_type value) const
-      -> combined_result<void> {
+    auto set_uniform(
+      const program_name prog,
+      const uniform_location loc,
+      const int_type value) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform1i, this->uniform1i, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const int_type> value,
-      type_identity<int_type[1]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const int_type> value,
+      const type_identity<int_type[1]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform1iv, this->uniform1iv, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const int_type> value,
-      type_identity<int_type[2]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const int_type> value,
+      const type_identity<int_type[2]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform2iv, this->uniform2iv, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const int_type> value,
-      type_identity<int_type[3]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const int_type> value,
+      const type_identity<int_type[3]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform3iv, this->uniform3iv, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const int_type> value,
-      type_identity<int_type[4]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const int_type> value,
+      const type_identity<int_type[4]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform4iv, this->uniform4iv, prog, loc, value);
     }
 
     // float
-    auto
-    set_uniform(program_name prog, uniform_location loc, float_type value) const
-      -> combined_result<void> {
+    auto set_uniform(
+      const program_name prog,
+      const uniform_location loc,
+      const float_type value) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform1f, this->uniform1f, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      type_identity<float_type[1]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const type_identity<float_type[1]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform1fv, this->uniform1fv, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      type_identity<float_type[2]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const type_identity<float_type[2]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform2fv, this->uniform2fv, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      type_identity<float_type[3]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const type_identity<float_type[3]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform3fv, this->uniform3fv, prog, loc, value);
     }
 
     auto set_uniform(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      type_identity<float_type[4]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const type_identity<float_type[4]>) const -> combined_result<void> {
         return _set_uniform(
           this->program_uniform4fv, this->uniform4fv, prog, loc, value);
     }
 
     template <typename T>
-    auto
-    set_uniform(program_name prog, uniform_location loc, const T& value) const
+    auto set_uniform(
+      const program_name prog,
+      const uniform_location loc,
+      const T& value) const
       -> std::enable_if_t<is_known_vector_type_v<T>, combined_result<void>> {
         return set_uniform(
           prog, loc, element_view(value), canonical_compound_type<T>());
@@ -257,11 +242,11 @@ public:
 
     // uniform matrix
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[2][2]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[2][2]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix2fv,
           this->uniform_matrix2fv,
@@ -272,11 +257,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[2][3]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[2][3]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix2x3fv,
           this->uniform_matrix2x3fv,
@@ -287,11 +272,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[2][4]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[2][4]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix2x4fv,
           this->uniform_matrix2x4fv,
@@ -302,11 +287,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[3][2]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[3][2]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix3x2fv,
           this->uniform_matrix3x2fv,
@@ -317,11 +302,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[3][3]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[3][3]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix3fv,
           this->uniform_matrix3fv,
@@ -332,11 +317,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[3][4]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[3][4]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix3x4fv,
           this->uniform_matrix3x4fv,
@@ -347,11 +332,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[4][2]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[4][2]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix4x2fv,
           this->uniform_matrix4x2fv,
@@ -362,11 +347,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[4][3]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[4][3]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix4x3fv,
           this->uniform_matrix4x3fv,
@@ -377,11 +362,11 @@ public:
     }
 
     auto set_uniform_matrix(
-      program_name prog,
-      uniform_location loc,
-      span<const float_type> value,
-      true_false transpose,
-      type_identity<float_type[4][4]>) const -> combined_result<void> {
+      const program_name prog,
+      const uniform_location loc,
+      const span<const float_type> value,
+      const true_false transpose,
+      const type_identity<float_type[4][4]>) const -> combined_result<void> {
         return _set_uniform_matrix(
           this->program_uniform_matrix4fv,
           this->uniform_matrix4fv,
@@ -392,8 +377,10 @@ public:
     }
 
     template <typename T>
-    auto
-    set_uniform(program_name prog, uniform_location loc, const T& value) const
+    auto set_uniform(
+      const program_name prog,
+      const uniform_location loc,
+      const T& value) const
       -> std::enable_if_t<is_known_matrix_type_v<T>, combined_result<void>> {
         return set_uniform_matrix(
           prog,
@@ -405,9 +392,9 @@ public:
 
     // texture image
     auto spec_tex_image1d(
-      texture_target tex_tgt,
-      gl_types::int_type level,
-      gl_types::int_type border,
+      const texture_target tex_tgt,
+      const gl_types::int_type level,
+      const gl_types::int_type border,
       const image_spec& image) const -> combined_result<void> {
         return this->tex_image1d(
           tex_tgt,
@@ -421,9 +408,9 @@ public:
     }
 
     auto spec_tex_image2d(
-      texture_target tex_tgt,
-      gl_types::int_type level,
-      gl_types::int_type border,
+      const texture_target tex_tgt,
+      const gl_types::int_type level,
+      const gl_types::int_type border,
       const image_spec& image) const -> combined_result<void> {
         return this->tex_image2d(
           tex_tgt,
@@ -438,9 +425,9 @@ public:
     }
 
     auto spec_tex_image3d(
-      texture_target tex_tgt,
-      gl_types::int_type level,
-      gl_types::int_type border,
+      const texture_target tex_tgt,
+      const gl_types::int_type level,
+      const gl_types::int_type border,
       const image_spec& image) const -> combined_result<void> {
         return this->tex_image3d(
           tex_tgt,
@@ -457,19 +444,14 @@ public:
 };
 
 template <std::size_t I, typename ApiTraits>
-auto get(basic_gl_api<ApiTraits>& x) noexcept ->
-  typename std::tuple_element<I, basic_gl_api<ApiTraits>>::type& {
-    return x;
-}
-
-template <std::size_t I, typename ApiTraits>
 auto get(const basic_gl_api<ApiTraits>& x) noexcept -> const
   typename std::tuple_element<I, basic_gl_api<ApiTraits>>::type& {
     return x;
 }
 //------------------------------------------------------------------------------
 template <typename A>
-auto translate(const basic_gl_api<A>& api, bool value) noexcept -> true_false {
+auto translate(const basic_gl_api<A>& api, const bool value) noexcept
+  -> true_false {
     if(value) {
         return api.true_;
     }

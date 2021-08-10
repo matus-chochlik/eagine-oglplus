@@ -23,13 +23,13 @@ namespace eagine::oglplus {
 class orbiting_camera {
 public:
     /// @brief Sets the target position.
-    auto set_target(vec3 target) noexcept -> auto& {
+    auto set_target(const vec3 target) noexcept -> auto& {
         _target = target;
         return *this;
     }
 
     /// @brief Sets the y-axis FOV angle.
-    auto set_fov(radians_t<float> angle) noexcept -> auto& {
+    auto set_fov(const radians_t<float> angle) noexcept -> auto& {
         _fov = angle;
         return *this;
     }
@@ -59,19 +59,19 @@ public:
     }
 
     /// @brief Set the factor for calculating the orbit between min and max.
-    auto set_orbit_factor(float factor) noexcept -> auto& {
+    auto set_orbit_factor(const float factor) noexcept -> auto& {
         _orbit_factor = factor;
         return *this;
     }
 
     /// @brief Sets the azimuth angle (longitude)
-    auto set_azimuth(radians_t<float> turns) noexcept -> auto& {
+    auto set_azimuth(const radians_t<float> turns) noexcept -> auto& {
         _turns = turns;
         return *this;
     }
 
     /// @brief Sets the elevation angle (latitude)
-    auto set_elevation(radians_t<float> pitch) noexcept -> auto& {
+    auto set_elevation(const radians_t<float> pitch) noexcept -> auto& {
         _pitch = pitch;
         return *this;
     }
@@ -124,12 +124,12 @@ public:
         return target() + target_to_camera_direction() * orbit();
     }
 
-    auto perspective_matrix_ctr(float aspect) const noexcept {
+    auto perspective_matrix_ctr(const float aspect) const noexcept {
         return matrix_perspective::y(_fov, aspect, _near, _far);
     }
 
     /// @brief Returns the perspective matrix for the given aspect ratio.
-    auto perspective_matrix(float aspect) const noexcept {
+    auto perspective_matrix(const float aspect) const noexcept {
         return perspective_matrix_ctr(aspect)();
     }
 
@@ -143,17 +143,19 @@ public:
     }
 
     /// @brief Returns the camera matrix (perspective * projection).
-    auto matrix(float aspect) const noexcept {
+    auto matrix(const float aspect) const noexcept {
         return perspective_matrix_ctr(aspect) * transform_matrix_ctr();
     }
 
     /// @brief Returns the 3D position of a point (in NDC) on the target plane.
-    auto target_plane_point(float ndcx, float ndcy, float aspect) const noexcept
-      -> optionally_valid<vec3>;
+    auto target_plane_point(
+      const float ndcx,
+      const float ndcy,
+      const float aspect) const noexcept -> optionally_valid<vec3>;
 
     /// @brief Returns a ray from the camera through a point on the target plane.
-    auto pointer_ray(float ndcx, float ndcy, float aspect) const noexcept
-      -> optionally_valid<line>;
+    auto pointer_ray(const float ndcx, const float ndcy, const float aspect)
+      const noexcept -> optionally_valid<line>;
 
     auto grab_sphere_radius() const noexcept -> float;
     auto grab_sphere() const noexcept -> sphere;
@@ -181,4 +183,3 @@ protected:
 #endif
 
 #endif
-

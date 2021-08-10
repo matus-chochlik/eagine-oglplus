@@ -28,14 +28,14 @@ struct image_data_header {
     constexpr image_data_header() noexcept = default;
 
     image_data_header(
-      valid_if_positive<gl_types::sizei_type> w,
-      valid_if_positive<gl_types::sizei_type> h,
-      valid_if_positive<gl_types::sizei_type> d,
-      valid_if_positive<gl_types::sizei_type> c) noexcept
-      : width(w.value())
-      , height(h.value())
-      , depth(d.value())
-      , channels(c.value()) {}
+      const valid_if_positive<gl_types::sizei_type>& w,
+      const valid_if_positive<gl_types::sizei_type>& h,
+      const valid_if_positive<gl_types::sizei_type>& d,
+      const valid_if_positive<gl_types::sizei_type>& c) noexcept
+      : width{w.value()}
+      , height{h.value()}
+      , depth{d.value()}
+      , channels{c.value()} {}
 };
 
 } // namespace eagine::oglplus

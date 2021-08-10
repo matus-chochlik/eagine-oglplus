@@ -17,8 +17,10 @@ auto orbiting_camera::target_to_camera_direction() const noexcept -> vec3 {
 }
 //------------------------------------------------------------------------------
 OGLPLUS_LIB_FUNC
-auto orbiting_camera::target_plane_point(float ndcx, float ndcy, float aspect)
-  const noexcept -> optionally_valid<vec3> {
+auto orbiting_camera::target_plane_point(
+  const float ndcx,
+  const float ndcy,
+  const float aspect) const noexcept -> optionally_valid<vec3> {
     using math::inverse_matrix;
     using math::multiply;
 
@@ -33,8 +35,10 @@ auto orbiting_camera::target_plane_point(float ndcx, float ndcy, float aspect)
 }
 //------------------------------------------------------------------------------
 OGLPLUS_LIB_FUNC
-auto orbiting_camera::pointer_ray(float ndcx, float ndcy, float aspect)
-  const noexcept -> optionally_valid<line> {
+auto orbiting_camera::pointer_ray(
+  const float ndcx,
+  const float ndcy,
+  const float aspect) const noexcept -> optionally_valid<line> {
     if(const auto ptr{target_plane_point(ndcx, ndcy, aspect)}) {
         return {line(position(), ptr.value_anyway() - position()), true};
     }

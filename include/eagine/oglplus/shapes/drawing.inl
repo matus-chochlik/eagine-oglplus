@@ -5,14 +5,15 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
+#include <eagine/integer_range.hpp>
 #include <eagine/memory/null_ptr.hpp>
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename A>
-inline auto
-translate(const basic_gl_api<A>& api, shapes::primitive_type mode) noexcept
-  -> primitive_type {
+inline auto translate(
+  const basic_gl_api<A>& api,
+  const shapes::primitive_type mode) noexcept -> primitive_type {
     auto& GL = api.constants();
 
     switch(mode) {
@@ -43,9 +44,9 @@ translate(const basic_gl_api<A>& api, shapes::primitive_type mode) noexcept
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline auto
-translate(const basic_gl_api<A>& api, shapes::attrib_data_type type) noexcept
-  -> data_type {
+inline auto translate(
+  const basic_gl_api<A>& api,
+  const shapes::attrib_data_type type) noexcept -> data_type {
     auto& GL = api.constants();
 
     switch(type) {
@@ -68,9 +69,9 @@ translate(const basic_gl_api<A>& api, shapes::attrib_data_type type) noexcept
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline auto
-translate(const basic_gl_api<A>& api, shapes::index_data_type type) noexcept
-  -> index_data_type {
+inline auto translate(
+  const basic_gl_api<A>& api,
+  const shapes::index_data_type type) noexcept -> index_data_type {
     auto& GL = api.constants();
 
     switch(type) {
@@ -86,7 +87,8 @@ translate(const basic_gl_api<A>& api, shapes::index_data_type type) noexcept
     return GL.none;
 }
 //------------------------------------------------------------------------------
-inline auto type_size(shapes::attrib_data_type type) noexcept -> span_size_t {
+inline auto type_size(const shapes::attrib_data_type type) noexcept
+  -> span_size_t {
     switch(type) {
         case shapes::attrib_data_type::ubyte:
             return span_size(sizeof(gl_types::ubyte_type));
@@ -106,7 +108,8 @@ inline auto type_size(shapes::attrib_data_type type) noexcept -> span_size_t {
     return 1;
 }
 //------------------------------------------------------------------------------
-inline auto type_size(shapes::index_data_type type) noexcept -> span_size_t {
+inline auto type_size(const shapes::index_data_type type) noexcept
+  -> span_size_t {
     switch(type) {
         case shapes::index_data_type::unsigned_8:
             return span_size(sizeof(gl_types::ubyte_type));
@@ -140,8 +143,8 @@ inline auto shape_draw_operation::_idx_ptr() const noexcept
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline void
-shape_draw_operation::_prepare(const basic_gl_api<A>& api) const noexcept {
+inline void shape_draw_operation::_prepare(
+  const basic_gl_api<A>& api) const noexcept {
     auto& [gl, GL] = api;
 
     if(_cw_face_winding) {
@@ -167,8 +170,8 @@ shape_draw_operation::_prepare(const basic_gl_api<A>& api) const noexcept {
 }
 //------------------------------------------------------------------------------
 template <typename A>
-inline void
-shape_draw_operation::draw(const basic_gl_api<A>& api) const noexcept {
+inline void shape_draw_operation::draw(
+  const basic_gl_api<A>& api) const noexcept {
     _prepare(api);
     auto& [gl, GL] = api;
 
@@ -182,7 +185,7 @@ shape_draw_operation::draw(const basic_gl_api<A>& api) const noexcept {
 template <typename A>
 inline void shape_draw_operation::draw_instanced(
   const basic_gl_api<A>& api,
-  gl_types::sizei_type inst_count) const noexcept {
+  const gl_types::sizei_type inst_count) const noexcept {
     _prepare(api);
     auto& [gl, GL] = api;
 
@@ -197,7 +200,7 @@ inline void shape_draw_operation::draw_instanced(
 template <typename A>
 inline void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops) noexcept {
+  const span<const shape_draw_operation> ops) noexcept {
     for(const auto& op : ops) {
         op.draw(api);
     }
@@ -206,8 +209,8 @@ inline void draw_using_instructions(
 template <typename A>
 inline void draw_instanced_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
-  gl_types::sizei_type inst_count) noexcept {
+  const span<const shape_draw_operation> ops,
+  const gl_types::sizei_type inst_count) noexcept {
     for(const auto& op : ops) {
         op.draw_instanced(api, inst_count);
     }
@@ -216,10 +219,10 @@ inline void draw_instanced_using_instructions(
 template <typename A>
 inline void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
+  const span<const shape_draw_operation> ops,
   const shape_draw_subset& subs) noexcept {
-    for(span_size_t i = subs.first; i < subs.first + subs.count; ++i) {
-        if(i < ops.size()) {
+    for(const auto i : integer_range(subs.first, subs.first + subs.count)) {
+        if(EAGINE_LIKELY(i < ops.size())) {
             ops[i].draw(api);
         }
     }
@@ -228,11 +231,11 @@ inline void draw_using_instructions(
 template <typename A>
 inline void draw_using_instructions(
   const basic_gl_api<A>& api,
-  span<const shape_draw_operation> ops,
+  const span<const shape_draw_operation> ops,
   const shape_draw_subset& subs,
-  gl_types::sizei_type inst_count) noexcept {
-    for(span_size_t i = subs.first; i < subs.first + subs.count; ++i) {
-        if(i < ops.size()) {
+  const gl_types::sizei_type inst_count) noexcept {
+    for(const auto i : integer_range(subs.first, subs.first + subs.count)) {
+        if(EAGINE_LIKELY(i < ops.size())) {
             ops[i].draw_instanced(api, inst_count);
         }
     }

@@ -30,7 +30,7 @@ inline shape_generator::shape_generator(
 }
 //------------------------------------------------------------------------------
 inline void shape_generator::attrib_data(
-  shapes::vertex_attrib_variant vav,
+  const shapes::vertex_attrib_variant vav,
   memory::block data) const {
     using shapes::attrib_data_type;
 
@@ -53,7 +53,7 @@ inline void shape_generator::attrib_data(
 }
 //------------------------------------------------------------------------------
 inline void shape_generator::index_data(
-  shapes::drawing_variant dv,
+  const shapes::drawing_variant dv,
   memory::block data) const {
     using shapes::index_data_type;
 
@@ -75,10 +75,10 @@ inline void shape_generator::index_data(
 template <typename A>
 inline void shape_generator::attrib_setup(
   const basic_gl_api<A>& api,
-  vertex_array_name vao,
-  buffer_name buf,
-  vertex_attrib_location loc,
-  shapes::vertex_attrib_variant vav,
+  const vertex_array_name vao,
+  const buffer_name buf,
+  const vertex_attrib_location loc,
+  const shapes::vertex_attrib_variant vav,
   memory::buffer& temp) const {
     using shapes::attrib_data_type;
     auto& [gl, GL] = api;
@@ -104,8 +104,8 @@ inline void shape_generator::attrib_setup(
 }
 //------------------------------------------------------------------------------
 inline auto shape_generator::operation_count(
-  span<const shapes::drawing_variant> dvs) const -> span_size_t {
-    auto result = 0;
+  const span<const shapes::drawing_variant> dvs) const -> span_size_t {
+    span_size_t result = 0;
     for(auto dv : dvs) {
         result += _gen->operation_count(dv);
     }
@@ -115,8 +115,8 @@ inline auto shape_generator::operation_count(
 template <typename A>
 inline void shape_generator::index_setup(
   const basic_gl_api<A>& api,
-  buffer_name buf,
-  shapes::drawing_variant dv,
+  const buffer_name buf,
+  const shapes::drawing_variant dv,
   memory::buffer& temp) const {
     auto& [gl, GL] = api;
 
@@ -131,8 +131,8 @@ inline void shape_generator::index_setup(
 template <typename A>
 inline void shape_generator::index_setup(
   const basic_gl_api<A>& api,
-  buffer_name buf,
-  span<const shapes::drawing_variant> dvs,
+  const buffer_name buf,
+  const span<const shapes::drawing_variant> dvs,
   memory::buffer& temp) const {
     auto& [gl, GL] = api;
 
@@ -155,7 +155,7 @@ inline void shape_generator::index_setup(
 template <typename A>
 inline void shape_generator::instructions(
   const basic_gl_api<A>& api,
-  shapes::drawing_variant dv,
+  const shapes::drawing_variant dv,
   span<shape_draw_operation> ops) const {
     EAGINE_ASSERT(ops.size() >= operation_count(dv));
 
@@ -170,7 +170,7 @@ inline void shape_generator::instructions(
 template <typename A>
 inline void shape_generator::instructions(
   const basic_gl_api<A>& api,
-  span<const shapes::drawing_variant> dvs,
+  const span<const shapes::drawing_variant> dvs,
   span<shape_draw_subset> subs,
   span<shape_draw_operation> ops) const {
 

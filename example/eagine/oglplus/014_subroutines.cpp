@@ -83,13 +83,16 @@ void main() {
 }
 )"};
 
-static void
-run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
+static void run_loop(
+  eagine::main_ctx& ctx,
+  GLFWwindow* window,
+  int width,
+  int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
 
-    gl_api glapi;
-    auto& [gl, GL] = glapi;
+    const gl_api glapi;
+    const auto& [gl, GL] = glapi;
 
     if(gl.clear) {
         gl_debug_logger gdl{ctx};
@@ -103,21 +106,21 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         // vertex shader
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
-        auto cleanup_vs = gl.delete_shader.raii(vs);
+        const auto cleanup_vs = gl.delete_shader.raii(vs);
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
         // fragment shader
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
-        auto cleanup_fs = gl.delete_shader.raii(fs);
+        const auto cleanup_fs = gl.delete_shader.raii(fs);
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
         // program
         owned_program_name prog;
         gl.create_program() >> prog;
-        auto cleanup_prog = gl.delete_program.raii(prog);
+        const auto cleanup_prog = gl.delete_program.raii(prog);
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
@@ -137,14 +140,14 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         // vao
         owned_vertex_array_name vao;
         gl.gen_vertex_arrays() >> vao;
-        auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
+        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
         gl.bind_vertex_array(vao);
 
         // positions
         vertex_attrib_location position_loc{0};
         owned_buffer_name positions;
         gl.gen_buffers() >> positions;
-        auto cleanup_positions = gl.delete_buffers.raii(positions);
+        const auto cleanup_positions = gl.delete_buffers.raii(positions);
         shape.attrib_setup(
           glapi,
           vao,
@@ -158,7 +161,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         vertex_attrib_location coord_loc{1};
         owned_buffer_name coords;
         gl.gen_buffers() >> coords;
-        auto cleanup_coords = gl.delete_buffers.raii(coords);
+        const auto cleanup_coords = gl.delete_buffers.raii(coords);
         shape.attrib_setup(
           glapi,
           vao,
@@ -171,7 +174,7 @@ run_loop(eagine::main_ctx& ctx, GLFWwindow* window, int width, int height) {
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
-        auto cleanup_indices = gl.delete_buffers.raii(indices);
+        const auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
         // subroutines
@@ -296,7 +299,7 @@ static void init_and_run(eagine::main_ctx& ctx) {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);
-            eagine::oglplus::api_initializer gl_api;
+            eagine::oglplus::api_initializer gl_api_init;
             glGetError();
             run_loop(ctx, window, width, height);
         }

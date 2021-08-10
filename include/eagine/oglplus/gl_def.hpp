@@ -41,7 +41,9 @@ struct api_initializer {
     auto operator=(const api_initializer&) = delete;
     auto operator=(api_initializer&&) = delete;
 
-    explicit api_initializer(int /*gl_ver_major*/ = 3, int /*gl_ver_minor*/ = 3);
+    explicit api_initializer(
+      const int /*gl_ver_major*/ = 3,
+      const int /*gl_ver_minor*/ = 3);
 };
 
 } // namespace eagine::oglplus

@@ -19,35 +19,35 @@ static void run() {
     using namespace eagine;
     using namespace eagine::oglplus;
 
-    gl_api gl;
+    const gl_api gl;
 
-    if(ok info{gl.get_string(gl.vendor)}) {
+    if(const ok info{gl.get_string(gl.vendor)}) {
         std::cout << "Vendor: " << extract(info) << std::endl;
     }
 
-    if(ok info{gl.get_string(gl.renderer)}) {
+    if(const ok info{gl.get_string(gl.renderer)}) {
         std::cout << "Renderer: " << extract(info) << std::endl;
     }
 
-    if(ok info{gl.get_string(gl.version)}) {
+    if(const ok info{gl.get_string(gl.version)}) {
         std::cout << "Version: " << extract(info) << std::endl;
     }
 
-    if(ok info{gl.get_integer(gl.major_version)}) {
+    if(const ok info{gl.get_integer(gl.major_version)}) {
         std::cout << "Major version: " << extract(info) << std::endl;
     }
 
-    if(ok info{gl.get_integer(gl.minor_version)}) {
+    if(const ok info{gl.get_integer(gl.minor_version)}) {
         std::cout << "Minor version: " << extract(info) << std::endl;
     }
 
-    if(ok info{gl.get_string(gl.shading_language_version)}) {
+    if(const ok info{gl.get_string(gl.shading_language_version)}) {
         std::cout << "GLSL Version: " << extract(info) << std::endl;
     }
 
     std::cout << "Extensions:" << std::endl;
 
-    if(ok extensions{gl.get_extensions()}) {
+    if(const ok extensions{gl.get_extensions()}) {
         for(auto name : extensions) {
             std::cout << "  " << name << std::endl;
         }
@@ -75,7 +75,7 @@ static void init_and_run() {
         } else {
             glfwMakeContextCurrent(window);
             glewExperimental = GL_TRUE;
-            GLenum init_result = glewInit();
+            const GLenum init_result = glewInit();
             glGetError();
             if(init_result != GLEW_OK) {
                 throw std::runtime_error("OpenGL/GLEW initialization error.");

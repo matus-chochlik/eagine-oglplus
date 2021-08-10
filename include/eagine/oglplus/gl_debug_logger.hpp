@@ -33,11 +33,11 @@ public:
 
 private:
     void _do_log(
-      gl_types::enum_type source,
-      gl_types::enum_type type,
-      gl_types::uint_type id,
-      gl_types::enum_type severity,
-      gl_types::sizei_type length,
+      const gl_types::enum_type source,
+      const gl_types::enum_type type,
+      const gl_types::uint_type id,
+      const gl_types::enum_type severity,
+      const gl_types::sizei_type length,
       const gl_types::char_type* message) const {
         const auto msg = length >= 0 ? string_view(message, span_size(length))
                                      : string_view(message);

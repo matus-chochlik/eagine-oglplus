@@ -21,4 +21,3 @@ template class basic_gl_c_api<gl_api_traits>;
 template class basic_gl_api<gl_api_traits>;
 
 } // namespace eagine::oglplus
-
