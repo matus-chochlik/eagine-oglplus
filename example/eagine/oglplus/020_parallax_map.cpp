@@ -34,7 +34,6 @@ in vec3 Normal;
 in vec3 Tangent;
 in vec2 TexCoord;
 
-out vec3 vertEye;
 out vec3 vertLight;
 out vec3 vertNormal;
 out vec2 vertTexCoord;
@@ -44,7 +43,7 @@ out mat3 vertNormalMatrix;
 void main() {
 	mat4 modelview = camera * model;
 	vec4 eyePos = modelview * Position;
-	vertEye = eyePos.xyz;
+	vec3 vertEye = eyePos.xyz;
 	vec3 fragTangent = mat3(modelview) * Tangent;
 	vertNormal = mat3(modelview) * Normal;
 	vertLight = (mat3(camera) * lightPos) - vertEye;
@@ -64,9 +63,8 @@ static const eagine::string_view fs_source{R"(
 uniform sampler2D colorTex;
 uniform sampler2D normalTex;
 uniform sampler2D depthTex;
-const float depthMult = 0.15;
+const float depthMult = 0.12;
 
-in vec3 vertEye;
 in vec3 vertLight;
 in vec3 vertNormal;
 in vec2 vertTexCoord;
@@ -77,7 +75,6 @@ out vec3 fragColor;
 
 void main() {
 	vec3 viewTangent = normalize(vertViewTangent);
-	float perp = sqrt(-dot(normalize(vertEye), vertNormal));
 	float sampleInterval = 1.0 / length(textureSize(depthTex, 0));
 	vec3 sampleStep = viewTangent*sampleInterval;
 	float depth = sqrt(1.0 - texture(depthTex, vertTexCoord).r);
@@ -92,7 +89,7 @@ void main() {
 		if(offsTexC.y <= 0.0 || offsTexC.y >= 1.0) {
 			discard;
 		}
-		if(depth*depthMult*perp <= -viewOffs.z) {
+		if(depth*depthMult <= -viewOffs.z) {
 			break;
 		}
 		viewOffs += sampleStep;
