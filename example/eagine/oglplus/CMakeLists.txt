@@ -3,7 +3,6 @@
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
 #
-
 eagine_example_common(001_info)
 eagine_example_common(002_clear)
 eagine_example_common(003_spectrum)
@@ -20,6 +19,7 @@ eagine_example_common(013_texture_projection)
 eagine_example_common(014_subroutines)
 eagine_example_common(015_tessellation)
 eagine_example_common(016_wooden_crate)
+eagine_example_common(020_parallax_map)
 
 eagine_embed_target_resources(
 	TARGET oglplus-013_texture_projection
@@ -34,3 +34,11 @@ eagine_embed_target_resources(
 	wooden_crate-hmap
 	wooden_crate-nmap
 )
+eagine_embed_target_resources(
+	TARGET oglplus-020_parallax_map
+	INPUT_TARGETS
+	wooden_crate-diff
+	wooden_crate-hmap
+	wooden_crate-nmap
+)
+
