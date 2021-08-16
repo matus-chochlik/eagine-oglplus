@@ -57,279 +57,6 @@
          id="stop7053" />
     </linearGradient>
     <pattern
-       inkscape:stockid="Polka dots, large white"
-       id="Polkadots-largewhite"
-       patternTransform="translate(0,0) scale(10,10)"
-       height="10"
-       width="10"
-       patternUnits="userSpaceOnUse"
-       inkscape:collect="always">
-      <circle
-         id="circle4938"
-         r="0.45"
-         cy="0.810"
-         cx="2.567"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4940"
-         r="0.45"
-         cy="2.33"
-         cx="3.048"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4942"
-         r="0.45"
-         cy="2.415"
-         cx="4.418"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4944"
-         r="0.45"
-         cy="3.029"
-         cx="1.844"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4946"
-         r="0.45"
-         cy="1.363"
-         cx="6.08"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4948"
-         r="0.45"
-         cy="4.413"
-         cx="5.819"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4950"
-         r="0.45"
-         cy="4.048"
-         cx="4.305"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4952"
-         r="0.45"
-         cy="3.045"
-         cx="5.541"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4954"
-         r="0.45"
-         cy="5.527"
-         cx="4.785"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4956"
-         r="0.45"
-         cy="5.184"
-         cx="2.667"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4958"
-         r="0.45"
-         cy="1.448"
-         cx="7.965"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4960"
-         r="0.45"
-         cy="5.049"
-         cx="7.047"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4962"
-         r="0.45"
-         cy="0.895"
-         cx="4.340"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4964"
-         r="0.45"
-         cy="0.340"
-         cx="7.125"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4966"
-         r="0.45"
-         cy="1.049"
-         cx="9.553"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4968"
-         r="0.45"
-         cy="2.689"
-         cx="7.006"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4970"
-         r="0.45"
-         cy="2.689"
-         cx="8.909"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4972"
-         r="0.45"
-         cy="4.407"
-         cx="9.315"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4974"
-         r="0.45"
-         cy="3.870"
-         cx="7.820"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4976"
-         r="0.45"
-         cy="5.948"
-         cx="8.270"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4978"
-         r="0.45"
-         cy="7.428"
-         cx="7.973"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4980"
-         r="0.45"
-         cy="8.072"
-         cx="9.342"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4982"
-         r="0.45"
-         cy="9.315"
-         cx="8.206"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4984"
-         r="0.45"
-         cy="9.475"
-         cx="9.682"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4986"
-         r="0.45"
-         cy="6.186"
-         cx="9.688"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4988"
-         r="0.45"
-         cy="6.296"
-         cx="3.379"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4990"
-         r="0.45"
-         cy="8.204"
-         cx="2.871"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4992"
-         r="0.45"
-         cy="8.719"
-         cx="4.59"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4994"
-         r="0.45"
-         cy="9.671"
-         cx="3.181"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4996"
-         r="0.45"
-         cy="7.315"
-         cx="5.734"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle4998"
-         r="0.45"
-         cy="6.513"
-         cx="6.707"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5000"
-         r="0.45"
-         cy="9.670"
-         cx="5.730"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5002"
-         r="0.45"
-         cy="8.373"
-         cx="6.535"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5004"
-         r="0.45"
-         cy="7.154"
-         cx="4.37"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5006"
-         r="0.45"
-         cy="7.25"
-         cx="0.622"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5008"
-         r="0.45"
-         cy="5.679"
-         cx="0.831"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5010"
-         r="0.45"
-         cy="8.519"
-         cx="1.257"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5012"
-         r="0.45"
-         cy="6.877"
-         cx="1.989"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5014"
-         r="0.45"
-         cy="3.181"
-         cx="0.374"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5016"
-         r="0.45"
-         cy="1.664"
-         cx="1.166"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5018"
-         r="0.45"
-         cy="0.093"
-         cx="1.151"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5020"
-         r="0.45"
-         cy="10.093"
-         cx="1.151"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5022"
-         r="0.45"
-         cy="4.451"
-         cx="1.302"
-         style="fill:white;stroke:none" />
-      <circle
-         id="circle5024"
-         r="0.45"
-         cy="3.763"
-         cx="3.047"
-         style="fill:white;stroke:none" />
-    </pattern>
-    <pattern
        inkscape:stockid="Packed circles"
        id="Packedcircles"
        patternTransform="translate(0,0) scale(10,10)"
@@ -842,18 +569,6 @@
            id="path5531" />
       </g>
     </pattern>
-    <filter
-       inkscape:collect="always"
-       id="filter6691"
-       x="-0.024857201"
-       y="-0.024857201"
-       width="1.0497144"
-       height="1.0497144">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="4.97025"
-         id="feGaussianBlur6693" />
-    </filter>
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient7049"
@@ -1283,18 +998,6 @@
        fx="37.131985"
        fy="37.563389"
        r="11.368017" />
-    <filter
-       inkscape:collect="always"
-       id="filter4699"
-       x="-0.0060937498"
-       y="-0.0059090907"
-       width="1.0121875"
-       height="1.0118182">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="1.3"
-         id="feGaussianBlur4701" />
-    </filter>
     <filter
        inkscape:collect="always"
        id="filter5564"
@@ -1763,18 +1466,6 @@
          stdDeviation="1.2356662"
          id="feGaussianBlur5718" />
     </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter2161"
-       x="-0.031105199"
-       y="-0.031105199"
-       width="1.0622104"
-       height="1.0622104">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="6.48025"
-         id="feGaussianBlur2159" />
-    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -1784,8 +1475,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="261.78571"
-     inkscape:cy="300.35714"
+     inkscape:cx="30.357143"
+     inkscape:cy="53.214286"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="true"
@@ -1890,14 +1581,6 @@
        height="64"
        x="0"
        y="988.36218" />
-    <rect
-       style="opacity:0.2;fill:url(#Wavy);fill-opacity:1;stroke:none;filter:url(#filter4699)"
-       id="rect3197"
-       width="512"
-       height="528"
-       x="0"
-       y="0"
-       transform="translate(0,540.36218)" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -1922,14 +1605,6 @@
        style="fill:#ffffff;fill-opacity:1;stroke:none"
        d="M 0,0 V 512 H 512 V 0 Z M 93.25,48 H 464 V 418.75 Z M 48,93.25 418.75,464 H 48 Z"
        id="rect6657" />
-    <path
-       style="fill:#fcfcfc;fill-opacity:1;stroke:#000000;stroke-opacity:1;filter:url(#filter6691)"
-       d="m 6,506 c 166.66667,0 333.33333,0 500,0 0,-166.66667 0,-333.33333 0,-500 C 339.33333,6 172.66667,6 6,6 6,172.66667 6,339.33333 6,506 Z M 83.5625,42 c 128.8125,0 257.625,0 386.4375,0 0,130.42708 0,260.85417 0,391.28125 C 339.63124,302.79601 209.20399,172.36876 78.71875,42 c 1.614583,0 3.229167,0 4.84375,0 z M 45.4375,82.125 C 174.64317,211.49166 303.91912,340.78946 433.28125,470 302.85417,470 172.42708,470 42,470 42,339.54167 42,209.08333 42,78.625 c 1.145833,1.166667 2.291667,2.333333 3.4375,3.5 z"
-       id="path6667" />
-    <path
-       id="path6695"
-       d="m 6,506 c 166.66667,0 333.33333,0 500,0 0,-166.66667 0,-333.33333 0,-500 C 339.33333,6 172.66667,6 6,6 6,172.66667 6,339.33333 6,506 Z M 83.5625,42 c 128.8125,0 257.625,0 386.4375,0 0,130.42708 0,260.85417 0,391.28125 C 339.63124,302.79601 209.20399,172.36876 78.71875,42 c 1.614583,0 3.229167,0 4.84375,0 z M 45.4375,82.125 C 174.64317,211.49166 303.91912,340.78946 433.28125,470 302.85417,470 172.42708,470 42,470 42,339.54167 42,209.08333 42,78.625 c 1.145833,1.166667 2.291667,2.333333 3.4375,3.5 z"
-       style="opacity:0.1;fill:url(#Polkadots-largewhite);fill-opacity:1;stroke:none;stroke-opacity:1;filter:url(#filter2161)" />
     <path
        style="opacity:0.2;fill:url(#pattern4781);fill-opacity:1;stroke:none;filter:url(#filter5716)"
        d="M 26.46875,11.5625 C 14.734397,11.157288 7.4773182,27.437023 16.03125,35.65625 c 7.688367,9.321443 25.442486,3.856748 25.9375,-8.34375 1.004436,-8.615184 -7.034129,-16.386499 -15.5,-15.75 z"
