@@ -237,7 +237,7 @@ static void run_loop(
 
         // light texture
         const auto light_tex_src{
-          embed(EAGINE_ID(LightTex), "wooden_crate-hmap")};
+          embed(EAGINE_ID(LightTex), "wooden_crate-lmap")};
 
         owned_texture_name light_tex;
         gl.gen_textures() >> light_tex;

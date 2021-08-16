@@ -31,7 +31,7 @@ eagine_embed_target_resources(
 	TARGET oglplus-016_wooden_crate
 	INPUT_TARGETS
 	wooden_crate-diff
-	wooden_crate-hmap
+	wooden_crate-lmap
 	wooden_crate-nmap
 )
 eagine_embed_target_resources(
