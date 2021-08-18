@@ -20,6 +20,7 @@ eagine_example_common(014_subroutines)
 eagine_example_common(015_tessellation)
 eagine_example_common(016_wooden_crate)
 eagine_example_common(020_parallax_map)
+eagine_example_common(021_octree)
 
 eagine_embed_target_resources(
 	TARGET oglplus-013_texture_projection
