@@ -41,7 +41,7 @@ uniform mat4 model;
 void main() {
     gl_Position = model * vec4(Position, 1.0);
     vertNormal = mat3(model) * Normal;
-    vertAmbient = mix(1.0, 0.4, Occlusion);
+    vertAmbient = mix(1.0, 0.0, Occlusion);
     gl_Position = camera * vec4(gl_Position.xyz, 1.0);
 }
 )"};
@@ -111,8 +111,8 @@ static void run_loop(
               6,
               48,
               4,
-              0.6F),
-            64));
+              0.5F),
+            128));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
