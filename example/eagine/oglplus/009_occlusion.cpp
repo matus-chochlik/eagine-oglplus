@@ -112,7 +112,7 @@ static void run_loop(
               48,
               4,
               0.5F),
-            128));
+            256));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));

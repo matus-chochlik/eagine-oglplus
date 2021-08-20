@@ -1,4 +1,4 @@
-/// @example oglplus/009_round_cube.cpp
+/// @example oglplus/008_round_cube.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
