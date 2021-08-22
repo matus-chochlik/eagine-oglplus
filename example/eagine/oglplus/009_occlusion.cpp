@@ -66,6 +66,9 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
+    set_progress_update_callback(
+      ctx, &glfwPollEvents, std::chrono::milliseconds{100});
+
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
 
@@ -105,6 +108,7 @@ static void run_loop(
         shape_generator shape(
           glapi,
           shapes::occlude(
+            ctx,
             shapes::unit_twisted_torus(
               shapes::vertex_attrib_kind::position |
                 shapes::vertex_attrib_kind::normal,
