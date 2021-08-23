@@ -11,7 +11,7 @@
 #include "basic_gl_api.hpp"
 #include "gl_api_fwd.hpp"
 
-#if !OGLPLUS_LINK_LIBRARY || defined(OGLPLUS_IMPLEMENTING_LIBRARY)
+#if !EAGINE_OGLPLUS_LIBRARY || defined(EAGINE_IMPLEMENTING_OGLPLUS_LIBRARY)
 #include <eagine/oglplus/gl_api.inl>
 #endif
 

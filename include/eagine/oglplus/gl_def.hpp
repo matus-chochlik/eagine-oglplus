@@ -61,7 +61,7 @@ struct api_initializer {
 EAGINE_DIAG_POP()
 #endif
 //------------------------------------------------------------------------------
-#if !OGLPLUS_LINK_LIBRARY || defined(OGLPLUS_IMPLEMENTING_LIBRARY)
+#if !EAGINE_OGLPLUS_LIBRARY || defined(EAGINE_IMPLEMENTING_OGLPLUS_LIBRARY)
 #include <eagine/oglplus/gl_def.inl>
 #endif
 //------------------------------------------------------------------------------
