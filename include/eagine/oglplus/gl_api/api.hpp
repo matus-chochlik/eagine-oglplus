@@ -912,6 +912,31 @@ public:
         }
     } get_active_attrib_name;
 
+    struct : func<OGLPAFP(TransformFeedbackVaryings)> {
+        using func<OGLPAFP(TransformFeedbackVaryings)>::func;
+
+        auto operator()(
+          program_name prog,
+          string_view name,
+          transform_feedback_mode mode) const noexcept {
+            const auto name_c_str{c_str(name)};
+            const char* varyings = name_c_str;
+            return this->_cnvchkcall(prog, 1, &varyings, mode);
+        }
+
+        auto operator()(program_name prog, string_view name) const noexcept {
+#ifdef GL_SEPARATE_ATTRIBS
+            const auto name_c_str{c_str(name)};
+            const char* varyings = name_c_str;
+            return this->_cnvchkcall(prog, 1, &varyings, GL_SEPARATE_ATTRIBS);
+#else
+            EAGINE_MAYBE_UNUSED(prog);
+            EAGINE_MAYBE_UNUSED(name);
+            return this->_fake();
+#endif
+        }
+    } transform_feedback_varyings;
+
     func<
       OGLPAFP(BindFragDataLocation),
       void(program_name, frag_data_location, string_view)>

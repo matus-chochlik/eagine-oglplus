@@ -110,6 +110,7 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , bind_attrib_location{"bind_attrib_location", traits, *this}
   , get_attrib_location{"get_attrib_location", traits, *this}
   , get_active_attrib_name{"get_active_attrib_name", traits, *this}
+  , transform_feedback_varyings{"transform_feedback_varyings", traits, *this}
   , bind_frag_data_location{"bind_frag_data_location", traits, *this}
   , get_frag_data_location{"get_frag_data_location", traits, *this}
   , get_frag_data_index{"get_frag_data_index", traits, *this}

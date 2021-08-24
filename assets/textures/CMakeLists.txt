@@ -5,5 +5,6 @@
 
 oglplus_add_texture(oglplus)
 oglplus_add_texture(wooden_crate-diff)
+oglplus_add_texture(wooden_crate-lmap)
 oglplus_add_texture(wooden_crate-hmap)
 oglplus_add_texture(wooden_crate-nmap)

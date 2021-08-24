@@ -161,10 +161,9 @@ static void run_loop(
         shape.index_setup(glapi, indices, buf);
 
         // gradient
-
         owned_texture_name gradient_tex{};
         gl.gen_textures() >> gradient_tex;
-        const auto cleanup_gradients = gl.delete_textures.raii(gradient_tex);
+        const auto cleanup_gradient = gl.delete_textures.raii(gradient_tex);
         gl.active_texture(GL.texture0);
         gl.bind_texture(GL.texture_1d, gradient_tex);
         gl.tex_parameter_i(GL.texture_1d, GL.texture_min_filter, GL.linear);
@@ -201,9 +200,9 @@ static void run_loop(
         }
 
         // uniforms
-        uniform_location gradients_loc;
-        gl.get_uniform_location(prog, "gradients") >> gradients_loc;
-        glapi.set_uniform(prog, gradients_loc, 0);
+        uniform_location gradient_loc;
+        gl.get_uniform_location(prog, "gradient") >> gradient_loc;
+        glapi.set_uniform(prog, gradient_loc, 0);
 
         uniform_location camera_pos_loc;
         gl.get_uniform_location(prog, "cameraPos") >> camera_pos_loc;

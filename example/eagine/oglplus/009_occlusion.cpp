@@ -1,4 +1,4 @@
-/// @example oglplus/009_round_cube.cpp
+/// @example oglplus/009_occlusion.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -10,39 +10,51 @@
 #include <eagine/oglplus/gl_api.hpp>
 
 #include <eagine/main.hpp>
+#include <eagine/math/curve.hpp>
 #include <eagine/math/functions.hpp>
 #include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
+#include <eagine/oglplus/math/matrix.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
-#include <eagine/shapes/round_cube.hpp>
+#include <eagine/shapes/occluded.hpp>
+#include <eagine/shapes/twisted_torus.hpp>
 
 #include <GLFW/glfw3.h>
 
+#include <array>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
 static const eagine::string_view vs_source{R"(
 #version 140
 in vec3 Position;
 in vec3 Normal;
-out vec3 vertColor;
-uniform mat4 Camera;
+in float Occlusion;
+out vec3 vertNormal;
+out float vertAmbient;
+uniform mat4 camera;
+uniform mat4 model;
 
 void main() {
-    gl_Position = Camera * vec4(Position, 1.0);
-    vertColor = normalize(vec3(1.0) + Normal);
+    gl_Position = model * vec4(Position, 1.0);
+    vertNormal = mat3(model) * Normal;
+    vertAmbient = mix(1.0, 0.0, Occlusion);
+    gl_Position = camera * vec4(gl_Position.xyz, 1.0);
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
 #version 140
-in vec3 vertColor;
+in vec3 vertNormal;
+in float vertAmbient;
 out vec3 fragColor;
 
 void main() {
-    fragColor = mix(vertColor, vec3(1), 0.5);
+    fragColor = vertAmbient *
+        mix(vec3(1.0), normalize(vec3(1.0) - vertNormal), 0.2);
 }
 )"};
 
@@ -53,6 +65,9 @@ static void run_loop(
   int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
+
+    set_progress_update_callback(
+      ctx, &glfwPollEvents, std::chrono::milliseconds{100});
 
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
@@ -92,9 +107,16 @@ static void run_loop(
         // geometry
         shape_generator shape(
           glapi,
-          shapes::unit_round_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal));
+          shapes::occlude(
+            ctx,
+            shapes::unit_twisted_torus(
+              shapes::vertex_attrib_kind::position |
+                shapes::vertex_attrib_kind::normal,
+              6,
+              48,
+              4,
+              0.5F),
+            256));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -134,23 +156,43 @@ static void run_loop(
           buf);
         gl.bind_attrib_location(prog, normal_loc, "Normal");
 
+        // occlusion
+        vertex_attrib_location occlusion_loc{2};
+        owned_buffer_name occlusion;
+        gl.gen_buffers() >> occlusion;
+        const auto cleanup_occlusion = gl.delete_buffers.raii(occlusion);
+        shape.attrib_setup(
+          glapi,
+          vao,
+          occlusion,
+          occlusion_loc,
+          shapes::vertex_attrib_kind::occlusion,
+          buf);
+        gl.bind_attrib_location(prog, occlusion_loc, "Occlusion");
+
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         const auto cleanup_indices = gl.delete_buffers.raii(indices);
         shape.index_setup(glapi, indices, buf);
 
-        // uniform
+        // uniforms
         uniform_location camera_loc;
-        gl.get_uniform_location(prog, "Camera") >> camera_loc;
+        gl.get_uniform_location(prog, "camera") >> camera_loc;
+
+        uniform_location model_loc;
+        gl.get_uniform_location(prog, "model") >> model_loc;
 
         orbiting_camera camera;
-        camera.set_near(0.1F).set_far(50.F).set_fov(right_angle_());
+        camera.set_near(0.1F)
+          .set_far(50.F)
+          .set_fov(degrees_(70))
+          .set_orbit_min(0.7F)
+          .set_orbit_max(1.0F);
 
-        gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
+        gl.clear_color(0.65F, 0.65F, 0.65F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
-        gl.polygon_mode(GL.front_and_back, GL.line);
 
         float t = 0.F;
 
@@ -177,15 +219,14 @@ static void run_loop(
 
             gl.clear(GL.color_buffer_bit | GL.depth_buffer_bit);
 
-            t += 0.02F;
+            t += 0.01F;
             const auto aspect = float(width) / float(height);
+            camera.set_azimuth(radians_(t))
+              .set_elevation(radians_(std::sin(t)))
+              .set_orbit_factor(math::sine_wave01(t * 0.1F));
+            glapi.set_uniform(prog, camera_loc, camera.matrix(aspect));
             glapi.set_uniform(
-              prog,
-              camera_loc,
-              camera.set_azimuth(radians_(t))
-                .set_elevation(radians_(std::sin(t)))
-                .set_orbit_factor(math::sine_wave01(t * 0.1F))
-                .matrix(aspect));
+              prog, model_loc, oglplus::matrix_rotation_x(right_angles_(t))());
             draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);

@@ -4338,6 +4338,17 @@ public:
 #endif
       blend;
 
+    /// @var program_point_size
+    /// @glconstwrap{PROGRAM_POINT_SIZE}
+    opt_c_api_constant<
+      mp_list<capability>,
+#ifdef GL_PROGRAM_POINT_SIZE
+      enum_type_c<GL_PROGRAM_POINT_SIZE>>
+#else
+      enum_type_i>
+#endif
+      program_point_size;
+
     /// @var primitive_restart
     /// @glconstwrap{PRIMITIVE_RESTART}
     opt_c_api_constant<
@@ -4416,6 +4427,17 @@ public:
       enum_type_i>
 #endif
       stencil_test;
+
+    /// @var rasterizer_discard
+    /// @glconstwrap{RASTERIZER_DISCARD}
+    opt_c_api_constant<
+      mp_list<capability>,
+#ifdef GL_RASTERIZER_DISCARD
+      enum_type_c<GL_RASTERIZER_DISCARD>>
+#else
+      enum_type_i>
+#endif
+      rasterizer_discard;
 
     /// @var multisample
     /// @glconstwrap{MULTISAMPLE}

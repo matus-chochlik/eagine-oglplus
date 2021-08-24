@@ -110,22 +110,42 @@ using path_nv_tag = EAGINE_MSG_TYPE(gl, PathNV);
 /// @brief Alias for GL buffer object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_buffer_name
+/// @see no_buffer
 using buffer_name = gl_object_name<buffer_tag>;
+
+/// @brief Constant used to break existing buffer object binding.
+/// @ingroup gl_api_wrap
+constexpr const buffer_name no_buffer{0};
 
 /// @brief Alias for GL framebuffer object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_framebuffer_name
+/// @see default_framebuffer
 using framebuffer_name = gl_object_name<framebuffer_tag>;
+
+/// @brief Constant representing the default framebuffer object.
+/// @ingroup gl_api_wrap
+constexpr const framebuffer_name default_framebuffer{0};
 
 /// @brief Alias for GL program pipeline object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_program_pipeline_name
+/// @see no_program_pipeline
 using program_pipeline_name = gl_object_name<program_pipeline_tag>;
+
+/// @brief Constant used to break existing program pipeline object binding.
+/// @ingroup gl_api_wrap
+constexpr const program_pipeline_name no_program_pipeline{0};
 
 /// @brief Alias for GL program object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_program_name
+/// @see no_program
 using program_name = gl_object_name<program_tag>;
+
+/// @brief Constant used to break existing program object binding.
+/// @ingroup gl_api_wrap
+constexpr const program_name no_program{0};
 
 /// @brief Alias for GL query object handle.
 /// @ingroup gl_api_wrap
@@ -135,12 +155,22 @@ using query_name = gl_object_name<query_tag>;
 /// @brief Alias for GL renderbuffer object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_renderbuffer_name
+/// @see no_renderbuffer
 using renderbuffer_name = gl_object_name<renderbuffer_tag>;
+
+/// @brief Constant used to break existing renderbuffer object binding.
+/// @ingroup gl_api_wrap
+constexpr const renderbuffer_name no_renderbuffer{0};
 
 /// @brief Alias for GL sampler object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_sampler_name
+/// @see no_sampler
 using sampler_name = gl_object_name<sampler_tag>;
+
+/// @brief Constant used to break existing sampler object binding.
+/// @ingroup gl_api_wrap
+constexpr const sampler_name no_sampler{0};
 
 /// @brief Alias for GL shader object handle.
 /// @ingroup gl_api_wrap
@@ -150,17 +180,32 @@ using shader_name = gl_object_name<shader_tag>;
 /// @brief Alias for GL texture object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_texture_name
+/// @see default_texture
 using texture_name = gl_object_name<texture_tag>;
+
+/// @brief Constant representing the default texture object.
+/// @ingroup gl_api_wrap
+constexpr const texture_name default_texture{0};
 
 /// @brief Alias for GL transform feedback object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_transform_feedback_name
+/// @see default_transform_feedback
 using transform_feedback_name = gl_object_name<transform_feedback_tag>;
+
+/// @brief Constant representing the default transform feedback object.
+/// @ingroup gl_api_wrap
+constexpr const transform_feedback_name default_transform_feedback{0};
 
 /// @brief Alias for GL vertex array object handle.
 /// @ingroup gl_api_wrap
 /// @see owned_vertex_array_name
+/// @see no_vertex_array
 using vertex_array_name = gl_object_name<vertex_array_tag>;
+
+/// @brief Constant used to break existing vertex array object binding.
+/// @ingroup gl_api_wrap
+constexpr const vertex_array_name no_vertex_array{0};
 
 /// @brief Alias for GL path object handle.
 /// @ingroup gl_api_wrap
