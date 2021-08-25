@@ -66,8 +66,13 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
+    const auto progress_callback = [window] {
+        glfwPollEvents();
+        return glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
+    };
+
     set_progress_update_callback(
-      ctx, &glfwPollEvents, std::chrono::milliseconds{100});
+      ctx, {construct_from, progress_callback}, std::chrono::milliseconds{100});
 
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
