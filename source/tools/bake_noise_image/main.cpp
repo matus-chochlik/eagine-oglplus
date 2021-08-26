@@ -103,7 +103,7 @@ void write_output(std::ostream& output, const options& opts) {
             hdr.format = GL_RGBA;
             hdr.internal_format = GL_RGBA8;
             break;
-    };
+    }
 
     hdr.data_type = GL_UNSIGNED_BYTE;
 
