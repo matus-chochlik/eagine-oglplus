@@ -79,6 +79,7 @@ inline void shape_generator::attrib_setup(
   const buffer_name buf,
   const vertex_attrib_location loc,
   const shapes::vertex_attrib_variant vav,
+  const string_view label,
   memory::buffer& temp) const {
     using shapes::attrib_data_type;
     auto& [gl, GL] = api;
@@ -88,6 +89,9 @@ inline void shape_generator::attrib_setup(
     attrib_data(vav, data);
 
     gl.bind_buffer(GL.array_buffer, buf);
+    if(label) {
+        gl.object_label(buf, label);
+    }
     gl.buffer_data(GL.array_buffer, data, GL.static_draw);
 
     gl.vertex_attrib_pointer(
@@ -117,6 +121,7 @@ inline void shape_generator::index_setup(
   const basic_gl_api<A>& api,
   const buffer_name buf,
   const shapes::drawing_variant dv,
+  const string_view label,
   memory::buffer& temp) const {
     auto& [gl, GL] = api;
 
@@ -125,6 +130,9 @@ inline void shape_generator::index_setup(
     index_data(dv, data);
 
     gl.bind_buffer(GL.element_array_buffer, buf);
+    if(label) {
+        gl.object_label(buf, label);
+    }
     gl.buffer_data(GL.element_array_buffer, data, GL.static_draw);
 }
 //------------------------------------------------------------------------------
@@ -133,6 +141,7 @@ inline void shape_generator::index_setup(
   const basic_gl_api<A>& api,
   const buffer_name buf,
   const span<const shapes::drawing_variant> dvs,
+  const string_view label,
   memory::buffer& temp) const {
     auto& [gl, GL] = api;
 
@@ -149,6 +158,9 @@ inline void shape_generator::index_setup(
     auto data = head(cover(temp), total_size);
 
     gl.bind_buffer(GL.element_array_buffer, buf);
+    if(label) {
+        gl.object_label(buf, label);
+    }
     gl.buffer_data(GL.element_array_buffer, data, GL.static_draw);
 }
 //------------------------------------------------------------------------------

@@ -82,7 +82,7 @@ public:
     extension ARB_shading_language_include;
 
     // utilities
-    constexpr auto type_of(buffer_name) const noexcept {
+    static constexpr auto type_of(buffer_name) noexcept {
 #ifdef GL_BUFFER
         return object_type(GL_BUFFER);
 #else
@@ -90,7 +90,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(framebuffer_name) const noexcept {
+    static constexpr auto type_of(framebuffer_name) noexcept {
 #ifdef GL_FRAMEBUFFER
         return object_type(GL_FRAMEBUFFER);
 #else
@@ -98,7 +98,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(program_pipeline_name) const noexcept {
+    static constexpr auto type_of(program_pipeline_name) noexcept {
 #ifdef GL_PROGRAM_PIPELINE
         return object_type(GL_PROGRAM_PIPELINE);
 #else
@@ -106,7 +106,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(program_name) const noexcept {
+    static constexpr auto type_of(program_name) noexcept {
 #ifdef GL_PROGRAM
         return object_type(GL_PROGRAM);
 #else
@@ -114,7 +114,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(query_name) const noexcept {
+    static constexpr auto type_of(query_name) noexcept {
 #ifdef GL_QUERY
         return object_type(GL_QUERY);
 #else
@@ -122,7 +122,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(renderbuffer_name) const noexcept {
+    static constexpr auto type_of(renderbuffer_name) noexcept {
 #ifdef GL_RENDERBUFFER
         return object_type(GL_RENDERBUFFER);
 #else
@@ -130,7 +130,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(sampler_name) const noexcept {
+    static constexpr auto type_of(sampler_name) noexcept {
 #ifdef GL_SAMPLER
         return object_type(GL_SAMPLER);
 #else
@@ -138,7 +138,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(shader_name) const noexcept {
+    static constexpr auto type_of(shader_name) noexcept {
 #ifdef GL_SHADER
         return object_type(GL_SHADER);
 #else
@@ -146,7 +146,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(texture_name) const noexcept {
+    static constexpr auto type_of(texture_name) noexcept {
 #ifdef GL_TEXTURE
         return object_type(GL_TEXTURE);
 #else
@@ -154,7 +154,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(transform_feedback_name) const noexcept {
+    static constexpr auto type_of(transform_feedback_name) noexcept {
 #ifdef GL_TRANSFORM_FEEDBACK
         return object_type(GL_TRANSFORM_FEEDBACK);
 #else
@@ -162,7 +162,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(vertex_array_name) const noexcept {
+    static constexpr auto type_of(vertex_array_name) noexcept {
 #ifdef GL_VERTEX_ARRAY
         return object_type(GL_VERTEX_ARRAY);
 #else
@@ -4207,9 +4207,9 @@ public:
         template <typename ObjTag>
         constexpr auto operator()(
           gl_object_name<ObjTag> name,
-          string_view message) const noexcept {
+          string_view label) const noexcept {
             return this->_cnvchkcall(
-              type_of(name), name, sizei_type(message.size()), message.data());
+              type_of(name), name, sizei_type(label.size()), label.data());
         }
 
     } object_label;
