@@ -91,6 +91,7 @@ static void run_loop(
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
+        gl.object_label(vs, "vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -98,6 +99,7 @@ static void run_loop(
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
         const auto cleanup_fs = gl.delete_shader.raii(fs);
+        gl.object_label(fs, "fragment shader");
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
@@ -147,6 +149,7 @@ static void run_loop(
           positions,
           position_loc,
           shapes::vertex_attrib_kind::position,
+          "positions",
           buf);
 
         // normals
@@ -161,13 +164,14 @@ static void run_loop(
           normals,
           normal_loc,
           shapes::vertex_attrib_kind::normal,
+          "normals",
           buf);
 
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, buf);
+        shape.index_setup(glapi, indices, "indices", buf);
 
         // color texture
         const auto color_tex_src{embed(EAGINE_ID(ColorTex), "oglplus")};

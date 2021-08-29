@@ -142,7 +142,6 @@ static void run_loop(
           positions,
           position_loc,
           shapes::vertex_attrib_kind::position,
-          "positions buffer",
           buf);
         gl.bind_attrib_location(prog, position_loc, "Position");
 
@@ -150,7 +149,7 @@ static void run_loop(
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, "index buffer", buf);
+        shape.index_setup(glapi, indices, buf);
 
         gl.disable(GL.depth_test);
 

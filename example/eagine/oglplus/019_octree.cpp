@@ -39,6 +39,7 @@ public:
         oglplus::owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
+        gl.object_label(vs, "sort vertex shader");
         gl.shader_source(vs, oglplus::glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -111,10 +112,12 @@ public:
         oglplus::owned_shader_name gs;
         gl.create_shader(GL.geometry_shader) >> gs;
         const auto cleanup_gs = gl.delete_shader.raii(gs);
+        gl.object_label(gs, "sort geometry shader");
         gl.shader_source(gs, oglplus::glsl_string_ref(gs_source));
         gl.compile_shader(gs);
 
         gl.create_program() >> prog;
+        gl.object_label(prog, "sort program");
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, gs);
         gl.transform_feedback_varyings(
@@ -159,6 +162,7 @@ public:
         oglplus::owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
+        gl.object_label(vs, "draw vertex shader");
         gl.shader_source(vs, oglplus::glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -173,10 +177,12 @@ public:
         oglplus::owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
         const auto cleanup_fs = gl.delete_shader.raii(fs);
+        gl.object_label(fs, "draw fragment shader");
         gl.shader_source(fs, oglplus::glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
         gl.create_program() >> prog;
+        gl.object_label(prog, "draw program shader");
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);

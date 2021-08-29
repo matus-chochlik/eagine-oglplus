@@ -70,6 +70,7 @@ static void run_loop(
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
+        gl.object_label(vs, "vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -77,6 +78,7 @@ static void run_loop(
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
         const auto cleanup_fs = gl.delete_shader.raii(fs);
+        gl.object_label(fs, "fragment shader");
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
@@ -84,6 +86,7 @@ static void run_loop(
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
+        gl.object_label(prog, "draw program");
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
@@ -117,6 +120,7 @@ static void run_loop(
           positions,
           position_loc,
           shapes::vertex_attrib_kind::position,
+          "positions",
           buf);
         gl.bind_attrib_location(prog, position_loc, "Position");
 
@@ -131,6 +135,7 @@ static void run_loop(
           normals,
           normal_loc,
           shapes::vertex_attrib_kind::normal,
+          "normals",
           buf);
         gl.bind_attrib_location(prog, normal_loc, "Normal");
 
@@ -138,7 +143,7 @@ static void run_loop(
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, buf);
+        shape.index_setup(glapi, indices, "indices", buf);
 
         // uniform
         uniform_location camera_loc;

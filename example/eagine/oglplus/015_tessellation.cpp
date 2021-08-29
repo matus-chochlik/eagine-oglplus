@@ -202,6 +202,7 @@ static void run_loop(
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
+        gl.object_label(vs, "vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -209,6 +210,7 @@ static void run_loop(
         owned_shader_name cs;
         gl.create_shader(GL.tess_control_shader) >> cs;
         const auto cleanup_cs = gl.delete_shader.raii(cs);
+        gl.object_label(cs, "tessellation control shader");
         gl.shader_source(cs, glsl_string_ref(cs_source));
         gl.compile_shader(cs);
 
@@ -216,6 +218,7 @@ static void run_loop(
         owned_shader_name es;
         gl.create_shader(GL.tess_evaluation_shader) >> es;
         const auto cleanup_es = gl.delete_shader.raii(es);
+        gl.object_label(es, "tessellation evaluation shader");
         gl.shader_source(es, glsl_string_ref(es_source));
         gl.compile_shader(es);
 
@@ -223,6 +226,7 @@ static void run_loop(
         owned_shader_name gs;
         gl.create_shader(GL.geometry_shader) >> gs;
         const auto cleanup_gs = gl.delete_shader.raii(gs);
+        gl.object_label(gs, "geometry shader");
         gl.shader_source(gs, glsl_string_ref(gs_source));
         gl.compile_shader(gs);
 
@@ -230,6 +234,7 @@ static void run_loop(
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
         const auto cleanup_fs = gl.delete_shader.raii(fs);
+        gl.object_label(fs, "fragment shader");
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
