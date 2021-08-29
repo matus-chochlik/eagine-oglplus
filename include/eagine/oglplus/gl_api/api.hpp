@@ -187,7 +187,7 @@ public:
         }
 
         auto bind(Params... params) const noexcept {
-            return [=] {
+            return [=, this] {
                 return (*this)(params...);
             };
         }
@@ -240,7 +240,7 @@ public:
         }
 
         auto bind(Params... params) const noexcept {
-            return [=] {
+            return [=, this] {
                 return (*this)(params...);
             };
         }
