@@ -154,6 +154,7 @@ static void run_loop(
           shapes::unit_cube(
             shapes::vertex_attrib_kind::position |
             shapes::vertex_attrib_kind::normal |
+            shapes::vertex_attrib_kind::tangential |
             shapes::vertex_attrib_kind::face_coord));
 
         std::vector<shape_draw_operation> _ops;
