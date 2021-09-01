@@ -82,7 +82,7 @@ public:
     extension ARB_shading_language_include;
 
     // utilities
-    constexpr auto type_of(buffer_name) const noexcept {
+    static constexpr auto type_of(buffer_name) noexcept {
 #ifdef GL_BUFFER
         return object_type(GL_BUFFER);
 #else
@@ -90,7 +90,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(framebuffer_name) const noexcept {
+    static constexpr auto type_of(framebuffer_name) noexcept {
 #ifdef GL_FRAMEBUFFER
         return object_type(GL_FRAMEBUFFER);
 #else
@@ -98,7 +98,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(program_pipeline_name) const noexcept {
+    static constexpr auto type_of(program_pipeline_name) noexcept {
 #ifdef GL_PROGRAM_PIPELINE
         return object_type(GL_PROGRAM_PIPELINE);
 #else
@@ -106,7 +106,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(program_name) const noexcept {
+    static constexpr auto type_of(program_name) noexcept {
 #ifdef GL_PROGRAM
         return object_type(GL_PROGRAM);
 #else
@@ -114,7 +114,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(query_name) const noexcept {
+    static constexpr auto type_of(query_name) noexcept {
 #ifdef GL_QUERY
         return object_type(GL_QUERY);
 #else
@@ -122,7 +122,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(renderbuffer_name) const noexcept {
+    static constexpr auto type_of(renderbuffer_name) noexcept {
 #ifdef GL_RENDERBUFFER
         return object_type(GL_RENDERBUFFER);
 #else
@@ -130,7 +130,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(sampler_name) const noexcept {
+    static constexpr auto type_of(sampler_name) noexcept {
 #ifdef GL_SAMPLER
         return object_type(GL_SAMPLER);
 #else
@@ -138,7 +138,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(shader_name) const noexcept {
+    static constexpr auto type_of(shader_name) noexcept {
 #ifdef GL_SHADER
         return object_type(GL_SHADER);
 #else
@@ -146,7 +146,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(texture_name) const noexcept {
+    static constexpr auto type_of(texture_name) noexcept {
 #ifdef GL_TEXTURE
         return object_type(GL_TEXTURE);
 #else
@@ -154,7 +154,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(transform_feedback_name) const noexcept {
+    static constexpr auto type_of(transform_feedback_name) noexcept {
 #ifdef GL_TRANSFORM_FEEDBACK
         return object_type(GL_TRANSFORM_FEEDBACK);
 #else
@@ -162,7 +162,7 @@ public:
 #endif
     }
 
-    constexpr auto type_of(vertex_array_name) const noexcept {
+    static constexpr auto type_of(vertex_array_name) noexcept {
 #ifdef GL_VERTEX_ARRAY
         return object_type(GL_VERTEX_ARRAY);
 #else
@@ -187,7 +187,7 @@ public:
         }
 
         auto bind(Params... params) const noexcept {
-            return [=] {
+            return [this, params...] {
                 return (*this)(params...);
             };
         }
@@ -240,7 +240,7 @@ public:
         }
 
         auto bind(Params... params) const noexcept {
-            return [=] {
+            return [this, params...] {
                 return (*this)(params...);
             };
         }
@@ -846,9 +846,9 @@ public:
                 prog,
                 intf,
                 index,
-                props.size(),
+                sizei_type(props.size()),
                 props.raw_enums().data(),
-                dest.size(),
+                sizei_type(dest.size()),
                 &real_len,
                 dest.data())
               .replaced_with(head(dest, span_size(real_len)));
@@ -870,9 +870,9 @@ public:
                 prog,
                 intf,
                 index,
-                props.size(),
+                sizei_type(props.size()),
                 props.raw_enums().data(),
-                dest.size(),
+                sizei_type(dest.size()),
                 &real_len,
                 dest.data())
               .replaced_with(head(dest, span_size(real_len)));
@@ -1027,7 +1027,7 @@ public:
                 prog,
                 shdr_type,
                 loc.index(),
-                dest.size(),
+                sizei_type(dest.size()),
                 &real_len,
                 dest.data())
               .replaced_with(head(dest, span_size(real_len)));
@@ -2547,7 +2547,7 @@ public:
               height,
               depth,
               border,
-              data.size(),
+              sizei_type(data.size()),
               data.data());
         }
     } compressed_tex_image3d;
@@ -2564,7 +2564,14 @@ public:
           int_type border,
           memory::const_block data) const noexcept {
             return this->_cnvchkcall(
-              tgt, level, ifmt, width, height, border, data.size(), data.data());
+              tgt,
+              level,
+              ifmt,
+              width,
+              height,
+              border,
+              sizei_type(data.size()),
+              data.data());
         }
     } compressed_tex_image2d;
 
@@ -2579,7 +2586,13 @@ public:
           int_type border,
           memory::const_block data) const noexcept {
             return this->_cnvchkcall(
-              tgt, level, ifmt, width, border, data.size(), data.data());
+              tgt,
+              level,
+              ifmt,
+              width,
+              border,
+              sizei_type(data.size()),
+              data.data());
         }
     } compressed_tex_image1d;
 
@@ -2606,7 +2619,7 @@ public:
               height,
               depth,
               fmt,
-              data.size(),
+              sizei_type(data.size()),
               data.data());
         }
     } compressed_tex_sub_image3d;
@@ -2634,7 +2647,7 @@ public:
               height,
               depth,
               fmt,
-              data.size(),
+              sizei_type(data.size()),
               data.data());
         }
     } compressed_texture_sub_image3d;
@@ -2658,7 +2671,7 @@ public:
               width,
               height,
               fmt,
-              data.size(),
+              sizei_type(data.size()),
               data.data());
         }
     } compressed_tex_sub_image2d;
@@ -2682,7 +2695,7 @@ public:
               width,
               height,
               fmt,
-              data.size(),
+              sizei_type(data.size()),
               data.data());
         }
     } compressed_texture_sub_image2d;
@@ -2697,7 +2710,13 @@ public:
           pixel_format fmt,
           memory::const_block data) const noexcept {
             return this->_cnvchkcall(
-              tgt, level, xoffset, width, fmt, data.size(), data.data());
+              tgt,
+              level,
+              xoffset,
+              width,
+              fmt,
+              sizei_type(data.size()),
+              data.data());
         }
     } compressed_tex_sub_image1d;
 
@@ -2711,7 +2730,13 @@ public:
           pixel_format fmt,
           memory::const_block data) const noexcept {
             return this->_cnvchkcall(
-              tex, level, xoffset, width, fmt, data.size(), data.data());
+              tex,
+              level,
+              xoffset,
+              width,
+              fmt,
+              sizei_type(data.size()),
+              data.data());
         }
     } compressed_texture_sub_image1d;
 
@@ -3509,7 +3534,7 @@ public:
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               mode,
-              glyphs.size(),
+              sizei_type(glyphs.size()),
               GL_UTF8_NV,
               static_cast<const char*>(c_str(glyphs)),
               pth,
@@ -3549,7 +3574,7 @@ public:
           span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
-              glyphs.size(),
+              sizei_type(glyphs.size()),
               GL_UTF8_NV,
               static_cast<const char*>(c_str(glyphs)),
               pth,
@@ -3580,7 +3605,7 @@ public:
           span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
-              glyphs.size(),
+              sizei_type(glyphs.size()),
               GL_UTF8_NV,
               static_cast<const char*>(c_str(glyphs)),
               pth,
@@ -3618,7 +3643,7 @@ public:
           span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
-              glyphs.size(),
+              sizei_type(glyphs.size()),
               GL_UTF8_NV,
               static_cast<const char*>(c_str(glyphs)),
               pth,
@@ -3646,7 +3671,7 @@ public:
           span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
-              glyphs.size(),
+              sizei_type(glyphs.size()),
               GL_UTF8_NV,
               static_cast<const char*>(c_str(glyphs)),
               pth,
@@ -3977,7 +4002,11 @@ public:
           string_view name,
           string_view str) const noexcept {
             return this->_cnvchkcall(
-              kind, name.size(), name.data(), str.size(), str.data());
+              kind,
+              sizei_type(name.size()),
+              name.data(),
+              sizei_type(str.size()),
+              str.data());
         }
     } named_string;
 
@@ -3985,7 +4014,7 @@ public:
         using func<OGLPAFP(DeleteNamedString)>::func;
 
         constexpr auto operator()(string_view name) const noexcept {
-            return this->_cnvchkcall(name.size(), name.data());
+            return this->_cnvchkcall(sizei_type(name.size()), name.data());
         }
     } delete_named_string;
 
@@ -3993,7 +4022,7 @@ public:
         using func<OGLPAFP(IsNamedString)>::func;
 
         constexpr auto operator()(string_view name) const noexcept {
-            return this->_cnvchkcall(name.size(), name.data())
+            return this->_cnvchkcall(sizei_type(name.size()), name.data())
               .cast_to(type_identity<true_false>{});
         }
     } is_named_string;
@@ -4102,7 +4131,12 @@ public:
           span<const uint_type> ids,
           true_false enabled) const noexcept {
             return this->_cnvchkcall(
-              source, type, severity, ids.size(), ids.data(), enabled);
+              source,
+              type,
+              severity,
+              sizei_type(ids.size()),
+              ids.data(),
+              enabled);
         }
 
         constexpr auto operator()(
@@ -4125,7 +4159,12 @@ public:
           uint_type id,
           string_view message) const noexcept {
             return this->_cnvchkcall(
-              source, type, id, severity, message.size(), message.data());
+              source,
+              type,
+              id,
+              severity,
+              sizei_type(message.size()),
+              message.data());
         }
 
     } debug_message_insert;
@@ -4155,7 +4194,7 @@ public:
           uint_type id,
           string_view message) const noexcept {
             return this->_cnvchkcall(
-              source, id, message.size(), message.data());
+              source, id, sizei_type(message.size()), message.data());
         }
 
     } push_debug_group;
@@ -4168,9 +4207,9 @@ public:
         template <typename ObjTag>
         constexpr auto operator()(
           gl_object_name<ObjTag> name,
-          string_view message) const noexcept {
+          string_view label) const noexcept {
             return this->_cnvchkcall(
-              type_of(name), name, message.size(), message.data());
+              type_of(name), name, sizei_type(label.size()), label.data());
         }
 
     } object_label;

@@ -94,6 +94,7 @@ static void run_loop(
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
+        gl.object_label(vs, "mandelbrot vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -101,6 +102,7 @@ static void run_loop(
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
         const auto cleanup_fs = gl.delete_shader.raii(fs);
+        gl.object_label(fs, "mandelbrot fragment shader");
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
@@ -108,6 +110,7 @@ static void run_loop(
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
+        gl.object_label(prog, "mandelbrot program");
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
@@ -126,6 +129,7 @@ static void run_loop(
         gl.gen_vertex_arrays() >> vao;
         const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
         gl.bind_vertex_array(vao);
+        gl.object_label(vao, "screen VAO");
 
         // positions
         vertex_attrib_location position_loc{0};

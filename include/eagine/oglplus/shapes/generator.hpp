@@ -155,6 +155,26 @@ public:
       const buffer_name buf,
       const vertex_attrib_location loc,
       const shapes::vertex_attrib_variant attrib_variant,
+      const string_view label,
+      memory::buffer& temp) const;
+
+    template <typename A>
+    void attrib_setup(
+      const basic_gl_api<A>& api,
+      const vertex_array_name vao,
+      const buffer_name buf,
+      const vertex_attrib_location loc,
+      const shapes::vertex_attrib_variant attrib_variant,
+      memory::buffer& temp) const {
+        return attrib_setup(api, vao, buf, loc, attrib_variant, {}, temp);
+    }
+
+    template <typename A>
+    void index_setup(
+      const basic_gl_api<A>& api,
+      const buffer_name buf,
+      const shapes::drawing_variant dv,
+      const string_view label,
       memory::buffer& temp) const;
 
     template <typename A>
@@ -162,14 +182,25 @@ public:
       const basic_gl_api<A>& api,
       const buffer_name buf,
       const shapes::drawing_variant dv,
-      memory::buffer& temp) const;
+      memory::buffer& temp) const {
+        return index_setup(api, buf, dv, {}, temp);
+    }
+
+    template <typename A>
+    void index_setup(
+      const basic_gl_api<A>& api,
+      const buffer_name buf,
+      const string_view label,
+      memory::buffer& temp) const {
+        return index_setup(api, buf, 0, label, temp);
+    }
 
     template <typename A>
     void index_setup(
       const basic_gl_api<A>& api,
       const buffer_name buf,
       memory::buffer& temp) const {
-        return index_setup(api, buf, 0, temp);
+        return index_setup(api, buf, 0, {}, temp);
     }
 
     template <typename A>
@@ -177,7 +208,17 @@ public:
       const basic_gl_api<A>& api,
       const buffer_name buf,
       const span<const shapes::drawing_variant> dvs,
+      const string_view label,
       memory::buffer& temp) const;
+
+    template <typename A>
+    void index_setup(
+      const basic_gl_api<A>& api,
+      const buffer_name buf,
+      const span<const shapes::drawing_variant> dvs,
+      memory::buffer& temp) const {
+        return index_setup(api, buf, dvs, {}, temp);
+    }
 
     template <typename A>
     void instructions(

@@ -66,8 +66,13 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
+    const auto progress_callback = [window] {
+        glfwPollEvents();
+        return glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
+    };
+
     set_progress_update_callback(
-      ctx, &glfwPollEvents, std::chrono::milliseconds{100});
+      ctx, {construct_from, progress_callback}, std::chrono::milliseconds{100});
 
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
@@ -85,6 +90,7 @@ static void run_loop(
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
+        gl.object_label(vs, "vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -92,6 +98,7 @@ static void run_loop(
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
         const auto cleanup_fs = gl.delete_shader.raii(fs);
+        gl.object_label(fs, "fragment shader");
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
@@ -139,6 +146,7 @@ static void run_loop(
           positions,
           position_loc,
           shapes::vertex_attrib_kind::position,
+          "positions",
           buf);
         gl.bind_attrib_location(prog, position_loc, "Position");
 
@@ -153,6 +161,7 @@ static void run_loop(
           normals,
           normal_loc,
           shapes::vertex_attrib_kind::normal,
+          "normals",
           buf);
         gl.bind_attrib_location(prog, normal_loc, "Normal");
 
@@ -167,6 +176,7 @@ static void run_loop(
           occlusion,
           occlusion_loc,
           shapes::vertex_attrib_kind::occlusion,
+          "occlusion",
           buf);
         gl.bind_attrib_location(prog, occlusion_loc, "Occlusion");
 
@@ -174,7 +184,7 @@ static void run_loop(
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, buf);
+        shape.index_setup(glapi, indices, "indices", buf);
 
         // uniforms
         uniform_location camera_loc;

@@ -354,7 +354,6 @@ static void run_loop(
             camera.set_azimuth(radians_(t * 0.4F))
               .set_elevation(radians_(std::sin(t * 0.5F)))
               .set_orbit_factor(math::sine_wave01(t * 0.1F));
-            ;
             glapi.set_uniform(
               prog, perspective_loc, camera.perspective_matrix(aspect));
             glapi.set_uniform(prog, camera_loc, camera.transform_matrix());
