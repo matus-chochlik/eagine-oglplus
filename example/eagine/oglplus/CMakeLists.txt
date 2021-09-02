@@ -22,6 +22,7 @@ eagine_example_common(015_tessellation)
 eagine_example_common(016_wooden_crate)
 eagine_example_common(019_octree)
 eagine_example_common(020_parallax_map)
+eagine_example_common(021_parallax_sphere)
 
 eagine_embed_target_resources(
 	TARGET oglplus-013_texture_projection
@@ -42,5 +43,11 @@ eagine_embed_target_resources(
 	wooden_crate-diff
 	wooden_crate-hmap
 	wooden_crate-nmap
+)
+eagine_embed_target_resources(
+	TARGET oglplus-021_parallax_sphere
+	INPUT_TARGETS
+	worley-bump
+	round_rect_mask
 )
 
