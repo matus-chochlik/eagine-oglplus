@@ -41,20 +41,20 @@ out vec3 vertViewTangent;
 out mat3 vertNormalMatrix;
 
 void main() {
-	mat4 modelview = camera * model;
-	vec4 eyePos = modelview * Position;
-	vec3 vertEye = eyePos.xyz;
-	vec3 fragTangent = mat3(modelview) * Tangent;
-	vertNormal = mat3(modelview) * Normal;
-	vertLight = lightPos - (model * Position).xyz;
-	vertNormalMatrix = mat3(fragTangent, cross(vertNormal, fragTangent), vertNormal);
-	vertViewTangent = vec3(
-		dot(vertNormalMatrix[0], vertEye),
-		dot(vertNormalMatrix[1], vertEye),
-		dot(vertNormalMatrix[2], vertEye)
-	);
-	vertTexCoord = TexCoord;
-	gl_Position = perspective * eyePos;
+    mat4 modelview = camera * model;
+    vec4 eyePos = modelview * Position;
+    vec3 vertEye = eyePos.xyz;
+    vec3 fragTangent = mat3(modelview) * Tangent;
+    vertNormal = mat3(modelview) * Normal;
+    vertLight = lightPos - (model * Position).xyz;
+    vertNormalMatrix = mat3(fragTangent, cross(vertNormal, fragTangent), vertNormal);
+    vertViewTangent = vec3(
+        dot(vertNormalMatrix[0], vertEye),
+        dot(vertNormalMatrix[1], vertEye),
+        dot(vertNormalMatrix[2], vertEye)
+    );
+    vertTexCoord = TexCoord;
+    gl_Position = perspective * eyePos;
 }
 )"};
 
@@ -62,7 +62,7 @@ static const eagine::string_view fs_source{R"(
 #version 400
 uniform sampler2D normalTex;
 uniform sampler2D maskTex;
-const float depthMult = 0.12;
+const float depthMult = 0.15;
 
 in vec3 vertLight;
 in vec3 vertNormal;
@@ -73,49 +73,46 @@ in mat3 vertNormalMatrix;
 out vec3 fragColor;
 
 vec3 normalAt(vec2 c) {
-	vec3 n = 2.0*texture(normalTex, c).xyz-vec3(1.0);
-	return vertNormalMatrix * vec3(-n.xy, n.z);
-}
-
-float shadeAt(vec2 c) {
-	return texture(normalTex, c).z;
+    vec3 n = 2.0*texture(normalTex, c).xyz-vec3(1.0);
+    return vertNormalMatrix * vec3(-n.xy, n.z);
 }
 
 float depthAt(vec2 c) {
-	return texture(normalTex, c).a * texture(maskTex, c).r;
+    return texture(normalTex, c).a * texture(maskTex, c).r;
 }
 
 void main() {
-	vec3 viewTangent = normalize(vertViewTangent);
-	float sampleInterval = 1.0 / length(textureSize(normalTex, 0));
-	vec3 sampleStep = viewTangent*sampleInterval;
-	float depth = depthAt(vertTexCoord);
-	float maxOffs = min((depth * depthMult)/(-viewTangent.z), 1.0);
-	vec3 viewOffs = vec3(0.0, 0.0, 0.0);
-	vec2 offsTexC = vertTexCoord + viewOffs.xy;
-	while(length(viewOffs) < maxOffs)
-	{
-		if(offsTexC.x <= 0.0 || offsTexC.x >= 1.0) {
-			discard;
-		}
-		if(offsTexC.y <= 0.0 || offsTexC.y >= 1.0) {
-			discard;
-		}
-		if(depth*depthMult <= -viewOffs.z) {
-			break;
-		}
-		viewOffs += sampleStep;
-		offsTexC = vertTexCoord + viewOffs.xy;
-		depth = depthAt(offsTexC);
-	}
-	float emission = max(pow(fract(exp(1.1+depth)), 5.0), depth*1.6);
-	float shade = shadeAt(offsTexC);
-	vec3 finalNormal = normalAt(offsTexC);
-	float dffuse = dot(normalize(vertLight), normalize(finalNormal));
-	fragColor = max(
-		mix(0.6, 0.4, shade) * vec3(0.10 + 0.35*max(dffuse, 0.0)),
-		emission * vec3(1.2, 1.0, 0.6)
-	);
+    vec3 viewTangent = normalize(vertViewTangent);
+    float sampleInterval = 1.0 / length(textureSize(normalTex, 0));
+    vec3 sampleStep = viewTangent*sampleInterval;
+    float depth = depthAt(vertTexCoord);
+    float maxOffs = min((depth * depthMult)/(-viewTangent.z), 1.0);
+    vec3 viewOffs = vec3(0.0, 0.0, 0.0);
+    vec2 offsTexC = vertTexCoord + viewOffs.xy;
+    while(true) {
+        if(offsTexC.x <= 0.0 || offsTexC.x >= 1.0) {
+            discard;
+        }
+        if(offsTexC.y <= 0.0 || offsTexC.y >= 1.0) {
+            discard;
+        }
+        if(depth*depthMult <= -viewOffs.z) {
+            break;
+        }
+        viewOffs += sampleStep;
+        if(length(viewOffs) >= maxOffs) {
+            break;
+        }
+        offsTexC = vertTexCoord + viewOffs.xy;
+        depth = depthAt(offsTexC);
+    }
+    float emission = max(pow(fract(exp(1.1+depth*3.0)), 4.0), depth*1.2);
+    vec3 normal = normalAt(offsTexC);
+    float diffuse = max(dot(normalize(vertLight), normalize(normal)), 0.0);
+    fragColor = max(
+        0.6 * vec3(0.10 + 0.20*diffuse + 0.25*pow(diffuse, 2.0)),
+        emission * vec3(1.2, 1.0, 0.6)
+    );
 }
 )"};
 
