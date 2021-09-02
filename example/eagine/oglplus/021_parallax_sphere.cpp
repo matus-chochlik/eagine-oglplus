@@ -108,12 +108,12 @@ void main() {
 		offsTexC = vertTexCoord + viewOffs.xy;
 		depth = depthAt(offsTexC);
 	}
-	float emission = max(pow(fract(exp(1.1+depth)), 4.0), depth);
+	float emission = max(pow(fract(exp(1.1+depth)), 5.0), depth*1.6);
 	float shade = shadeAt(offsTexC);
 	vec3 finalNormal = normalAt(offsTexC);
 	float dffuse = dot(normalize(vertLight), normalize(finalNormal));
 	fragColor = max(
-		mix(0.4, 0.6, shade) * vec3(0.10 + 0.35*max(dffuse, 0.0)),
+		mix(0.6, 0.4, shade) * vec3(0.10 + 0.35*max(dffuse, 0.0)),
 		emission * vec3(1.2, 1.0, 0.6)
 	);
 }
@@ -305,7 +305,7 @@ static void run_loop(
           .set_orbit_min(1.8F)
           .set_orbit_max(2.0F);
 
-        gl.clear_color(0.15F, 0.15F, 0.15F, 1.0F);
+        gl.clear_color(0.05F, 0.05F, 0.05F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
 
@@ -343,7 +343,7 @@ static void run_loop(
               prog, perspective_loc, camera.perspective_matrix(aspect));
             glapi.set_uniform(prog, camera_loc, camera.transform_matrix());
             glapi.set_uniform(
-              prog, model_loc, matrix_rotation_x(right_angles_(t * 0.05))());
+              prog, model_loc, matrix_translation(-0.45F, 0.F, 0.F)());
             glapi.set_uniform(
               prog,
               light_pos_loc,
