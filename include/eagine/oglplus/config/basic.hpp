@@ -8,6 +8,8 @@
 #ifndef EAGINE_OGLPLUS_CONFIG_BASIC_HPP
 #define EAGINE_OGLPLUS_CONFIG_BASIC_HPP
 
+#include <eagine/config/basic.hpp>
+
 #if __has_include(<eagine/oglplus/config/site.hpp>)
 #include <eagine/oglplus/config/site.hpp>
 #endif
@@ -42,16 +44,6 @@
 
 #ifndef OGLPLUS_NO_LIMIT_CHECKS
 #define OGLPLUS_NO_LIMIT_CHECKS OGLPLUS_LOW_PROFILE
-#endif
-
-#ifndef OGLPLUS_LINK_LIBRARY
-#define OGLPLUS_LINK_LIBRARY 0
-#endif
-
-#if OGLPLUS_LINK_LIBRARY
-#define OGLPLUS_LIB_FUNC
-#else
-#define OGLPLUS_LIB_FUNC inline
 #endif
 
 #endif // EAGINE_OGLPLUS_CONFIG_BASIC_HPP

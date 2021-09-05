@@ -11,12 +11,12 @@
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
-OGLPLUS_LIB_FUNC
+EAGINE_LIB_FUNC
 auto orbiting_camera::target_to_camera_direction() const noexcept -> vec3 {
     return to_cartesian(unit_spherical_coordinate(azimuth(), elevation()));
 }
 //------------------------------------------------------------------------------
-OGLPLUS_LIB_FUNC
+EAGINE_LIB_FUNC
 auto orbiting_camera::target_plane_point(
   const float ndcx,
   const float ndcy,
@@ -34,7 +34,7 @@ auto orbiting_camera::target_plane_point(
     return {};
 }
 //------------------------------------------------------------------------------
-OGLPLUS_LIB_FUNC
+EAGINE_LIB_FUNC
 auto orbiting_camera::pointer_ray(
   const float ndcx,
   const float ndcy,
@@ -45,13 +45,13 @@ auto orbiting_camera::pointer_ray(
     return {};
 }
 //------------------------------------------------------------------------------
-OGLPLUS_LIB_FUNC
+EAGINE_LIB_FUNC
 auto orbiting_camera::grab_sphere_radius() const noexcept -> float {
     const auto orb = orbit();
     return math::minimum(orb * tan(fov() * 0.5F), orb * 0.75F);
 }
 //------------------------------------------------------------------------------
-OGLPLUS_LIB_FUNC
+EAGINE_LIB_FUNC
 auto orbiting_camera::grab_sphere() const noexcept -> sphere {
     return sphere(target(), grab_sphere_radius());
 }
