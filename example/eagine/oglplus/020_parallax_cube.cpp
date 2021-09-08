@@ -1,4 +1,4 @@
-/// @example oglplus/020_parallax_map.cpp
+/// @example oglplus/020_parallax_cube.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -46,7 +46,7 @@ void main() {
 	vec3 vertEye = eyePos.xyz;
 	vec3 fragTangent = mat3(modelview) * Tangent;
 	vertNormal = mat3(modelview) * Normal;
-	vertLight = (mat3(camera) * lightPos) - vertEye;
+	vertLight = lightPos - (model * Position).xyz;
 	vertNormalMatrix = mat3(fragTangent, cross(vertNormal, fragTangent), vertNormal);
 	vertViewTangent = vec3(
 		dot(vertNormalMatrix[0], vertEye),
@@ -73,11 +73,24 @@ in mat3 vertNormalMatrix;
 
 out vec3 fragColor;
 
+vec3 colorAt(vec2 c) {
+	return texture(colorTex, c).xyz;
+}
+
+vec3 normalAt(vec2 c) {
+	vec3 n = 2.0*texture(normalTex, c).xyz-vec3(1.0);
+	return vertNormalMatrix * vec3(-n.xy, n.z);
+}
+
+float depthAt(vec2 c) {
+	return sqrt(1.0 - texture(depthTex, c).r);
+}
+
 void main() {
 	vec3 viewTangent = normalize(vertViewTangent);
 	float sampleInterval = 1.0 / length(textureSize(depthTex, 0));
 	vec3 sampleStep = viewTangent*sampleInterval;
-	float depth = sqrt(1.0 - texture(depthTex, vertTexCoord).r);
+	float depth = depthAt(vertTexCoord);
 	float maxOffs = min((depth * depthMult)/(-viewTangent.z), 1.0);
 	vec3 viewOffs = vec3(0.0, 0.0, 0.0);
 	vec2 offsTexC = vertTexCoord + viewOffs.xy;
@@ -94,14 +107,13 @@ void main() {
 		}
 		viewOffs += sampleStep;
 		offsTexC = vertTexCoord + viewOffs.xy;
-		depth = sqrt(1.0 - texture(depthTex, offsTexC).r);
+		depth = depthAt(offsTexC);
 	}
-	vec3 c = texture(colorTex, offsTexC).xyz;
-	vec3 n = texture(normalTex, offsTexC).xyz;
-	vec3 finalNormal = vertNormalMatrix * n;
-	float d = dot(normalize(vertLight), normalize(finalNormal));
-	float l = 0.45 + 1.6*max(d, 0.0);
-	fragColor = vec3(c*l);
+	vec3 color = colorAt(offsTexC);
+	vec3 normal = normalAt(offsTexC);
+	float diffuse = dot(normalize(vertLight), normalize(normal));
+	float light = 0.45 + 1.6*max(diffuse, 0.0);
+	fragColor = color*light;
 }
 )"};
 
@@ -154,6 +166,7 @@ static void run_loop(
           shapes::unit_cube(
             shapes::vertex_attrib_kind::position |
             shapes::vertex_attrib_kind::normal |
+            shapes::vertex_attrib_kind::tangential |
             shapes::vertex_attrib_kind::face_coord));
 
         std::vector<shape_draw_operation> _ops;

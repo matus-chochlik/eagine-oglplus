@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="round_rect_mask"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="blur"
+       x="0.0"
+       y="0.0"
+       width="4"
+       height="4">
+      <feGaussianBlur
+         stdDeviation="1"
+         id="feGaussianBlur" />
+    </filter>
+  </defs>
+  <g id="layer">
+    <rect
+       style="opacity:1;fill:#ffffff;stroke-width:0;filter:url(#blur)"
+       id="rect"
+       width="248"
+       height="248"
+       x="4"
+       y="4"
+       rx="8"
+       ry="8" />
+  </g>
+</svg>

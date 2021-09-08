@@ -15,7 +15,7 @@ namespace eagine::oglplus {
 #ifndef OGLPLUS_NO_GL
 //------------------------------------------------------------------------------
 #if OGLPLUS_USE_GLEW
-OGLPLUS_LIB_FUNC
+EAGINE_LIB_FUNC
 api_initializer::api_initializer(const int, const int) {
     glewExperimental = GL_TRUE;
     GLenum init_result = glewInit();
