@@ -1,0 +1,6 @@
+version: "3.6"
+services:
+    eagine_oglplus_dev_deb_test:
+        build: .
+        container_name: eagine_oglplus_dev_deb_test
+
