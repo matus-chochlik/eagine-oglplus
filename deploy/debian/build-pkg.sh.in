@@ -1,0 +1,84 @@
+#!/bin/bash
+#
+source "$(dirname ${0})/build-pkg-cfg"
+src_dir=$(realpath "@SRC_DIR@")
+bin_dir=$(realpath "@BIN_DIR@")
+pkg_dir=$(realpath "@PKG_DIR@")
+
+mkdir -p "${pkg_dir}/usr"
+pkg_prefix=$(realpath "@PKG_DIR@/usr")
+lib_prefix="${pkg_prefix}/lib/@PKG_MULTIARCH@"
+cmk_prefix="${lib_prefix}/cmake/EAGine"
+
+mkdir -p "${pkg_dir}/DEBIAN"
+mkdir -p "${pkg_prefix}/include"
+mkdir -p "${lib_prefix}/eagine"
+mkdir -p "${cmk_prefix}"
+
+# ------------------------------------------------------------------------------
+#cp "${eagine_oglplus_path}" \
+#   "${lib_prefix}/eagine/${eagine_oglplus_name}"
+# ------------------------------------------------------------------------------
+cat "$(dirname ${0})/pkg-headers.txt" |\
+tr ';' '\n' |\
+while read abs_path
+do
+	rel_path=${abs_path#$(realpath "${src_dir}/include")/}
+	mkdir -p $(dirname "${pkg_prefix}/include/${rel_path}")
+	cp "${abs_path}" \
+	   "${pkg_prefix}/include/${rel_path}"
+done
+# ------------------------------------------------------------------------------
+mkdir -p "${cmk_prefix}"
+cat << EOD > "${cmk_prefix}/EAGineOGLplusConfig.cmake"
+if(CMAKE_VERSION VERSION_LESS 3.1.0)
+  message(
+    FATAL_ERROR
+    "This file relies on consumers using CMake 3.1.0 or greater."
+  )
+endif()
+
+get_filename_component(_IMPORT_PREFIX "\${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "\${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "\${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "\${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "\${_IMPORT_PREFIX}" PATH)
+if(_IMPORT_PREFIX STREQUAL "/")
+  set(_IMPORT_PREFIX "")
+endif()
+
+add_library(EAGine::OGLplus INTERFACE IMPORTED)
+
+target_compile_definitions(
+  EAGine::OGLplus INTERFACE EAGINE_OGLPLUS_LIBRARY=0
+)
+
+set_target_properties(
+  EAGine::OGLplus PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "\${_IMPORT_PREFIX}/include"
+)
+set_target_properties(
+  EAGine::OGLplus PROPERTIES
+  INTERFACE_LINK_DIRECTORIES "\${_IMPORT_PREFIX}/lib/@PKG_MULTIARCH@/eagine"
+)
+
+target_link_libraries(
+  EAGine::OGLplus
+  INTERFACE
+  	EAGine::Core
+    #"\${_IMPORT_PREFIX}/lib/@PKG_MULTIARCH@/eagine/${eagine_oglplus_name}"
+	GLEW GLU GL
+	glfw
+)
+EOD
+# ------------------------------------------------------------------------------
+mkdir -p "${pkg_dir}/DEBIAN"
+cat << EOD > "${pkg_dir}/DEBIAN/control"
+Package: eagine-oglplus-dev
+Version: @PKG_VERSION@
+Architecture: @PKG_ARCH@
+Installed-Size: $(du -k -s ${pkg_dir} | cut -f1)
+Depends: libglew-dev,libglfw3-dev,eagine-core-dev
+Maintainer: Matus Chochlik <chochlik@gmail.com>
+Description: C++ wrapper for the OpenGL C API.
+EOD
