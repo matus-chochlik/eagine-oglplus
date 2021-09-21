@@ -3975,7 +3975,7 @@ public:
 #ifdef GL_EXTENSIONS
         return get_string(string_query(GL_EXTENSIONS))
 #else
-        return get_string()
+        return get_string(string_query(0x1F03))
 #endif
           .transformed(
             [](auto src) { return split_into_string_list(src, ' '); });
