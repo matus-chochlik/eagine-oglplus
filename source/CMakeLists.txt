@@ -2,7 +2,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
-
+add_subdirectory(lib)
 add_subdirectory(tools)
 
 add_library(EAGine::OGLplus INTERFACE IMPORTED GLOBAL)
@@ -11,12 +11,7 @@ target_link_libraries(EAGine::OGLplus INTERFACE eagine-oglplus-headers)
 target_link_libraries(
 	EAGine::OGLplus
 	INTERFACE
-		EAGine::Deps::GLEW
-		EAGine::Deps::GLFW3
-		EAGine::Core
-		EAGine::Shapes
-		eagine-oglplus-generated-headers
-		eagine-oglplus-headers
+		eagine-oglplus
 )
 
 install(

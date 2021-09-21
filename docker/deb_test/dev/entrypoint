@@ -1,0 +1,9 @@
+#!/bin/sh
+apt --yes install /tmp/eagine-core-dev.deb /tmp/eagine-shapes-dev.deb /tmp/eagine-oglplus-dev.deb
+mkdir -p /tmp/eagine/_build
+cd /tmp/eagine/_build
+cmake /tmp/eagine
+VERBOSE=1 cmake --build /tmp/eagine/_build
+for e in /tmp/eagine/_build/example/eagine-*
+do ${e} --use-null-log
+done
