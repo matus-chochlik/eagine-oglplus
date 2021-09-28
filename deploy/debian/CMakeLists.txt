@@ -57,3 +57,17 @@ install(
 	OPTIONAL
 )
 
+add_custom_command(
+	OUTPUT "${CMAKE_INSTALL_PREFIX}/opt/eagine/debian/${PKG_NAME}.deb"
+	COMMAND ${CMAKE_COMMAND}
+	ARGS -DCOMPONENT=deb-packages -P cmake_install.cmake
+	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+	MAIN_DEPENDENCY "${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}.deb"
+	DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}.deb"
+)
+
+add_custom_target(
+	install-eagine-oglplus-deb
+	DEPENDS "${CMAKE_INSTALL_PREFIX}/opt/eagine/debian/${PKG_NAME}.deb"
+)
+

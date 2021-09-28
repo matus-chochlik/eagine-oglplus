@@ -65,11 +65,15 @@ set_target_properties(
 target_link_libraries(
   EAGine::OGLplus
   INTERFACE
-  	EAGine::Core
     #"\${_IMPORT_PREFIX}/lib/@PKG_MULTIARCH@/eagine/${eagine_oglplus_name}"
+  	EAGine::Core
 	GLEW GLU GL
 	glfw
 )
+EOD
+# ------------------------------------------------------------------------------
+cat << EOD > "${cmk_prefix}/EAGineOGLplusDeps.cmake"
+set(EAGineOGLplusDeps Core Shapes)
 EOD
 # ------------------------------------------------------------------------------
 mkdir -p "${pkg_dir}/DEBIAN"
