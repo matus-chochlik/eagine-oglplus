@@ -38,7 +38,7 @@ public:
 
     /// @brief Conversion to glsl_source_ref
     operator glsl_source_ref() const noexcept {
-        return glsl_source_ref(1, &_src_str, &_length);
+        return {1, &_src_str, &_length};
     }
 
 private:

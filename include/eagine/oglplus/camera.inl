@@ -53,7 +53,7 @@ auto orbiting_camera::grab_sphere_radius() const noexcept -> float {
 //------------------------------------------------------------------------------
 EAGINE_LIB_FUNC
 auto orbiting_camera::grab_sphere() const noexcept -> sphere {
-    return sphere(target(), grab_sphere_radius());
+    return {target(), grab_sphere_radius()};
 }
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
