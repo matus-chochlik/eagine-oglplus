@@ -31,10 +31,10 @@ done
 # ------------------------------------------------------------------------------
 mkdir -p "${cmk_prefix}"
 cat << EOD > "${cmk_prefix}/EAGineOGLplusConfig.cmake"
-if(CMAKE_VERSION VERSION_LESS 3.1.0)
+if(CMAKE_VERSION VERSION_LESS 3.16.0)
   message(
     FATAL_ERROR
-    "This file relies on consumers using CMake 3.1.0 or greater."
+    "This file relies on consumers using CMake 3.16.0 or greater."
   )
 endif()
 
@@ -82,7 +82,7 @@ Package: eagine-oglplus-dev
 Version: @PKG_VERSION@
 Architecture: @PKG_ARCH@
 Installed-Size: $(du -k -s ${pkg_dir} | cut -f1)
-Depends: libglew-dev,libglfw3-dev,eagine-core-dev
+Depends: libglew-dev,libglfw3-dev,libpng-dev,eagine-core-dev
 Maintainer: Matus Chochlik <chochlik@gmail.com>
 Description: C++ wrapper for the OpenGL C API.
 EOD
