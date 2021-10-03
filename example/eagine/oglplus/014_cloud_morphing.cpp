@@ -38,7 +38,10 @@ uniform float Factor;
 
 void main() {
     gl_Position = Camera * vec4(mix(Position1, Position2, Factor), 1.0);
-    vertColor = vec3(mix(Color1.r, Color2.g, Factor));
+    vertColor = mix(
+		vec3(1.0, 0.1, 0.0) * Color1.r * 1.4,
+		vec3(0.0, 0.1, 1.0) * Color2.g * 1.4,
+		Factor);
 }
 )"};
 
@@ -59,6 +62,14 @@ static void run_loop(
   int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
+
+    const auto progress_callback = [window] {
+        glfwPollEvents();
+        return glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
+    };
+
+    set_progress_update_callback(
+      ctx, {construct_from, progress_callback}, std::chrono::milliseconds{100});
 
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
@@ -208,7 +219,7 @@ static void run_loop(
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
-        gl.point_size(2.F);
+        gl.point_size(3.F);
 
         float tim = 0.F;
         animated_value<float, float> fac;
