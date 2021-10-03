@@ -1,4 +1,4 @@
-/// @example oglplus/021_parallax_sphere.cpp
+/// @example oglplus/025_parallax_sphere.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
