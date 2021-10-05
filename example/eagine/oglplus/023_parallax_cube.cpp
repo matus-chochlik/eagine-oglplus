@@ -1,4 +1,4 @@
-/// @example oglplus/020_parallax_cube.cpp
+/// @example oglplus/023_parallax_cube.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.

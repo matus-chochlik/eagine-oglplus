@@ -31,9 +31,9 @@ public:
         return _header->magic.is_valid();
     }
 
-    auto type() const noexcept -> shader_type {
+    auto type() const noexcept {
         EAGINE_ASSERT(is_valid());
-        return shader_type(_header->shader_type);
+        return shader_type{_header->shader_type};
     }
 
     auto source_text() const noexcept -> string_view {
@@ -44,7 +44,7 @@ public:
 
     operator glsl_source_ref() const noexcept {
         EAGINE_ASSERT(is_valid());
-        return glsl_source_ref(_header->source_text);
+        return {_header->source_text};
     }
 
 private:

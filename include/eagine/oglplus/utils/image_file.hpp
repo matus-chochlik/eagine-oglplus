@@ -32,34 +32,34 @@ public:
     }
 
     auto dimensions() const noexcept -> image_dimensions {
-        return image_dimensions(
-          _header->width, _header->height, _header->depth, _header->channels);
+        return {
+          _header->width, _header->height, _header->depth, _header->channels};
     }
 
     auto format() const noexcept -> image_pixel_format {
-        return image_pixel_format(
+        return {
           pixel_format(_header->format),
-          pixel_internal_format(_header->internal_format));
+          pixel_internal_format(_header->internal_format)};
     }
 
     auto format(const pixel_internal_format ifmt) const noexcept
       -> image_pixel_format {
-        return image_pixel_format(pixel_format(_header->format), ifmt);
+        return {pixel_format(_header->format), ifmt};
     }
 
     auto pixel_data() const noexcept -> image_pixel_data {
-        return image_pixel_data(
+        return {
           pixel_data_type(_header->data_type),
           as_bytes(_header->pixels),
-          sizeof(GLubyte));
+          sizeof(GLubyte)};
     }
 
     auto spec() const noexcept -> image_spec {
         return {dimensions(), format(), pixel_data()};
     }
 
-    auto spec(const pixel_internal_format ifmt) const noexcept {
-        return image_spec(dimensions(), format(ifmt), pixel_data());
+    auto spec(const pixel_internal_format ifmt) const noexcept -> image_spec {
+        return {dimensions(), format(ifmt), pixel_data()};
     }
 
     inline operator image_spec() const noexcept {

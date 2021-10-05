@@ -1,4 +1,4 @@
-/// @example oglplus/014_subroutines.cpp
+/// @example oglplus/017_wooden_crate.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -9,6 +9,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
+#include <eagine/embed.hpp>
 #include <eagine/main.hpp>
 #include <eagine/math/functions.hpp>
 #include <eagine/oglplus/camera.hpp>
@@ -16,7 +17,7 @@
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/generator.hpp>
-#include <eagine/shapes/round_cube.hpp>
+#include <eagine/shapes/cube.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -24,62 +25,44 @@
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 400
+#version 150
 in vec3 Position;
-in vec2 Coord;
-out vec2 vertCoord;
-uniform vec3 center;
+in vec3 Normal;
+in vec3 Tangent;
+in vec2 TexCoord;
+
+out mat3 vertNormalMatrix;
+out vec2 vertTexCoord;
+
 uniform mat4 camera;
 
 void main() {
-    gl_Position = camera * vec4(center + Position, 1.0);
-    vertCoord = Coord;
+	gl_Position = camera * vec4(Position, 1.0);
+	vertNormalMatrix[0] = Tangent;
+	vertNormalMatrix[1] = cross(Normal, Tangent);
+	vertNormalMatrix[2] = Normal;
+	vertTexCoord = TexCoord;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 400
-in vec2 vertCoord;
+#version 150
+in mat3 vertNormalMatrix;
+in vec2 vertTexCoord;
 out vec3 fragColor;
 
-subroutine float patternType(vec2 c);
-
-subroutine(patternType) float horzStrip(vec2 c) {
-	return float(int(c.x * 8.0) % 2);
-}
-
-subroutine(patternType) float vertStrip(vec2 c) {
-	return float(int(c.y * 8.0) % 2);
-}
-
-subroutine(patternType) float diagStrip(vec2 c) {
-	c = c * 8.0;
-	return float(int(c.x + c.y) % 2);
-}
-
-subroutine(patternType) float checker(vec2 c) {
-	c = c * 8.0;
-	return float((int(c.x) % 2 + int(c.y) % 2) % 2);
-}
-
-subroutine(patternType) float spiral(vec2 c) {
-	vec2 center = (c - vec2(0.5)) * 16.0;
-	float l = length(center);
-	float t = atan(center.y, center.x) / (2.0 * asin(1.0));
-	return float(int(l + t) % 2);
-}
-
-subroutine(patternType) float dots(vec2 c) {
-	c = c * 4.0;
-	vec2 center = floor(c) + vec2(0.5);
-	float l = length(c - center);
-	return l > 0.25 ? 1.0 : 0.0;
-}
-
-subroutine uniform patternType pattern;
+uniform vec3 lightDir;
+uniform sampler2D colorTex;
+uniform sampler2D normalTex;
+uniform sampler2D lightTex;
 
 void main() {
-    fragColor = vec3(pattern(vertCoord));
+	vec3 finalNormal = vertNormalMatrix * texture(normalTex, vertTexCoord).xyz;
+	float d = max(dot(normalize(lightDir), finalNormal), 0.0);
+	float l = texture(lightTex, vertTexCoord).r;
+	float diff = 0.2 + 0.8 * d;
+	float spec = 1.2 * pow(d+0.01, mix(1.0, 32.0, l)) * l;
+	fragColor = texture(colorTex, vertTexCoord).rgb * diff + vec3(spec);
 }
 )"};
 
@@ -107,7 +90,6 @@ static void run_loop(
         owned_shader_name vs;
         gl.create_shader(GL.vertex_shader) >> vs;
         const auto cleanup_vs = gl.delete_shader.raii(vs);
-        gl.object_label(vs, "vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
@@ -115,7 +97,6 @@ static void run_loop(
         owned_shader_name fs;
         gl.create_shader(GL.fragment_shader) >> fs;
         const auto cleanup_fs = gl.delete_shader.raii(fs);
-        gl.object_label(fs, "fragment shader");
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
@@ -131,9 +112,10 @@ static void run_loop(
         // geometry
         shape_generator shape(
           glapi,
-          shapes::unit_round_cube(
+          shapes::unit_cube(
             shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal));
+            shapes::vertex_attrib_kind::normal |
+            shapes::vertex_attrib_kind::face_coord));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -147,6 +129,7 @@ static void run_loop(
 
         // positions
         vertex_attrib_location position_loc{0};
+        gl.get_attrib_location(prog, "Position") >> position_loc;
         owned_buffer_name positions;
         gl.gen_buffers() >> positions;
         const auto cleanup_positions = gl.delete_buffers.raii(positions);
@@ -156,64 +139,138 @@ static void run_loop(
           positions,
           position_loc,
           shapes::vertex_attrib_kind::position,
-          "positions",
           buf);
-        gl.bind_attrib_location(prog, position_loc, "Position");
 
-        // coords
-        vertex_attrib_location coord_loc{1};
-        owned_buffer_name coords;
-        gl.gen_buffers() >> coords;
-        const auto cleanup_coords = gl.delete_buffers.raii(coords);
+        // normals
+        vertex_attrib_location normal_loc{1};
+        gl.get_attrib_location(prog, "Normal") >> normal_loc;
+        owned_buffer_name normals;
+        gl.gen_buffers() >> normals;
+        const auto cleanup_normals = gl.delete_buffers.raii(normals);
         shape.attrib_setup(
           glapi,
           vao,
-          coords,
-          coord_loc,
-          shapes::vertex_attrib_kind::face_coord,
-          "face coords",
+          normals,
+          normal_loc,
+          shapes::vertex_attrib_kind::normal,
           buf);
-        gl.bind_attrib_location(prog, coord_loc, "Coord");
+
+        // tangentials
+        vertex_attrib_location tangential_loc{2};
+        gl.get_attrib_location(prog, "Tangent") >> tangential_loc;
+        owned_buffer_name tangentials;
+        gl.gen_buffers() >> tangentials;
+        const auto cleanup_tangentials = gl.delete_buffers.raii(tangentials);
+        shape.attrib_setup(
+          glapi,
+          vao,
+          tangentials,
+          tangential_loc,
+          shapes::vertex_attrib_kind::tangential,
+          buf);
+
+        // tex coords
+        vertex_attrib_location tex_coord_loc{3};
+        gl.get_attrib_location(prog, "TexCoord") >> tex_coord_loc;
+        owned_buffer_name tex_coords;
+        gl.gen_buffers() >> tex_coords;
+        const auto cleanup_tex_coords = gl.delete_buffers.raii(tex_coords);
+        shape.attrib_setup(
+          glapi,
+          vao,
+          tex_coords,
+          tex_coord_loc,
+          shapes::vertex_attrib_kind::face_coord,
+          buf);
 
         // indices
         owned_buffer_name indices;
         gl.gen_buffers() >> indices;
         const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, "indices", buf);
+        shape.index_setup(glapi, indices, buf);
 
-        // subroutines
-        subroutine_uniform_location pattern_loc;
-        gl.get_subroutine_uniform_location(
-          prog, GL.fragment_shader, "pattern") >>
-          pattern_loc;
+        // color texture
+        const auto color_tex_src{
+          embed(EAGINE_ID(ColorTex), "wooden_crate-diff")};
 
-        std::array<subroutine_location, 6> subroutines;
-        gl.get_subroutine_index(prog, GL.fragment_shader, "horzStrip") >>
-          subroutines[0];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "vertStrip") >>
-          subroutines[1];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "diagStrip") >>
-          subroutines[2];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "checker") >>
-          subroutines[3];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "spiral") >>
-          subroutines[4];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "dots") >>
-          subroutines[5];
+        owned_texture_name color_tex;
+        gl.gen_textures() >> color_tex;
+        gl.active_texture(GL.texture0 + 0);
+        gl.bind_texture(GL.texture_2d, color_tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
+        glapi.spec_tex_image2d(
+          GL.texture_2d,
+          0,
+          0,
+          oglplus::texture_image_block(color_tex_src.unpack(ctx)));
+        oglplus::uniform_location color_tex_loc;
+        gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
+        glapi.set_uniform(prog, color_tex_loc, 0);
 
-        // uniforms
-        uniform_location center_loc;
-        gl.get_uniform_location(prog, "center") >> center_loc;
+        // normal texture
+        const auto normal_tex_src{
+          embed(EAGINE_ID(NormalTex), "wooden_crate-nmap")};
 
+        owned_texture_name normal_tex;
+        gl.gen_textures() >> normal_tex;
+        gl.active_texture(GL.texture0 + 1);
+        gl.bind_texture(GL.texture_2d, normal_tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
+        glapi.spec_tex_image2d(
+          GL.texture_2d,
+          0,
+          0,
+          oglplus::texture_image_block(normal_tex_src.unpack(ctx)));
+        oglplus::uniform_location normal_tex_loc;
+        gl.get_uniform_location(prog, "normalTex") >> normal_tex_loc;
+        glapi.set_uniform(prog, normal_tex_loc, 1);
+
+        // light texture
+        const auto light_tex_src{
+          embed(EAGINE_ID(LightTex), "wooden_crate-lmap")};
+
+        owned_texture_name light_tex;
+        gl.gen_textures() >> light_tex;
+        gl.active_texture(GL.texture0 + 2);
+        gl.bind_texture(GL.texture_2d, light_tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
+        glapi.spec_tex_image2d(
+          GL.texture_2d,
+          0,
+          0,
+          oglplus::texture_image_block(light_tex_src.unpack(ctx)));
+        oglplus::uniform_location light_tex_loc;
+        gl.get_uniform_location(prog, "lightTex") >> light_tex_loc;
+        glapi.set_uniform(prog, light_tex_loc, 2);
+
+        // uniform
         uniform_location camera_loc;
         gl.get_uniform_location(prog, "camera") >> camera_loc;
+
+        uniform_location light_dir_loc;
+        gl.get_uniform_location(prog, "lightDir") >> light_dir_loc;
 
         orbiting_camera camera;
         camera.set_near(0.1F)
           .set_far(50.F)
-          .set_fov(right_angle_())
-          .set_orbit_min(4.F)
-          .set_orbit_max(5.F);
+          .set_fov(degrees_(75))
+          .set_orbit_min(1.9F)
+          .set_orbit_max(2.1F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
@@ -253,19 +310,14 @@ static void run_loop(
                 .set_elevation(radians_(std::sin(t)))
                 .set_orbit_factor(math::sine_wave01(t * 0.1F))
                 .matrix(aspect));
-
-            for(const auto s : integer_range(subroutines.size())) {
-                const auto angle = turns_(float(s) / float(subroutines.size()));
-
-                glapi.set_uniform(
-                  prog,
-                  center_loc,
-                  vec3(2.5F * cos(angle), 0.F, 2.5F * sin(angle)));
-                gl.uniform_subroutines(
-                  GL.fragment_shader, pattern_loc / subroutines[s]);
-
-                draw_using_instructions(glapi, view(_ops));
-            }
+            glapi.set_uniform(
+              prog,
+              light_dir_loc,
+              oglplus::vec3(
+                sin(degrees_(3.0F * t * 2.718F)),
+                cos(degrees_(3.0F * t * 2.718F)),
+                sin(degrees_(3.0F * t * 1.618F))));
+            draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);
         }

@@ -17,12 +17,13 @@ eagine_example_common(010_metallic_torus)
 eagine_example_common(011_text_rendering)
 eagine_example_common(012_single_pass_edges)
 eagine_example_common(013_texture_projection)
-eagine_example_common(014_subroutines)
-eagine_example_common(015_tessellation)
-eagine_example_common(016_wooden_crate)
-eagine_example_common(019_octree)
-eagine_example_common(020_parallax_cube)
-eagine_example_common(021_parallax_sphere)
+eagine_example_common(014_cloud_morphing)
+eagine_example_common(015_subroutines)
+eagine_example_common(016_tessellation)
+eagine_example_common(017_wooden_crate)
+eagine_example_common(021_octree)
+eagine_example_common(023_parallax_cube)
+eagine_example_common(025_parallax_sphere)
 
 eagine_embed_target_resources(
 	TARGET oglplus-013_texture_projection
@@ -31,21 +32,21 @@ eagine_embed_target_resources(
 )
 
 eagine_embed_target_resources(
-	TARGET oglplus-016_wooden_crate
+	TARGET oglplus-017_wooden_crate
 	INPUT_TARGETS
 	wooden_crate-diff
 	wooden_crate-lmap
 	wooden_crate-nmap
 )
 eagine_embed_target_resources(
-	TARGET oglplus-020_parallax_cube
+	TARGET oglplus-023_parallax_cube
 	INPUT_TARGETS
 	wooden_crate-diff
 	wooden_crate-hmap
 	wooden_crate-nmap
 )
 eagine_embed_target_resources(
-	TARGET oglplus-021_parallax_sphere
+	TARGET oglplus-025_parallax_sphere
 	INPUT_TARGETS
 	worley-bump
 	round_rect_mask
