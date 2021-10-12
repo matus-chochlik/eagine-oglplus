@@ -657,8 +657,23 @@ public:
     } viewport;
 
     // stencil func
-    func<OGLPAFP(StencilFunc), void(compare_function, int_type, uint_type)>
-      stencil_func;
+    struct : func<OGLPAFP(StencilFunc)> {
+        using base = func<OGLPAFP(StencilFunc)>;
+
+        using base::base;
+
+        constexpr auto operator()(
+          compare_function fnc,
+          int_type ref,
+          uint_type mask) const noexcept {
+            return this->_cnvchkcall(fnc, ref, mask);
+        }
+
+        constexpr auto operator()(compare_function fnc, int_type ref)
+          const noexcept {
+            return (*this)(fnc, ref, ~uint_type{0U});
+        }
+    } stencil_func;
 
     func<
       OGLPAFP(StencilFuncSeparate),

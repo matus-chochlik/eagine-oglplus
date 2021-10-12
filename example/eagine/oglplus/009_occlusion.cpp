@@ -115,7 +115,6 @@ static void run_loop(
         shape_generator shape(
           glapi,
           shapes::occlude(
-            ctx,
             shapes::unit_twisted_torus(
               shapes::vertex_attrib_kind::position |
                 shapes::vertex_attrib_kind::normal,
@@ -123,7 +122,8 @@ static void run_loop(
               48,
               4,
               0.5F),
-            256));
+            256,
+            ctx));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
