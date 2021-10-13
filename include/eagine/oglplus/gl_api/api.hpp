@@ -656,6 +656,26 @@ public:
         }
     } viewport;
 
+    // viewport_array
+    struct : func<OGLPAFP(ViewportArrayv)> {
+        using base = func<OGLPAFP(ViewportArrayv)>;
+
+        using base::base;
+
+        constexpr auto operator()(
+          uint_type first,
+          const span<const float_type> coords) const noexcept {
+            EAGINE_ASSERT(coords.size() % 4 == 0);
+            return base::operator()(
+              first, limit_cast<sizei_type>(coords.size() / 4), coords.data());
+        }
+
+        constexpr auto operator()(
+          const span<const float_type> coords) const noexcept {
+            return (*this)(0U, coords);
+        }
+    } viewport_array;
+
     // stencil func
     struct : func<OGLPAFP(StencilFunc)> {
         using base = func<OGLPAFP(StencilFunc)>;
