@@ -3,6 +3,7 @@
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
 #
+
 eagine_example_common(001_info)
 eagine_example_common(002_clear)
 eagine_example_common(003_spectrum)
@@ -21,6 +22,7 @@ eagine_example_common(014_cloud_morphing)
 eagine_example_common(015_subroutines)
 eagine_example_common(016_tessellation)
 eagine_example_common(017_wooden_crate)
+eagine_example_common(020_multi_viewport)
 eagine_example_common(021_octree)
 eagine_example_common(023_parallax_cube)
 eagine_example_common(025_parallax_sphere)

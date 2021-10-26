@@ -72,6 +72,7 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , memory_barrier{"memory_barrier", traits, *this}
   , memory_barrier_by_region{"memory_barrier_by_region", traits, *this}
   , viewport{"viewport", traits, *this}
+  , viewport_array{"viewport_array", traits, *this}
   , stencil_func{"stencil_func", traits, *this}
   , stencil_func_separate{"stencil_func_separate", traits, *this}
   , stencil_op{"stencil_op", traits, *this}

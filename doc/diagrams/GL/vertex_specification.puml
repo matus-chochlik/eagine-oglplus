@@ -73,7 +73,7 @@ note on link: glVertexAttribBinding
 
 VertexBufferBinding --> Buffer: vertex buffer
 
-VertexArray --> Buffer : element buffe
+VertexArray --> Buffer : element buffer
 note on link: glBindBuffer
 
 BufferBinding --> Buffer
