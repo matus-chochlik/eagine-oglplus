@@ -1084,7 +1084,7 @@ public:
           shader_type shdr_type,
           const subroutine_bindings<N>& subrs) const noexcept {
             std::array<uint_type, N> idcs{};
-            for(const auto [su, s] : subrs._bindings) {
+            for(const auto& [su, s] : subrs._bindings) {
                 idcs[su.index()] = s.index();
             }
             return this->_cnvchkcall(
