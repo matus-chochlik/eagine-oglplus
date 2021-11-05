@@ -1,4 +1,4 @@
-/// @example oglplus/004_mandelbrot.cpp
+/// @example oglplus/008_worley_waves.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
