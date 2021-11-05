@@ -211,11 +211,10 @@ static void run_loop(
         // uniform
         uniform_location time_loc;
         gl.get_uniform_location(prog, "time") >> time_loc;
-        glapi.set_uniform(prog, time_loc, 0);
+        glapi.set_uniform(prog, time_loc, 0.F);
 
         uniform_location view_size_loc;
         gl.get_uniform_location(prog, "viewSize") >> view_size_loc;
-        glapi.set_uniform(prog, view_size_loc, 0);
 
         uniform_location noise_loc;
         gl.get_uniform_location(prog, "noise") >> noise_loc;
