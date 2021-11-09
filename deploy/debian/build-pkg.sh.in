@@ -73,7 +73,7 @@ Package: eagine-oglplus-dev
 Version: @PKG_VERSION@
 Architecture: @PKG_ARCH@
 Installed-Size: $(du -k -s ${pkg_dir} | cut -f1)
-Depends: libglew-dev,libglfw3-dev,libpng-dev,eagine-core-dev
+Depends: libglew-dev,libglfw3-dev,libpng-dev,eagine-shapes-dev (>= @PKG_VERSION@),eagine-core-dev (>= @PKG_VERSION@)
 Maintainer: Matus Chochlik <chochlik@gmail.com>
 Description: C++ wrapper for the OpenGL C API.
 EOD
