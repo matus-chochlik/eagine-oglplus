@@ -10,6 +10,14 @@
 
 #include <eagine/config/basic.hpp>
 
+#ifndef EAGINE_OGLPLUS_LIBRARY
+#if defined(__clang_analyzer__)
+#define EAGINE_OGLPLUS_LIBRARY 1
+#else
+#define EAGINE_OGLPLUS_LIBRARY 0
+#endif
+#endif
+
 #if __has_include(<eagine/oglplus/config/site.hpp>)
 #include <eagine/oglplus/config/site.hpp>
 #endif

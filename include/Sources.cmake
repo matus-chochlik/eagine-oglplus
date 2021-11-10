@@ -4,9 +4,9 @@
 #  http://www.boost.org/LICENSE_1_0.txt
 #
 set(HEADERS
+    eagine/oglplus/config/basic.hpp
     eagine/oglplus/basic_gl_api.hpp
     eagine/oglplus/camera.hpp
-    eagine/oglplus/config/basic.hpp
     eagine/oglplus/gl_api/api.hpp
     eagine/oglplus/gl_api/api_traits.hpp
     eagine/oglplus/gl_api/c_api.hpp
