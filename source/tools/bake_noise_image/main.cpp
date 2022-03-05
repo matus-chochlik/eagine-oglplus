@@ -19,31 +19,12 @@
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
-    using _str_param_t = program_parameter<string_view>;
-    using _pos_int_t = valid_if_positive<GLsizei>;
-    using _int_param_t = program_parameter<_pos_int_t>;
-    using _int_alias_t = program_parameter_alias<_pos_int_t>;
-    using _opt_param_t = program_option;
-
-    _str_param_t output_path;
-    _int_param_t components;
-    _int_alias_t format;
-    _int_param_t width;
-    _int_param_t height;
-    _int_param_t depth;
-    _opt_param_t verbosity;
-
-    program_parameters all;
-
-    options()
-      : output_path("-o", "--output", "a.oglptex")
-      , components("-c", "--components", 1)
-      , format("-f", "--format", components)
-      , width("-w", "--width", 256)
-      , height("-h", "--height", 256)
-      , depth("-d", "--depth", 1)
-      , verbosity("-v", "--verbose")
-      , all(output_path, components, width, height, depth, verbosity) {}
+    string_view output_path{"a.oglptex"};
+    valid_if_positive<int> components{1};
+    valid_if_positive<int> width{256};
+    valid_if_positive<int> height{256};
+    valid_if_positive<int> depth{1};
+    int verbosity{0};
 
     void print_usage(std::ostream& log) {
         log << "bake_noise_image options" << std::endl;
@@ -64,22 +45,39 @@ struct options {
         log << "   -d|--depth N: Output image depth." << std::endl;
     }
 
-    auto check(std::ostream& log) const -> bool {
-        return all.validate(log);
-    }
-
     auto parse(program_arg& a, std::ostream& log) -> bool {
-        const string_view fmtnamevals[] = {"R8", "RG8", "RGB8", "RGBA8"};
-        const span<const string_view> fmtnames = view(fmtnamevals);
-
-        const GLsizei cmpbytevals[] = {1, 2, 3, 4};
-        const span<const GLsizei> cmpbytes = view(cmpbytevals);
-
-        return a.parse_param(output_path, log) ||
-               a.parse_param(components, cmpbytes, log) ||
-               a.parse_param(format, fmtnames, cmpbytes, log) ||
-               a.parse_param(width, log) || a.parse_param(height, log) ||
-               a.parse_param(depth, log) || a.parse_param(verbosity, log);
+        if(a.is_tag("-o", "--output")) {
+            output_path = a.next();
+        } else if(a.is_tag("-w", "--width")) {
+            if(!a.next().parse(width, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-h", "--height")) {
+            if(!a.next().parse(height, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-d", "--depth")) {
+            if(!a.next().parse(depth, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-c", "--components")) {
+            if(!a.next().parse(components, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-f", "--format")) {
+            if(a.next() == "R8") {
+                components = 1;
+            } else if(a.next() == "RG8") {
+                components = 2;
+            } else if(a.next() == "RGB8") {
+                components = 3;
+            } else if(a.next() == "RGBA8") {
+                components = 4;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 };
 //------------------------------------------------------------------------------
@@ -133,10 +131,10 @@ auto main(main_ctx& ctx) -> int {
             return err;
         }
 
-        if(are_equal(opts.output_path.value(), string_view("-"))) {
+        if(are_equal(opts.output_path, string_view("-"))) {
             write_output(std::cout, opts);
         } else {
-            std::ofstream output_file(c_str(opts.output_path.value()));
+            std::ofstream output_file(c_str(opts.output_path));
             write_output(output_file, opts);
         }
     } catch(const std::exception& err) {
@@ -145,32 +143,16 @@ auto main(main_ctx& ctx) -> int {
     return 0;
 }
 //------------------------------------------------------------------------------
-auto parse_argument(program_arg& a, options& opts) -> bool {
-
-    if(!opts.parse(a, std::cerr)) {
-        std::cerr << "Failed to parse argument '" << a.get() << "'"
-                  << std::endl;
-        return false;
-    }
-    return true;
-}
-//------------------------------------------------------------------------------
 auto parse_options(const program_args& args, options& opts) -> int {
 
-    for(program_arg a = args.first(); a; a = a.next()) {
-
+    for(auto a : args) {
         if(a.is_help_arg()) {
             opts.print_usage(std::cout);
             return 1;
-        } else if(!parse_argument(a, opts)) {
+        } else if(!opts.parse(a, std::cerr)) {
             opts.print_usage(std::cerr);
             return 2;
         }
-    }
-
-    if(!opts.check(std::cerr)) {
-        opts.print_usage(std::cerr);
-        return 2;
     }
 
     return 0;
