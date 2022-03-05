@@ -22,45 +22,45 @@
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
-
-    program_parameter<string_view> output_path;
-    program_parameter<std::vector<string_view>> input_paths;
-    program_parameter<valid_if_one_of<int, 4>> rank;
-    program_parameter<valid_if_positive<int>> width;
-    program_parameter<valid_if_positive<int>> height;
-    program_option verbosity;
-
-    program_parameters all;
-
-    options()
-      : output_path{"-o", "--output", "a.oglptex"}
-      , input_paths{"-i", "--input"}
-      , rank{"-r", "--rank", 4}
-      , width{"-w", "--width", 256}
-      , height{"-h", "--height", 256}
-      , verbosity{"-v", "--verbose"}
-      , all{output_path, input_paths, rank, width, height, verbosity} {}
+    std::vector<string_view> input_paths;
+    string_view output_path{"a.oglptex"};
+    valid_if_one_of<int, 4> rank{4};
+    valid_if_positive<int> width{256};
+    valid_if_positive<int> height{256};
 
     void print_usage(std::ostream& log) {
-        log << "bake_tiling_image options" << std::endl;
-        log << "  options:" << std::endl;
-        log << "   -o|--output PATH: Output file path ";
-        log << "or '-' for stdout." << std::endl;
-        log << "   -i|--input PATH: Input file path " << std::endl;
-        log << "   -r|--rank N: Tiling rank." << std::endl;
-        log << "   -w|--width N: Output image width." << std::endl;
-        log << "   -h|--height N: Output image height." << std::endl;
+        log << "bake_noise_image options\n";
+        log << "  options:\n";
+        log << "   -i|--input PATH: Existing PNG file path or '-' for stdin.\n";
+        log << "   -o|--output PATH: Output file path or '-' for stdout.\n";
+        log << "   -r|--rank N: Tiling rank.\n";
+        log << "   -w|--width N: Output image width.\n";
+        log << "   -h|--height N: Output image height.\n";
     }
 
-    auto check(std::ostream& log) const -> bool {
-        return all.validate(log);
-    }
-
-    auto parse(program_arg& a, std::ostream& log) -> bool {
-        return a.parse_param(output_path, log) ||
-               a.parse_param(input_paths, log) || a.parse_param(rank, log) ||
-               a.parse_param(width, log) || a.parse_param(height, log) ||
-               a.parse_param(verbosity, log);
+    auto parse(program_arg& arg, std::ostream& log) -> bool {
+        if(arg.is_tag("-o", "--output")) {
+            output_path = arg.next();
+        } else if(arg.is_tag("-i", "--input")) {
+            auto str{arg.next().get()};
+            if(str.empty()) {
+                return false;
+            }
+            input_paths.emplace_back(str);
+        } else if(arg.is_tag("-w", "--width")) {
+            if(!arg.next().parse(width, log)) {
+                return false;
+            }
+        } else if(arg.is_tag("-h", "--height")) {
+            if(!arg.next().parse(height, log)) {
+                return false;
+            }
+        } else if(arg.is_tag("-r", "--rank")) {
+            if(!arg.next().parse(rank, log)) {
+                return false;
+            }
+        }
+        return true;
     }
 };
 //------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ auto translate(char c, const options& opts) -> int {
 }
 //------------------------------------------------------------------------------
 auto write_output(std::ostream& output, const options& opts) -> int {
-    auto& input_paths = opts.input_paths.value();
+    auto& input_paths = opts.input_paths;
     if(input_paths.empty()) {
         std::cerr << "error: no inputs" << std::endl;
         return 3;
@@ -129,10 +129,10 @@ auto main(main_ctx& ctx) -> int {
             return err;
         }
 
-        if(are_equal(opts.output_path.value(), string_view("-"))) {
+        if(are_equal(opts.output_path, string_view("-"))) {
             return write_output(std::cout, opts);
         } else {
-            std::ofstream output_file(c_str(opts.output_path.value()));
+            std::ofstream output_file(c_str(opts.output_path));
             return write_output(output_file, opts);
         }
     } catch(const std::exception& err) {
@@ -141,32 +141,16 @@ auto main(main_ctx& ctx) -> int {
     return 0;
 }
 //------------------------------------------------------------------------------
-auto parse_argument(program_arg& a, options& opts) -> bool {
-
-    if(!opts.parse(a, std::cerr)) {
-        std::cerr << "Failed to parse argument '" << a.get() << "'"
-                  << std::endl;
-        return false;
-    }
-    return true;
-}
-//------------------------------------------------------------------------------
 auto parse_options(const program_args& args, options& opts) -> int {
 
-    for(program_arg a = args.first(); a; a = a.next()) {
-
+    for(auto a : args) {
         if(a.is_help_arg()) {
             opts.print_usage(std::cout);
             return 1;
-        } else if(!parse_argument(a, opts)) {
+        } else if(!opts.parse(a, std::cerr)) {
             opts.print_usage(std::cerr);
             return 2;
         }
-    }
-
-    if(!opts.check(std::cerr)) {
-        opts.print_usage(std::cerr);
-        return 2;
     }
 
     return 0;
