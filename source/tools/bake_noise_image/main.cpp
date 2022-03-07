@@ -11,6 +11,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/image_file_io.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/positive.hpp>
 #include <climits>
 #include <fstream>
@@ -19,7 +20,7 @@
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
-    string_view output_path{"a.oglptex"};
+    valid_if_in_writable_directory<string_view> output_path{"a.oglptex"};
     valid_if_positive<int> components{1};
     valid_if_positive<int> width{256};
     valid_if_positive<int> height{256};
@@ -47,21 +48,23 @@ struct options {
 
     auto parse(program_arg& a, std::ostream& log) -> bool {
         if(a.is_tag("-o", "--output")) {
-            output_path = a.next();
+            if(!a.parse_next(output_path, log)) {
+                return false;
+            }
         } else if(a.is_tag("-w", "--width")) {
-            if(!a.next().parse(width, log)) {
+            if(!a.parse_next(width, log)) {
                 return false;
             }
         } else if(a.is_tag("-h", "--height")) {
-            if(!a.next().parse(height, log)) {
+            if(!a.parse_next(height, log)) {
                 return false;
             }
         } else if(a.is_tag("-d", "--depth")) {
-            if(!a.next().parse(depth, log)) {
+            if(!a.parse_next(depth, log)) {
                 return false;
             }
         } else if(a.is_tag("-c", "--components")) {
-            if(!a.next().parse(components, log)) {
+            if(!a.parse_next(components, log)) {
                 return false;
             }
         } else if(a.is_tag("-f", "--format")) {
@@ -83,8 +86,8 @@ struct options {
 //------------------------------------------------------------------------------
 void write_output(std::ostream& output, const options& opts) {
     oglplus::image_data_header hdr(
-      opts.width, opts.height, opts.depth, opts.components.value());
-    switch(opts.components.value()) {
+      opts.width, opts.height, opts.depth, extract(opts.components));
+    switch(extract(opts.components)) {
         case 1:
             hdr.format = GL_RED;
             hdr.internal_format = GL_R8;
@@ -106,8 +109,8 @@ void write_output(std::ostream& output, const options& opts) {
     hdr.data_type = GL_UNSIGNED_BYTE;
 
     const auto size = span_size(
-      opts.width.value() * opts.height.value() * opts.depth.value() *
-      opts.components.value());
+      extract(opts.width) * extract(opts.height) * extract(opts.depth) *
+      extract(opts.components));
 
     oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
@@ -134,7 +137,7 @@ auto main(main_ctx& ctx) -> int {
         if(are_equal(opts.output_path, string_view("-"))) {
             write_output(std::cout, opts);
         } else {
-            std::ofstream output_file(c_str(opts.output_path));
+            std::ofstream output_file(c_str(extract(opts.output_path)));
             write_output(output_file, opts);
         }
     } catch(const std::exception& err) {
