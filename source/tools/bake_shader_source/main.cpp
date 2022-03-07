@@ -13,16 +13,16 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/program_file_hdr.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/not_empty.hpp>
-#include <eagine/valid_if/one_of.hpp>
 #include <fstream>
 #include <iostream>
 
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
-    string_view input_path;
-    string_view output_path{"a.oglpshdr"};
+    valid_if_existing_file<string_view> input_path;
+    valid_if_in_writable_directory<string_view> output_path{"a.oglpshdr"};
     GLenum shader_type{0};
 
     void print_usage(std::ostream& log) {
@@ -43,11 +43,15 @@ struct options {
         log << "       compute" << std::endl;
     }
 
-    auto parse(program_arg& a, std::ostream&) -> bool {
+    auto parse(program_arg& a, std::ostream& log) -> bool {
         if(a.is_tag("-o", "--output")) {
-            output_path = a.next();
+            if(!a.parse_next(output_path, log)) {
+                return false;
+            }
         } else if(a.is_tag("-i", "--input")) {
-            input_path = a.next();
+            if(!a.parse_next(input_path, log)) {
+                return false;
+            }
         } else if(a.is_tag("-t", "--shader-type")) {
             if(a.next() == "vertex") {
                 shader_type = GL_VERTEX_SHADER;
@@ -109,20 +113,20 @@ auto run(const program_args& args) -> int {
         return err;
     }
 
-    bool from_stdin = are_equal(opts.input_path, string_view("-"));
-    bool to_stdout = are_equal(opts.output_path, string_view("-"));
+    const auto from_stdin = opts.input_path == string_view("-");
+    const auto to_stdout = opts.output_path == string_view("-");
 
     if(from_stdin && to_stdout) {
         write_output(std::cin, std::cout, opts);
     } else if(from_stdin) {
-        std::ofstream output_file(c_str(opts.output_path));
+        std::ofstream output_file(c_str(extract(opts.output_path)));
         write_output(std::cin, output_file, opts);
     } else if(to_stdout) {
-        std::ifstream input_file(c_str(opts.input_path));
+        std::ifstream input_file(c_str(extract(opts.input_path)));
         write_output(input_file, std::cout, opts);
     } else {
-        std::ifstream input_file(c_str(opts.input_path));
-        std::ofstream output_file(c_str(opts.output_path));
+        std::ifstream input_file(c_str(extract(opts.input_path)));
+        std::ofstream output_file(c_str(extract(opts.output_path)));
         write_output(input_file, output_file, opts);
     }
     return 0;
