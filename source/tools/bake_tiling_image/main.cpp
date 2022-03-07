@@ -12,6 +12,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/image_file_io.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/one_of.hpp>
 #include <eagine/valid_if/positive.hpp>
 #include <fstream>
@@ -22,8 +23,8 @@
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
-    std::vector<string_view> input_paths;
-    string_view output_path{"a.oglptex"};
+    std::vector<valid_if_existing_file<string_view>> input_paths;
+    valid_if_in_writable_directory<string_view> output_path{"a.oglptex"};
     valid_if_one_of<int, 4> rank{4};
     valid_if_positive<int> width{256};
     valid_if_positive<int> height{256};
@@ -40,13 +41,13 @@ struct options {
 
     auto parse(program_arg& arg, std::ostream& log) -> bool {
         if(arg.is_tag("-o", "--output")) {
-            output_path = arg.next();
-        } else if(arg.is_tag("-i", "--input")) {
-            auto str{arg.next().get()};
-            if(str.empty()) {
+            if(!arg.next().parse(output_path, log)) {
                 return false;
             }
-            input_paths.emplace_back(str);
+        } else if(arg.is_tag("-i", "--input")) {
+            if(!arg.next().parse(input_paths, log)) {
+                return false;
+            }
         } else if(arg.is_tag("-w", "--width")) {
             if(!arg.next().parse(width, log)) {
                 return false;
@@ -101,14 +102,14 @@ auto write_output(std::ostream& output, const options& opts) -> int {
     oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
     for(auto input_path : input_paths) {
-        std::ifstream input{c_str(input_path)};
+        std::ifstream input{c_str(extract(input_path))};
         char c{};
         for(const int y : integer_range(opts.height.value())) {
             for(const int x : integer_range(opts.width.value())) {
                 if(!(input >> c).good()) {
                     std::cerr << "error: failed to read from input file '"
-                              << input_path << "' at position " << x << "," << y
-                              << std::endl;
+                              << input_path.value_anyway() << "' at position "
+                              << x << "," << y << std::endl;
                     return 4;
                 }
                 output.put(char(translate(c, opts)));
@@ -132,7 +133,7 @@ auto main(main_ctx& ctx) -> int {
         if(are_equal(opts.output_path, string_view("-"))) {
             return write_output(std::cout, opts);
         } else {
-            std::ofstream output_file(c_str(opts.output_path));
+            std::ofstream output_file(c_str(extract(opts.output_path)));
             return write_output(output_file, opts);
         }
     } catch(const std::exception& err) {
