@@ -14,6 +14,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/program_file_hdr.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/not_empty.hpp>
 #include <fstream>
 #include <iostream>
@@ -21,29 +22,44 @@
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
-    std::vector<string_view> vertex_shader_paths;
-    std::vector<string_view> geometry_shader_paths;
-    std::vector<string_view> tess_control_shader_paths;
-    std::vector<string_view> tess_evaluation_shader_paths;
-    std::vector<string_view> fragment_shader_paths;
-    std::vector<string_view> compute_shader_paths;
-    string_view output_path{"a.oglpprog"};
+    std::vector<valid_if_existing_file<string_view>> vertex_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> geometry_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> tess_control_shader_paths;
+    std::vector<valid_if_existing_file<string_view>>
+      tess_evaluation_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> fragment_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> compute_shader_paths;
+    valid_if_in_writable_directory<string_view> output_path{"a.oglpprog"};
 
-    auto parse(program_arg& a, std::ostream&) -> bool {
+    auto parse(program_arg& a, std::ostream& log) -> bool {
         if(a.is_tag("-o", "--output")) {
-            output_path = a.next();
+            if(!a.parse_next(output_path, log)) {
+                return false;
+            }
         } else if(a.is_tag("-vx", "--vertex")) {
-            vertex_shader_paths.emplace_back(a.next());
+            if(!a.parse_next(vertex_shader_paths, log)) {
+                return false;
+            }
         } else if(a.is_tag("-gy", "--geometry")) {
-            geometry_shader_paths.emplace_back(a.next());
+            if(!a.parse_next(geometry_shader_paths, log)) {
+                return false;
+            }
         } else if(a.is_tag("-tc", "--tess-control")) {
-            tess_control_shader_paths.emplace_back(a.next());
+            if(!a.parse_next(tess_control_shader_paths, log)) {
+                return false;
+            }
         } else if(a.is_tag("-te", "--tess-evaluation")) {
-            tess_evaluation_shader_paths.emplace_back(a.next());
+            if(!a.parse_next(tess_evaluation_shader_paths, log)) {
+                return false;
+            }
         } else if(a.is_tag("-ft", "--fragment")) {
-            fragment_shader_paths.emplace_back(a.next());
+            if(!a.parse_next(fragment_shader_paths, log)) {
+                return false;
+            }
         } else if(a.is_tag("-ce", "--compute")) {
-            compute_shader_paths.emplace_back(a.next());
+            if(!a.parse_next(compute_shader_paths, log)) {
+                return false;
+            }
         }
         return true;
     }
@@ -65,10 +81,10 @@ void read_shader_source_texts(
   std::vector<file_contents>& source_texts,
   std::vector<GLenum>& shader_types,
   GLenum shader_type,
-  const std::vector<string_view>& paths) {
+  const std::vector<valid_if_existing_file<string_view>>& paths) {
 
     for(const auto& path : paths) {
-        source_texts.emplace_back(file_contents(path));
+        source_texts.emplace_back(file_contents(extract(path)));
         shader_types.push_back(shader_type);
     }
 }
@@ -164,10 +180,10 @@ auto run(const program_args& args) -> int {
         return err;
     }
 
-    if(are_equal(opts.output_path, string_view("-"))) {
+    if(opts.output_path == string_view("-")) {
         write_output(std::cout, opts);
     } else {
-        std::ofstream output_file(c_str(opts.output_path));
+        std::ofstream output_file(c_str(extract(opts.output_path)));
         write_output(output_file, opts);
     }
     return 0;
