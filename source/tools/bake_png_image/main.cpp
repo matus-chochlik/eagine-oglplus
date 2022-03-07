@@ -11,6 +11,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/image_file_io.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/not_empty.hpp>
 #include <cassert>
 #include <fstream>
@@ -29,40 +30,35 @@ constexpr const bool has_rgba16 = false;
 //------------------------------------------------------------------------------
 // program options
 struct options {
-    std::vector<string_view> input_paths;
-    string_view output_path;
+    std::vector<valid_if_existing_file<string_view>> input_paths;
+    valid_if_in_writable_directory<string_view> output_path;
 
     void print_usage(std::ostream& log) {
-        log << "bake_noise_image options" << std::endl;
-        log << "  options:" << std::endl;
-        log << "   -i|--input PATH: Existing PNG file path "
-               "or '-' for stdin."
-            << std::endl;
-        log << "   -o|--output PATH: Output file path "
-               "or '-' for stdout."
-            << std::endl;
+        log << "bake_noise_image options\n";
+        log << "  options:\n";
+        log << "   -i|--input PATH: Existing PNG file path or '-' for stdin.\n";
+        log << "   -o|--output PATH: Output file path or '-' for stdout.\n";
     }
 
-    auto parse(program_arg& arg, std::ostream&) -> bool {
+    auto parse(program_arg& arg, std::ostream& log) -> bool {
         if(arg.is_tag("-o", "--output")) {
-            output_path = arg.next();
-        } else if(arg.is_tag("-i", "--input")) {
-            auto str{arg.next().get()};
-            if(str.empty()) {
+            if(!arg.parse_next(output_path, log)) {
                 return false;
             }
-            input_paths.emplace_back(str);
+        } else if(arg.is_tag("-i", "--input")) {
+            if(!arg.parse_next(input_paths, log)) {
+                return false;
+            }
         }
         return true;
     }
 
-    auto from_stdin() const -> bool {
-        return !input_paths.empty() &&
-               are_equal(input_paths.front(), string_view("-"));
+    auto from_stdin() const -> tribool {
+        return !input_paths.empty() && input_paths.front() == string_view("-");
     }
 
-    auto to_stdout() const -> bool {
-        return are_equal(output_path, string_view("-"));
+    auto to_stdout() const -> tribool {
+        return output_path == string_view("-");
     }
 };
 //------------------------------------------------------------------------------
@@ -265,29 +261,29 @@ auto main(main_ctx& ctx) -> int {
             return err;
         }
 
-        const bool from_stdin = opts.from_stdin();
-        const bool to_stdout = opts.to_stdout();
+        const auto from_stdin = opts.from_stdin();
+        const auto to_stdout = opts.to_stdout();
 
         if(from_stdin && to_stdout) {
             convert_image(std::cin, std::cout);
         } else if(from_stdin) {
-            std::ofstream output_file(c_str(opts.output_path));
+            std::ofstream output_file(c_str(extract(opts.output_path)));
             convert_image(std::cin, output_file);
         } else if(to_stdout) {
             oglplus::image_data_header header{};
             header.depth = limit_cast<int>(opts.input_paths.size());
             int layer = 0;
             for(auto& input_path : opts.input_paths) {
-                std::ifstream input_file(c_str(input_path));
+                std::ifstream input_file(c_str(extract(input_path)));
                 do_convert_image(input_file, std::cout, header, layer++);
             }
         } else {
             oglplus::image_data_header header{};
             header.depth = limit_cast<int>(opts.input_paths.size());
-            std::ofstream output_file(c_str(opts.output_path));
+            std::ofstream output_file(c_str(extract(opts.output_path)));
             int layer = 0;
             for(auto& input_path : opts.input_paths) {
-                std::ifstream input_file(c_str(input_path));
+                std::ifstream input_file(c_str(extract(input_path)));
                 do_convert_image(input_file, output_file, header, layer++);
             }
         }
