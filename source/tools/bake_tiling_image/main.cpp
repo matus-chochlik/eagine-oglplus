@@ -102,7 +102,7 @@ auto write_output(std::ostream& output, const options& opts) -> int {
     oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
     for(auto input_path : input_paths) {
-        std::ifstream input{c_str(extract(input_path))};
+        std::ifstream input{c_str(input_path)};
         char c{};
         for(const int y : integer_range(opts.height.value())) {
             for(const int x : integer_range(opts.width.value())) {
@@ -133,7 +133,7 @@ auto main(main_ctx& ctx) -> int {
         if(are_equal(opts.output_path, string_view("-"))) {
             return write_output(std::cout, opts);
         } else {
-            std::ofstream output_file(c_str(extract(opts.output_path)));
+            std::ofstream output_file(c_str(opts.output_path));
             return write_output(output_file, opts);
         }
     } catch(const std::exception& err) {

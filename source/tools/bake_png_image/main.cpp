@@ -267,23 +267,23 @@ auto main(main_ctx& ctx) -> int {
         if(from_stdin && to_stdout) {
             convert_image(std::cin, std::cout);
         } else if(from_stdin) {
-            std::ofstream output_file(c_str(extract(opts.output_path)));
+            std::ofstream output_file(c_str(opts.output_path));
             convert_image(std::cin, output_file);
         } else if(to_stdout) {
             oglplus::image_data_header header{};
             header.depth = limit_cast<int>(opts.input_paths.size());
             int layer = 0;
             for(auto& input_path : opts.input_paths) {
-                std::ifstream input_file(c_str(extract(input_path)));
+                std::ifstream input_file(c_str(input_path));
                 do_convert_image(input_file, std::cout, header, layer++);
             }
         } else {
             oglplus::image_data_header header{};
             header.depth = limit_cast<int>(opts.input_paths.size());
-            std::ofstream output_file(c_str(extract(opts.output_path)));
+            std::ofstream output_file(c_str(opts.output_path));
             int layer = 0;
             for(auto& input_path : opts.input_paths) {
-                std::ifstream input_file(c_str(extract(input_path)));
+                std::ifstream input_file(c_str(input_path));
                 do_convert_image(input_file, output_file, header, layer++);
             }
         }

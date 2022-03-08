@@ -119,14 +119,14 @@ auto run(const program_args& args) -> int {
     if(from_stdin && to_stdout) {
         write_output(std::cin, std::cout, opts);
     } else if(from_stdin) {
-        std::ofstream output_file(c_str(extract(opts.output_path)));
+        std::ofstream output_file(c_str(opts.output_path));
         write_output(std::cin, output_file, opts);
     } else if(to_stdout) {
-        std::ifstream input_file(c_str(extract(opts.input_path)));
+        std::ifstream input_file(c_str(opts.input_path));
         write_output(input_file, std::cout, opts);
     } else {
-        std::ifstream input_file(c_str(extract(opts.input_path)));
-        std::ofstream output_file(c_str(extract(opts.output_path)));
+        std::ifstream input_file(c_str(opts.input_path));
+        std::ofstream output_file(c_str(opts.output_path));
         write_output(input_file, output_file, opts);
     }
     return 0;

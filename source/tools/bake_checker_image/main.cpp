@@ -137,7 +137,7 @@ auto main(main_ctx& ctx) -> int {
         if(opts.output_path == string_view("-")) {
             write_output(std::cout, opts);
         } else {
-            std::ofstream output_file(c_str(extract(opts.output_path)));
+            std::ofstream output_file(c_str(opts.output_path));
             write_output(output_file, opts);
         }
     } catch(const std::exception& err) {
