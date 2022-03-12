@@ -291,15 +291,13 @@ public:
       F> : func<W, F> {
         using func<W, F>::func;
 
-        template <
-          typename Query,
-          typename = std::enable_if_t<
-            (true || ... || is_enum_class_value_v<QueryClasses, Query>)>,
-          typename = std::enable_if_t<!std::is_array_v<typename Query::tag_type>>>
+        template <typename Query>
         constexpr auto operator()(
           PreParams... pre_params,
           Query query,
-          PostParams... post_params) const noexcept {
+          PostParams... post_params) const noexcept
+          requires((true || ... || is_enum_class_value_v<QueryClasses, Query>)&&(
+            !std::is_array_v<typename Query::tag_type>)) {
             using RV = typename Query::tag_type;
             QueryResult result{};
             return this
@@ -309,15 +307,13 @@ public:
               .cast_to(type_identity<RV>{});
         }
 
-        template <
-          typename Query,
-          typename = std::enable_if_t<
-            (true || ... || is_enum_class_value_v<QueryClasses, Query>)>>
+        template <typename Query>
         auto operator()(
           PreParams... pre_params,
           Query query,
           PostParams... post_params,
-          span<QueryResult> dest) const noexcept {
+          span<QueryResult> dest) const noexcept
+          requires(true || ... || is_enum_class_value_v<QueryClasses, Query>) {
             EAGINE_ASSERT(dest.size());
             return this->_cnvchkcall(
               pre_params..., enum_type(query), post_params..., dest.data());
@@ -2818,15 +2814,16 @@ public:
     struct : func<OGLPAFP(TexParameteri)> {
         using func<OGLPAFP(TexParameteri)>::func;
 
-        template <
-          typename TexParam,
-          typename Value,
-          typename = std::enable_if_t<
-            is_enum_parameter_value_v<texture_parameter, TexParam, int_type, Value>>>
+        template <typename TexParam, typename Value>
         constexpr auto operator()(
           texture_target tgt,
           TexParam param,
-          Value value) const noexcept {
+          Value value) const noexcept
+          requires(is_enum_parameter_value_v<
+                   texture_parameter,
+                   TexParam,
+                   int_type,
+                   Value>) {
             return this->_chkcall(
               enum_type(tgt), enum_type(param), enum_type(value));
         }
@@ -2835,13 +2832,13 @@ public:
     struct : func<OGLPAFP(TextureParameteri)> {
         using func<OGLPAFP(TextureParameteri)>::func;
 
-        template <
-          typename TexParam,
-          typename Value,
-          typename = std::enable_if_t<
-            is_enum_parameter_value_v<texture_parameter, TexParam, int_type, Value>>>
+        template <typename TexParam, typename Value>
         constexpr auto operator()(texture_name tex, TexParam param, Value value)
-          const noexcept {
+          const noexcept requires(is_enum_parameter_value_v<
+                                  texture_parameter,
+                                  TexParam,
+                                  int_type,
+                                  Value>) {
             return this->_chkcall(
               name_type(tex), enum_type(param), enum_type(value));
         }

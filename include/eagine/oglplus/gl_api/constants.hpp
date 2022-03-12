@@ -32,8 +32,8 @@ public:
 
         /// @brief Creates an instance of the constant type with the specified value.
         template <typename X>
-        auto operator()(X&& x) const noexcept
-          -> std::enable_if_t<std::is_convertible_v<X, T>, T> {
+        auto operator()(X&& x) const noexcept -> T
+          requires(std::is_convertible_v<X, T>) {
             return T(std::forward<X>(x));
         }
 
@@ -42,10 +42,10 @@ public:
         struct {
             /// @brief Creates an array of the constant type with the specified values.
             template <typename... X>
-            auto operator()(X&&... x) const noexcept -> std::enable_if_t<
-              ((sizeof...(X) > 0) && ... &&
-               std::is_convertible_v<std::decay_t<X>, T>),
-              std::array<T, sizeof...(X)>> {
+            auto operator()(X&&... x) const noexcept
+              -> std::array<T, sizeof...(X)> requires(
+                (sizeof...(X) > 0) && ... &&
+                std::is_convertible_v<std::decay_t<X>, T>) {
                 return {{T(std::forward<X>(x))...}};
             }
 
@@ -62,9 +62,8 @@ public:
         using Wrap::Wrap;
 
         template <typename... X>
-        auto operator()(X&&... x) const noexcept -> std::enable_if_t<
-          ((sizeof...(X) == N) && ... && std::is_convertible_v<X, T>),
-          tvec<T, N>> {
+        auto operator()(X&&... x) const noexcept -> tvec<T, N> requires(
+          (sizeof...(X) == N) && ... && std::is_convertible_v<X, T>) {
             return tvec<T, N>(T(std::forward<X>(x))...);
         }
     };
@@ -74,9 +73,8 @@ public:
         using Wrap::Wrap;
 
         template <typename... X>
-        auto operator()(X&&... x) const noexcept -> std::enable_if_t<
-          ((sizeof...(X) == C * R) && ... && std::is_convertible_v<X, T>),
-          tmat<T, C, R>> {
+        auto operator()(X&&... x) const noexcept -> tmat<T, C, R> requires(
+          (sizeof...(X) == C * R) && ... && std::is_convertible_v<X, T>) {
             return tmat<T, C, R>(T(std::forward<X>(x))...);
         }
     };
