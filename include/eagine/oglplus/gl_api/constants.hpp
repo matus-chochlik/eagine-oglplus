@@ -101,7 +101,7 @@ public:
 
     /// @var no_error
     /// @glconstwrap{NO_ERROR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code, graphics_reset_status>,
 #ifdef GL_NO_ERROR
       enum_type_c<GL_NO_ERROR>>
@@ -112,7 +112,7 @@ public:
 
     /// @var invalid_enum
     /// @glconstwrap{INVALID_ENUM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_INVALID_ENUM
       enum_type_c<GL_INVALID_ENUM>>
@@ -123,7 +123,7 @@ public:
 
     /// @var invalid_value
     /// @glconstwrap{INVALID_VALUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_INVALID_VALUE
       enum_type_c<GL_INVALID_VALUE>>
@@ -134,7 +134,7 @@ public:
 
     /// @var invalid_operation
     /// @glconstwrap{INVALID_OPERATION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_INVALID_OPERATION
       enum_type_c<GL_INVALID_OPERATION>>
@@ -145,7 +145,7 @@ public:
 
     /// @var invalid_framebuffer_operation
     /// @glconstwrap{INVALID_FRAMEBUFFER_OPERATION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_INVALID_FRAMEBUFFER_OPERATION
       enum_type_c<GL_INVALID_FRAMEBUFFER_OPERATION>>
@@ -156,7 +156,7 @@ public:
 
     /// @var stack_overflow
     /// @glconstwrap{STACK_OVERFLOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_STACK_OVERFLOW
       enum_type_c<GL_STACK_OVERFLOW>>
@@ -167,7 +167,7 @@ public:
 
     /// @var stack_underflow
     /// @glconstwrap{STACK_UNDERFLOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_STACK_UNDERFLOW
       enum_type_c<GL_STACK_UNDERFLOW>>
@@ -178,7 +178,7 @@ public:
 
     /// @var table_too_large
     /// @glconstwrap{TABLE_TOO_LARGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_TABLE_TOO_LARGE
       enum_type_c<GL_TABLE_TOO_LARGE>>
@@ -189,7 +189,7 @@ public:
 
     /// @var context_lost
     /// @glconstwrap{CONTEXT_LOST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_CONTEXT_LOST
       enum_type_c<GL_CONTEXT_LOST>>
@@ -200,7 +200,7 @@ public:
 
     /// @var out_of_memory
     /// @glconstwrap{OUT_OF_MEMORY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<error_code>,
 #ifdef GL_OUT_OF_MEMORY
       enum_type_c<GL_OUT_OF_MEMORY>>
@@ -211,7 +211,7 @@ public:
 
     /// @var true_
     /// @glconstwrap{TRUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::true_false>,
 #ifdef GL_TRUE
       bool_type_c<GL_TRUE>>
@@ -222,7 +222,7 @@ public:
 
     /// @var false_
     /// @glconstwrap{FALSE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::true_false>,
 #ifdef GL_FALSE
       bool_type_c<GL_FALSE>>
@@ -233,7 +233,7 @@ public:
 
     /// @var context_flag_forward_compatible_bit
     /// @glconstwrap{CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<context_flag_bit>,
 #ifdef GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT
       bitfield_type_c<GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT>>
@@ -244,7 +244,7 @@ public:
 
     /// @var context_flag_debug_bit
     /// @glconstwrap{CONTEXT_FLAG_FORWARD_DEBUG_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<context_flag_bit>,
 #ifdef GL_CONTEXT_FLAG_DEBUG_BIT
       bitfield_type_c<GL_CONTEXT_FLAG_DEBUG_BIT>>
@@ -255,7 +255,7 @@ public:
 
     /// @var context_flag_robust_access_bit
     /// @glconstwrap{CONTEXT_FLAG_ROBUST_ACCESS_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<context_flag_bit>,
 #ifdef GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT
       bitfield_type_c<GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT>>
@@ -266,7 +266,7 @@ public:
 
     /// @var context_flag_no_error_bit
     /// @glconstwrap{CONTEXT_FLAG_NO_ERROR_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<context_flag_bit>,
 #ifdef GL_CONTEXT_FLAG_NO_ERROR_BIT
       bitfield_type_c<GL_CONTEXT_FLAG_NO_ERROR_BIT>>
@@ -277,7 +277,7 @@ public:
 
     /// @var context_core_profile_bit
     /// @glconstwrap{CONTEXT_CORE_PROFILE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<context_profile_bit>,
 #ifdef GL_CONTEXT_CORE_PROFILE_BIT
       bitfield_type_c<GL_CONTEXT_CORE_PROFILE_BIT>>
@@ -288,7 +288,7 @@ public:
 
     /// @var context_compatibility_profile_bit
     /// @glconstwrap{CONTEXT_COMPATIBILITY_PROFILE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<context_profile_bit>,
 #ifdef GL_CONTEXT_COMPATIBILITY_PROFILE_BIT
       bitfield_type_c<GL_CONTEXT_COMPATIBILITY_PROFILE_BIT>>
@@ -299,7 +299,7 @@ public:
 
     /// @var no_reset_notification
     /// @glconstwrap{NO_RESET_NOTIFICATION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::reset_notification_strategy>,
 #ifdef GL_NO_RESET_NOTIFICATION
       enum_type_c<GL_NO_RESET_NOTIFICATION>>
@@ -310,7 +310,7 @@ public:
 
     /// @var lose_context_on_reset
     /// @glconstwrap{LOSE_CONTEXT_ON_RESET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::reset_notification_strategy>,
 #ifdef GL_LOSE_CONTEXT_ON_RESET
       enum_type_c<GL_LOSE_CONTEXT_ON_RESET>>
@@ -321,7 +321,7 @@ public:
 
     /// @var context_release_behavior_flush
     /// @glconstwrap{CONTEXT_RELEASE_BEHAVIOR_FLUSH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<context_release_behavior>,
 #ifdef GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH
       enum_type_c<GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH>>
@@ -332,7 +332,7 @@ public:
 
     /// @var guilty_context_reset
     /// @glconstwrap{GUILTY_CONTEXT_RESET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<graphics_reset_status>,
 #ifdef GL_GUILTY_CONTEXT_RESET
       enum_type_c<GL_GUILTY_CONTEXT_RESET>>
@@ -343,7 +343,7 @@ public:
 
     /// @var innocent_context_reset
     /// @glconstwrap{INNOCENT_CONTEXT_RESET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<graphics_reset_status>,
 #ifdef GL_INNOCENT_CONTEXT_RESET
       enum_type_c<GL_INNOCENT_CONTEXT_RESET>>
@@ -354,7 +354,7 @@ public:
 
     /// @var graphics_reset_status
     /// @glconstwrap{GRAPHICS_RESET_STATUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<graphics_reset_status>,
 #ifdef GL_UNKNOWN_CONTEXT_RESET
       enum_type_c<GL_UNKNOWN_CONTEXT_RESET>>
@@ -365,7 +365,7 @@ public:
 
     /// @var vertex_attrib_array_barrier_bit
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT
       bitfield_type_c<GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT>>
@@ -376,7 +376,7 @@ public:
 
     /// @var element_array_barrier_bit
     /// @glconstwrap{ELEMENT_ARRAY_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_ELEMENT_ARRAY_BARRIER_BIT
       bitfield_type_c<GL_ELEMENT_ARRAY_BARRIER_BIT>>
@@ -387,7 +387,7 @@ public:
 
     /// @var uniform_barrier_bit
     /// @glconstwrap{UNIFORM_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_UNIFORM_BARRIER_BIT
       bitfield_type_c<GL_UNIFORM_BARRIER_BIT>>
@@ -398,7 +398,7 @@ public:
 
     /// @var texture_fetch_barrier_bit
     /// @glconstwrap{TEXTURE_FETCH_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_TEXTURE_FETCH_BARRIER_BIT
       bitfield_type_c<GL_TEXTURE_FETCH_BARRIER_BIT>>
@@ -409,7 +409,7 @@ public:
 
     /// @var shader_image_access_barrier_bit
     /// @glconstwrap{SHADER_IMAGE_ACCESS_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_SHADER_IMAGE_ACCESS_BARRIER_BIT
       bitfield_type_c<GL_SHADER_IMAGE_ACCESS_BARRIER_BIT>>
@@ -420,7 +420,7 @@ public:
 
     /// @var command_barrier_bit
     /// @glconstwrap{COMMAND_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_COMMAND_BARRIER_BIT
       bitfield_type_c<GL_COMMAND_BARRIER_BIT>>
@@ -431,7 +431,7 @@ public:
 
     /// @var pixel_buffer_barrier_bit
     /// @glconstwrap{PIXEL_BUFFER_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_PIXEL_BUFFER_BARRIER_BIT
       bitfield_type_c<GL_PIXEL_BUFFER_BARRIER_BIT>>
@@ -442,7 +442,7 @@ public:
 
     /// @var texture_update_barrier_bit
     /// @glconstwrap{TEXTURE_UPDATE_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_TEXTURE_UPDATE_BARRIER_BIT
       bitfield_type_c<GL_TEXTURE_UPDATE_BARRIER_BIT>>
@@ -453,7 +453,7 @@ public:
 
     /// @var buffer_update_barrier_bit
     /// @glconstwrap{BUFFER_UPDATE_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_BUFFER_UPDATE_BARRIER_BIT
       bitfield_type_c<GL_BUFFER_UPDATE_BARRIER_BIT>>
@@ -464,7 +464,7 @@ public:
 
     /// @var client_mapped_buffer_barrier_bit
     /// @glconstwrap{CLIENT_MAPPED_BUFFER_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT
       bitfield_type_c<GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT>>
@@ -475,7 +475,7 @@ public:
 
     /// @var query_buffer_barrier_bit
     /// @glconstwrap{QUERY_BUFFER_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_QUERY_BUFFER_BARRIER_BIT
       bitfield_type_c<GL_QUERY_BUFFER_BARRIER_BIT>>
@@ -486,7 +486,7 @@ public:
 
     /// @var framebuffer_barrier_bit
     /// @glconstwrap{FRAMEBUFFER_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_FRAMEBUFFER_BARRIER_BIT
       bitfield_type_c<GL_FRAMEBUFFER_BARRIER_BIT>>
@@ -497,7 +497,7 @@ public:
 
     /// @var transform_feedback_barrier_bit
     /// @glconstwrap{TRANSFORM_FEEDBACK_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_TRANSFORM_FEEDBACK_BARRIER_BIT
       bitfield_type_c<GL_TRANSFORM_FEEDBACK_BARRIER_BIT>>
@@ -508,7 +508,7 @@ public:
 
     /// @var atomic_counter_barrier_bit
     /// @glconstwrap{ATOMIC_COUNTER_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_ATOMIC_COUNTER_BARRIER_BIT
       bitfield_type_c<GL_ATOMIC_COUNTER_BARRIER_BIT>>
@@ -519,7 +519,7 @@ public:
 
     /// @var shader_storage_barrier_bit
     /// @glconstwrap{SHADER_STORAGE_BARRIER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_SHADER_STORAGE_BARRIER_BIT
       bitfield_type_c<GL_SHADER_STORAGE_BARRIER_BIT>>
@@ -530,7 +530,7 @@ public:
 
     /// @var all_barrier_bits
     /// @glconstwrap{ALL_BARRIER_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<memory_barrier_bit>,
 #ifdef GL_ALL_BARRIER_BITS
       bitfield_type_c<GL_ALL_BARRIER_BITS>>
@@ -541,7 +541,7 @@ public:
 
     /// @var read_only
     /// @glconstwrap{READ_ONLY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<access_specifier>,
 #ifdef GL_READ_ONLY
       enum_type_c<GL_READ_ONLY>>
@@ -552,7 +552,7 @@ public:
 
     /// @var write_only
     /// @glconstwrap{WRITE_ONLY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<access_specifier>,
 #ifdef GL_WRITE_ONLY
       enum_type_c<GL_WRITE_ONLY>>
@@ -563,7 +563,7 @@ public:
 
     /// @var read_Write
     /// @glconstwrap{READ_WRITE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<access_specifier>,
 #ifdef GL_READ_WRITE
       enum_type_c<GL_READ_WRITE>>
@@ -574,7 +574,7 @@ public:
 
     /// @var low_float
     /// @glconstwrap{LOW_FLOAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<precision_type>,
 #ifdef GL_LOW_FLOAT
       enum_type_c<GL_LOW_FLOAT>>
@@ -585,7 +585,7 @@ public:
 
     /// @var medium_float
     /// @glconstwrap{MEDIUM_FLOAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<precision_type>,
 #ifdef GL_MEDIUM_FLOAT
       enum_type_c<GL_MEDIUM_FLOAT>>
@@ -596,7 +596,7 @@ public:
 
     /// @var high_float
     /// @glconstwrap{HIGH_FLOAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<precision_type>,
 #ifdef GL_HIGH_FLOAT
       enum_type_c<GL_HIGH_FLOAT>>
@@ -607,7 +607,7 @@ public:
 
     /// @var low_int
     /// @glconstwrap{LOW_INT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<precision_type>,
 #ifdef GL_LOW_INT
       enum_type_c<GL_LOW_INT>>
@@ -618,7 +618,7 @@ public:
 
     /// @var medium_int
     /// @glconstwrap{MEDIUM_INT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<precision_type>,
 #ifdef GL_MEDIUM_INT
       enum_type_c<GL_MEDIUM_INT>>
@@ -629,7 +629,7 @@ public:
 
     /// @var high_int
     /// @glconstwrap{HIGH_INT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<precision_type>,
 #ifdef GL_HIGH_INT
       enum_type_c<GL_HIGH_INT>>
@@ -640,7 +640,7 @@ public:
 
     /// @var buffer
     /// @glconstwrap{BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type>,
 #ifdef GL_BUFFER
       enum_type_c<GL_BUFFER>>
@@ -651,7 +651,7 @@ public:
 
     /// @var framebuffer
     /// @glconstwrap{FRAMEBUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type>,
 #ifdef GL_FRAMEBUFFER
       enum_type_c<GL_FRAMEBUFFER>>
@@ -662,7 +662,7 @@ public:
 
     /// @var program_pipeline
     /// @glconstwrap{PROGRAM_PIPELINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type>,
 #ifdef GL_PROGRAM_PIPELINE
       enum_type_c<GL_PROGRAM_PIPELINE>>
@@ -673,7 +673,7 @@ public:
 
     /// @var program
     /// @glconstwrap{PROGRAM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type>,
 #ifdef GL_PROGRAM
       enum_type_c<GL_PROGRAM>>
@@ -684,7 +684,7 @@ public:
 
     /// @var query
     /// @glconstwrap{QUERY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type>,
 #ifdef GL_QUERY
       enum_type_c<GL_QUERY>>
@@ -695,7 +695,7 @@ public:
 
     /// @var renderbuffer
     /// @glconstwrap{RENDERBUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type, renderbuffer_target>,
 #ifdef GL_RENDERBUFFER
       enum_type_c<GL_RENDERBUFFER>>
@@ -706,7 +706,7 @@ public:
 
     /// @var sampler
     /// @glconstwrap{SAMPLER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type>,
 #ifdef GL_SAMPLER
       enum_type_c<GL_SAMPLER>>
@@ -717,7 +717,7 @@ public:
 
     /// @var shader
     /// @glconstwrap{SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type>,
 #ifdef GL_SHADER
       enum_type_c<GL_SHADER>>
@@ -728,7 +728,7 @@ public:
 
     /// @var texture
     /// @glconstwrap{TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type, matrix_mode>,
 #ifdef GL_TEXTURE
       enum_type_c<GL_TEXTURE>>
@@ -739,7 +739,7 @@ public:
 
     /// @var transform_feedback
     /// @glconstwrap{TRANSFORM_FEEDBACK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type, transform_feedback_target>,
 #ifdef GL_TRANSFORM_FEEDBACK
       enum_type_c<GL_TRANSFORM_FEEDBACK>>
@@ -750,7 +750,7 @@ public:
 
     /// @var vertex_array
     /// @glconstwrap{VERTEX_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::object_type, client_capability>,
 #ifdef GL_VERTEX_ARRAY
       enum_type_c<GL_VERTEX_ARRAY>>
@@ -761,7 +761,7 @@ public:
 
     /// @var vertex_shader
     /// @glconstwrap{VERTEX_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::shader_type, program_pipeline_parameter>,
 #ifdef GL_VERTEX_SHADER
       enum_type_c<GL_VERTEX_SHADER>>
@@ -772,7 +772,7 @@ public:
 
     /// @var tess_control_shader
     /// @glconstwrap{TESS_CONTROL_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::shader_type, program_pipeline_parameter>,
 #ifdef GL_TESS_CONTROL_SHADER
       enum_type_c<GL_TESS_CONTROL_SHADER>>
@@ -783,7 +783,7 @@ public:
 
     /// @var tess_evaluation_shader
     /// @glconstwrap{TESS_EVALUATION_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::shader_type, program_pipeline_parameter>,
 #ifdef GL_TESS_EVALUATION_SHADER
       enum_type_c<GL_TESS_EVALUATION_SHADER>>
@@ -794,7 +794,7 @@ public:
 
     /// @var geometry_shader
     /// @glconstwrap{GEOMETRY_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::shader_type, program_pipeline_parameter>,
 #ifdef GL_GEOMETRY_SHADER
       enum_type_c<GL_GEOMETRY_SHADER>>
@@ -805,7 +805,7 @@ public:
 
     /// @var fragment_shader
     /// @glconstwrap{FRAGMENT_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::shader_type, program_pipeline_parameter>,
 #ifdef GL_FRAGMENT_SHADER
       enum_type_c<GL_FRAGMENT_SHADER>>
@@ -816,7 +816,7 @@ public:
 
     /// @var compute_shader
     /// @glconstwrap{COMPUTE_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::shader_type>,
 #ifdef GL_COMPUTE_SHADER
       enum_type_c<GL_COMPUTE_SHADER>>
@@ -827,7 +827,7 @@ public:
 
     /// @var shader_include
     /// @glconstwrap{SHADER_INCLUDE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<named_string_kind>,
 #ifdef GL_SHADER_INCLUDE_ARB
       enum_type_c<GL_SHADER_INCLUDE_ARB>>
@@ -838,7 +838,7 @@ public:
 
     /// @var sync_fence
     /// @glconstwrap{SYNC_FENCE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_type>,
 #ifdef GL_SYNC_FENCE
       enum_type_c<GL_SYNC_FENCE>>
@@ -849,7 +849,7 @@ public:
 
     /// @var sync_gpu_commands_complete
     /// @glconstwrap{SYNC_GPU_COMMANDS_COMPLETE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::sync_condition, sync_parameter>,
 #ifdef GL_SYNC_GPU_COMMANDS_COMPLETE
       enum_type_c<GL_SYNC_GPU_COMMANDS_COMPLETE>>
@@ -860,7 +860,7 @@ public:
 
     /// @var signaled
     /// @glconstwrap{SIGNALED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::sync_status>,
 #ifdef GL_SIGNALED
       enum_type_c<GL_SIGNALED>>
@@ -871,7 +871,7 @@ public:
 
     /// @var unsignaled
     /// @glconstwrap{UNSIGNALED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::sync_status>,
 #ifdef GL_UNSIGNALED
       enum_type_c<GL_UNSIGNALED>>
@@ -882,7 +882,7 @@ public:
 
     /// @var object_type
     /// @glconstwrap{OBJECT_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_parameter>,
 #ifdef GL_OBJECT_TYPE
       enum_type_c<GL_OBJECT_TYPE>>
@@ -893,7 +893,7 @@ public:
 
     /// @var sync_status
     /// @glconstwrap{SYNC_STATUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_parameter>,
 #ifdef GL_SYNC_STATUS
       enum_type_c<GL_SYNC_STATUS>>
@@ -904,7 +904,7 @@ public:
 
     /// @var sync_condition
     /// @glconstwrap{SYNC_CONDITION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_parameter>,
 #ifdef GL_SYNC_CONDITION
       enum_type_c<GL_SYNC_CONDITION>>
@@ -915,7 +915,7 @@ public:
 
     /// @var sync_wait_result
     /// @glconstwrap{SYNC_WAIT_RESULT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_wait_result>,
 #ifdef GL_CONDITION_SATISFIED
       enum_type_c<GL_CONDITION_SATISFIED>>
@@ -926,7 +926,7 @@ public:
 
     /// @var already_signaled
     /// @glconstwrap{ALREADY_SIGNALED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_wait_result>,
 #ifdef GL_ALREADY_SIGNALED
       enum_type_c<GL_ALREADY_SIGNALED>>
@@ -937,7 +937,7 @@ public:
 
     /// @var timeout_expired
     /// @glconstwrap{TIMEOUT_EXPIRED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_wait_result>,
 #ifdef GL_TIMEOUT_EXPIRED
       enum_type_c<GL_TIMEOUT_EXPIRED>>
@@ -948,7 +948,7 @@ public:
 
     /// @var wait_failed
     /// @glconstwrap{WAIT_FAILED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sync_wait_result>,
 #ifdef GL_WAIT_FAILED
       enum_type_c<GL_WAIT_FAILED>>
@@ -959,7 +959,7 @@ public:
 
     /// @var shader_type
     /// @glconstwrap{SHADER_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<shader_parameter>,
 #ifdef GL_SHADER_TYPE
       enum_type_c<GL_SHADER_TYPE>,
@@ -971,7 +971,7 @@ public:
 
     /// @var compute_shader_bit
     /// @glconstwrap{COMPUTE_SHADER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_bit>,
 #ifdef GL_COMPUTE_SHADER_BIT
       bitfield_type_c<GL_COMPUTE_SHADER_BIT>>
@@ -982,7 +982,7 @@ public:
 
     /// @var vertex_shader_bit
     /// @glconstwrap{VERTEX_SHADER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_bit>,
 #ifdef GL_VERTEX_SHADER_BIT
       bitfield_type_c<GL_VERTEX_SHADER_BIT>>
@@ -993,7 +993,7 @@ public:
 
     /// @var tess_control_shader_bit
     /// @glconstwrap{TESS_CONTROL_SHADER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_bit>,
 #ifdef GL_TESS_CONTROL_SHADER_BIT
       bitfield_type_c<GL_TESS_CONTROL_SHADER_BIT>>
@@ -1004,7 +1004,7 @@ public:
 
     /// @var tess_evaluation_shader_bit
     /// @glconstwrap{TESS_EVALUATION_SHADER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_bit>,
 #ifdef GL_TESS_EVALUATION_SHADER_BIT
       bitfield_type_c<GL_TESS_EVALUATION_SHADER_BIT>>
@@ -1015,7 +1015,7 @@ public:
 
     /// @var geometry_shader_bit
     /// @glconstwrap{GEOMETRY_SHADER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_bit>,
 #ifdef GL_GEOMETRY_SHADER_BIT
       bitfield_type_c<GL_GEOMETRY_SHADER_BIT>>
@@ -1026,7 +1026,7 @@ public:
 
     /// @var fragment_shader_bit
     /// @glconstwrap{FRAGMENT_SHADER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_bit>,
 #ifdef GL_FRAGMENT_SHADER_BIT
       bitfield_type_c<GL_FRAGMENT_SHADER_BIT>>
@@ -1037,7 +1037,7 @@ public:
 
     /// @var all_shader_bits
     /// @glconstwrap{ALL_SHADER_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_bit>,
 #ifdef GL_ALL_SHADER_BITS
       bitfield_type_c<GL_ALL_SHADER_BITS>>
@@ -1048,7 +1048,7 @@ public:
 
     /// @var active_subroutine_uniforms
     /// @glconstwrap{ACTIVE_SUBROUTINE_UNIFORMS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_parameter>,
 #ifdef GL_ACTIVE_SUBROUTINE_UNIFORMS
       enum_type_c<GL_ACTIVE_SUBROUTINE_UNIFORMS>>
@@ -1059,7 +1059,7 @@ public:
 
     /// @var active_subroutine_uniform_locations
     /// @glconstwrap{ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_parameter>,
 #ifdef GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS
       enum_type_c<GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS>>
@@ -1070,7 +1070,7 @@ public:
 
     /// @var active_subroutines
     /// @glconstwrap{ACTIVE_SUBROUTINES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_parameter>,
 #ifdef GL_ACTIVE_SUBROUTINES
       enum_type_c<GL_ACTIVE_SUBROUTINES>>
@@ -1081,7 +1081,7 @@ public:
 
     /// @var active_subroutine_uniform_max_length
     /// @glconstwrap{ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_parameter>,
 #ifdef GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH
       enum_type_c<GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH>>
@@ -1092,7 +1092,7 @@ public:
 
     /// @var active_subroutine_max_length
     /// @glconstwrap{ACTIVE_SUBROUTINE_MAX_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_stage_parameter>,
 #ifdef GL_ACTIVE_SUBROUTINE_MAX_LENGTH
       enum_type_c<GL_ACTIVE_SUBROUTINE_MAX_LENGTH>>
@@ -1103,7 +1103,7 @@ public:
 
     /// @var delete_status
     /// @glconstwrap{DELETE_STATUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<shader_parameter, program_parameter>,
 #ifdef GL_DELETE_STATUS
       enum_type_c<GL_DELETE_STATUS>,
@@ -1115,7 +1115,7 @@ public:
 
     /// @var compile_status
     /// @glconstwrap{COMPILE_STATUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<shader_parameter>,
 #ifdef GL_COMPILE_STATUS
       enum_type_c<GL_COMPILE_STATUS>,
@@ -1127,7 +1127,7 @@ public:
 
     /// @var info_log_length
     /// @glconstwrap{INFO_LOG_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<shader_parameter, program_parameter, program_pipeline_parameter>,
 #ifdef GL_INFO_LOG_LENGTH
       enum_type_c<GL_INFO_LOG_LENGTH>>
@@ -1138,7 +1138,7 @@ public:
 
     /// @var shader_source_length
     /// @glconstwrap{SHADER_SOURCE_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<shader_parameter>,
 #ifdef GL_SHADER_SOURCE_LENGTH
       enum_type_c<GL_SHADER_SOURCE_LENGTH>>
@@ -1149,7 +1149,7 @@ public:
 
     /// @var spir_v_binary
     /// @glconstwrap{SPIR_V_BINARY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<shader_parameter>,
 #ifdef GL_SPIR_V_BINARY
       enum_type_c<GL_SPIR_V_BINARY>,
@@ -1161,7 +1161,7 @@ public:
 
     /// @var program_separable
     /// @glconstwrap{PROGRAM_SEPARABLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_PROGRAM_SEPARABLE
       enum_type_c<GL_PROGRAM_SEPARABLE>,
@@ -1173,7 +1173,7 @@ public:
 
     /// @var completion_status
     /// @glconstwrap{COMPLETION_STATUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<shader_parameter, program_parameter>,
 #ifdef GL_COMPLETION_STATUS_ARB
       enum_type_c<GL_COMPLETION_STATUS_ARB>,
@@ -1185,7 +1185,7 @@ public:
 
     /// @var link_status
     /// @glconstwrap{LINK_STATUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_LINK_STATUS
       enum_type_c<GL_LINK_STATUS>,
@@ -1197,7 +1197,7 @@ public:
 
     /// @var validate_status
     /// @glconstwrap{VALIDATE_STATUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_VALIDATE_STATUS
       enum_type_c<GL_VALIDATE_STATUS>,
@@ -1209,7 +1209,7 @@ public:
 
     /// @var attached_shaders
     /// @glconstwrap{ATTACHED_SHADERS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_ATTACHED_SHADERS
       enum_type_c<GL_ATTACHED_SHADERS>>
@@ -1220,7 +1220,7 @@ public:
 
     /// @var active_atomic_counter_buffers
     /// @glconstwrap{ACTIVE_ATOMIC_COUNTER_BUFFERS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_ACTIVE_ATOMIC_COUNTER_BUFFERS
       enum_type_c<GL_ACTIVE_ATOMIC_COUNTER_BUFFERS>>
@@ -1231,7 +1231,7 @@ public:
 
     /// @var active_attributes
     /// @glconstwrap{ACTIVE_ATTRIBUTES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_ACTIVE_ATTRIBUTES
       enum_type_c<GL_ACTIVE_ATTRIBUTES>>
@@ -1242,7 +1242,7 @@ public:
 
     /// @var active_attribute_max_length
     /// @glconstwrap{ACTIVE_ATTRIBUTE_MAX_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_ACTIVE_ATTRIBUTE_MAX_LENGTH
       enum_type_c<GL_ACTIVE_ATTRIBUTE_MAX_LENGTH>>
@@ -1253,7 +1253,7 @@ public:
 
     /// @var active_uniforms
     /// @glconstwrap{ACTIVE_UNIFORMS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_ACTIVE_UNIFORMS
       enum_type_c<GL_ACTIVE_UNIFORMS>>
@@ -1264,7 +1264,7 @@ public:
 
     /// @var active_uniform_max_length
     /// @glconstwrap{ACTIVE_UNIFORM_MAX_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_ACTIVE_UNIFORM_MAX_LENGTH
       enum_type_c<GL_ACTIVE_UNIFORM_MAX_LENGTH>>
@@ -1275,7 +1275,7 @@ public:
 
     /// @var program_binary_length
     /// @glconstwrap{PROGRAM_BINARY_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_PROGRAM_BINARY_LENGTH
       enum_type_c<GL_PROGRAM_BINARY_LENGTH>>
@@ -1286,7 +1286,7 @@ public:
 
     /// @var compute_work_group_size
     /// @glconstwrap{COMPUTE_WORK_GROUP_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_COMPUTE_WORK_GROUP_SIZE
       enum_type_c<GL_COMPUTE_WORK_GROUP_SIZE>>
@@ -1297,7 +1297,7 @@ public:
 
     /// @var transform_feedback_buffer_mode
     /// @glconstwrap{TRANSFORM_FEEDBACK_BUFFER_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER_MODE
       enum_type_c<GL_TRANSFORM_FEEDBACK_BUFFER_MODE>>
@@ -1308,7 +1308,7 @@ public:
 
     /// @var transform_feedback_varyings
     /// @glconstwrap{TRANSFORM_FEEDBACK_VARYINGS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_VARYINGS
       enum_type_c<GL_TRANSFORM_FEEDBACK_VARYINGS>>
@@ -1319,7 +1319,7 @@ public:
 
     /// @var transform_feedback_varying_max_length
     /// @glconstwrap{TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH
       enum_type_c<GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH>>
@@ -1330,7 +1330,7 @@ public:
 
     /// @var geometry_vertices_out
     /// @glconstwrap{GEOMETRY_VERTICES_OUT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_GEOMETRY_VERTICES_OUT
       enum_type_c<GL_GEOMETRY_VERTICES_OUT>>
@@ -1341,7 +1341,7 @@ public:
 
     /// @var geometry_input_type
     /// @glconstwrap{GEOMETRY_INPUT_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_GEOMETRY_INPUT_TYPE
       enum_type_c<GL_GEOMETRY_INPUT_TYPE>>
@@ -1352,7 +1352,7 @@ public:
 
     /// @var geometry_output_type
     /// @glconstwrap{GEOMETRY_OUTPUT_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_GEOMETRY_OUTPUT_TYPE
       enum_type_c<GL_GEOMETRY_OUTPUT_TYPE>>
@@ -1363,7 +1363,7 @@ public:
 
     /// @var tess_gen_point_mode
     /// @glconstwrap{TESS_GEN_POINT_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_parameter>,
 #ifdef GL_TESS_GEN_POINT_MODE
       enum_type_c<GL_TESS_GEN_POINT_MODE>>
@@ -1374,7 +1374,7 @@ public:
 
     /// @var program_binary_format_mesa
     /// @glconstwrap{PROGRAM_BINARY_FORMAT_MESA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_binary_format>,
 #ifdef GL_PROGRAM_BINARY_FORMAT_MESA
       enum_type_c<GL_PROGRAM_BINARY_FORMAT_MESA>>
@@ -1385,7 +1385,7 @@ public:
 
     /// @var active_program
     /// @glconstwrap{ACTIVE_PROGRAM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_pipeline_parameter>,
 #ifdef GL_ACTIVE_PROGRAM
       enum_type_c<GL_ACTIVE_PROGRAM>>
@@ -1396,7 +1396,7 @@ public:
 
     /// @var renderbuffer_width
     /// @glconstwrap{RENDERBUFFER_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_WIDTH
       enum_type_c<GL_RENDERBUFFER_WIDTH>>
@@ -1407,7 +1407,7 @@ public:
 
     /// @var renderbuffer_height
     /// @glconstwrap{RENDERBUFFER_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_HEIGHT
       enum_type_c<GL_RENDERBUFFER_HEIGHT>>
@@ -1418,7 +1418,7 @@ public:
 
     /// @var renderbuffer_internal_format
     /// @glconstwrap{RENDERBUFFER_INTERNAL_FORMAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_INTERNAL_FORMAT
       enum_type_c<GL_RENDERBUFFER_INTERNAL_FORMAT>>
@@ -1429,7 +1429,7 @@ public:
 
     /// @var renderbuffer_samples
     /// @glconstwrap{RENDERBUFFER_SAMPLES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_SAMPLES
       enum_type_c<GL_RENDERBUFFER_SAMPLES>>
@@ -1440,7 +1440,7 @@ public:
 
     /// @var renderbuffer_red_size
     /// @glconstwrap{RENDERBUFFER_RED_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_RED_SIZE
       enum_type_c<GL_RENDERBUFFER_RED_SIZE>>
@@ -1451,7 +1451,7 @@ public:
 
     /// @var renderbuffer_green_size
     /// @glconstwrap{RENDERBUFFER_GREEN_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_GREEN_SIZE
       enum_type_c<GL_RENDERBUFFER_GREEN_SIZE>>
@@ -1462,7 +1462,7 @@ public:
 
     /// @var renderbuffer_blue_size
     /// @glconstwrap{RENDERBUFFER_BLUE_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_BLUE_SIZE
       enum_type_c<GL_RENDERBUFFER_BLUE_SIZE>>
@@ -1473,7 +1473,7 @@ public:
 
     /// @var renderbuffer_alpha_size
     /// @glconstwrap{RENDERBUFFER_ALPHA_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_ALPHA_SIZE
       enum_type_c<GL_RENDERBUFFER_ALPHA_SIZE>>
@@ -1484,7 +1484,7 @@ public:
 
     /// @var renderbuffer_depth_size
     /// @glconstwrap{RENDERBUFFER_DEPTH_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_DEPTH_SIZE
       enum_type_c<GL_RENDERBUFFER_DEPTH_SIZE>>
@@ -1495,7 +1495,7 @@ public:
 
     /// @var renderbuffer_stencil_size
     /// @glconstwrap{RENDERBUFFER_STENCIL_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<renderbuffer_parameter>,
 #ifdef GL_RENDERBUFFER_STENCIL_SIZE
       enum_type_c<GL_RENDERBUFFER_STENCIL_SIZE>>
@@ -1506,7 +1506,7 @@ public:
 
     /// @var framebuffer_framebuffer
     /// @glconstwrap{FRAMEBUFFER_FRAMEBUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_target>,
 #ifdef GL_FRAMEBUFFER_FRAMEBUFFER
       enum_type_c<GL_FRAMEBUFFER_FRAMEBUFFER>>
@@ -1517,7 +1517,7 @@ public:
 
     /// @var draw_framebuffer
     /// @glconstwrap{DRAW_FRAMEBUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_target>,
 #ifdef GL_DRAW_FRAMEBUFFER
       enum_type_c<GL_DRAW_FRAMEBUFFER>>
@@ -1528,7 +1528,7 @@ public:
 
     /// @var read_framebuffer
     /// @glconstwrap{READ_FRAMEBUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_target>,
 #ifdef GL_READ_FRAMEBUFFER
       enum_type_c<GL_READ_FRAMEBUFFER>>
@@ -1539,7 +1539,7 @@ public:
 
     /// @var framebuffer_complete
     /// @glconstwrap{FRAMEBUFFER_COMPLETE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_status>,
 #ifdef GL_FRAMEBUFFER_COMPLETE
       enum_type_c<GL_FRAMEBUFFER_COMPLETE>>
@@ -1550,7 +1550,7 @@ public:
 
     /// @var framebuffer_undefined
     /// @glconstwrap{FRAMEBUFFER_UNDEFINED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_status>,
 #ifdef GL_FRAMEBUFFER_UNDEFINED
       enum_type_c<GL_FRAMEBUFFER_UNDEFINED>>
@@ -1561,7 +1561,7 @@ public:
 
     /// @var framebuffer_incomplete_attachment
     /// @glconstwrap{FRAMEBUFFER_INCOMPLETE_ATTACHMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_status>,
 #ifdef GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT
       enum_type_c<GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT>>
@@ -1572,7 +1572,7 @@ public:
 
     /// @var framebuffer_incomplete_missing_attachment
     /// @glconstwrap{FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_status>,
 #ifdef GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT
       enum_type_c<GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT>>
@@ -1583,7 +1583,7 @@ public:
 
     /// @var framebuffer_unsupported
     /// @glconstwrap{FRAMEBUFFER_UNSUPPORTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_status>,
 #ifdef GL_FRAMEBUFFER_UNSUPPORTED
       enum_type_c<GL_FRAMEBUFFER_UNSUPPORTED>>
@@ -1594,7 +1594,7 @@ public:
 
     /// @var framebuffer_incomplete_multisample
     /// @glconstwrap{FRAMEBUFFER_INCOMPLETE_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_status>,
 #ifdef GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE
       enum_type_c<GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE>>
@@ -1605,7 +1605,7 @@ public:
 
     /// @var framebuffer_incomplete_layer_targets
     /// @glconstwrap{FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_status>,
 #ifdef GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS
       enum_type_c<GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS>>
@@ -1616,7 +1616,7 @@ public:
 
     /// @var framebuffer_default_width
     /// @glconstwrap{FRAMEBUFFER_DEFAULT_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_parameter>,
 #ifdef GL_FRAMEBUFFER_DEFAULT_WIDTH
       enum_type_c<GL_FRAMEBUFFER_DEFAULT_WIDTH>>
@@ -1627,7 +1627,7 @@ public:
 
     /// @var framebuffer_default_height
     /// @glconstwrap{FRAMEBUFFER_DEFAULT_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_parameter>,
 #ifdef GL_FRAMEBUFFER_DEFAULT_HEIGHT
       enum_type_c<GL_FRAMEBUFFER_DEFAULT_HEIGHT>>
@@ -1638,7 +1638,7 @@ public:
 
     /// @var framebuffer_default_layers
     /// @glconstwrap{FRAMEBUFFER_DEFAULT_LAYERS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_parameter>,
 #ifdef GL_FRAMEBUFFER_DEFAULT_LAYERS
       enum_type_c<GL_FRAMEBUFFER_DEFAULT_LAYERS>>
@@ -1649,7 +1649,7 @@ public:
 
     /// @var framebuffer_default_samples
     /// @glconstwrap{FRAMEBUFFER_DEFAULT_SAMPLES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_parameter>,
 #ifdef GL_FRAMEBUFFER_DEFAULT_SAMPLES
       enum_type_c<GL_FRAMEBUFFER_DEFAULT_SAMPLES>>
@@ -1660,7 +1660,7 @@ public:
 
     /// @var framebuffer_default_fixed_sample_locations
     /// @glconstwrap{FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_parameter>,
 #ifdef GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS
       enum_type_c<GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS>>
@@ -1671,7 +1671,7 @@ public:
 
     /// @var framebuffer_attachment_red_size
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_RED_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE>>
@@ -1682,7 +1682,7 @@ public:
 
     /// @var framebuffer_attachment_green_size
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_GREEN_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE>>
@@ -1693,7 +1693,7 @@ public:
 
     /// @var framebuffer_attachment_blue_size
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_BLUE_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE>>
@@ -1704,7 +1704,7 @@ public:
 
     /// @var framebuffer_attachment_alpha_size
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE>>
@@ -1715,7 +1715,7 @@ public:
 
     /// @var framebuffer_attachment_depth_size
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE>>
@@ -1726,7 +1726,7 @@ public:
 
     /// @var framebuffer_attachment_stencil_size
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE>>
@@ -1737,7 +1737,7 @@ public:
 
     /// @var framebuffer_attachment_component_type
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE>>
@@ -1748,7 +1748,7 @@ public:
 
     /// @var framebuffer_attachment_color_encoding
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING>>
@@ -1759,7 +1759,7 @@ public:
 
     /// @var framebuffer_attachment_object_type
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE>>
@@ -1770,7 +1770,7 @@ public:
 
     /// @var framebuffer_attachment_object_name
     /// @glconstwrap{framebuffer_attachment_object_name}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME>>
@@ -1781,7 +1781,7 @@ public:
 
     /// @var framebuffer_attachment_texture_level
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL>>
@@ -1792,7 +1792,7 @@ public:
 
     /// @var framebuffer_attachment_texture_cube_map_face
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE>>
@@ -1803,7 +1803,7 @@ public:
 
     /// @var framebuffer_attachment_layered
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_LAYERED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_LAYERED
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_LAYERED>,
@@ -1815,7 +1815,7 @@ public:
 
     /// @var framebuffer_attachment_texture_layer
     /// @glconstwrap{FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment_parameter>,
 #ifdef GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER
       enum_type_c<GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER>>
@@ -1826,7 +1826,7 @@ public:
 
     /// @var color_attachment0
     /// @glconstwrap{COLOR_ATTACHMENT0}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment>,
 #ifdef GL_COLOR_ATTACHMENT0
       enum_type_c<GL_COLOR_ATTACHMENT0>,
@@ -1839,7 +1839,7 @@ public:
 
     /// @var depth_attachment
     /// @glconstwrap{DEPTH_ATTACHMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment>,
 #ifdef GL_DEPTH_ATTACHMENT
       enum_type_c<GL_DEPTH_ATTACHMENT>>
@@ -1850,7 +1850,7 @@ public:
 
     /// @var stencil_attachment
     /// @glconstwrap{STENCIL_ATTACHMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment>,
 #ifdef GL_STENCIL_ATTACHMENT
       enum_type_c<GL_STENCIL_ATTACHMENT>>
@@ -1861,7 +1861,7 @@ public:
 
     /// @var depth_stencil_attachment
     /// @glconstwrap{DEPTH_STENCIL_ATTACHMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_attachment>,
 #ifdef GL_DEPTH_STENCIL_ATTACHMENT
       enum_type_c<GL_DEPTH_STENCIL_ATTACHMENT>>
@@ -1872,7 +1872,7 @@ public:
 
     /// @var color
     /// @glconstwrap{COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_buffer, matrix_mode>,
 #ifdef GL_COLOR
       enum_type_c<GL_COLOR>>
@@ -1883,7 +1883,7 @@ public:
 
     /// @var depth
     /// @glconstwrap{DEPTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_buffer, framebuffer_attachment>,
 #ifdef GL_DEPTH
       enum_type_c<GL_DEPTH>>
@@ -1894,7 +1894,7 @@ public:
 
     /// @var stencil
     /// @glconstwrap{STENCIL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<framebuffer_buffer, framebuffer_attachment>,
 #ifdef GL_STENCIL
       enum_type_c<GL_STENCIL>>
@@ -1905,7 +1905,7 @@ public:
 
     /// @var array_buffer
     /// @glconstwrap{ARRAY_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_ARRAY_BUFFER
       enum_type_c<GL_ARRAY_BUFFER>>
@@ -1916,7 +1916,7 @@ public:
 
     /// @var atomic_counter_buffer
     /// @glconstwrap{ATOMIC_COUNTER_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target, program_interface>,
 #ifdef GL_ATOMIC_COUNTER_BUFFER
       enum_type_c<GL_ATOMIC_COUNTER_BUFFER>>
@@ -1927,7 +1927,7 @@ public:
 
     /// @var copy_read_buffer
     /// @glconstwrap{COPY_READ_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_COPY_READ_BUFFER
       enum_type_c<GL_COPY_READ_BUFFER>>
@@ -1938,7 +1938,7 @@ public:
 
     /// @var copy_write_buffer
     /// @glconstwrap{COPY_WRITE_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_COPY_WRITE_BUFFER
       enum_type_c<GL_COPY_WRITE_BUFFER>>
@@ -1949,7 +1949,7 @@ public:
 
     /// @var dispatch_indirect_buffer
     /// @glconstwrap{DISPATCH_INDIRECT_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_DISPATCH_INDIRECT_BUFFER
       enum_type_c<GL_DISPATCH_INDIRECT_BUFFER>>
@@ -1960,7 +1960,7 @@ public:
 
     /// @var draw_indirect_buffer
     /// @glconstwrap{DRAW_INDIRECT_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_DRAW_INDIRECT_BUFFER
       enum_type_c<GL_DRAW_INDIRECT_BUFFER>>
@@ -1971,7 +1971,7 @@ public:
 
     /// @var element_array_buffer
     /// @glconstwrap{ELEMENT_ARRAY_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_ELEMENT_ARRAY_BUFFER
       enum_type_c<GL_ELEMENT_ARRAY_BUFFER>>
@@ -1982,7 +1982,7 @@ public:
 
     /// @var parameter_buffer
     /// @glconstwrap{PARAMETER_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_PARAMETER_BUFFER
       enum_type_c<GL_PARAMETER_BUFFER>>
@@ -1993,7 +1993,7 @@ public:
 
     /// @var pixel_pack_buffer
     /// @glconstwrap{PIXEL_PACK_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_PIXEL_PACK_BUFFER
       enum_type_c<GL_PIXEL_PACK_BUFFER>>
@@ -2004,7 +2004,7 @@ public:
 
     /// @var pixel_unpack_buffer
     /// @glconstwrap{PIXEL_UNPACK_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_PIXEL_UNPACK_BUFFER
       enum_type_c<GL_PIXEL_UNPACK_BUFFER>>
@@ -2015,7 +2015,7 @@ public:
 
     /// @var query_buffer
     /// @glconstwrap{QUERY_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_QUERY_BUFFER
       enum_type_c<GL_QUERY_BUFFER>>
@@ -2026,7 +2026,7 @@ public:
 
     /// @var shader_storage_buffer
     /// @glconstwrap{SHADER_STORAGE_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_SHADER_STORAGE_BUFFER
       enum_type_c<GL_SHADER_STORAGE_BUFFER>>
@@ -2037,7 +2037,7 @@ public:
 
     /// @var texture_buffer
     /// @glconstwrap{TEXTURE_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_TEXTURE_BUFFER
       enum_type_c<GL_TEXTURE_BUFFER>>
@@ -2048,7 +2048,7 @@ public:
 
     /// @var transform_feedback_buffer
     /// @glconstwrap{TRANSFORM_FEEDBACK_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target, program_interface>,
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER
       enum_type_c<GL_TRANSFORM_FEEDBACK_BUFFER>>
@@ -2059,7 +2059,7 @@ public:
 
     /// @var uniform_buffer
     /// @glconstwrap{UNIFORM_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_target>,
 #ifdef GL_UNIFORM_BUFFER
       enum_type_c<GL_UNIFORM_BUFFER>>
@@ -2070,7 +2070,7 @@ public:
 
     /// @var buffer_access
     /// @glconstwrap{BUFFER_ACCESS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_ACCESS
       enum_type_c<GL_BUFFER_ACCESS>,
@@ -2082,7 +2082,7 @@ public:
 
     /// @var buffer_access_flags
     /// @glconstwrap{BUFFER_ACCESS_FLAGS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_ACCESS_FLAGS
       enum_type_c<GL_BUFFER_ACCESS_FLAGS>,
@@ -2094,7 +2094,7 @@ public:
 
     /// @var buffer_immutable_storage
     /// @glconstwrap{BUFFER_IMMUTABLE_STORAGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_IMMUTABLE_STORAGE
       enum_type_c<GL_BUFFER_IMMUTABLE_STORAGE>,
@@ -2106,7 +2106,7 @@ public:
 
     /// @var buffer_mapped
     /// @glconstwrap{BUFFER_MAPPED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_MAPPED
       enum_type_c<GL_BUFFER_MAPPED>,
@@ -2118,7 +2118,7 @@ public:
 
     /// @var buffer_map_length
     /// @glconstwrap{buffer_map_length}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_MAP_LENGTH
       enum_type_c<GL_BUFFER_MAP_LENGTH>>
@@ -2129,7 +2129,7 @@ public:
 
     /// @var buffer_map_offset
     /// @glconstwrap{BUFFER_MAP_OFFSET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_MAP_OFFSET
       enum_type_c<GL_BUFFER_MAP_OFFSET>>
@@ -2140,7 +2140,7 @@ public:
 
     /// @var buffer_size
     /// @glconstwrap{BUFFER_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_SIZE
       enum_type_c<GL_BUFFER_SIZE>>
@@ -2151,7 +2151,7 @@ public:
 
     /// @var buffer_storage_flags
     /// @glconstwrap{BUFFER_STORAGE_FLAGS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_STORAGE_FLAGS
       enum_type_c<GL_BUFFER_STORAGE_FLAGS>,
@@ -2163,7 +2163,7 @@ public:
 
     /// @var buffer_usage
     /// @glconstwrap{BUFFER_USAGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_parameter>,
 #ifdef GL_BUFFER_USAGE
       enum_type_c<GL_BUFFER_USAGE>,
@@ -2175,7 +2175,7 @@ public:
 
     /// @var stream_draw
     /// @glconstwrap{STREAM_DRAW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_STREAM_DRAW
       enum_type_c<GL_STREAM_DRAW>>
@@ -2186,7 +2186,7 @@ public:
 
     /// @var stream_read
     /// @glconstwrap{STREAM_READ}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_STREAM_READ
       enum_type_c<GL_STREAM_READ>>
@@ -2197,7 +2197,7 @@ public:
 
     /// @var stream_copy
     /// @glconstwrap{STREAM_COPY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_STREAM_COPY
       enum_type_c<GL_STREAM_COPY>>
@@ -2208,7 +2208,7 @@ public:
 
     /// @var static_draw
     /// @glconstwrap{STATIC_DRAW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_STATIC_DRAW
       enum_type_c<GL_STATIC_DRAW>>
@@ -2219,7 +2219,7 @@ public:
 
     /// @var static_read
     /// @glconstwrap{STATIC_READ}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_STATIC_READ
       enum_type_c<GL_STATIC_READ>>
@@ -2230,7 +2230,7 @@ public:
 
     /// @var static_copy
     /// @glconstwrap{STATIC_COPY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_STATIC_COPY
       enum_type_c<GL_STATIC_COPY>>
@@ -2241,7 +2241,7 @@ public:
 
     /// @var dynamic_draw
     /// @glconstwrap{DYNAMIC_DRAW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_DYNAMIC_DRAW
       enum_type_c<GL_DYNAMIC_DRAW>>
@@ -2252,7 +2252,7 @@ public:
 
     /// @var dynamic_read
     /// @glconstwrap{DYNAMIC_READ}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_DYNAMIC_READ
       enum_type_c<GL_DYNAMIC_READ>>
@@ -2263,7 +2263,7 @@ public:
 
     /// @var dynamic_copy
     /// @glconstwrap{DYNAMIC_COPY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::buffer_usage>,
 #ifdef GL_DYNAMIC_COPY
       enum_type_c<GL_DYNAMIC_COPY>>
@@ -2274,7 +2274,7 @@ public:
 
     /// @var map_read_bit
     /// @glconstwrap{MAP_READ_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit, buffer_storage_bit>,
 #ifdef GL_MAP_READ_BIT
       bitfield_type_c<GL_MAP_READ_BIT>>
@@ -2285,7 +2285,7 @@ public:
 
     /// @var map_write_bit
     /// @glconstwrap{MAP_WRITE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit, buffer_storage_bit>,
 #ifdef GL_MAP_WRITE_BIT
       bitfield_type_c<GL_MAP_WRITE_BIT>>
@@ -2296,7 +2296,7 @@ public:
 
     /// @var map_persistent_bit
     /// @glconstwrap{MAP_PERSISTENT_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit, buffer_storage_bit>,
 #ifdef GL_MAP_PERSISTENT_BIT
       bitfield_type_c<GL_MAP_PERSISTENT_BIT>>
@@ -2307,7 +2307,7 @@ public:
 
     /// @var map_coherent_bit
     /// @glconstwrap{MAP_COHERENT_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit, buffer_storage_bit>,
 #ifdef GL_MAP_COHERENT_BIT
       bitfield_type_c<GL_MAP_COHERENT_BIT>>
@@ -2318,7 +2318,7 @@ public:
 
     /// @var map_invalidate_range_bit
     /// @glconstwrap{MAP_INVALIDATE_RANGE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit>,
 #ifdef GL_MAP_INVALIDATE_RANGE_BIT
       bitfield_type_c<GL_MAP_INVALIDATE_RANGE_BIT>>
@@ -2329,7 +2329,7 @@ public:
 
     /// @var map_invalidate_buffer_bit
     /// @glconstwrap{MAP_INVALIDATE_BUFFER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit>,
 #ifdef GL_MAP_INVALIDATE_BUFFER_BIT
       bitfield_type_c<GL_MAP_INVALIDATE_BUFFER_BIT>>
@@ -2340,7 +2340,7 @@ public:
 
     /// @var map_flush_explicit_bit
     /// @glconstwrap{MAP_FLUSH_EXPLICIT_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit>,
 #ifdef GL_MAP_FLUSH_EXPLICIT_BIT
       bitfield_type_c<GL_MAP_FLUSH_EXPLICIT_BIT>>
@@ -2351,7 +2351,7 @@ public:
 
     /// @var map_unsynchronized_bit
     /// @glconstwrap{MAP_UNSYNCHRONIZED_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_map_access_bit>,
 #ifdef GL_MAP_UNSYNCHRONIZED_BIT
       bitfield_type_c<GL_MAP_UNSYNCHRONIZED_BIT>>
@@ -2362,7 +2362,7 @@ public:
 
     /// @var dynamic_storage_bit
     /// @glconstwrap{DYNAMIC_STORAGE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_storage_bit>,
 #ifdef GL_DYNAMIC_STORAGE_BIT
       bitfield_type_c<GL_DYNAMIC_STORAGE_BIT>>
@@ -2373,7 +2373,7 @@ public:
 
     /// @var client_storage_bit
     /// @glconstwrap{CLIENT_STORAGE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_storage_bit>,
 #ifdef GL_CLIENT_STORAGE_BIT
       bitfield_type_c<GL_CLIENT_STORAGE_BIT>>
@@ -2384,7 +2384,7 @@ public:
 
     /// @var sparse_storage_bit
     /// @glconstwrap{SPARSE_STORAGE_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_storage_bit>,
 #ifdef GL_SPARSE_STORAGE_BIT_ARB
       bitfield_type_c<GL_SPARSE_STORAGE_BIT_ARB>>
@@ -2395,7 +2395,7 @@ public:
 
     /// @var texture0
     /// @glconstwrap{TEXTURE0}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_unit>,
 #ifdef GL_TEXTURE0
       enum_type_c<GL_TEXTURE0>,
@@ -2408,7 +2408,7 @@ public:
 
     /// @var texture_3d
     /// @glconstwrap{TEXTURE_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_3D
       enum_type_c<GL_TEXTURE_3D>>
@@ -2419,7 +2419,7 @@ public:
 
     /// @var texture_2d
     /// @glconstwrap{TEXTURE_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_2D
       enum_type_c<GL_TEXTURE_2D>>
@@ -2430,7 +2430,7 @@ public:
 
     /// @var texture_1d
     /// @glconstwrap{TEXTURE_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_1D
       enum_type_c<GL_TEXTURE_1D>>
@@ -2441,7 +2441,7 @@ public:
 
     /// @var texture_2d_array
     /// @glconstwrap{TEXTURE_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_2D_ARRAY
       enum_type_c<GL_TEXTURE_2D_ARRAY>>
@@ -2452,7 +2452,7 @@ public:
 
     /// @var texture_1d_array
     /// @glconstwrap{TEXTURE_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_1D_ARRAY
       enum_type_c<GL_TEXTURE_1D_ARRAY>>
@@ -2463,7 +2463,7 @@ public:
 
     /// @var texture_rectangle
     /// @glconstwrap{TEXTURE_RECTANGLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_RECTANGLE
       enum_type_c<GL_TEXTURE_RECTANGLE>>
@@ -2474,7 +2474,7 @@ public:
 
     /// @var texture_cube_map
     /// @glconstwrap{TEXTURE_CUBE_MAP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP
       enum_type_c<GL_TEXTURE_CUBE_MAP>>
@@ -2485,7 +2485,7 @@ public:
 
     /// @var texture_cube_map_array
     /// @glconstwrap{TEXTURE_CUBE_MAP_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP_ARRAY
       enum_type_c<GL_TEXTURE_CUBE_MAP_ARRAY>>
@@ -2496,7 +2496,7 @@ public:
 
     /// @var texture_2d_multisample
     /// @glconstwrap{TEXTURE_2D_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_2D_MULTISAMPLE
       enum_type_c<GL_TEXTURE_2D_MULTISAMPLE>>
@@ -2507,7 +2507,7 @@ public:
 
     /// @var texture_2d_multisample_array
     /// @glconstwrap{TEXTURE_2D_MULTISAMPLE_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_TEXTURE_2D_MULTISAMPLE_ARRAY>>
@@ -2518,7 +2518,7 @@ public:
 
     /// @var texture_cube_map_positive_x
     /// @glconstwrap{TEXTURE_CUBE_MAP_POSITIVE_X}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP_POSITIVE_X
       enum_type_c<GL_TEXTURE_CUBE_MAP_POSITIVE_X>>
@@ -2529,7 +2529,7 @@ public:
 
     /// @var texture_cube_map_negative_x
     /// @glconstwrap{TEXTURE_CUBE_MAP_NEGATIVE_X}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP_NEGATIVE_X
       enum_type_c<GL_TEXTURE_CUBE_MAP_NEGATIVE_X>>
@@ -2540,7 +2540,7 @@ public:
 
     /// @var texture_cube_map_positive_y
     /// @glconstwrap{TEXTURE_CUBE_MAP_POSITIVE_Y}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP_POSITIVE_Y
       enum_type_c<GL_TEXTURE_CUBE_MAP_POSITIVE_Y>>
@@ -2551,7 +2551,7 @@ public:
 
     /// @var texture_cube_map_negative_y
     /// @glconstwrap{TEXTURE_CUBE_MAP_NEGATIVE_Y}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
       enum_type_c<GL_TEXTURE_CUBE_MAP_NEGATIVE_Y>>
@@ -2562,7 +2562,7 @@ public:
 
     /// @var texture_cube_map_positive_z
     /// @glconstwrap{TEXTURE_CUBE_MAP_POSITIVE_Z}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP_POSITIVE_Z
       enum_type_c<GL_TEXTURE_CUBE_MAP_POSITIVE_Z>>
@@ -2573,7 +2573,7 @@ public:
 
     /// @var texture_cube_map_negative_z
     /// @glconstwrap{TEXTURE_CUBE_MAP_NEGATIVE_Z}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_target>,
 #ifdef GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
       enum_type_c<GL_TEXTURE_CUBE_MAP_NEGATIVE_Z>>
@@ -2584,12 +2584,12 @@ public:
 
     /// @var texture_external
     /// @glconstwrap{TEXTURE_EXTERNAL}
-    opt_c_api_constant<mp_list<oglplus::texture_target>, enum_type_c<0x8D65>>
+    c_api::opt_constant<mp_list<oglplus::texture_target>, enum_type_c<0x8D65>>
       texture_external;
 
     /// @var compare_ref_to_texture
     /// @glconstwrap{COMPARE_REF_TO_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_compare_mode>,
 #ifdef GL_COMPARE_REF_TO_TEXTURE
       enum_type_c<GL_COMPARE_REF_TO_TEXTURE>>
@@ -2600,7 +2600,7 @@ public:
 
     /// @var nearest
     /// @glconstwrap{NEAREST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<
         oglplus::texture_min_filter,
         oglplus::texture_mag_filter,
@@ -2615,7 +2615,7 @@ public:
 
     /// @var linear
     /// @glconstwrap{LINEAR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<
         oglplus::texture_min_filter,
         oglplus::texture_mag_filter,
@@ -2630,7 +2630,7 @@ public:
 
     /// @var nearest_mipmap_linear
     /// @glconstwrap{NEAREST_MIPMAP_LINEAR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_min_filter>,
 #ifdef GL_NEAREST_MIPMAP_NEAREST
       enum_type_c<GL_NEAREST_MIPMAP_NEAREST>>
@@ -2641,7 +2641,7 @@ public:
 
     /// @var nearest_mipmap_linear
     /// @glconstwrap{NEAREST_MIPMAP_LINEAR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_min_filter>,
 #ifdef GL_NEAREST_MIPMAP_LINEAR
       enum_type_c<GL_NEAREST_MIPMAP_LINEAR>>
@@ -2652,7 +2652,7 @@ public:
 
     /// @var linear_mipmap_nearest
     /// @glconstwrap{LINEAR_MIPMAP_NEAREST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_min_filter>,
 #ifdef GL_LINEAR_MIPMAP_NEAREST
       enum_type_c<GL_LINEAR_MIPMAP_NEAREST>>
@@ -2663,7 +2663,7 @@ public:
 
     /// @var linear_mipmap_linear
     /// @glconstwrap{LINEAR_MIPMAP_LINEAR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::texture_min_filter>,
 #ifdef GL_LINEAR_MIPMAP_LINEAR
       enum_type_c<GL_LINEAR_MIPMAP_LINEAR>>
@@ -2674,7 +2674,7 @@ public:
 
     /// @var texture_width
     /// @glconstwrap{TEXTURE_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_WIDTH
       enum_type_c<GL_TEXTURE_WIDTH>>
@@ -2685,7 +2685,7 @@ public:
 
     /// @var texture_height
     /// @glconstwrap{TEXTURE_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_HEIGHT
       enum_type_c<GL_TEXTURE_HEIGHT>>
@@ -2696,7 +2696,7 @@ public:
 
     /// @var texture_depth
     /// @glconstwrap{TEXTURE_DEPTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_DEPTH
       enum_type_c<GL_TEXTURE_DEPTH>>
@@ -2707,7 +2707,7 @@ public:
 
     /// @var texture_red_size
     /// @glconstwrap{TEXTURE_RED_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_RED_SIZE
       enum_type_c<GL_TEXTURE_RED_SIZE>>
@@ -2718,7 +2718,7 @@ public:
 
     /// @var texture_green_type
     /// @glconstwrap{TEXTURE_GREEN_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_GREEN_SIZE
       enum_type_c<GL_TEXTURE_GREEN_SIZE>>
@@ -2729,7 +2729,7 @@ public:
 
     /// @var texture_blue_size
     /// @glconstwrap{TEXTURE_BLUE_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_BLUE_SIZE
       enum_type_c<GL_TEXTURE_BLUE_SIZE>>
@@ -2740,7 +2740,7 @@ public:
 
     /// @var texture_alpha_size
     /// @glconstwrap{TEXTURE_ALPHA_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_ALPHA_SIZE
       enum_type_c<GL_TEXTURE_ALPHA_SIZE>>
@@ -2751,7 +2751,7 @@ public:
 
     /// @var texture_depth_size
     /// @glconstwrap{TEXTURE_DEPTH_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_DEPTH_SIZE
       enum_type_c<GL_TEXTURE_DEPTH_SIZE>>
@@ -2760,7 +2760,7 @@ public:
 #endif
       texture_depth_size;
 
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_STENCIL_SIZE
       enum_type_c<GL_TEXTURE_STENCIL_SIZE>>
@@ -2771,7 +2771,7 @@ public:
 
     /// @var texture_shared_size
     /// @glconstwrap{TEXTURE_SHARED_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_SHARED_SIZE
       enum_type_c<GL_TEXTURE_SHARED_SIZE>>
@@ -2782,7 +2782,7 @@ public:
 
     /// @var texture_red_type
     /// @glconstwrap{texture_red_type}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_RED_TYPE
       enum_type_c<GL_TEXTURE_RED_TYPE>,
@@ -2794,7 +2794,7 @@ public:
 
     /// @var texture_green_type
     /// @glconstwrap{TEXTURE_GREEN_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_GREEN_TYPE
       enum_type_c<GL_TEXTURE_GREEN_TYPE>,
@@ -2806,7 +2806,7 @@ public:
 
     /// @var texture_blue_type
     /// @glconstwrap{TEXTURE_BLUE_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_BLUE_TYPE
       enum_type_c<GL_TEXTURE_BLUE_TYPE>,
@@ -2818,7 +2818,7 @@ public:
 
     /// @var texture_alpha_type
     /// @glconstwrap{TEXTURE_ALPHA_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_ALPHA_TYPE
       enum_type_c<GL_TEXTURE_ALPHA_TYPE>,
@@ -2830,7 +2830,7 @@ public:
 
     /// @var texture_depth_type
     /// @glconstwrap{TEXTURE_DEPTH_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_DEPTH_TYPE
       enum_type_c<GL_TEXTURE_DEPTH_TYPE>,
@@ -2842,7 +2842,7 @@ public:
 
     /// @var depth_stencil_texture_mode
     /// @glconstwrap{DEPTH_STENCIL_TEXTURE_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_DEPTH_STENCIL_TEXTURE_MODE
       enum_type_c<GL_DEPTH_STENCIL_TEXTURE_MODE>>
@@ -2853,7 +2853,7 @@ public:
 
     /// @var image_format_compatibility_type
     /// @glconstwrap{IMAGE_FORMAT_COMPATIBILITY_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, internal_format_parameter>,
 #ifdef GL_IMAGE_FORMAT_COMPATIBILITY_TYPE
       enum_type_c<GL_IMAGE_FORMAT_COMPATIBILITY_TYPE>>
@@ -2864,7 +2864,7 @@ public:
 
     /// @var texture_base_level
     /// @glconstwrap{TEXTURE_BASE_LEVEL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_BASE_LEVEL
       enum_type_c<GL_TEXTURE_BASE_LEVEL>>
@@ -2875,7 +2875,7 @@ public:
 
     /// @var texture_border_color
     /// @glconstwrap{TEXTURE_BORDER_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_BORDER_COLOR
       enum_type_c<GL_TEXTURE_BORDER_COLOR>>
@@ -2886,7 +2886,7 @@ public:
 
     /// @var texture_compare_mode
     /// @glconstwrap{TEXTURE_COMPARE_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_COMPARE_MODE
       enum_type_c<GL_TEXTURE_COMPARE_MODE>,
@@ -2898,7 +2898,7 @@ public:
 
     /// @var texture_compare_func
     /// @glconstwrap{TEXTURE_COMPARE_FUNC}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_COMPARE_FUNC
       enum_type_c<GL_TEXTURE_COMPARE_FUNC>,
@@ -2910,7 +2910,7 @@ public:
 
     /// @var texture_internal_format
     /// @glconstwrap{TEXTURE_INTERNAL_FORMAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_INTERNAL_FORMAT
       enum_type_c<GL_TEXTURE_INTERNAL_FORMAT>,
@@ -2922,7 +2922,7 @@ public:
 
     /// @var texture_immutable_format
     /// @glconstwrap{TEXTURE_IMMUTABLE_FORMAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_IMMUTABLE_FORMAT
       enum_type_c<GL_TEXTURE_IMMUTABLE_FORMAT>,
@@ -2934,7 +2934,7 @@ public:
 
     /// @var texture_immutable_levels
     /// @glconstwrap{TEXTURE_IMMUTABLE_LEVELS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_IMMUTABLE_LEVELS
       enum_type_c<GL_TEXTURE_IMMUTABLE_LEVELS>>
@@ -2945,7 +2945,7 @@ public:
 
     /// @var texture_lod_bias
     /// @glconstwrap{TEXTURE_LOD_BIAS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_LOD_BIAS
       enum_type_c<GL_TEXTURE_LOD_BIAS>>
@@ -2956,7 +2956,7 @@ public:
 
     /// @var texture_mag_filter
     /// @glconstwrap{TEXTURE_MAG_FILTER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_MAG_FILTER
       enum_type_c<GL_TEXTURE_MAG_FILTER>,
@@ -2968,7 +2968,7 @@ public:
 
     /// @var texture_max_level
     /// @glconstwrap{TEXTURE_MAX_LEVEL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_MAX_LEVEL
       enum_type_c<GL_TEXTURE_MAX_LEVEL>>
@@ -2979,7 +2979,7 @@ public:
 
     /// @var texture_max_lod
     /// @glconstwrap{TEXTURE_MAX_LOD}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_MAX_LOD
       enum_type_c<GL_TEXTURE_MAX_LOD>>
@@ -2990,7 +2990,7 @@ public:
 
     /// @var texture_min_filter
     /// @glconstwrap{TEXTURE_MIN_FILTER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_MIN_FILTER
       enum_type_c<GL_TEXTURE_MIN_FILTER>,
@@ -3002,7 +3002,7 @@ public:
 
     /// @var texture_min_lod
     /// @glconstwrap{TEXTURE_MIN_LOD}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, sampler_parameter>,
 #ifdef GL_TEXTURE_MIN_LOD
       enum_type_c<GL_TEXTURE_MIN_LOD>>
@@ -3013,7 +3013,7 @@ public:
 
     /// @var texture_swizzle_r
     /// @glconstwrap{TEXTURE_SWIZZLE_R}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_swizzle_mode>,
 #ifdef GL_TEXTURE_SWIZZLE_R
       enum_type_c<GL_TEXTURE_SWIZZLE_R>,
@@ -3025,7 +3025,7 @@ public:
 
     /// @var texture_swizzle_g
     /// @glconstwrap{TEXTURE_SWIZZLE_G}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_swizzle_mode>,
 #ifdef GL_TEXTURE_SWIZZLE_G
       enum_type_c<GL_TEXTURE_SWIZZLE_G>,
@@ -3037,7 +3037,7 @@ public:
 
     /// @var texture_swizzle_b
     /// @glconstwrap{TEXTURE_SWIZZLE_B}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_swizzle_mode>,
 #ifdef GL_TEXTURE_SWIZZLE_B
       enum_type_c<GL_TEXTURE_SWIZZLE_B>,
@@ -3049,7 +3049,7 @@ public:
 
     /// @var texture_swizzle_a
     /// @glconstwrap{TEXTURE_SWIZZLE_A}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_swizzle_mode>,
 #ifdef GL_TEXTURE_SWIZZLE_A
       enum_type_c<GL_TEXTURE_SWIZZLE_A>,
@@ -3061,7 +3061,7 @@ public:
 
     /// @var texture_swizzle_rgba
     /// @glconstwrap{TEXTURE_SWIZZLE_RGBA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_swizzle_mode>,
 #ifdef GL_TEXTURE_SWIZZLE_RGBA
       enum_type_c<GL_TEXTURE_SWIZZLE_RGBA>>
@@ -3072,7 +3072,7 @@ public:
 
     /// @var texture_target
     /// @glconstwrap{TEXTURE_TARGET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_TARGET
       enum_type_c<GL_TEXTURE_TARGET>,
@@ -3084,7 +3084,7 @@ public:
 
     /// @var texture_view_min_layer
     /// @glconstwrap{TEXTURE_VIEW_MIN_LAYER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_VIEW_MIN_LAYER
       enum_type_c<GL_TEXTURE_VIEW_MIN_LAYER>>
@@ -3095,7 +3095,7 @@ public:
 
     /// @var texture_view_min_level
     /// @glconstwrap{TEXTURE_VIEW_MIN_LEVEL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_VIEW_MIN_LEVEL
       enum_type_c<GL_TEXTURE_VIEW_MIN_LEVEL>>
@@ -3106,7 +3106,7 @@ public:
 
     /// @var texture_view_num_layers
     /// @glconstwrap{TEXTURE_VIEW_NUM_LAYERS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_VIEW_NUM_LAYERS
       enum_type_c<GL_TEXTURE_VIEW_NUM_LAYERS>>
@@ -3117,7 +3117,7 @@ public:
 
     /// @var texture_view_num_levels
     /// @glconstwrap{TEXTURE_VIEW_NUM_LEVELS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter>,
 #ifdef GL_TEXTURE_VIEW_NUM_LEVELS
       enum_type_c<GL_TEXTURE_VIEW_NUM_LEVELS>>
@@ -3128,7 +3128,7 @@ public:
 
     /// @var texture_fixed_sample_locations
     /// @glconstwrap{TEXTURE_FIXED_SAMPLE_LOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_FIXED_SAMPLE_LOCATIONS
       enum_type_c<GL_TEXTURE_FIXED_SAMPLE_LOCATIONS>,
@@ -3140,7 +3140,7 @@ public:
 
     /// @var texture_wrap_s
     /// @glconstwrap{TEXTURE_WRAP_S}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_wrap_coord, sampler_parameter>,
 #ifdef GL_TEXTURE_WRAP_S
       enum_type_c<GL_TEXTURE_WRAP_S>,
@@ -3152,7 +3152,7 @@ public:
 
     /// @var texture_wrap_t
     /// @glconstwrap{TEXTURE_WRAP_T}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_wrap_coord, sampler_parameter>,
 #ifdef GL_TEXTURE_WRAP_T
       enum_type_c<GL_TEXTURE_WRAP_T>,
@@ -3164,7 +3164,7 @@ public:
 
     /// @var texture_wrap_r
     /// @glconstwrap{TEXTURE_WRAP_R}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_parameter, texture_wrap_coord, sampler_parameter>,
 #ifdef GL_TEXTURE_WRAP_R
       enum_type_c<GL_TEXTURE_WRAP_R>,
@@ -3176,7 +3176,7 @@ public:
 
     /// @var clamp_to_edge
     /// @glconstwrap{CLAMP_TO_EDGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_wrap_mode>,
 #ifdef GL_CLAMP_TO_EDGE
       enum_type_c<GL_CLAMP_TO_EDGE>>
@@ -3187,7 +3187,7 @@ public:
 
     /// @var repeat
     /// @glconstwrap{REPEAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_wrap_mode>,
 #ifdef GL_REPEAT
       enum_type_c<GL_REPEAT>>
@@ -3198,7 +3198,7 @@ public:
 
     /// @var clamp_to_border
     /// @glconstwrap{CLAMP_TO_BORDER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_wrap_mode>,
 #ifdef GL_CLAMP_TO_BORDER
       enum_type_c<GL_CLAMP_TO_BORDER>>
@@ -3209,7 +3209,7 @@ public:
 
     /// @var mirrored_repeat
     /// @glconstwrap{MIRRORED_REPEAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_wrap_mode>,
 #ifdef GL_MIRRORED_REPEAT
       enum_type_c<GL_MIRRORED_REPEAT>>
@@ -3220,7 +3220,7 @@ public:
 
     /// @var mirror_clamp_to_edge
     /// @glconstwrap{MIRROR_CLAMP_TO_EDGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_wrap_mode>,
 #ifdef GL_MIRROR_CLAMP_TO_EDGE
       enum_type_c<GL_MIRROR_CLAMP_TO_EDGE>>
@@ -3231,7 +3231,7 @@ public:
 
     /// @var red
     /// @glconstwrap{RED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_swizzle_mode, pixel_internal_format, pixel_format>,
 #ifdef GL_RED
       enum_type_c<GL_RED>>
@@ -3242,7 +3242,7 @@ public:
 
     /// @var green
     /// @glconstwrap{GREEN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_swizzle_mode, pixel_format>,
 #ifdef GL_GREEN
       enum_type_c<GL_GREEN>>
@@ -3253,7 +3253,7 @@ public:
 
     /// @var blue
     /// @glconstwrap{BLUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_swizzle_mode, pixel_format>,
 #ifdef GL_BLUE
       enum_type_c<GL_BLUE>>
@@ -3264,7 +3264,7 @@ public:
 
     /// @var alpha
     /// @glconstwrap{ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_swizzle_mode, path_color_format_nv>,
 #ifdef GL_ALPHA
       enum_type_c<GL_ALPHA>>
@@ -3275,7 +3275,7 @@ public:
 
     /// @var zero
     /// @glconstwrap{ZERO}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_swizzle_mode, blend_function, stencil_operation>,
 #ifdef GL_ZERO
       enum_type_c<GL_ZERO>>
@@ -3286,7 +3286,7 @@ public:
 
     /// @var one
     /// @glconstwrap{ONE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_swizzle_mode, blend_function>,
 #ifdef GL_ONE
       enum_type_c<GL_ONE>>
@@ -3297,7 +3297,7 @@ public:
 
     /// @var primitives_generated
     /// @glconstwrap{PRIMITIVES_GENERATED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_PRIMITIVES_GENERATED
       enum_type_c<GL_PRIMITIVES_GENERATED>>
@@ -3308,7 +3308,7 @@ public:
 
     /// @var transform_feedback_primitives_written
     /// @glconstwrap{TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN
       enum_type_c<GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN>>
@@ -3319,7 +3319,7 @@ public:
 
     /// @var transform_feedback_overflow
     /// @glconstwrap{TRANSFORM_FEEDBACK_OVERFLOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_TRANSFORM_FEEDBACK_OVERFLOW
       enum_type_c<GL_TRANSFORM_FEEDBACK_OVERFLOW>>
@@ -3330,7 +3330,7 @@ public:
 
     /// @var transform_feedback_stream_overflow
     /// @glconstwrap{TRANSFORM_FEEDBACK_STREAM_OVERFLOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_TRANSFORM_FEEDBACK_STREAM_OVERFLOW
       enum_type_c<GL_TRANSFORM_FEEDBACK_STREAM_OVERFLOW>>
@@ -3341,7 +3341,7 @@ public:
 
     /// @var samples_passed
     /// @glconstwrap{SAMPLES_PASSED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_SAMPLES_PASSED
       enum_type_c<GL_SAMPLES_PASSED>>
@@ -3352,7 +3352,7 @@ public:
 
     /// @var any_samples_passed
     /// @glconstwrap{ANY_SAMPLES_PASSED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_ANY_SAMPLES_PASSED
       enum_type_c<GL_ANY_SAMPLES_PASSED>>
@@ -3363,7 +3363,7 @@ public:
 
     /// @var any_samples_passed_conservative
     /// @glconstwrap{ANY_SAMPLES_PASSED_CONSERVATIVE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_ANY_SAMPLES_PASSED_CONSERVATIVE
       enum_type_c<GL_ANY_SAMPLES_PASSED_CONSERVATIVE>>
@@ -3374,7 +3374,7 @@ public:
 
     /// @var time_elapsed
     /// @glconstwrap{TIME_ELAPSED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_TIME_ELAPSED
       enum_type_c<GL_TIME_ELAPSED>>
@@ -3385,7 +3385,7 @@ public:
 
     /// @var timestamp
     /// @glconstwrap{TIMESTAMP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target, counter_query_target>,
 #ifdef GL_TIMESTAMP
       enum_type_c<GL_TIMESTAMP>>
@@ -3396,7 +3396,7 @@ public:
 
     /// @var vertices_submitted
     /// @glconstwrap{VERTICES_SUBMITTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_VERTICES_SUBMITTED
       enum_type_c<GL_VERTICES_SUBMITTED>>
@@ -3407,7 +3407,7 @@ public:
 
     /// @var primitives_submitted
     /// @glconstwrap{PRIMITIVES_SUBMITTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_PRIMITIVES_SUBMITTED
       enum_type_c<GL_PRIMITIVES_SUBMITTED>>
@@ -3418,7 +3418,7 @@ public:
 
     /// @var vertex_shader_invocations
     /// @glconstwrap{VERTEX_SHADER_INVOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_VERTEX_SHADER_INVOCATIONS
       enum_type_c<GL_VERTEX_SHADER_INVOCATIONS>>
@@ -3429,7 +3429,7 @@ public:
 
     /// @var tess_control_shader_patches
     /// @glconstwrap{TESS_CONTROL_SHADER_PATCHES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_TESS_CONTROL_SHADER_PATCHES
       enum_type_c<GL_TESS_CONTROL_SHADER_PATCHES>>
@@ -3440,7 +3440,7 @@ public:
 
     /// @var tess_evaluation_shader_invocations
     /// @glconstwrap{TESS_EVALUATION_SHADER_INVOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_TESS_EVALUATION_SHADER_INVOCATIONS
       enum_type_c<GL_TESS_EVALUATION_SHADER_INVOCATIONS>>
@@ -3451,7 +3451,7 @@ public:
 
     /// @var geometry_shader_invocations
     /// @glconstwrap{GEOMETRY_SHADER_INVOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_GEOMETRY_SHADER_INVOCATIONS
       enum_type_c<GL_GEOMETRY_SHADER_INVOCATIONS>>
@@ -3462,7 +3462,7 @@ public:
 
     /// @var geometry_shader_primitives_emitted
     /// @glconstwrap{GEOMETRY_SHADER_PRIMITIVES_EMITTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_GEOMETRY_SHADER_PRIMITIVES_EMITTED
       enum_type_c<GL_GEOMETRY_SHADER_PRIMITIVES_EMITTED>>
@@ -3473,7 +3473,7 @@ public:
 
     /// @var clipping_input_primitives
     /// @glconstwrap{CLIPPING_INPUT_PRIMITIVES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_CLIPPING_INPUT_PRIMITIVES
       enum_type_c<GL_CLIPPING_INPUT_PRIMITIVES>>
@@ -3484,7 +3484,7 @@ public:
 
     /// @var clipping_output_primitives
     /// @glconstwrap{CLIPPING_OUTPUT_PRIMITIVES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_CLIPPING_OUTPUT_PRIMITIVES
       enum_type_c<GL_CLIPPING_OUTPUT_PRIMITIVES>>
@@ -3495,7 +3495,7 @@ public:
 
     /// @var fragment_shader_invocations
     /// @glconstwrap{FRAGMENT_SHADER_INVOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_FRAGMENT_SHADER_INVOCATIONS
       enum_type_c<GL_FRAGMENT_SHADER_INVOCATIONS>>
@@ -3506,7 +3506,7 @@ public:
 
     /// @var compute_shader_invocations
     /// @glconstwrap{COMPUTE_SHADER_INVOCATIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_target>,
 #ifdef GL_COMPUTE_SHADER_INVOCATIONS
       enum_type_c<GL_COMPUTE_SHADER_INVOCATIONS>>
@@ -3517,7 +3517,7 @@ public:
 
     /// @var query_result
     /// @glconstwrap{QUERY_RESULT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_parameter>,
 #ifdef GL_QUERY_RESULT
       enum_type_c<GL_QUERY_RESULT>>
@@ -3528,7 +3528,7 @@ public:
 
     /// @var query_result_available
     /// @glconstwrap{QUERY_RESULT_AVAILABLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<query_parameter>,
 #ifdef GL_QUERY_RESULT_AVAILABLE
       enum_type_c<GL_QUERY_RESULT_AVAILABLE>,
@@ -3540,7 +3540,7 @@ public:
 
     /// @var interleaved_attribs
     /// @glconstwrap{INTERLEAVED_ATTRIBS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<transform_feedback_mode>,
 #ifdef GL_INTERLEAVED_ATTRIBS
       enum_type_c<GL_INTERLEAVED_ATTRIBS>>
@@ -3551,7 +3551,7 @@ public:
 
     /// @var separate_attribs
     /// @glconstwrap{SEPARATE_ATTRIBS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<transform_feedback_mode>,
 #ifdef GL_SEPARATE_ATTRIBS
       enum_type_c<GL_SEPARATE_ATTRIBS>>
@@ -3562,7 +3562,7 @@ public:
 
     /// @var transform_feedback_buffer_start
     /// @glconstwrap{TRANSFORM_FEEDBACK_BUFFER_START}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<transform_feedback_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER_START
       enum_type_c<GL_TRANSFORM_FEEDBACK_BUFFER_START>>
@@ -3573,7 +3573,7 @@ public:
 
     /// @var transform_feedback_buffer_size
     /// @glconstwrap{TRANSFORM_FEEDBACK_BUFFER_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<transform_feedback_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER_SIZE
       enum_type_c<GL_TRANSFORM_FEEDBACK_BUFFER_SIZE>>
@@ -3584,7 +3584,7 @@ public:
 
     /// @var transform_feedback_parameter
     /// @glconstwrap{TRANSFORM_FEEDBACK_PARAMETER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<transform_feedback_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_PAUSED
       enum_type_c<GL_TRANSFORM_FEEDBACK_PAUSED>,
@@ -3596,7 +3596,7 @@ public:
 
     /// @var transform_feedback_active
     /// @glconstwrap{TRANSFORM_FEEDBACK_ACTIVE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<transform_feedback_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_ACTIVE
       enum_type_c<GL_TRANSFORM_FEEDBACK_ACTIVE>,
@@ -3608,7 +3608,7 @@ public:
 
     /// @var current_vertex_attrib
     /// @glconstwrap{CURRENT_VERTEX_ATTRIB}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_CURRENT_VERTEX_ATTRIB
       enum_type_c<GL_CURRENT_VERTEX_ATTRIB>>
@@ -3619,7 +3619,7 @@ public:
 
     /// @var vertex_attrib_array_buffer_binding
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING>>
@@ -3630,7 +3630,7 @@ public:
 
     /// @var vertex_attrib_array_divisor
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_DIVISOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_DIVISOR
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_DIVISOR>>
@@ -3641,7 +3641,7 @@ public:
 
     /// @var vertex_attrib_array_enabled
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_ENABLED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_ENABLED
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_ENABLED>,
@@ -3653,7 +3653,7 @@ public:
 
     /// @var vertex_attrib_array_integer
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_INTEGER
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_INTEGER>,
@@ -3665,7 +3665,7 @@ public:
 
     /// @var vertex_attrib_array_integer_ext
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_INTEGER_EXT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_INTEGER_EXT
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_INTEGER_EXT>>
@@ -3676,7 +3676,7 @@ public:
 
     /// @var vertex_attrib_array_long
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_LONG}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_LONG
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_LONG>,
@@ -3688,7 +3688,7 @@ public:
 
     /// @var vertex_attrib_array_normalized
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_NORMALIZED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_NORMALIZED
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_NORMALIZED>,
@@ -3700,7 +3700,7 @@ public:
 
     /// @var vertex_attrib_array_pointer
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_POINTER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_POINTER
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_POINTER>>
@@ -3711,7 +3711,7 @@ public:
 
     /// @var vertex_attrib_array_size
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_SIZE
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_SIZE>>
@@ -3722,7 +3722,7 @@ public:
 
     /// @var vertex_attrib_array_stride
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_STRIDE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_STRIDE
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_STRIDE>>
@@ -3733,7 +3733,7 @@ public:
 
     /// @var vertex_attrib_array_type
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_TYPE
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_TYPE>>
@@ -3744,7 +3744,7 @@ public:
 
     /// @var vertex_attrib_binding
     /// @glconstwrap{VERTEX_ATTRIB_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_BINDING
       enum_type_c<GL_VERTEX_ATTRIB_BINDING>>
@@ -3755,7 +3755,7 @@ public:
 
     /// @var vertex_attrib_relative_offset
     /// @glconstwrap{VERTEX_ATTRIB_RELATIVE_OFFSET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<vertex_attrib_parameter>,
 #ifdef GL_VERTEX_ATTRIB_RELATIVE_OFFSET
       enum_type_c<GL_VERTEX_ATTRIB_RELATIVE_OFFSET>>
@@ -3766,7 +3766,7 @@ public:
 
     /// @var uniform
     /// @glconstwrap{UNIFORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_UNIFORM
       enum_type_c<GL_UNIFORM>>
@@ -3777,7 +3777,7 @@ public:
 
     /// @var uniform_block
     /// @glconstwrap{UNIFORM_BLOCK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_UNIFORM_BLOCK
       enum_type_c<GL_UNIFORM_BLOCK>>
@@ -3788,7 +3788,7 @@ public:
 
     /// @var program_input
     /// @glconstwrap{PROGRAM_INPUT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_PROGRAM_INPUT
       enum_type_c<GL_PROGRAM_INPUT>>
@@ -3799,7 +3799,7 @@ public:
 
     /// @var program_output
     /// @glconstwrap{PROGRAM_OUTPUT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_PROGRAM_OUTPUT
       enum_type_c<GL_PROGRAM_OUTPUT>>
@@ -3810,7 +3810,7 @@ public:
 
     /// @var vertex_subroutine
     /// @glconstwrap{VERTEX_SUBROUTINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_VERTEX_SUBROUTINE
       enum_type_c<GL_VERTEX_SUBROUTINE>>
@@ -3821,7 +3821,7 @@ public:
 
     /// @var tess_control_subroutine
     /// @glconstwrap{TESS_CONTROL_SUBROUTINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_TESS_CONTROL_SUBROUTINE
       enum_type_c<GL_TESS_CONTROL_SUBROUTINE>>
@@ -3832,7 +3832,7 @@ public:
 
     /// @var tess_evaluation_subroutine
     /// @glconstwrap{TESS_EVALUATION_SUBROUTINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_TESS_EVALUATION_SUBROUTINE
       enum_type_c<GL_TESS_EVALUATION_SUBROUTINE>>
@@ -3843,7 +3843,7 @@ public:
 
     /// @var geometry_subroutine
     /// @glconstwrap{GEOMETRY_SUBROUTINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_GEOMETRY_SUBROUTINE
       enum_type_c<GL_GEOMETRY_SUBROUTINE>>
@@ -3854,7 +3854,7 @@ public:
 
     /// @var fragment_subroutine
     /// @glconstwrap{FRAGMENT_SUBROUTINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_FRAGMENT_SUBROUTINE
       enum_type_c<GL_FRAGMENT_SUBROUTINE>>
@@ -3865,7 +3865,7 @@ public:
 
     /// @var compute_subroutine
     /// @glconstwrap{COMPUTE_SUBROUTINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_COMPUTE_SUBROUTINE
       enum_type_c<GL_COMPUTE_SUBROUTINE>>
@@ -3876,7 +3876,7 @@ public:
 
     /// @var vertex_subroutine_uniform
     /// @glconstwrap{VERTEX_SUBROUTINE_UNIFORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_VERTEX_SUBROUTINE_UNIFORM
       enum_type_c<GL_VERTEX_SUBROUTINE_UNIFORM>>
@@ -3887,7 +3887,7 @@ public:
 
     /// @var tess_control_subroutine_uniform
     /// @glconstwrap{TESS_CONTROL_SUBROUTINE_UNIFORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_TESS_CONTROL_SUBROUTINE_UNIFORM
       enum_type_c<GL_TESS_CONTROL_SUBROUTINE_UNIFORM>>
@@ -3898,7 +3898,7 @@ public:
 
     /// @var tess_evaluation_subroutine_uniform
     /// @glconstwrap{TESS_EVALUATION_SUBROUTINE_UNIFORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_TESS_EVALUATION_SUBROUTINE_UNIFORM
       enum_type_c<GL_TESS_EVALUATION_SUBROUTINE_UNIFORM>>
@@ -3909,7 +3909,7 @@ public:
 
     /// @var geometry_subroutine_uniform
     /// @glconstwrap{GEOMETRY_SUBROUTINE_UNIFORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_GEOMETRY_SUBROUTINE_UNIFORM
       enum_type_c<GL_GEOMETRY_SUBROUTINE_UNIFORM>>
@@ -3920,7 +3920,7 @@ public:
 
     /// @var fragment_subroutine_uniform
     /// @glconstwrap{FRAGMENT_SUBROUTINE_UNIFORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_FRAGMENT_SUBROUTINE_UNIFORM
       enum_type_c<GL_FRAGMENT_SUBROUTINE_UNIFORM>>
@@ -3931,7 +3931,7 @@ public:
 
     /// @var compute_subroutine_uniform
     /// @glconstwrap{COMPUTE_SUBROUTINE_UNIFORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_COMPUTE_SUBROUTINE_UNIFORM
       enum_type_c<GL_COMPUTE_SUBROUTINE_UNIFORM>>
@@ -3942,7 +3942,7 @@ public:
 
     /// @var transform_feedback_varying
     /// @glconstwrap{TRANSFORM_FEEDBACK_VARYING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_TRANSFORM_FEEDBACK_VARYING
       enum_type_c<GL_TRANSFORM_FEEDBACK_VARYING>>
@@ -3953,7 +3953,7 @@ public:
 
     /// @var buffer_variable
     /// @glconstwrap{BUFFER_VARIABLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_BUFFER_VARIABLE
       enum_type_c<GL_BUFFER_VARIABLE>>
@@ -3964,7 +3964,7 @@ public:
 
     /// @var buffer_storage_block
     /// @glconstwrap{BUFFER_STORAGE_BLOCK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_BUFFER_STORAGE_BLOCK
       enum_type_c<GL_BUFFER_STORAGE_BLOCK>>
@@ -3975,7 +3975,7 @@ public:
 
     /// @var fragment_input_nv
     /// @glconstwrap{FRAGMENT_INPUT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_interface>,
 #ifdef GL_FRAGMENT_INPUT_NV
       enum_type_c<GL_FRAGMENT_INPUT_NV>>
@@ -3986,7 +3986,7 @@ public:
 
     /// @var active_variables
     /// @glconstwrap{ACTIVE_VARIABLES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_ACTIVE_VARIABLES
       enum_type_c<GL_ACTIVE_VARIABLES>>
@@ -3997,7 +3997,7 @@ public:
 
     /// @var num_active_variables
     /// @glconstwrap{NUM_ACTIVE_VARIABLES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_NUM_ACTIVE_VARIABLES
       enum_type_c<GL_NUM_ACTIVE_VARIABLES>>
@@ -4008,7 +4008,7 @@ public:
 
     /// @var array_size
     /// @glconstwrap{ARRAY_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_ARRAY_SIZE
       enum_type_c<GL_ARRAY_SIZE>>
@@ -4019,7 +4019,7 @@ public:
 
     /// @var array_stride
     /// @glconstwrap{ARRAY_STRIDE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_ARRAY_STRIDE
       enum_type_c<GL_ARRAY_STRIDE>>
@@ -4030,7 +4030,7 @@ public:
 
     /// @var block_index
     /// @glconstwrap{BLOCK_INDEX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_BLOCK_INDEX
       enum_type_c<GL_BLOCK_INDEX>>
@@ -4041,7 +4041,7 @@ public:
 
     /// @var is_row_major
     /// @glconstwrap{IS_ROW_MAJOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_IS_ROW_MAJOR
       enum_type_c<GL_IS_ROW_MAJOR>>
@@ -4052,7 +4052,7 @@ public:
 
     /// @var matrix_stride
     /// @glconstwrap{MATRIX_STRIDE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_MATRIX_STRIDE
       enum_type_c<GL_MATRIX_STRIDE>>
@@ -4063,7 +4063,7 @@ public:
 
     /// @var atomic_counter_buffer_index
     /// @glconstwrap{ATOMIC_COUNTER_BUFFER_INDEX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_ATOMIC_COUNTER_BUFFER_INDEX
       enum_type_c<GL_ATOMIC_COUNTER_BUFFER_INDEX>>
@@ -4074,7 +4074,7 @@ public:
 
     /// @var buffer_data_size
     /// @glconstwrap{BUFFER_DATA_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_BUFFER_DATA_SIZE
       enum_type_c<GL_BUFFER_DATA_SIZE>>
@@ -4085,7 +4085,7 @@ public:
 
     /// @var num_compatible_subroutines
     /// @glconstwrap{NUM_COMPATIBLE_SUBROUTINES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_NUM_COMPATIBLE_SUBROUTINES
       enum_type_c<GL_NUM_COMPATIBLE_SUBROUTINES>>
@@ -4096,7 +4096,7 @@ public:
 
     /// @var compatible_subroutines
     /// @glconstwrap{COMPATIBLE_SUBROUTINES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_COMPATIBLE_SUBROUTINES
       enum_type_c<GL_COMPATIBLE_SUBROUTINES>>
@@ -4107,7 +4107,7 @@ public:
 
     /// @var is_per_patch
     /// @glconstwrap{IS_PER_PATCH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_IS_PER_PATCH
       enum_type_c<GL_IS_PER_PATCH>>
@@ -4118,7 +4118,7 @@ public:
 
     /// @var location
     /// @glconstwrap{LOCATION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_LOCATION
       enum_type_c<GL_LOCATION>>
@@ -4129,7 +4129,7 @@ public:
 
     /// @var location_component
     /// @glconstwrap{LOCATION_COMPONENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_LOCATION_COMPONENT
       enum_type_c<GL_LOCATION_COMPONENT>>
@@ -4140,7 +4140,7 @@ public:
 
     /// @var location_index
     /// @glconstwrap{LOCATION_INDEX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_LOCATION_INDEX
       enum_type_c<GL_LOCATION_INDEX>>
@@ -4151,7 +4151,7 @@ public:
 
     /// @var name_lenght
     /// @glconstwrap{NAME_LENGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_NAME_LENGTH
       enum_type_c<GL_NAME_LENGTH>>
@@ -4162,7 +4162,7 @@ public:
 
     /// @var offset
     /// @glconstwrap{OFFSET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_OFFSET
       enum_type_c<GL_OFFSET>>
@@ -4173,7 +4173,7 @@ public:
 
     /// @var referenced_by_vertex_shader
     /// @glconstwrap{REFERENCED_BY_VERTEX_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_REFERENCED_BY_VERTEX_SHADER
       enum_type_c<GL_REFERENCED_BY_VERTEX_SHADER>>
@@ -4184,7 +4184,7 @@ public:
 
     /// @var referenced_by_tess_control_shader
     /// @glconstwrap{REFERENCED_BY_TESS_CONTROL_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_REFERENCED_BY_TESS_CONTROL_SHADER
       enum_type_c<GL_REFERENCED_BY_TESS_CONTROL_SHADER>>
@@ -4195,7 +4195,7 @@ public:
 
     /// @var referenced_by_tess_evaluation_shader
     /// @glconstwrap{REFERENCED_BY_TESS_EVALUATION_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_REFERENCED_BY_TESS_EVALUATION_SHADER
       enum_type_c<GL_REFERENCED_BY_TESS_EVALUATION_SHADER>>
@@ -4206,7 +4206,7 @@ public:
 
     /// @var referenced_by_geometry_shader
     /// @glconstwrap{REFERENCED_BY_GEOMETRY_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_REFERENCED_BY_GEOMETRY_SHADER
       enum_type_c<GL_REFERENCED_BY_GEOMETRY_SHADER>>
@@ -4217,7 +4217,7 @@ public:
 
     /// @var referenced_by_fragment_shader
     /// @glconstwrap{REFERENCED_BY_FRAGMENT_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_REFERENCED_BY_FRAGMENT_SHADER
       enum_type_c<GL_REFERENCED_BY_FRAGMENT_SHADER>>
@@ -4228,7 +4228,7 @@ public:
 
     /// @var referenced_by_compute_shader
     /// @glconstwrap{REFERENCED_BY_COMPUTE_SHADER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_REFERENCED_BY_COMPUTE_SHADER
       enum_type_c<GL_REFERENCED_BY_COMPUTE_SHADER>>
@@ -4239,7 +4239,7 @@ public:
 
     /// @var transform_feedback_buffer_index
     /// @glconstwrap{TRANSFORM_FEEDBACK_BUFFER_INDEX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER_INDEX
       enum_type_c<GL_TRANSFORM_FEEDBACK_BUFFER_INDEX>>
@@ -4250,7 +4250,7 @@ public:
 
     /// @var transform_feedback_buffer_start
     /// @glconstwrap{TRANSFORM_FEEDBACK_BUFFER_START}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE
       enum_type_c<GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE>>
@@ -4261,7 +4261,7 @@ public:
 
     /// @var top_level_array_size
     /// @glconstwrap{TOP_LEVEL_ARRAY_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_TOP_LEVEL_ARRAY_SIZE
       enum_type_c<GL_TOP_LEVEL_ARRAY_SIZE>>
@@ -4272,7 +4272,7 @@ public:
 
     /// @var top_level_array_stride
     /// @glconstwrap{TOP_LEVEL_ARRAY_STRIDE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_TOP_LEVEL_ARRAY_STRIDE
       enum_type_c<GL_TOP_LEVEL_ARRAY_STRIDE>>
@@ -4283,7 +4283,7 @@ public:
 
     /// @var type
     /// @glconstwrap{TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_TYPE
       enum_type_c<GL_TYPE>>
@@ -4294,7 +4294,7 @@ public:
 
     /// @var path_gen_mode_nv
     /// @glconstwrap{PATH_GEN_MODE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_PATH_GEN_MODE_NV
       enum_type_c<GL_PATH_GEN_MODE_NV>>
@@ -4305,7 +4305,7 @@ public:
 
     /// @var path_gen_components_nv
     /// @glconstwrap{PATH_GEN_COMPONENTS_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_PATH_GEN_COMPONENTS_NV
       enum_type_c<GL_PATH_GEN_COMPONENTS_NV>>
@@ -4316,7 +4316,7 @@ public:
 
     /// @var path_gen_coeff_nv
     /// @glconstwrap{PATH_GEN_COEFF_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<program_property>,
 #ifdef GL_PATH_GEN_COEFF_NV
       enum_type_c<GL_PATH_GEN_COEFF_NV>>
@@ -4327,7 +4327,7 @@ public:
 
     /// @var blend
     /// @glconstwrap{BLEND}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_BLEND
       enum_type_c<GL_BLEND>>
@@ -4338,7 +4338,7 @@ public:
 
     /// @var program_point_size
     /// @glconstwrap{PROGRAM_POINT_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_PROGRAM_POINT_SIZE
       enum_type_c<GL_PROGRAM_POINT_SIZE>>
@@ -4349,7 +4349,7 @@ public:
 
     /// @var primitive_restart
     /// @glconstwrap{PRIMITIVE_RESTART}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_PRIMITIVE_RESTART
       enum_type_c<GL_PRIMITIVE_RESTART>>
@@ -4360,7 +4360,7 @@ public:
 
     /// @var clip_distance0
     /// @glconstwrap{CLIP_DISTANCE0}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_CLIP_DISTANCE0
       enum_type_c<GL_CLIP_DISTANCE0>,
@@ -4373,7 +4373,7 @@ public:
 
     /// @var cull_face
     /// @glconstwrap{CULL_FACE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_CULL_FACE
       enum_type_c<GL_CULL_FACE>>
@@ -4384,7 +4384,7 @@ public:
 
     /// @var depth_clamp
     /// @glconstwrap{DEPTH_CLAMP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_DEPTH_CLAMP
       enum_type_c<GL_DEPTH_CLAMP>>
@@ -4395,7 +4395,7 @@ public:
 
     /// @var depth_test
     /// @glconstwrap{DEPTH_TEST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_DEPTH_TEST
       enum_type_c<GL_DEPTH_TEST>>
@@ -4406,7 +4406,7 @@ public:
 
     /// @var scissor_test
     /// @glconstwrap{SCISSOR_TEST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_SCISSOR_TEST
       enum_type_c<GL_SCISSOR_TEST>>
@@ -4417,7 +4417,7 @@ public:
 
     /// @var stencil_test
     /// @glconstwrap{STENCIL_TEST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_STENCIL_TEST
       enum_type_c<GL_STENCIL_TEST>>
@@ -4428,7 +4428,7 @@ public:
 
     /// @var rasterizer_discard
     /// @glconstwrap{RASTERIZER_DISCARD}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_RASTERIZER_DISCARD
       enum_type_c<GL_RASTERIZER_DISCARD>>
@@ -4439,7 +4439,7 @@ public:
 
     /// @var multisample
     /// @glconstwrap{MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_MULTISAMPLE
       enum_type_c<GL_MULTISAMPLE>>
@@ -4450,7 +4450,7 @@ public:
 
     /// @var debug_output
     /// @glconstwrap{DEBUG_OUTPUT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_DEBUG_OUTPUT
       enum_type_c<GL_DEBUG_OUTPUT>>
@@ -4463,7 +4463,7 @@ public:
 
     /// @var debug_output_synchronous
     /// @glconstwrap{DEBUG_OUTPUT_SYNCHRONOUS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<capability>,
 #ifdef GL_DEBUG_OUTPUT_SYNCHRONOUS
       enum_type_c<GL_DEBUG_OUTPUT_SYNCHRONOUS>>
@@ -4476,7 +4476,7 @@ public:
 
     /// @var color_array
     /// @glconstwrap{COLOR_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_COLOR_ARRAY
       enum_type_c<GL_COLOR_ARRAY>>
@@ -4487,7 +4487,7 @@ public:
 
     /// @var edge_flag_array
     /// @glconstwrap{EDGE_FLAG_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_EDGE_FLAG_ARRAY
       enum_type_c<GL_EDGE_FLAG_ARRAY>>
@@ -4498,7 +4498,7 @@ public:
 
     /// @var fog_coord_array
     /// @glconstwrap{FOG_COORD_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_FOG_COORD_ARRAY
       enum_type_c<GL_FOG_COORD_ARRAY>>
@@ -4509,7 +4509,7 @@ public:
 
     /// @var index_array
     /// @glconstwrap{INDEX_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_INDEX_ARRAY
       enum_type_c<GL_INDEX_ARRAY>>
@@ -4520,7 +4520,7 @@ public:
 
     /// @var normal_array
     /// @glconstwrap{NORMAL_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_NORMAL_ARRAY
       enum_type_c<GL_NORMAL_ARRAY>>
@@ -4531,7 +4531,7 @@ public:
 
     /// @var secondary_color_array
     /// @glconstwrap{SECONDARY_COLOR_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_SECONDARY_COLOR_ARRAY
       enum_type_c<GL_SECONDARY_COLOR_ARRAY>>
@@ -4542,7 +4542,7 @@ public:
 
     /// @var texture_coord_array
     /// @glconstwrap{TEXTURE_COORD_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_TEXTURE_COORD_ARRAY
       enum_type_c<GL_TEXTURE_COORD_ARRAY>>
@@ -4553,7 +4553,7 @@ public:
 
     /// @var vertex_attrib_array_unified_nv
     /// @glconstwrap{VERTEX_ATTRIB_ARRAY_UNIFIED_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_VERTEX_ATTRIB_ARRAY_UNIFIED_NV
       enum_type_c<GL_VERTEX_ATTRIB_ARRAY_UNIFIED_NV>>
@@ -4564,7 +4564,7 @@ public:
 
     /// @var element_array_unified_nv
     /// @glconstwrap{ELEMENT_ARRAY_UNIFIED_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_ELEMENT_ARRAY_UNIFIED_NV
       enum_type_c<GL_ELEMENT_ARRAY_UNIFIED_NV>>
@@ -4575,7 +4575,7 @@ public:
 
     /// @var uniform_buffer_unified_nv
     /// @glconstwrap{UNIFORM_BUFFER_UNIFIED_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<client_capability>,
 #ifdef GL_UNIFORM_BUFFER_UNIFIED_NV
       enum_type_c<GL_UNIFORM_BUFFER_UNIFIED_NV>>
@@ -4586,7 +4586,7 @@ public:
 
     /// @var front_left
     /// @glconstwrap{FRONT_LEFT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer, framebuffer_attachment>,
 #ifdef GL_FRONT_LEFT
       enum_type_c<GL_FRONT_LEFT>>
@@ -4597,7 +4597,7 @@ public:
 
     /// @var front_right
     /// @glconstwrap{FRONT_RIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer, framebuffer_attachment>,
 #ifdef GL_FRONT_RIGHT
       enum_type_c<GL_FRONT_RIGHT>>
@@ -4608,7 +4608,7 @@ public:
 
     /// @var back_left
     /// @glconstwrap{BACK_LEFT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer, framebuffer_attachment>,
 #ifdef GL_BACK_LEFT
       enum_type_c<GL_BACK_LEFT>>
@@ -4619,7 +4619,7 @@ public:
 
     /// @var back_right
     /// @glconstwrap{BACK_RIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer, framebuffer_attachment>,
 #ifdef GL_BACK_RIGHT
       enum_type_c<GL_BACK_RIGHT>>
@@ -4630,7 +4630,7 @@ public:
 
     /// @var front
     /// @glconstwrap{FRONT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer, face_mode, framebuffer_attachment>,
 #ifdef GL_FRONT
       enum_type_c<GL_FRONT>>
@@ -4641,7 +4641,7 @@ public:
 
     /// @var back
     /// @glconstwrap{BACK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer, face_mode, framebuffer_attachment>,
 #ifdef GL_BACK
       enum_type_c<GL_BACK>>
@@ -4652,7 +4652,7 @@ public:
 
     /// @var left
     /// @glconstwrap{LEFT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer>,
 #ifdef GL_LEFT
       enum_type_c<GL_LEFT>>
@@ -4663,7 +4663,7 @@ public:
 
     /// @var right
     /// @glconstwrap{RIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer>,
 #ifdef GL_RIGHT
       enum_type_c<GL_RIGHT>>
@@ -4674,7 +4674,7 @@ public:
 
     /// @var front_and_back
     /// @glconstwrap{FRONT_AND_BACK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<surface_buffer, face_mode>,
 #ifdef GL_FRONT_AND_BACK
       enum_type_c<GL_FRONT_AND_BACK>>
@@ -4685,7 +4685,7 @@ public:
 
     /// @var array_buffer_binding
     /// @glconstwrap{ARRAY_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query, program_property>,
 #ifdef GL_ARRAY_BUFFER_BINDING
       enum_type_c<GL_ARRAY_BUFFER_BINDING>,
@@ -4697,7 +4697,7 @@ public:
 
     /// @var atomic_counter_buffer_binding
     /// @glconstwrap{ATOMIC_COUNTER_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_ATOMIC_COUNTER_BUFFER_BINDING
       enum_type_c<GL_ATOMIC_COUNTER_BUFFER_BINDING>,
@@ -4709,7 +4709,7 @@ public:
 
     /// @var copy_read_buffer_binding
     /// @glconstwrap{COPY_READ_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_COPY_READ_BUFFER_BINDING
       enum_type_c<GL_COPY_READ_BUFFER_BINDING>,
@@ -4721,7 +4721,7 @@ public:
 
     /// @var copy_write_buffer_binding
     /// @glconstwrap{COPY_WRITE_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_COPY_WRITE_BUFFER_BINDING
       enum_type_c<GL_COPY_WRITE_BUFFER_BINDING>,
@@ -4733,7 +4733,7 @@ public:
 
     /// @var dispatch_indirect_buffer_binding
     /// @glconstwrap{DISPATCH_INDIRECT_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_DISPATCH_INDIRECT_BUFFER_BINDING
       enum_type_c<GL_DISPATCH_INDIRECT_BUFFER_BINDING>,
@@ -4745,7 +4745,7 @@ public:
 
     /// @var draw_indirect_buffer_binding
     /// @glconstwrap{DRAW_INDIRECT_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_DRAW_INDIRECT_BUFFER_BINDING
       enum_type_c<GL_DRAW_INDIRECT_BUFFER_BINDING>,
@@ -4757,7 +4757,7 @@ public:
 
     /// @var element_array_buffer_binding
     /// @glconstwrap{ELEMENT_ARRAY_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_ELEMENT_ARRAY_BUFFER_BINDING
       enum_type_c<GL_ELEMENT_ARRAY_BUFFER_BINDING>,
@@ -4769,7 +4769,7 @@ public:
 
     /// @var pixel_pack_buffer_binding
     /// @glconstwrap{PIXEL_PACK_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_PIXEL_PACK_BUFFER_BINDING
       enum_type_c<GL_PIXEL_PACK_BUFFER_BINDING>,
@@ -4781,7 +4781,7 @@ public:
 
     /// @var pixel_unpack_buffer_binding
     /// @glconstwrap{PIXEL_UNPACK_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_PIXEL_UNPACK_BUFFER_BINDING
       enum_type_c<GL_PIXEL_UNPACK_BUFFER_BINDING>,
@@ -4793,7 +4793,7 @@ public:
 
     /// @var shader_storage_buffer_binding
     /// @glconstwrap{SHADER_STORAGE_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_SHADER_STORAGE_BUFFER_BINDING
       enum_type_c<GL_SHADER_STORAGE_BUFFER_BINDING>,
@@ -4805,7 +4805,7 @@ public:
 
     /// @var texture_buffer_binding
     /// @glconstwrap{TEXTURE_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BUFFER_BINDING
       enum_type_c<GL_TEXTURE_BUFFER_BINDING>,
@@ -4817,7 +4817,7 @@ public:
 
     /// @var transform_feedback_buffer_binding
     /// @glconstwrap{TRANSFORM_FEEDBACK_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query, transform_feedback_parameter>,
 #ifdef GL_TRANSFORM_FEEDBACK_BUFFER_BINDING
       enum_type_c<GL_TRANSFORM_FEEDBACK_BUFFER_BINDING>,
@@ -4829,7 +4829,7 @@ public:
 
     /// @var uniform_buffer_binding
     /// @glconstwrap{UNIFORM_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_UNIFORM_BUFFER_BINDING
       enum_type_c<GL_UNIFORM_BUFFER_BINDING>,
@@ -4841,7 +4841,7 @@ public:
 
     /// @var query_buffer_binding
     /// @glconstwrap{QUERY_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_QUERY_BUFFER_BINDING
       enum_type_c<GL_QUERY_BUFFER_BINDING>,
@@ -4853,7 +4853,7 @@ public:
 
     /// @var parameter_buffer_binding
     /// @glconstwrap{PARAMETER_BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_PARAMETER_BUFFER_BINDING_ARB
       enum_type_c<GL_PARAMETER_BUFFER_BINDING_ARB>,
@@ -4865,7 +4865,7 @@ public:
 
     /// @var buffer_binding
     /// @glconstwrap{BUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_BUFFER_BINDING
       enum_type_c<GL_BUFFER_BINDING>>
@@ -4876,7 +4876,7 @@ public:
 
     /// @var draw_framebuffer_binding
     /// @glconstwrap{DRAW_FRAMEBUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_DRAW_FRAMEBUFFER_BINDING
       enum_type_c<GL_DRAW_FRAMEBUFFER_BINDING>,
@@ -4888,7 +4888,7 @@ public:
 
     /// @var renderbuffer_binding
     /// @glconstwrap{RENDERBUFFER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_RENDERBUFFER_BINDING
       enum_type_c<GL_RENDERBUFFER_BINDING>,
@@ -4900,7 +4900,7 @@ public:
 
     /// @var sampler_binding
     /// @glconstwrap{SAMPLER_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_SAMPLER_BINDING
       enum_type_c<GL_SAMPLER_BINDING>,
@@ -4912,7 +4912,7 @@ public:
 
     /// @var texture_binding_1d
     /// @glconstwrap{TEXTURE_BINDING_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_1D
       enum_type_c<GL_TEXTURE_BINDING_1D>,
@@ -4924,7 +4924,7 @@ public:
 
     /// @var texture_binding_2d
     /// @glconstwrap{TEXTURE_BINDING_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_2D
       enum_type_c<GL_TEXTURE_BINDING_2D>,
@@ -4936,7 +4936,7 @@ public:
 
     /// @var texture_binding_3d
     /// @glconstwrap{TEXTURE_BINDING_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_3D
       enum_type_c<GL_TEXTURE_BINDING_3D>,
@@ -4948,7 +4948,7 @@ public:
 
     /// @var texture_binding_1d_array
     /// @glconstwrap{TEXTURE_BINDING_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_1D_ARRAY
       enum_type_c<GL_TEXTURE_BINDING_1D_ARRAY>,
@@ -4960,7 +4960,7 @@ public:
 
     /// @var texture_binding_2d_array
     /// @glconstwrap{TEXTURE_BINDING_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_2D_ARRAY
       enum_type_c<GL_TEXTURE_BINDING_2D_ARRAY>,
@@ -4972,7 +4972,7 @@ public:
 
     /// @var texture_binding_rectangle
     /// @glconstwrap{TEXTURE_BINDING_RECTANGLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_RECTANGLE
       enum_type_c<GL_TEXTURE_BINDING_RECTANGLE>,
@@ -4984,7 +4984,7 @@ public:
 
     /// @var texture_binding_buffer
     /// @glconstwrap{TEXTURE_BINDING_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_BUFFER
       enum_type_c<GL_TEXTURE_BINDING_BUFFER>,
@@ -4996,7 +4996,7 @@ public:
 
     /// @var texture_binding_cube_map
     /// @glconstwrap{TEXTURE_BINDING_CUBE_MAP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_CUBE_MAP
       enum_type_c<GL_TEXTURE_BINDING_CUBE_MAP>,
@@ -5008,7 +5008,7 @@ public:
 
     /// @var texture_binding_cube_map_array
     /// @glconstwrap{TEXTURE_BINDING_CUBE_MAP_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_CUBE_MAP_ARRAY
       enum_type_c<GL_TEXTURE_BINDING_CUBE_MAP_ARRAY>,
@@ -5020,7 +5020,7 @@ public:
 
     /// @var texture_binding_2d_multisample
     /// @glconstwrap{TEXTURE_BINDING_2D_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_2D_MULTISAMPLE
       enum_type_c<GL_TEXTURE_BINDING_2D_MULTISAMPLE>,
@@ -5032,7 +5032,7 @@ public:
 
     /// @var texture_binding_2d_multisample_array
     /// @glconstwrap{TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY>,
@@ -5044,12 +5044,12 @@ public:
 
     /// @var texture_binding_external
     /// @glconstwrap{TEXTURE_BINDING_EXTERNAL}
-    opt_c_api_constant<mp_list<binding_query>, enum_type_c<0x8D67>, texture_name>
+    c_api::opt_constant<mp_list<binding_query>, enum_type_c<0x8D67>, texture_name>
       texture_binding_external;
 
     /// @var transform_feedback_binding
     /// @glconstwrap{TRANSFORM_FEEDBACK_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_TRANSFORM_FEEDBACK_BINDING
       enum_type_c<GL_TRANSFORM_FEEDBACK_BINDING>,
@@ -5061,7 +5061,7 @@ public:
 
     /// @var vertex_array_binding
     /// @glconstwrap{VERTEX_ARRAY_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_VERTEX_ARRAY_BINDING
       enum_type_c<GL_VERTEX_ARRAY_BINDING>,
@@ -5073,7 +5073,7 @@ public:
 
     /// @var program_pipeline_binding
     /// @glconstwrap{PROGRAM_PIPELINE_BINDING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_PROGRAM_PIPELINE_BINDING
       enum_type_c<GL_PROGRAM_PIPELINE_BINDING>,
@@ -5085,7 +5085,7 @@ public:
 
     /// @var current_program
     /// @glconstwrap{CURRENT_PROGRAM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_CURRENT_PROGRAM
       enum_type_c<GL_CURRENT_PROGRAM>,
@@ -5097,7 +5097,7 @@ public:
 
     /// @var draw_buffer0
     /// @glconstwrap{DRAW_BUFFER0}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<binding_query>,
 #ifdef GL_DRAW_BUFFER0
       enum_type_c<GL_DRAW_BUFFER0>,
@@ -5110,7 +5110,7 @@ public:
 
     /// @var major_version
     /// @glconstwrap{MAJOR_VERSION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAJOR_VERSION
       enum_type_c<GL_MAJOR_VERSION>>
@@ -5121,7 +5121,7 @@ public:
 
     /// @var minor_version
     /// @glconstwrap{MINOR_VERSION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MINOR_VERSION
       enum_type_c<GL_MINOR_VERSION>>
@@ -5132,7 +5132,7 @@ public:
 
     /// @var reset_notification_strategy
     /// @glconstwrap{RESET_NOTIFICATION_STRATEGY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_RESET_NOTIFICATION_STRATEGY
       enum_type_c<GL_RESET_NOTIFICATION_STRATEGY>,
@@ -5144,7 +5144,7 @@ public:
 
     /// @var num_shading_language_versions
     /// @glconstwrap{NUM_SHADING_LANGUAGE_VERSIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_NUM_SHADING_LANGUAGE_VERSIONS
       enum_type_c<GL_NUM_SHADING_LANGUAGE_VERSIONS>>
@@ -5155,7 +5155,7 @@ public:
 
     /// @var num_extensions
     /// @glconstwrap{NUM_EXTENSIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_NUM_EXTENSIONS
       enum_type_c<GL_NUM_EXTENSIONS>>
@@ -5166,7 +5166,7 @@ public:
 
     /// @var num_spir_v_extensions
     /// @glconstwrap{NUM_SPIR_V_EXTENSIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_NUM_SPIR_V_EXTENSIONS
       enum_type_c<GL_NUM_SPIR_V_EXTENSIONS>>
@@ -5177,7 +5177,7 @@ public:
 
     /// @var context_flags
     /// @glconstwrap{CONTEXT_FLAGS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_CONTEXT_FLAGS
       enum_type_c<GL_CONTEXT_FLAGS>,
@@ -5189,7 +5189,7 @@ public:
 
     /// @var context_profile_mask
     /// @glconstwrap{CONTEXT_PROFILE_MASK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_CONTEXT_PROFILE_MASK
       enum_type_c<GL_CONTEXT_PROFILE_MASK>,
@@ -5201,7 +5201,7 @@ public:
 
     /// @var doublebuffer
     /// @glconstwrap{DOUBLEBUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_DOUBLEBUFFER
       enum_type_c<GL_DOUBLEBUFFER>>
@@ -5212,7 +5212,7 @@ public:
 
     /// @var stereo
     /// @glconstwrap{STEREO}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STEREO
       enum_type_c<GL_STEREO>>
@@ -5223,7 +5223,7 @@ public:
 
     /// @var clip_origin
     /// @glconstwrap{CLIP_ORIGIN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_CLIP_ORIGIN
       enum_type_c<GL_CLIP_ORIGIN>>
@@ -5234,7 +5234,7 @@ public:
 
     /// @var clip_depth_mode
     /// @glconstwrap{CLIP_DEPTH_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_CLIP_DEPTH_MODE
       enum_type_c<GL_CLIP_DEPTH_MODE>>
@@ -5245,7 +5245,7 @@ public:
 
     /// @var clamp_read_color
     /// @glconstwrap{CLAMP_READ_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_CLAMP_READ_COLOR
       enum_type_c<GL_CLAMP_READ_COLOR>>
@@ -5256,7 +5256,7 @@ public:
 
     /// @var provoking_vertex
     /// @glconstwrap{PROVOKING_VERTEX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_PROVOKING_VERTEX
       enum_type_c<GL_PROVOKING_VERTEX>,
@@ -5268,7 +5268,7 @@ public:
 
     /// @var layer_provoking_vertex
     /// @glconstwrap{LAYER_PROVOKING_VERTEX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_LAYER_PROVOKING_VERTEX
       enum_type_c<GL_LAYER_PROVOKING_VERTEX>,
@@ -5280,7 +5280,7 @@ public:
 
     /// @var viewport_index_provoking_vertex
     /// @glconstwrap{VIEWPORT_INDEX_PROVOKING_VERTEX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_VIEWPORT_INDEX_PROVOKING_VERTEX
       enum_type_c<GL_VIEWPORT_INDEX_PROVOKING_VERTEX>,
@@ -5292,7 +5292,7 @@ public:
 
     /// @var cull_face_mode
     /// @glconstwrap{CULL_FACE_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_CULL_FACE_MODE
       enum_type_c<GL_CULL_FACE_MODE>,
@@ -5304,7 +5304,7 @@ public:
 
     /// @var front_face
     /// @glconstwrap{FRONT_FACE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_FRONT_FACE
       enum_type_c<GL_FRONT_FACE>,
@@ -5316,7 +5316,7 @@ public:
 
     /// @var polygon_mode
     /// @glconstwrap{POLYGON_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_POLYGON_MODE
       enum_type_c<GL_POLYGON_MODE>,
@@ -5328,7 +5328,7 @@ public:
 
     /// @var active_texture
     /// @glconstwrap{ACTIVE_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_ACTIVE_TEXTURE
       enum_type_c<GL_ACTIVE_TEXTURE>,
@@ -5340,7 +5340,7 @@ public:
 
     /// @var stencil_func
     /// @glconstwrap{STENCIL_FUNC}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_FUNC
       enum_type_c<GL_STENCIL_FUNC>>
@@ -5351,7 +5351,7 @@ public:
 
     /// @var stencil_value_mask
     /// @glconstwrap{STENCIL_VALUE_MASK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_VALUE_MASK
       enum_type_c<GL_STENCIL_VALUE_MASK>>
@@ -5362,7 +5362,7 @@ public:
 
     /// @var stencil_ref
     /// @glconstwrap{STENCIL_REF}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_REF
       enum_type_c<GL_STENCIL_REF>>
@@ -5373,7 +5373,7 @@ public:
 
     /// @var stencil_fail
     /// @glconstwrap{STENCIL_FAIL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_FAIL
       enum_type_c<GL_STENCIL_FAIL>>
@@ -5384,7 +5384,7 @@ public:
 
     /// @var stencil_pass_depth_pass
     /// @glconstwrap{STENCIL_PASS_DEPTH_PASS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_PASS_DEPTH_FAIL
       enum_type_c<GL_STENCIL_PASS_DEPTH_FAIL>>
@@ -5395,7 +5395,7 @@ public:
 
     /// @var stencil_pass_depth_pass
     /// @glconstwrap{STENCIL_PASS_DEPTH_PASS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_PASS_DEPTH_PASS
       enum_type_c<GL_STENCIL_PASS_DEPTH_PASS>>
@@ -5406,7 +5406,7 @@ public:
 
     /// @var stencil_back_func
     /// @glconstwrap{STENCIL_BACK_FUNC}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_BACK_FUNC
       enum_type_c<GL_STENCIL_BACK_FUNC>>
@@ -5417,7 +5417,7 @@ public:
 
     /// @var stencil_back_value_mask
     /// @glconstwrap{STENCIL_BACK_VALUE_MASK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_BACK_VALUE_MASK
       enum_type_c<GL_STENCIL_BACK_VALUE_MASK>>
@@ -5428,7 +5428,7 @@ public:
 
     /// @var stencil_back_ref
     /// @glconstwrap{STENCIL_BACK_REF}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_BACK_REF
       enum_type_c<GL_STENCIL_BACK_REF>>
@@ -5439,7 +5439,7 @@ public:
 
     /// @var stencil_back_fail
     /// @glconstwrap{STENCIL_BACK_FAIL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_BACK_FAIL
       enum_type_c<GL_STENCIL_BACK_FAIL>>
@@ -5450,7 +5450,7 @@ public:
 
     /// @var stencil_back_pass_depth_fail
     /// @glconstwrap{STENCIL_BACK_PASS_DEPTH_FAIL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_BACK_PASS_DEPTH_FAIL
       enum_type_c<GL_STENCIL_BACK_PASS_DEPTH_FAIL>>
@@ -5461,7 +5461,7 @@ public:
 
     /// @var stencil_back_pass_depth_pass
     /// @glconstwrap{STENCIL_BACK_PASS_DEPTH_PASS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_BACK_PASS_DEPTH_PASS
       enum_type_c<GL_STENCIL_BACK_PASS_DEPTH_PASS>>
@@ -5472,7 +5472,7 @@ public:
 
     /// @var stencil_writemask
     /// @glconstwrap{STENCIL_WRITEMASK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_WRITEMASK
       enum_type_c<GL_STENCIL_WRITEMASK>>
@@ -5483,7 +5483,7 @@ public:
 
     /// @var stencil_back_writemask
     /// @glconstwrap{STENCIL_BACK_WRITEMASK}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_BACK_WRITEMASK
       enum_type_c<GL_STENCIL_BACK_WRITEMASK>>
@@ -5494,7 +5494,7 @@ public:
 
     /// @var stencil_clear_value
     /// @glconstwrap{STENCIL_CLEAR_VALUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_STENCIL_CLEAR_VALUE
       enum_type_c<GL_STENCIL_CLEAR_VALUE>>
@@ -5505,7 +5505,7 @@ public:
 
     /// @var depth_func
     /// @glconstwrap{DEPTH_FUNC}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_DEPTH_FUNC
       enum_type_c<GL_DEPTH_FUNC>>
@@ -5516,7 +5516,7 @@ public:
 
     /// @var logic_op_mode
     /// @glconstwrap{LOGIC_OP_MODE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_LOGIC_OP_MODE
       enum_type_c<GL_LOGIC_OP_MODE>>
@@ -5527,7 +5527,7 @@ public:
 
     /// @var sample_buffers
     /// @glconstwrap{SAMPLE_BUFFERS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_SAMPLE_BUFFERS
       enum_type_c<GL_SAMPLE_BUFFERS>>
@@ -5538,7 +5538,7 @@ public:
 
     /// @var subpixel_bits
     /// @glconstwrap{SUBPIXEL_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_SUBPIXEL_BITS
       enum_type_c<GL_SUBPIXEL_BITS>>
@@ -5549,7 +5549,7 @@ public:
 
     /// @var viewport_subpixel_bits
     /// @glconstwrap{VIEWPORT_SUBPIXEL_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_VIEWPORT_SUBPIXEL_BITS
       enum_type_c<GL_VIEWPORT_SUBPIXEL_BITS>>
@@ -5560,7 +5560,7 @@ public:
 
     /// @var num_compressed_texture_formats
     /// @glconstwrap{NUM_COMPRESSED_TEXTURE_FORMATS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_NUM_COMPRESSED_TEXTURE_FORMATS
       enum_type_c<GL_NUM_COMPRESSED_TEXTURE_FORMATS>>
@@ -5571,7 +5571,7 @@ public:
 
     /// @var compressed_texture_formats
     /// @glconstwrap{COMPRESSED_TEXTURE_FORMATS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_COMPRESSED_TEXTURE_FORMATS
       enum_type_c<GL_COMPRESSED_TEXTURE_FORMATS>>
@@ -5582,7 +5582,7 @@ public:
 
     /// @var num_program_binary_formats
     /// @glconstwrap{NUM_PROGRAM_BINARY_FORMATS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_NUM_PROGRAM_BINARY_FORMATS
       enum_type_c<GL_NUM_PROGRAM_BINARY_FORMATS>>
@@ -5593,7 +5593,7 @@ public:
 
     /// @var program_binary_formats
     /// @glconstwrap{PROGRAM_BINARY_FORMATS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_PROGRAM_BINARY_FORMATS
       enum_type_c<GL_PROGRAM_BINARY_FORMATS>>
@@ -5604,7 +5604,7 @@ public:
 
     /// @var num_shader_binary_formats
     /// @glconstwrap{NUM_SHADER_BINARY_FORMATS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_NUM_SHADER_BINARY_FORMATS
       enum_type_c<GL_NUM_SHADER_BINARY_FORMATS>>
@@ -5615,7 +5615,7 @@ public:
 
     /// @var shader_binary_formats
     /// @glconstwrap{SHADER_BINARY_FORMATS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_SHADER_BINARY_FORMATS
       enum_type_c<GL_SHADER_BINARY_FORMATS>>
@@ -5626,7 +5626,7 @@ public:
 
     /// @var texture_buffer_offset_alignment
     /// @glconstwrap{TEXTURE_BUFFER_OFFSET_ALIGNMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT
       enum_type_c<GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT>>
@@ -5637,7 +5637,7 @@ public:
 
     /// @var max_vertex_uniform_blocks
     /// @glconstwrap{MAX_VERTEX_UNIFORM_BLOCKS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_VERTEX_UNIFORM_BLOCKS
       enum_type_c<GL_MAX_VERTEX_UNIFORM_BLOCKS>>
@@ -5648,7 +5648,7 @@ public:
 
     /// @var max_tess_control_uniform_blocks
     /// @glconstwrap{MAX_TESS_CONTROL_UNIFORM_BLOCKS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS
       enum_type_c<GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS>>
@@ -5659,7 +5659,7 @@ public:
 
     /// @var max_tess_evaluation_uniform_blocks
     /// @glconstwrap{MAX_TESS_EVALUATION_UNIFORM_BLOCKS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS
       enum_type_c<GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS>>
@@ -5670,7 +5670,7 @@ public:
 
     /// @var max_geometry_uniform_blocks
     /// @glconstwrap{MAX_GEOMETRY_UNIFORM_BLOCKS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_GEOMETRY_UNIFORM_BLOCKS
       enum_type_c<GL_MAX_GEOMETRY_UNIFORM_BLOCKS>>
@@ -5681,7 +5681,7 @@ public:
 
     /// @var max_fragment_uniform_blocks
     /// @glconstwrap{MAX_FRAGMENT_UNIFORM_BLOCKS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_FRAGMENT_UNIFORM_BLOCKS
       enum_type_c<GL_MAX_FRAGMENT_UNIFORM_BLOCKS>>
@@ -5692,7 +5692,7 @@ public:
 
     /// @var max_compute_uniform_blocks
     /// @glconstwrap{MAX_COMPUTE_UNIFORM_BLOCKS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_COMPUTE_UNIFORM_BLOCKS
       enum_type_c<GL_MAX_COMPUTE_UNIFORM_BLOCKS>>
@@ -5703,7 +5703,7 @@ public:
 
     /// @var max_combined_uniform_blocks
     /// @glconstwrap{MAX_COMBINED_UNIFORM_BLOCKS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_COMBINED_UNIFORM_BLOCKS
       enum_type_c<GL_MAX_COMBINED_UNIFORM_BLOCKS>>
@@ -5714,7 +5714,7 @@ public:
 
     /// @var max_uniform_block_size
     /// @glconstwrap{MAX_UNIFORM_BLOCK_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_UNIFORM_BLOCK_SIZE
       enum_type_c<GL_MAX_UNIFORM_BLOCK_SIZE>>
@@ -5725,7 +5725,7 @@ public:
 
     /// @var max_debug_message_length
     /// @glconstwrap{MAX_DEBUG_MESSAGE_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_DEBUG_MESSAGE_LENGTH
       enum_type_c<GL_MAX_DEBUG_MESSAGE_LENGTH>>
@@ -5738,7 +5738,7 @@ public:
 
     /// @var max_debug_logged_messages
     /// @glconstwrap{MAX_DEBUG_LOGGED_MESSAGES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_DEBUG_LOGGED_MESSAGES
       enum_type_c<GL_MAX_DEBUG_LOGGED_MESSAGES>>
@@ -5751,7 +5751,7 @@ public:
 
     /// @var debug_logged_messages
     /// @glconstwrap{DEBUG_LOGGED_MESSAGES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_DEBUG_LOGGED_MESSAGES
       enum_type_c<GL_DEBUG_LOGGED_MESSAGES>>
@@ -5764,7 +5764,7 @@ public:
 
     /// @var debug_next_logged_message_length
     /// @glconstwrap{DEBUG_NEXT_LOGGED_MESSAGE_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH
       enum_type_c<GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH>>
@@ -5777,7 +5777,7 @@ public:
 
     /// @var max_debug_group_stack_depth
     /// @glconstwrap{MAX_DEBUG_GROUP_STACK_DEPTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_DEBUG_GROUP_STACK_DEPTH
       enum_type_c<GL_MAX_DEBUG_GROUP_STACK_DEPTH>>
@@ -5790,7 +5790,7 @@ public:
 
     /// @var debug_group_stack_depth
     /// @glconstwrap{DEBUG_GROUP_STACK_DEPTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_DEBUG_GROUP_STACK_DEPTH
       enum_type_c<GL_DEBUG_GROUP_STACK_DEPTH>>
@@ -5803,7 +5803,7 @@ public:
 
     /// @var max_label_length
     /// @glconstwrap{MAX_LABEL_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_LABEL_LENGTH
       enum_type_c<GL_MAX_LABEL_LENGTH>>
@@ -5816,7 +5816,7 @@ public:
 
     /// @var shader_compiler
     /// @glconstwrap{SHADER_COMPILER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_SHADER_COMPILER
       enum_type_c<GL_SHADER_COMPILER>,
@@ -5828,7 +5828,7 @@ public:
 
     /// @var max_shader_compiler_threads
     /// @glconstwrap{MAX_SHADER_COMPILER_THREADS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<integer_query>,
 #ifdef GL_MAX_SHADER_COMPILER_THREADS_ARB
       enum_type_c<GL_MAX_SHADER_COMPILER_THREADS_ARB>>
@@ -5839,7 +5839,7 @@ public:
 
     /// @var line_width
     /// @glconstwrap{LINE_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_LINE_WIDTH
       enum_type_c<GL_LINE_WIDTH>>
@@ -5850,7 +5850,7 @@ public:
 
     /// @var point_size
     /// @glconstwrap{POINT_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_POINT_SIZE
       enum_type_c<GL_POINT_SIZE>>
@@ -5861,7 +5861,7 @@ public:
 
     /// @var polygon_offset_clamp
     /// @glconstwrap{POLYGON_OFFSET_CLAMP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_POLYGON_OFFSET_CLAMP
       enum_type_c<GL_POLYGON_OFFSET_CLAMP>>
@@ -5872,7 +5872,7 @@ public:
 
     /// @var polygon_offset_factor
     /// @glconstwrap{POLYGON_OFFSET_FACTOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_POLYGON_OFFSET_FACTOR
       enum_type_c<GL_POLYGON_OFFSET_FACTOR>>
@@ -5883,7 +5883,7 @@ public:
 
     /// @var polygon_offset_units
     /// @glconstwrap{POLYGON_OFFSET_UNITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_POLYGON_OFFSET_UNITS
       enum_type_c<GL_POLYGON_OFFSET_UNITS>>
@@ -5894,7 +5894,7 @@ public:
 
     /// @var sample_coverage_value
     /// @glconstwrap{SAMPLE_COVERAGE_VALUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_SAMPLE_COVERAGE_VALUE
       enum_type_c<GL_SAMPLE_COVERAGE_VALUE>>
@@ -5905,7 +5905,7 @@ public:
 
     /// @var blend_color
     /// @glconstwrap{BLEND_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_BLEND_COLOR
       enum_type_c<GL_BLEND_COLOR>>
@@ -5916,7 +5916,7 @@ public:
 
     /// @var color_clear_value
     /// @glconstwrap{COLOR_CLEAR_VALUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_COLOR_CLEAR_VALUE
       enum_type_c<GL_COLOR_CLEAR_VALUE>>
@@ -5927,7 +5927,7 @@ public:
 
     /// @var depth_clear_value
     /// @glconstwrap{DEPTH_CLEAR_VALUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_DEPTH_CLEAR_VALUE
       enum_type_c<GL_DEPTH_CLEAR_VALUE>>
@@ -5938,7 +5938,7 @@ public:
 
     /// @var viewport_bounds_range
     /// @glconstwrap{VIEWPORT_BOUNDS_RANGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_VIEWPORT_BOUNDS_RANGE
       enum_type_c<GL_VIEWPORT_BOUNDS_RANGE>>
@@ -5949,7 +5949,7 @@ public:
 
     /// @var point_size_range
     /// @glconstwrap{POINT_SIZE_RANGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_POINT_SIZE_RANGE
       enum_type_c<GL_POINT_SIZE_RANGE>>
@@ -5960,7 +5960,7 @@ public:
 
     /// @var point_size_granularity
     /// @glconstwrap{POINT_SIZE_GRANULARITY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_POINT_SIZE_GRANULARITY
       enum_type_c<GL_POINT_SIZE_GRANULARITY>>
@@ -5971,7 +5971,7 @@ public:
 
     /// @var aliased_line_width_range
     /// @glconstwrap{ALIASED_LINE_WIDTH_RANGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_ALIASED_LINE_WIDTH_RANGE
       enum_type_c<GL_ALIASED_LINE_WIDTH_RANGE>>
@@ -5982,7 +5982,7 @@ public:
 
     /// @var smooth_line_width_range
     /// @glconstwrap{SMOOTH_LINE_WIDTH_RANGE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_SMOOTH_LINE_WIDTH_RANGE
       enum_type_c<GL_SMOOTH_LINE_WIDTH_RANGE>>
@@ -5993,7 +5993,7 @@ public:
 
     /// @var smooth_line_width_granularity
     /// @glconstwrap{SMOOTH_LINE_WIDTH_GRANULARITY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_SMOOTH_LINE_WIDTH_GRANULARITY
       enum_type_c<GL_SMOOTH_LINE_WIDTH_GRANULARITY>>
@@ -6004,7 +6004,7 @@ public:
 
     /// @var min_sample_shading_value
     /// @glconstwrap{MIN_SAMPLE_SHADING_VALUE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_MIN_SAMPLE_SHADING_VALUE
       enum_type_c<GL_MIN_SAMPLE_SHADING_VALUE>>
@@ -6015,7 +6015,7 @@ public:
 
     /// @var min_fragment_interpolation_offset
     /// @glconstwrap{MIN_FRAGMENT_INTERPOLATION_OFFSET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_MIN_FRAGMENT_INTERPOLATION_OFFSET
       enum_type_c<GL_MIN_FRAGMENT_INTERPOLATION_OFFSET>>
@@ -6026,7 +6026,7 @@ public:
 
     /// @var max_fragment_interpolation_offset
     /// @glconstwrap{MAX_FRAGMENT_INTERPOLATION_OFFSET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_MAX_FRAGMENT_INTERPOLATION_OFFSET
       enum_type_c<GL_MAX_FRAGMENT_INTERPOLATION_OFFSET>>
@@ -6037,7 +6037,7 @@ public:
 
     /// @var max_texture_lod_bias
     /// @glconstwrap{MAX_TEXTURE_LOD_BIAS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_MAX_TEXTURE_LOD_BIAS
       enum_type_c<GL_MAX_TEXTURE_LOD_BIAS>>
@@ -6048,7 +6048,7 @@ public:
 
     /// @var max_texture_max_anisotropy
     /// @glconstwrap{MAX_TEXTURE_MAX_ANISOTROPY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_MAX_TEXTURE_MAX_ANISOTROPY
       enum_type_c<GL_MAX_TEXTURE_MAX_ANISOTROPY>>
@@ -6059,7 +6059,7 @@ public:
 
     /// @var max_viewport_dims
     /// @glconstwrap{MAX_VIEWPORT_DIMS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<float_query>,
 #ifdef GL_MAX_VIEWPORT_DIMS
       enum_type_c<GL_MAX_VIEWPORT_DIMS>>
@@ -6070,7 +6070,7 @@ public:
 
     /// @var vendor
     /// @glconstwrap{VENDOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<string_query>,
 #ifdef GL_VENDOR
       enum_type_c<GL_VENDOR>>
@@ -6081,7 +6081,7 @@ public:
 
     /// @var renderer
     /// @glconstwrap{RENDERER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<string_query>,
 #ifdef GL_RENDERER
       enum_type_c<GL_RENDERER>>
@@ -6092,7 +6092,7 @@ public:
 
     /// @var version
     /// @glconstwrap{VERSION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<string_query>,
 #ifdef GL_VERSION
       enum_type_c<GL_VERSION>>
@@ -6103,7 +6103,7 @@ public:
 
     /// @var shading_language_version
     /// @glconstwrap{SHADING_LANGUAGE_VERSION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<string_query>,
 #ifdef GL_SHADING_LANGUAGE_VERSION
       enum_type_c<GL_SHADING_LANGUAGE_VERSION>>
@@ -6114,7 +6114,7 @@ public:
 
     /// @var extensions
     /// @glconstwrap{EXTENSIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<string_query>,
 #ifdef GL_EXTENSIONS
       enum_type_c<GL_EXTENSIONS>>
@@ -6125,7 +6125,7 @@ public:
 
     /// @var named_string_length
     /// @glconstwrap{NAMED_STRING_LENGTH_ARB}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<named_string_query>,
 #ifdef GL_NAMED_STRING_LENGTH_ARB
       enum_type_c<GL_NAMED_STRING_LENGTH_ARB>>
@@ -6136,7 +6136,7 @@ public:
 
     /// @var named_string_type
     /// @glconstwrap{NAMED_STRING_TYPE_ARB}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<named_string_query>,
 #ifdef GL_NAMED_STRING_TYPE_ARB
       enum_type_c<GL_NAMED_STRING_TYPE_ARB>,
@@ -6148,7 +6148,7 @@ public:
 
     /// @var color_buffer_bit
     /// @glconstwrap{COLOR_BUFFER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_clear_bit, buffer_blit_bit>,
 #ifdef GL_COLOR_BUFFER_BIT
       bitfield_type_c<GL_COLOR_BUFFER_BIT>>
@@ -6159,7 +6159,7 @@ public:
 
     /// @var depth_buffer_bit
     /// @glconstwrap{DEPTH_BUFFER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_clear_bit, buffer_blit_bit>,
 #ifdef GL_DEPTH_BUFFER_BIT
       bitfield_type_c<GL_DEPTH_BUFFER_BIT>>
@@ -6170,7 +6170,7 @@ public:
 
     /// @var stencil_buffer_bit
     /// @glconstwrap{STENCIL_BUFFER_BIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<buffer_clear_bit, buffer_blit_bit>,
 #ifdef GL_STENCIL_BUFFER_BIT
       bitfield_type_c<GL_STENCIL_BUFFER_BIT>>
@@ -6181,7 +6181,7 @@ public:
 
     /// @var lequal
     /// @glconstwrap{LEQUAL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function>,
 #ifdef GL_LEQUAL
       enum_type_c<GL_LEQUAL>>
@@ -6192,7 +6192,7 @@ public:
 
     /// @var gequal
     /// @glconstwrap{GEQUAL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function>,
 #ifdef GL_GEQUAL
       enum_type_c<GL_GEQUAL>>
@@ -6203,7 +6203,7 @@ public:
 
     /// @var less
     /// @glconstwrap{LESS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function>,
 #ifdef GL_LESS
       enum_type_c<GL_LESS>>
@@ -6214,7 +6214,7 @@ public:
 
     /// @var greater
     /// @glconstwrap{GREATER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function>,
 #ifdef GL_GREATER
       enum_type_c<GL_GREATER>>
@@ -6225,7 +6225,7 @@ public:
 
     /// @var equal
     /// @glconstwrap{EQUAL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function, tess_gen_primitive_spacing>,
 #ifdef GL_EQUAL
       enum_type_c<GL_EQUAL>>
@@ -6236,7 +6236,7 @@ public:
 
     /// @var notequal
     /// @glconstwrap{NOTEQUAL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function>,
 #ifdef GL_NOTEQUAL
       enum_type_c<GL_NOTEQUAL>>
@@ -6247,7 +6247,7 @@ public:
 
     /// @var always
     /// @glconstwrap{ALWAYS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function>,
 #ifdef GL_ALWAYS
       enum_type_c<GL_ALWAYS>>
@@ -6258,7 +6258,7 @@ public:
 
     /// @var never
     /// @glconstwrap{NEVER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<compare_function>,
 #ifdef GL_NEVER
       enum_type_c<GL_NEVER>>
@@ -6269,7 +6269,7 @@ public:
 
     /// @var float_
     /// @glconstwrap{FLOAT}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<data_type, sl_data_type, pixel_data_type>,
 #ifdef GL_FLOAT
       enum_type_c<GL_FLOAT>,
@@ -6281,7 +6281,7 @@ public:
 
     /// @var float_vec2
     /// @glconstwrap{FLOAT_VEC2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_VEC2
       enum_type_c<GL_FLOAT_VEC2>,
@@ -6293,7 +6293,7 @@ public:
 
     /// @var float_vec3
     /// @glconstwrap{FLOAT_VEC3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_VEC3
       enum_type_c<GL_FLOAT_VEC3>,
@@ -6305,7 +6305,7 @@ public:
 
     /// @var float_vec4
     /// @glconstwrap{FLOAT_VEC4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_VEC4
       enum_type_c<GL_FLOAT_VEC4>,
@@ -6317,7 +6317,7 @@ public:
 
     /// @var double_
     /// @glconstwrap{DOUBLE}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<data_type, sl_data_type>,
 #ifdef GL_DOUBLE
       enum_type_c<GL_DOUBLE>,
@@ -6329,7 +6329,7 @@ public:
 
     /// @var double_vec2
     /// @glconstwrap{DOUBLE_VEC2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_VEC2
       enum_type_c<GL_DOUBLE_VEC2>,
@@ -6341,7 +6341,7 @@ public:
 
     /// @var double_vec3
     /// @glconstwrap{DOUBLE_VEC3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_VEC3
       enum_type_c<GL_DOUBLE_VEC3>,
@@ -6353,7 +6353,7 @@ public:
 
     /// @var double_vec4
     /// @glconstwrap{DOUBLE_VEC4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_VEC4
       enum_type_c<GL_DOUBLE_VEC4>,
@@ -6365,7 +6365,7 @@ public:
 
     /// @var int_
     /// @glconstwrap{INT}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<data_type, sl_data_type, pixel_data_type>,
 #ifdef GL_INT
       enum_type_c<GL_INT>,
@@ -6377,7 +6377,7 @@ public:
 
     /// @var int_vec2
     /// @glconstwrap{INT_VEC2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_VEC2
       enum_type_c<GL_INT_VEC2>,
@@ -6389,7 +6389,7 @@ public:
 
     /// @var int_vec3
     /// @glconstwrap{INT_VEC3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_VEC3
       enum_type_c<GL_INT_VEC3>,
@@ -6401,7 +6401,7 @@ public:
 
     /// @var int_vec4
     /// @glconstwrap{INT_VEC4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_VEC4
       enum_type_c<GL_INT_VEC4>,
@@ -6413,7 +6413,7 @@ public:
 
     /// @var unsigned_int_
     /// @glconstwrap{UNSIGNED_INT}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<data_type, sl_data_type, pixel_data_type, index_data_type>,
 #ifdef GL_UNSIGNED_INT
       enum_type_c<GL_UNSIGNED_INT>,
@@ -6425,7 +6425,7 @@ public:
 
     /// @var unsigned_int_vec2
     /// @glconstwrap{UNSIGNED_INT_VEC2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_VEC2
       enum_type_c<GL_UNSIGNED_INT_VEC2>,
@@ -6437,7 +6437,7 @@ public:
 
     /// @var unsigned_int_vec3
     /// @glconstwrap{UNSIGNED_INT_VEC3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_VEC3
       enum_type_c<GL_UNSIGNED_INT_VEC3>,
@@ -6449,7 +6449,7 @@ public:
 
     /// @var unsigned_int_vec4
     /// @glconstwrap{UNSIGNED_INT_VEC4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_VEC4
       enum_type_c<GL_UNSIGNED_INT_VEC4>,
@@ -6461,7 +6461,7 @@ public:
 
     /// @var bool_
     /// @glconstwrap{BOOL}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<data_type, sl_data_type>,
 #ifdef GL_BOOL
       enum_type_c<GL_BOOL>,
@@ -6473,7 +6473,7 @@ public:
 
     /// @var bool_vec2
     /// @glconstwrap{BOOL_VEC2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_BOOL_VEC2
       enum_type_c<GL_BOOL_VEC2>,
@@ -6485,7 +6485,7 @@ public:
 
     /// @var bool_vec3
     /// @glconstwrap{BOOL_VEC3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_BOOL_VEC3
       enum_type_c<GL_BOOL_VEC3>,
@@ -6497,7 +6497,7 @@ public:
 
     /// @var bool_vec4
     /// @glconstwrap{BOOL_VEC4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_BOOL_VEC4
       enum_type_c<GL_BOOL_VEC4>,
@@ -6509,7 +6509,7 @@ public:
 
     /// @var float_mat2
     /// @glconstwrap{FLOAT_MAT2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT2
       enum_type_c<GL_FLOAT_MAT2>,
@@ -6521,7 +6521,7 @@ public:
 
     /// @var float_mat3
     /// @glconstwrap{FLOAT_MAT3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT3
       enum_type_c<GL_FLOAT_MAT3>,
@@ -6533,7 +6533,7 @@ public:
 
     /// @var float_mat4
     /// @glconstwrap{FLOAT_MAT4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT4
       enum_type_c<GL_FLOAT_MAT4>,
@@ -6545,7 +6545,7 @@ public:
 
     /// @var float_mat2x3
     /// @glconstwrap{FLOAT_MAT2x3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT2x3
       enum_type_c<GL_FLOAT_MAT2x3>,
@@ -6557,7 +6557,7 @@ public:
 
     /// @var float_mat2x4
     /// @glconstwrap{FLOAT_MAT2x4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT2x4
       enum_type_c<GL_FLOAT_MAT2x4>,
@@ -6569,7 +6569,7 @@ public:
 
     /// @var float_mat3x2
     /// @glconstwrap{FLOAT_MAT3x2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT3x2
       enum_type_c<GL_FLOAT_MAT3x2>,
@@ -6581,7 +6581,7 @@ public:
 
     /// @var float_mat3x4
     /// @glconstwrap{FLOAT_MAT3x4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT3x4
       enum_type_c<GL_FLOAT_MAT3x4>,
@@ -6593,7 +6593,7 @@ public:
 
     /// @var float_mat4x2
     /// @glconstwrap{FLOAT_MAT4x2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT4x2
       enum_type_c<GL_FLOAT_MAT4x2>,
@@ -6605,7 +6605,7 @@ public:
 
     /// @var float_mat4x3
     /// @glconstwrap{FLOAT_MAT4x3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_FLOAT_MAT4x3
       enum_type_c<GL_FLOAT_MAT4x3>,
@@ -6617,7 +6617,7 @@ public:
 
     /// @var double_mat2
     /// @glconstwrap{DOUBLE_MAT2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT2
       enum_type_c<GL_DOUBLE_MAT2>,
@@ -6629,7 +6629,7 @@ public:
 
     /// @var double_mat3
     /// @glconstwrap{DOUBLE_MAT3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT3
       enum_type_c<GL_DOUBLE_MAT3>,
@@ -6641,7 +6641,7 @@ public:
 
     /// @var double_mat4
     /// @glconstwrap{DOUBLE_MAT4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT4
       enum_type_c<GL_DOUBLE_MAT4>,
@@ -6653,7 +6653,7 @@ public:
 
     /// @var double_mat2x3
     /// @glconstwrap{DOUBLE_MAT2x3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT2x3
       enum_type_c<GL_DOUBLE_MAT2x3>,
@@ -6665,7 +6665,7 @@ public:
 
     /// @var double_mat2x4
     /// @glconstwrap{DOUBLE_MAT2x4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT2x4
       enum_type_c<GL_DOUBLE_MAT2x4>,
@@ -6677,7 +6677,7 @@ public:
 
     /// @var double_mat3x2
     /// @glconstwrap{DOUBLE_MAT3x2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT3x2
       enum_type_c<GL_DOUBLE_MAT3x2>,
@@ -6689,7 +6689,7 @@ public:
 
     /// @var double_mat3x4
     /// @glconstwrap{DOUBLE_MAT3x4}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT3x4
       enum_type_c<GL_DOUBLE_MAT3x4>,
@@ -6701,7 +6701,7 @@ public:
 
     /// @var double_mat4x2
     /// @glconstwrap{DOUBLE_MAT4x2}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT4x2
       enum_type_c<GL_DOUBLE_MAT4x2>,
@@ -6713,7 +6713,7 @@ public:
 
     /// @var double_mat4x3
     /// @glconstwrap{DOUBLE_MAT4x3}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_DOUBLE_MAT4x3
       enum_type_c<GL_DOUBLE_MAT4x3>,
@@ -6725,7 +6725,7 @@ public:
 
     /// @var sampler_1d
     /// @glconstwrap{SAMPLER_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_1D
       enum_type_c<GL_SAMPLER_1D>>
@@ -6736,7 +6736,7 @@ public:
 
     /// @var sampler_2d
     /// @glconstwrap{SAMPLER_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D
       enum_type_c<GL_SAMPLER_2D>>
@@ -6747,7 +6747,7 @@ public:
 
     /// @var sampler_3d
     /// @glconstwrap{SAMPLER_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_3D
       enum_type_c<GL_SAMPLER_3D>>
@@ -6758,7 +6758,7 @@ public:
 
     /// @var sampler_cube
     /// @glconstwrap{SAMPLER_CUBE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_CUBE
       enum_type_c<GL_SAMPLER_CUBE>>
@@ -6769,7 +6769,7 @@ public:
 
     /// @var sampler_1d_shadow
     /// @glconstwrap{SAMPLER_1D_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_1D_SHADOW
       enum_type_c<GL_SAMPLER_1D_SHADOW>>
@@ -6780,7 +6780,7 @@ public:
 
     /// @var sampler_2d_shadow
     /// @glconstwrap{SAMPLER_2D_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D_SHADOW
       enum_type_c<GL_SAMPLER_2D_SHADOW>>
@@ -6791,7 +6791,7 @@ public:
 
     /// @var sampler_1d_array
     /// @glconstwrap{SAMPLER_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_1D_ARRAY
       enum_type_c<GL_SAMPLER_1D_ARRAY>>
@@ -6802,7 +6802,7 @@ public:
 
     /// @var sampler_2d_array
     /// @glconstwrap{SAMPLER_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D_ARRAY
       enum_type_c<GL_SAMPLER_2D_ARRAY>>
@@ -6813,7 +6813,7 @@ public:
 
     /// @var sampler_cube_map_array
     /// @glconstwrap{SAMPLER_CUBE_MAP_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_CUBE_MAP_ARRAY
       enum_type_c<GL_SAMPLER_CUBE_MAP_ARRAY>>
@@ -6824,7 +6824,7 @@ public:
 
     /// @var sampler_1d_array_shadow
     /// @glconstwrap{SAMPLER_1D_ARRAY_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_1D_ARRAY_SHADOW
       enum_type_c<GL_SAMPLER_1D_ARRAY_SHADOW>>
@@ -6835,7 +6835,7 @@ public:
 
     /// @var sampler_2d_array_shadow
     /// @glconstwrap{SAMPLER_2D_ARRAY_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D_ARRAY_SHADOW
       enum_type_c<GL_SAMPLER_2D_ARRAY_SHADOW>>
@@ -6846,7 +6846,7 @@ public:
 
     /// @var sampler_2d_multisample
     /// @glconstwrap{SAMPLER_2D_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D_MULTISAMPLE
       enum_type_c<GL_SAMPLER_2D_MULTISAMPLE>>
@@ -6857,7 +6857,7 @@ public:
 
     /// @var sampler_2d_multisample_array
     /// @glconstwrap{SAMPLER_2D_MULTISAMPLE_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_SAMPLER_2D_MULTISAMPLE_ARRAY>>
@@ -6868,7 +6868,7 @@ public:
 
     /// @var sampler_cube_shadow
     /// @glconstwrap{SAMPLER_CUBE_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_CUBE_SHADOW
       enum_type_c<GL_SAMPLER_CUBE_SHADOW>>
@@ -6879,7 +6879,7 @@ public:
 
     /// @var sampler_cube_map_array_shadow
     /// @glconstwrap{SAMPLER_CUBE_MAP_ARRAY_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW
       enum_type_c<GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW>>
@@ -6890,7 +6890,7 @@ public:
 
     /// @var sampler_buffer
     /// @glconstwrap{SAMPLER_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_BUFFER
       enum_type_c<GL_SAMPLER_BUFFER>>
@@ -6901,7 +6901,7 @@ public:
 
     /// @var sampler_2d_rect
     /// @glconstwrap{SAMPLER_2D_RECT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D_RECT
       enum_type_c<GL_SAMPLER_2D_RECT>>
@@ -6912,7 +6912,7 @@ public:
 
     /// @var sampler_2d_rect_shadow
     /// @glconstwrap{SAMPLER_2D_RECT_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_SAMPLER_2D_RECT_SHADOW
       enum_type_c<GL_SAMPLER_2D_RECT_SHADOW>>
@@ -6923,7 +6923,7 @@ public:
 
     /// @var int_sampler_1d
     /// @glconstwrap{INT_SAMPLER_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_1D
       enum_type_c<GL_INT_SAMPLER_1D>>
@@ -6934,7 +6934,7 @@ public:
 
     /// @var int_sampler_2d
     /// @glconstwrap{INT_SAMPLER_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_2D
       enum_type_c<GL_INT_SAMPLER_2D>>
@@ -6945,7 +6945,7 @@ public:
 
     /// @var int_sampler_3d
     /// @glconstwrap{INT_SAMPLER_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_3D
       enum_type_c<GL_INT_SAMPLER_3D>>
@@ -6956,7 +6956,7 @@ public:
 
     /// @var int_sampler_cube
     /// @glconstwrap{INT_SAMPLER_CUBE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_CUBE
       enum_type_c<GL_INT_SAMPLER_CUBE>>
@@ -6967,7 +6967,7 @@ public:
 
     /// @var int_sampler_1d_array
     /// @glconstwrap{INT_SAMPLER_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_1D_ARRAY
       enum_type_c<GL_INT_SAMPLER_1D_ARRAY>>
@@ -6978,7 +6978,7 @@ public:
 
     /// @var int_sampler_2d_array
     /// @glconstwrap{INT_SAMPLER_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_2D_ARRAY
       enum_type_c<GL_INT_SAMPLER_2D_ARRAY>>
@@ -6989,7 +6989,7 @@ public:
 
     /// @var int_sampler_cube_map_array
     /// @glconstwrap{INT_SAMPLER_CUBE_MAP_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_CUBE_MAP_ARRAY
       enum_type_c<GL_INT_SAMPLER_CUBE_MAP_ARRAY>>
@@ -7000,7 +7000,7 @@ public:
 
     /// @var int_sampler_2d_multisample
     /// @glconstwrap{INT_SAMPLER_2D_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_2D_MULTISAMPLE
       enum_type_c<GL_INT_SAMPLER_2D_MULTISAMPLE>>
@@ -7011,7 +7011,7 @@ public:
 
     /// @var int_sampler_2d_multisample_array
     /// @glconstwrap{INT_SAMPLER_2D_MULTISAMPLE_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY>>
@@ -7022,7 +7022,7 @@ public:
 
     /// @var int_sampler_buffer
     /// @glconstwrap{INT_SAMPLER_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_BUFFER
       enum_type_c<GL_INT_SAMPLER_BUFFER>>
@@ -7033,7 +7033,7 @@ public:
 
     /// @var int_sampler_2d_rect
     /// @glconstwrap{INT_SAMPLER_2D_RECT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_SAMPLER_2D_RECT
       enum_type_c<GL_INT_SAMPLER_2D_RECT>>
@@ -7044,7 +7044,7 @@ public:
 
     /// @var unsigned_int_sampler_1d
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_1D
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_1D>>
@@ -7055,7 +7055,7 @@ public:
 
     /// @var unsigned_int_sampler_2d
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_2D
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_2D>>
@@ -7066,7 +7066,7 @@ public:
 
     /// @var unsigned_int_sampler_3d
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_3D
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_3D>>
@@ -7077,7 +7077,7 @@ public:
 
     /// @var unsigned_int_sampler_cube
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_CUBE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_CUBE
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_CUBE>>
@@ -7088,7 +7088,7 @@ public:
 
     /// @var unsigned_int_sampler_1d_array
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_1D_ARRAY
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_1D_ARRAY>>
@@ -7099,7 +7099,7 @@ public:
 
     /// @var unsigned_int_sampler_2d_array
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_2D_ARRAY
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_2D_ARRAY>>
@@ -7110,7 +7110,7 @@ public:
 
     /// @var unsigned_int_sampler_cube_map_array
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY>>
@@ -7121,7 +7121,7 @@ public:
 
     /// @var unsigned_int_sampler_2d_multisample
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE>>
@@ -7132,7 +7132,7 @@ public:
 
     /// @var unsigned_int_sampler_2d_multisample_array
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY>>
@@ -7143,7 +7143,7 @@ public:
 
     /// @var unsigned_int_sampler_buffer
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_BUFFER
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_BUFFER>>
@@ -7154,7 +7154,7 @@ public:
 
     /// @var unsigned_int_sampler_2d_rect
     /// @glconstwrap{UNSIGNED_INT_SAMPLER_2D_RECT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_SAMPLER_2D_RECT
       enum_type_c<GL_UNSIGNED_INT_SAMPLER_2D_RECT>>
@@ -7165,7 +7165,7 @@ public:
 
     /// @var image_1d
     /// @glconstwrap{IMAGE_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_1D
       enum_type_c<GL_IMAGE_1D>>
@@ -7176,7 +7176,7 @@ public:
 
     /// @var image_2d
     /// @glconstwrap{IMAGE_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_2D
       enum_type_c<GL_IMAGE_2D>>
@@ -7187,7 +7187,7 @@ public:
 
     /// @var image_3d
     /// @glconstwrap{IMAGE_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_3D
       enum_type_c<GL_IMAGE_3D>>
@@ -7198,7 +7198,7 @@ public:
 
     /// @var image_2d_rect
     /// @glconstwrap{IMAGE_2D_RECT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_2D_RECT
       enum_type_c<GL_IMAGE_2D_RECT>>
@@ -7209,7 +7209,7 @@ public:
 
     /// @var image_cube
     /// @glconstwrap{IMAGE_CUBE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_CUBE
       enum_type_c<GL_IMAGE_CUBE>>
@@ -7220,7 +7220,7 @@ public:
 
     /// @var image_buffer
     /// @glconstwrap{IMAGE_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_BUFFER
       enum_type_c<GL_IMAGE_BUFFER>>
@@ -7231,7 +7231,7 @@ public:
 
     /// @var image_1d_array
     /// @glconstwrap{IMAGE_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_1D_ARRAY
       enum_type_c<GL_IMAGE_1D_ARRAY>>
@@ -7242,7 +7242,7 @@ public:
 
     /// @var image_2d_array
     /// @glconstwrap{IMAGE_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_2D_ARRAY
       enum_type_c<GL_IMAGE_2D_ARRAY>>
@@ -7253,7 +7253,7 @@ public:
 
     /// @var image_2d_multisample
     /// @glconstwrap{IMAGE_2D_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_2D_MULTISAMPLE
       enum_type_c<GL_IMAGE_2D_MULTISAMPLE>>
@@ -7264,7 +7264,7 @@ public:
 
     /// @var image_2d_multisample_array
     /// @glconstwrap{IMAGE_2D_MULTISAMPLE_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_IMAGE_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_IMAGE_2D_MULTISAMPLE_ARRAY>>
@@ -7275,7 +7275,7 @@ public:
 
     /// @var int_image_1d
     /// @glconstwrap{INT_IMAGE_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_1D
       enum_type_c<GL_INT_IMAGE_1D>>
@@ -7286,7 +7286,7 @@ public:
 
     /// @var int_image_2d
     /// @glconstwrap{INT_IMAGE_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_2D
       enum_type_c<GL_INT_IMAGE_2D>>
@@ -7297,7 +7297,7 @@ public:
 
     /// @var int_image_3d
     /// @glconstwrap{INT_IMAGE_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_3D
       enum_type_c<GL_INT_IMAGE_3D>>
@@ -7308,7 +7308,7 @@ public:
 
     /// @var int_image_2d_rect
     /// @glconstwrap{INT_IMAGE_2D_RECT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_2D_RECT
       enum_type_c<GL_INT_IMAGE_2D_RECT>>
@@ -7319,7 +7319,7 @@ public:
 
     /// @var int_image_cube
     /// @glconstwrap{INT_IMAGE_CUBE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_CUBE
       enum_type_c<GL_INT_IMAGE_CUBE>>
@@ -7330,7 +7330,7 @@ public:
 
     /// @var int_image_buffer
     /// @glconstwrap{INT_IMAGE_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_BUFFER
       enum_type_c<GL_INT_IMAGE_BUFFER>>
@@ -7341,7 +7341,7 @@ public:
 
     /// @var int_image_1d_array
     /// @glconstwrap{INT_IMAGE_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_1D_ARRAY
       enum_type_c<GL_INT_IMAGE_1D_ARRAY>>
@@ -7352,7 +7352,7 @@ public:
 
     /// @var int_image_2d_array
     /// @glconstwrap{INT_IMAGE_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_2D_ARRAY
       enum_type_c<GL_INT_IMAGE_2D_ARRAY>>
@@ -7363,7 +7363,7 @@ public:
 
     /// @var int_image_2d_multisample
     /// @glconstwrap{INT_IMAGE_2D_multisample}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_2D_MULTISAMPLE
       enum_type_c<GL_INT_IMAGE_2D_MULTISAMPLE>>
@@ -7374,7 +7374,7 @@ public:
 
     /// @var int_image_2d_multisample_array
     /// @glconstwrap{INT_IMAGE_2D_multisample_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY>>
@@ -7385,7 +7385,7 @@ public:
 
     /// @var unsigned_int_image_1d
     /// @glconstwrap{UNSIGNED_INT_IMAGE_1D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_1D
       enum_type_c<GL_UNSIGNED_INT_IMAGE_1D>>
@@ -7396,7 +7396,7 @@ public:
 
     /// @var unsigned_int_image_2d
     /// @glconstwrap{UNSIGNED_INT_IMAGE_2D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_2D
       enum_type_c<GL_UNSIGNED_INT_IMAGE_2D>>
@@ -7407,7 +7407,7 @@ public:
 
     /// @var unsigned_int_image_3d
     /// @glconstwrap{UNSIGNED_INT_IMAGE_3D}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_3D
       enum_type_c<GL_UNSIGNED_INT_IMAGE_3D>>
@@ -7418,7 +7418,7 @@ public:
 
     /// @var unsigned_int_image_2d_rect
     /// @glconstwrap{UNSIGNED_INT_IMAGE_2D_RECT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_2D_RECT
       enum_type_c<GL_UNSIGNED_INT_IMAGE_2D_RECT>>
@@ -7429,7 +7429,7 @@ public:
 
     /// @var unsigned_int_image_cube
     /// @glconstwrap{UNSIGNED_INT_IMAGE_CUBE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_CUBE
       enum_type_c<GL_UNSIGNED_INT_IMAGE_CUBE>>
@@ -7440,7 +7440,7 @@ public:
 
     /// @var unsigned_int_image_buffer
     /// @glconstwrap{UNSIGNED_INT_IMAGE_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_BUFFER
       enum_type_c<GL_UNSIGNED_INT_IMAGE_BUFFER>>
@@ -7451,7 +7451,7 @@ public:
 
     /// @var unsigned_int_image_1d_array
     /// @glconstwrap{UNSIGNED_INT_IMAGE_1D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_1D_ARRAY
       enum_type_c<GL_UNSIGNED_INT_IMAGE_1D_ARRAY>>
@@ -7462,7 +7462,7 @@ public:
 
     /// @var unsigned_int_image_2d_array
     /// @glconstwrap{UNSIGNED_INT_IMAGE_2D_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_2D_ARRAY
       enum_type_c<GL_UNSIGNED_INT_IMAGE_2D_ARRAY>>
@@ -7473,7 +7473,7 @@ public:
 
     /// @var unsigned_int_image_2d_multisample
     /// @glconstwrap{UNSIGNED_INT_IMAGE_2D_MULTISAMPLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE
       enum_type_c<GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE>>
@@ -7484,7 +7484,7 @@ public:
 
     /// @var unsigned_int_image_2d_multisample_array
     /// @glconstwrap{UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY
       enum_type_c<GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY>>
@@ -7495,7 +7495,7 @@ public:
 
     /// @var unsigned_int_atomic_counter
     /// @glconstwrap{UNSIGNED_INT_ATOMIC_COUNTER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sl_data_type>,
 #ifdef GL_UNSIGNED_INT_ATOMIC_COUNTER
       enum_type_c<GL_UNSIGNED_INT_ATOMIC_COUNTER>>
@@ -7506,7 +7506,7 @@ public:
 
     /// @var points
     /// @glconstwrap{POINTS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type, transform_feedback_primitive_type, old_primitive_type>,
 #ifdef GL_POINTS
       enum_type_c<GL_POINTS>>
@@ -7517,7 +7517,7 @@ public:
 
     /// @var line_strip
     /// @glconstwrap{LINE_STRIP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type, old_primitive_type>,
 #ifdef GL_LINE_STRIP
       enum_type_c<GL_LINE_STRIP>>
@@ -7528,7 +7528,7 @@ public:
 
     /// @var line_loop
     /// @glconstwrap{LINE_LOOP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type, old_primitive_type>,
 #ifdef GL_LINE_LOOP
       enum_type_c<GL_LINE_LOOP>>
@@ -7539,7 +7539,7 @@ public:
 
     /// @var lines
     /// @glconstwrap{LINES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type, old_primitive_type, transform_feedback_primitive_type>,
 #ifdef GL_LINES
       enum_type_c<GL_LINES>>
@@ -7550,7 +7550,7 @@ public:
 
     /// @var triangle_strip
     /// @glconstwrap{triangle_strip}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type, old_primitive_type>,
 #ifdef GL_TRIANGLE_STRIP
       enum_type_c<GL_TRIANGLE_STRIP>>
@@ -7561,7 +7561,7 @@ public:
 
     /// @var triangle_fan
     /// @glconstwrap{TRIANGLE_FAN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type, old_primitive_type>,
 #ifdef GL_TRIANGLE_FAN
       enum_type_c<GL_TRIANGLE_FAN>>
@@ -7572,7 +7572,7 @@ public:
 
     /// @var triangles
     /// @glconstwrap{TRIANGLES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<
         primitive_type,
         old_primitive_type,
@@ -7587,7 +7587,7 @@ public:
 
     /// @var quads
     /// @glconstwrap{QUADS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<old_primitive_type, tess_gen_primitive_type>,
 #ifdef GL_QUADS
       enum_type_c<GL_QUADS>>
@@ -7598,7 +7598,7 @@ public:
 
     /// @var quad_strip
     /// @glconstwrap{QUAD_STRIP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<old_primitive_type>,
 #ifdef GL_QUAD_STRIP
       enum_type_c<GL_QUAD_STRIP>>
@@ -7609,7 +7609,7 @@ public:
 
     /// @var polygon
     /// @glconstwrap{POLYGON}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<old_primitive_type>,
 #ifdef GL_POLYGON
       enum_type_c<GL_POLYGON>>
@@ -7620,7 +7620,7 @@ public:
 
     /// @var lines_adjacency
     /// @glconstwrap{LINES_ADJACENCY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type>,
 #ifdef GL_LINES_ADJACENCY
       enum_type_c<GL_LINES_ADJACENCY>>
@@ -7631,7 +7631,7 @@ public:
 
     /// @var line_strip_adjacency
     /// @glconstwrap{LINE_STRIP_ADJACENCY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type>,
 #ifdef GL_LINE_STRIP_ADJACENCY
       enum_type_c<GL_LINE_STRIP_ADJACENCY>>
@@ -7642,7 +7642,7 @@ public:
 
     /// @var triangles_adjacency
     /// @glconstwrap{TRIANGLES_ADJACENCY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type>,
 #ifdef GL_TRIANGLES_ADJACENCY
       enum_type_c<GL_TRIANGLES_ADJACENCY>>
@@ -7653,7 +7653,7 @@ public:
 
     /// @var triangle_strip_adjacency
     /// @glconstwrap{TRIANGLE_STRIP_ADJACENCY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type>,
 #ifdef GL_TRIANGLE_STRIP_ADJACENCY
       enum_type_c<GL_TRIANGLE_STRIP_ADJACENCY>>
@@ -7664,7 +7664,7 @@ public:
 
     /// @var patches
     /// @glconstwrap{PATCHES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<primitive_type>,
 #ifdef GL_PATCHES
       enum_type_c<GL_PATCHES>>
@@ -7675,7 +7675,7 @@ public:
 
     /// @var isolines
     /// @glconstwrap{ISOLINES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<tess_gen_primitive_type>,
 #ifdef GL_ISOLINES
       enum_type_c<GL_ISOLINES>>
@@ -7686,7 +7686,7 @@ public:
 
     /// @var fractional_even
     /// @glconstwrap{FRACTIONAL_EVEN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<tess_gen_primitive_spacing>,
 #ifdef GL_FRACTIONAL_EVEN
       enum_type_c<GL_FRACTIONAL_EVEN>>
@@ -7697,7 +7697,7 @@ public:
 
     /// @var fractional_odd
     /// @glconstwrap{FRACTIONAL_ODD}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<tess_gen_primitive_spacing>,
 #ifdef GL_FRACTIONAL_ODD
       enum_type_c<GL_FRACTIONAL_ODD>>
@@ -7708,7 +7708,7 @@ public:
 
     /// @var patch_vertices
     /// @glconstwrap{PATCH_VERTICES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<patch_parameter, integer_query>,
 #ifdef GL_PATCH_VERTICES
       enum_type_c<GL_PATCH_VERTICES>>
@@ -7719,7 +7719,7 @@ public:
 
     /// @var patch_default_outer_level
     /// @glconstwrap{PATCH_DEFAULT_OUTER_LEVEL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<patch_parameter, float_query>,
 #ifdef GL_PATCH_DEFAULT_OUTER_LEVEL
       enum_type_c<GL_PATCH_DEFAULT_OUTER_LEVEL>>
@@ -7730,7 +7730,7 @@ public:
 
     /// @var patch_default_inner_level
     /// @glconstwrap{PATCH_DEFAULT_INNER_LEVEL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<patch_parameter, float_query>,
 #ifdef GL_PATCH_DEFAULT_INNER_LEVEL
       enum_type_c<GL_PATCH_DEFAULT_INNER_LEVEL>>
@@ -7741,7 +7741,7 @@ public:
 
     /// @var cw
     /// @glconstwrap{CW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<face_orientation>,
 #ifdef GL_CW
       enum_type_c<GL_CW>>
@@ -7752,7 +7752,7 @@ public:
 
     /// @var ccw
     /// @glconstwrap{CCW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<face_orientation>,
 #ifdef GL_CCW
       enum_type_c<GL_CCW>>
@@ -7763,7 +7763,7 @@ public:
 
     /// @var first_vertex_convention
     /// @glconstwrap{FIRST_VERTEX_CONVENTION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<provoke_mode>,
 #ifdef GL_FIRST_VERTEX_CONVENTION
       enum_type_c<GL_FIRST_VERTEX_CONVENTION>>
@@ -7774,7 +7774,7 @@ public:
 
     /// @var last_vertex_convention
     /// @glconstwrap{LAST_VERTEX_CONVENTION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<provoke_mode>,
 #ifdef GL_LAST_VERTEX_CONVENTION
       enum_type_c<GL_LAST_VERTEX_CONVENTION>>
@@ -7785,7 +7785,7 @@ public:
 
     /// @var query_wait
     /// @glconstwrap{QUERY_WAIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_WAIT
       enum_type_c<GL_QUERY_WAIT>>
@@ -7796,7 +7796,7 @@ public:
 
     /// @var query_no_wait
     /// @glconstwrap{QUERY_NO_WAIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_NO_WAIT
       enum_type_c<GL_QUERY_NO_WAIT>>
@@ -7807,7 +7807,7 @@ public:
 
     /// @var query_by_region_wait
     /// @glconstwrap{QUERY_BY_REGION_WAIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_BY_REGION_WAIT
       enum_type_c<GL_QUERY_BY_REGION_WAIT>>
@@ -7818,7 +7818,7 @@ public:
 
     /// @var query_by_region_no_wait
     /// @glconstwrap{QUERY_BY_REGION_NO_WAIT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_BY_REGION_NO_WAIT
       enum_type_c<GL_QUERY_BY_REGION_NO_WAIT>>
@@ -7829,7 +7829,7 @@ public:
 
     /// @var query_wait_inverted
     /// @glconstwrap{QUERY_WAIT_INVERTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_WAIT_INVERTED
       enum_type_c<GL_QUERY_WAIT_INVERTED>>
@@ -7840,7 +7840,7 @@ public:
 
     /// @var query_no_wait_inverted
     /// @glconstwrap{QUERY_NO_WAIT_INVERTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_NO_WAIT_INVERTED
       enum_type_c<GL_QUERY_NO_WAIT_INVERTED>>
@@ -7851,7 +7851,7 @@ public:
 
     /// @var query_by_region_wait_inverted
     /// @glconstwrap{QUERY_BY_REGION_WAIT_INVERTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_BY_REGION_WAIT_INVERTED
       enum_type_c<GL_QUERY_BY_REGION_WAIT_INVERTED>>
@@ -7862,7 +7862,7 @@ public:
 
     /// @var query_by_region_no_wait_inverted
     /// @glconstwrap{QUERY_BY_REGION_NO_WAIT_INVERTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<conditional_render_mode>,
 #ifdef GL_QUERY_BY_REGION_NO_WAIT_INVERTED
       enum_type_c<GL_QUERY_BY_REGION_NO_WAIT_INVERTED>>
@@ -7873,7 +7873,7 @@ public:
 
     /// @var point_size_min
     /// @glconstwrap{POINT_SIZE_MIN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<point_parameter>,
 #ifdef GL_POINT_SIZE_MIN
       enum_type_c<GL_POINT_SIZE_MIN>>
@@ -7884,7 +7884,7 @@ public:
 
     /// @var point_size_max
     /// @glconstwrap{POINT_SIZE_MAX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<point_parameter>,
 #ifdef GL_POINT_SIZE_MAX
       enum_type_c<GL_POINT_SIZE_MAX>>
@@ -7895,7 +7895,7 @@ public:
 
     /// @var point_fade_threshold_size
     /// @glconstwrap{POINT_FADE_THRESHOLD_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<point_parameter, float_query>,
 #ifdef GL_POINT_FADE_THRESHOLD_SIZE
       enum_type_c<GL_POINT_FADE_THRESHOLD_SIZE>>
@@ -7906,7 +7906,7 @@ public:
 
     /// @var point_sprite_coord_origin
     /// @glconstwrap{POINT_SPRITE_COORD_ORIGIN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<point_parameter, integer_query>,
 #ifdef GL_POINT_SPRITE_COORD_ORIGIN
       enum_type_c<GL_POINT_SPRITE_COORD_ORIGIN>,
@@ -7918,7 +7918,7 @@ public:
 
     /// @var lower_left
     /// @glconstwrap{LOWER_LEFT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::point_sprite_coord_origin>,
 #ifdef GL_LOWER_LEFT
       enum_type_c<GL_LOWER_LEFT>>
@@ -7929,7 +7929,7 @@ public:
 
     /// @var upper_left
     /// @glconstwrap{UPPER_LEFT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::point_sprite_coord_origin>,
 #ifdef GL_UPPER_LEFT
       enum_type_c<GL_UPPER_LEFT>>
@@ -7940,7 +7940,7 @@ public:
 
     /// @var point
     /// @glconstwrap{POINT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::polygon_mode>,
 #ifdef GL_POINT
       enum_type_c<GL_POINT>>
@@ -7951,7 +7951,7 @@ public:
 
     /// @var line
     /// @glconstwrap{LINE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::polygon_mode>,
 #ifdef GL_LINE
       enum_type_c<GL_LINE>>
@@ -7962,7 +7962,7 @@ public:
 
     /// @var fill
     /// @glconstwrap{FILL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::polygon_mode>,
 #ifdef GL_FILL
       enum_type_c<GL_FILL>>
@@ -7973,7 +7973,7 @@ public:
 
     /// @var fill_rectangle_nv
     /// @glconstwrap{FILL_RECTANGLE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::polygon_mode>,
 #ifdef GL_FILL_RECTANGLE_NV
       enum_type_c<GL_FILL_RECTANGLE_NV>>
@@ -7984,7 +7984,7 @@ public:
 
     /// @var keep
     /// @glconstwrap{KEEP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<stencil_operation>,
 #ifdef GL_KEEP
       enum_type_c<GL_KEEP>>
@@ -7995,7 +7995,7 @@ public:
 
     /// @var replace
     /// @glconstwrap{REPLACE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<stencil_operation>,
 #ifdef GL_REPLACE
       enum_type_c<GL_REPLACE>>
@@ -8006,7 +8006,7 @@ public:
 
     /// @var incr
     /// @glconstwrap{INCR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<stencil_operation>,
 #ifdef GL_INCR
       enum_type_c<GL_INCR>>
@@ -8017,7 +8017,7 @@ public:
 
     /// @var decr
     /// @glconstwrap{DECR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<stencil_operation>,
 #ifdef GL_DECR
       enum_type_c<GL_DECR>>
@@ -8028,7 +8028,7 @@ public:
 
     /// @var invert
     /// @glconstwrap{INVERT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<stencil_operation, logic_operation, oglplus::path_fill_mode_nv>,
 #ifdef GL_INVERT
       enum_type_c<GL_INVERT>>
@@ -8039,7 +8039,7 @@ public:
 
     /// @var incr_wrap
     /// @glconstwrap{INCR_WRAP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<stencil_operation>,
 #ifdef GL_INCR_WRAP
       enum_type_c<GL_INCR_WRAP>>
@@ -8050,7 +8050,7 @@ public:
 
     /// @var decr_wrap
     /// @glconstwrap{DECR_WRAP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<stencil_operation>,
 #ifdef GL_DECR_WRAP
       enum_type_c<GL_DECR_WRAP>>
@@ -8061,7 +8061,7 @@ public:
 
     /// @var clear
     /// @glconstwrap{CLEAR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_CLEAR
       enum_type_c<GL_CLEAR>>
@@ -8072,7 +8072,7 @@ public:
 
     /// @var and_
     /// @glconstwrap{AND}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_AND
       enum_type_c<GL_AND>>
@@ -8083,7 +8083,7 @@ public:
 
     /// @var and_reverse
     /// @glconstwrap{AND_REVERSE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_AND_REVERSE
       enum_type_c<GL_AND_REVERSE>>
@@ -8094,7 +8094,7 @@ public:
 
     /// @var copy
     /// @glconstwrap{COPY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_COPY
       enum_type_c<GL_COPY>>
@@ -8105,7 +8105,7 @@ public:
 
     /// @var and_inverted
     /// @glconstwrap{AND_INVERTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_AND_INVERTED
       enum_type_c<GL_AND_INVERTED>>
@@ -8116,7 +8116,7 @@ public:
 
     /// @var noop
     /// @glconstwrap{NOOP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_NOOP
       enum_type_c<GL_NOOP>>
@@ -8127,7 +8127,7 @@ public:
 
     /// @var xor_
     /// @glconstwrap{XOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_XOR
       enum_type_c<GL_XOR>>
@@ -8138,7 +8138,7 @@ public:
 
     /// @var or_
     /// @glconstwrap{OR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_OR
       enum_type_c<GL_OR>>
@@ -8149,7 +8149,7 @@ public:
 
     /// @var nor
     /// @glconstwrap{NOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_NOR
       enum_type_c<GL_NOR>>
@@ -8160,7 +8160,7 @@ public:
 
     /// @var equiv
     /// @glconstwrap{EQUIV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_EQUIV
       enum_type_c<GL_EQUIV>>
@@ -8171,7 +8171,7 @@ public:
 
     /// @var or_reverse
     /// @glconstwrap{OR_REVERSE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_OR_REVERSE
       enum_type_c<GL_OR_REVERSE>>
@@ -8182,7 +8182,7 @@ public:
 
     /// @var copy_inverted
     /// @glconstwrap{COPY_INVERTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_COPY_INVERTED
       enum_type_c<GL_COPY_INVERTED>>
@@ -8193,7 +8193,7 @@ public:
 
     /// @var or_inverted
     /// @glconstwrap{OR_INVERTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_OR_INVERTED
       enum_type_c<GL_OR_INVERTED>>
@@ -8204,7 +8204,7 @@ public:
 
     /// @var nand
     /// @glconstwrap{NAND}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_NAND
       enum_type_c<GL_NAND>>
@@ -8215,7 +8215,7 @@ public:
 
     /// @var set
     /// @glconstwrap{SET}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<logic_operation>,
 #ifdef GL_SET
       enum_type_c<GL_SET>>
@@ -8226,7 +8226,7 @@ public:
 
     /// @var func_add
     /// @glconstwrap{FUNC_ADD}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation>,
 #ifdef GL_FUNC_ADD
       enum_type_c<GL_FUNC_ADD>>
@@ -8237,7 +8237,7 @@ public:
 
     /// @var func_subtract
     /// @glconstwrap{FUNC_SUBTRACT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation>,
 #ifdef GL_FUNC_SUBTRACT
       enum_type_c<GL_FUNC_SUBTRACT>>
@@ -8248,7 +8248,7 @@ public:
 
     /// @var func_reverse_subtract
     /// @glconstwrap{FUNC_REVERSE_SUBTRACT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation>,
 #ifdef GL_FUNC_REVERSE_SUBTRACT
       enum_type_c<GL_FUNC_REVERSE_SUBTRACT>>
@@ -8259,7 +8259,7 @@ public:
 
     /// @var min
     /// @glconstwrap{MIN}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation>,
 #ifdef GL_MIN
       enum_type_c<GL_MIN>>
@@ -8270,7 +8270,7 @@ public:
 
     /// @var max
     /// @glconstwrap{MAX}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation>,
 #ifdef GL_MAX
       enum_type_c<GL_MAX>>
@@ -8281,7 +8281,7 @@ public:
 
     /// @var multiply_khr
     /// @glconstwrap{MULTIPLY_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_MULTIPLY_KHR
       enum_type_c<GL_MULTIPLY_KHR>>
@@ -8292,7 +8292,7 @@ public:
 
     /// @var screen_khr
     /// @glconstwrap{SCREEN_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_SCREEN_KHR
       enum_type_c<GL_SCREEN_KHR>>
@@ -8303,7 +8303,7 @@ public:
 
     /// @var overlay_khr
     /// @glconstwrap{OVERLAY_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_OVERLAY_KHR
       enum_type_c<GL_OVERLAY_KHR>>
@@ -8314,7 +8314,7 @@ public:
 
     /// @var darken_khr
     /// @glconstwrap{DARKEN_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_DARKEN_KHR
       enum_type_c<GL_DARKEN_KHR>>
@@ -8325,7 +8325,7 @@ public:
 
     /// @var lighten_khr
     /// @glconstwrap{LIGHTEN_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_LIGHTEN_KHR
       enum_type_c<GL_LIGHTEN_KHR>>
@@ -8336,7 +8336,7 @@ public:
 
     /// @var colordodge_khr
     /// @glconstwrap{COLORDODGE_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_COLORDODGE_KHR
       enum_type_c<GL_COLORDODGE_KHR>>
@@ -8347,7 +8347,7 @@ public:
 
     /// @var colorburn_khr
     /// @glconstwrap{COLORBURN_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_COLORBURN_KHR
       enum_type_c<GL_COLORBURN_KHR>>
@@ -8358,7 +8358,7 @@ public:
 
     /// @var hardlight_khr
     /// @glconstwrap{HARDLIGHT_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_HARDLIGHT_KHR
       enum_type_c<GL_HARDLIGHT_KHR>>
@@ -8369,7 +8369,7 @@ public:
 
     /// @var softlight_khr
     /// @glconstwrap{SOFTLIGHT_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_SOFTLIGHT_KHR
       enum_type_c<GL_SOFTLIGHT_KHR>>
@@ -8380,7 +8380,7 @@ public:
 
     /// @var difference_khr
     /// @glconstwrap{DIFFERENCE_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_DIFFERENCE_KHR
       enum_type_c<GL_DIFFERENCE_KHR>>
@@ -8391,7 +8391,7 @@ public:
 
     /// @var exclusion_khr
     /// @glconstwrap{EXCLUSION_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_EXCLUSION_KHR
       enum_type_c<GL_EXCLUSION_KHR>>
@@ -8402,7 +8402,7 @@ public:
 
     /// @var hsl_hue_khr
     /// @glconstwrap{HSL_HUE_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_HSL_HUE_KHR
       enum_type_c<GL_HSL_HUE_KHR>>
@@ -8413,7 +8413,7 @@ public:
 
     /// @var hsl_saturation_khr
     /// @glconstwrap{HSL_SATURATION_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_HSL_SATURATION_KHR
       enum_type_c<GL_HSL_SATURATION_KHR>>
@@ -8424,7 +8424,7 @@ public:
 
     /// @var hsl_color_khr
     /// @glconstwrap{HSL_COLOR_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_HSL_COLOR_KHR
       enum_type_c<GL_HSL_COLOR_KHR>>
@@ -8435,7 +8435,7 @@ public:
 
     /// @var hsl_luminosity_khr
     /// @glconstwrap{HSL_LUMINOSITY_KHR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_equation_advanced>,
 #ifdef GL_HSL_LUMINOSITY_KHR
       enum_type_c<GL_HSL_LUMINOSITY_KHR>>
@@ -8446,7 +8446,7 @@ public:
 
     /// @var src_color
     /// @glconstwrap{SRC_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_SRC_COLOR
       enum_type_c<GL_SRC_COLOR>>
@@ -8457,7 +8457,7 @@ public:
 
     /// @var one_minus_src_color
     /// @glconstwrap{ONE_MINUS_SRC_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_SRC_COLOR
       enum_type_c<GL_ONE_MINUS_SRC_COLOR>>
@@ -8468,7 +8468,7 @@ public:
 
     /// @var dst_color
     /// @glconstwrap{DST_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_DST_COLOR
       enum_type_c<GL_DST_COLOR>>
@@ -8479,7 +8479,7 @@ public:
 
     /// @var one_minus_dst_color
     /// @glconstwrap{ONE_MINUS_DST_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_DST_COLOR
       enum_type_c<GL_ONE_MINUS_DST_COLOR>>
@@ -8490,7 +8490,7 @@ public:
 
     /// @var src_alpha
     /// @glconstwrap{SRC_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_SRC_ALPHA
       enum_type_c<GL_SRC_ALPHA>>
@@ -8501,7 +8501,7 @@ public:
 
     /// @var one_minus_src_alpha
     /// @glconstwrap{ONE_MINUS_SRC_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_SRC_ALPHA
       enum_type_c<GL_ONE_MINUS_SRC_ALPHA>>
@@ -8512,7 +8512,7 @@ public:
 
     /// @var dst_alpha
     /// @glconstwrap{DST_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_DST_ALPHA
       enum_type_c<GL_DST_ALPHA>>
@@ -8523,7 +8523,7 @@ public:
 
     /// @var one_minus_dst_alpha
     /// @glconstwrap{ONE_MINUS_DST_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_DST_ALPHA
       enum_type_c<GL_ONE_MINUS_DST_ALPHA>>
@@ -8534,7 +8534,7 @@ public:
 
     /// @var constant_color
     /// @glconstwrap{CONSTANT_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_CONSTANT_COLOR
       enum_type_c<GL_CONSTANT_COLOR>>
@@ -8545,7 +8545,7 @@ public:
 
     /// @var one_minus_constant_color
     /// @glconstwrap{ONE_MINUS_CONSTANT_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_CONSTANT_COLOR
       enum_type_c<GL_ONE_MINUS_CONSTANT_COLOR>>
@@ -8556,7 +8556,7 @@ public:
 
     /// @var constant_alpha
     /// @glconstwrap{CONSTANT_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_CONSTANT_ALPHA
       enum_type_c<GL_CONSTANT_ALPHA>>
@@ -8567,7 +8567,7 @@ public:
 
     /// @var one_minus_constant_alpha
     /// @glconstwrap{ONE_MINUS_CONSTANT_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_CONSTANT_ALPHA
       enum_type_c<GL_ONE_MINUS_CONSTANT_ALPHA>>
@@ -8578,7 +8578,7 @@ public:
 
     /// @var src_alpha_saturate
     /// @glconstwrap{SRC_ALPHA_SATURATE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_SRC_ALPHA_SATURATE
       enum_type_c<GL_SRC_ALPHA_SATURATE>>
@@ -8589,7 +8589,7 @@ public:
 
     /// @var src1_color
     /// @glconstwrap{SRC1_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_SRC1_COLOR
       enum_type_c<GL_SRC1_COLOR>>
@@ -8600,7 +8600,7 @@ public:
 
     /// @var one_minus_src1_color
     /// @glconstwrap{ONE_MINUS_SRC1_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_SRC1_COLOR
       enum_type_c<GL_ONE_MINUS_SRC1_COLOR>>
@@ -8611,7 +8611,7 @@ public:
 
     /// @var src1_alpha
     /// @glconstwrap{SRC1_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_SRC1_ALPHA
       enum_type_c<GL_SRC1_ALPHA>>
@@ -8622,7 +8622,7 @@ public:
 
     /// @var one_minus_src1_color
     /// @glconstwrap{ONE_MINUS_SRC1_COLOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<blend_function>,
 #ifdef GL_ONE_MINUS_SRC1_ALPHA
       enum_type_c<GL_ONE_MINUS_SRC1_ALPHA>>
@@ -8633,7 +8633,7 @@ public:
 
     /// @var unsigned_byte_
     /// @glconstwrap{UNSIGNED_BYTE}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<data_type, pixel_data_type, index_data_type>,
 #ifdef GL_UNSIGNED_BYTE
       enum_type_c<GL_UNSIGNED_BYTE>,
@@ -8645,7 +8645,7 @@ public:
 
     /// @var byte_
     /// @glconstwrap{BYTE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<data_type, pixel_data_type>,
 #ifdef GL_BYTE
       enum_type_c<GL_BYTE>>
@@ -8656,7 +8656,7 @@ public:
 
     /// @var unsigned_short_
     /// @glconstwrap{UNSIGNED_SHORT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type, data_type, index_data_type>,
 #ifdef GL_UNSIGNED_SHORT
       enum_type_c<GL_UNSIGNED_SHORT>>
@@ -8667,7 +8667,7 @@ public:
 
     /// @var short_
     /// @glconstwrap{SHORT}
-    type_constructor_constant<opt_c_api_constant<
+    type_constructor_constant<c_api::opt_constant<
       mp_list<pixel_data_type, data_type>,
 #ifdef GL_SHORT
       enum_type_c<GL_SHORT>,
@@ -8679,7 +8679,7 @@ public:
 
     /// @var half_float_
     /// @glconstwrap{HALF_FLOAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_HALF_FLOAT
       enum_type_c<GL_HALF_FLOAT>>
@@ -8690,7 +8690,7 @@ public:
 
     /// @var unsigned_byte_3_3_2
     /// @glconstwrap{UNSIGNED_BYTE_3_3_2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_BYTE_3_3_2
       enum_type_c<GL_UNSIGNED_BYTE_3_3_2>>
@@ -8701,7 +8701,7 @@ public:
 
     /// @var unsigned_byte_2_3_3_rev
     /// @glconstwrap{UNSIGNED_BYTE_2_3_3_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_BYTE_2_3_3_REV
       enum_type_c<GL_UNSIGNED_BYTE_2_3_3_REV>>
@@ -8712,7 +8712,7 @@ public:
 
     /// @var unsigned_short_5_6_5
     /// @glconstwrap{UNSIGNED_SHORT_5_6_5}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_SHORT_5_6_5
       enum_type_c<GL_UNSIGNED_SHORT_5_6_5>>
@@ -8723,7 +8723,7 @@ public:
 
     /// @var unsigned_short_5_6_5_rev
     /// @glconstwrap{UNSIGNED_SHORT_5_6_5_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_SHORT_5_6_5_REV
       enum_type_c<GL_UNSIGNED_SHORT_5_6_5_REV>>
@@ -8734,7 +8734,7 @@ public:
 
     /// @var unsigned_short_4_4_4_4
     /// @glconstwrap{UNSIGNED_SHORT_4_4_4_4}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_SHORT_4_4_4_4
       enum_type_c<GL_UNSIGNED_SHORT_4_4_4_4>>
@@ -8745,7 +8745,7 @@ public:
 
     /// @var unsigned_short_4_4_4_4_rev
     /// @glconstwrap{UNSIGNED_SHORT_4_4_4_4_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_SHORT_4_4_4_4_REV
       enum_type_c<GL_UNSIGNED_SHORT_4_4_4_4_REV>>
@@ -8756,7 +8756,7 @@ public:
 
     /// @var unsigned_short_5_5_5_1
     /// @glconstwrap{UNSIGNED_SHORT_5_5_5_1}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_SHORT_5_5_5_1
       enum_type_c<GL_UNSIGNED_SHORT_5_5_5_1>>
@@ -8767,7 +8767,7 @@ public:
 
     /// @var unsigned_short_5_5_5_1_rev
     /// @glconstwrap{UNSIGNED_SHORT_5_5_5_1_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_SHORT_1_5_5_5_REV
       enum_type_c<GL_UNSIGNED_SHORT_1_5_5_5_REV>>
@@ -8778,7 +8778,7 @@ public:
 
     /// @var unsigned_int_8_8_8_8
     /// @glconstwrap{UNSIGNED_INT_8_8_8_8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_INT_8_8_8_8
       enum_type_c<GL_UNSIGNED_INT_8_8_8_8>>
@@ -8789,7 +8789,7 @@ public:
 
     /// @var unsigned_int_8_8_8_8_rev
     /// @glconstwrap{UNSIGNED_INT_8_8_8_8_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_INT_8_8_8_8_REV
       enum_type_c<GL_UNSIGNED_INT_8_8_8_8_REV>>
@@ -8800,7 +8800,7 @@ public:
 
     /// @var unsigned_int_10_10_10_2
     /// @glconstwrap{UNSIGNED_INT_10_10_10_2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_INT_10_10_10_2
       enum_type_c<GL_UNSIGNED_INT_10_10_10_2>>
@@ -8811,7 +8811,7 @@ public:
 
     /// @var unsigned_int_10_10_10_2_rev
     /// @glconstwrap{UNSIGNED_INT_10_10_10_2_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_INT_2_10_10_10_REV
       enum_type_c<GL_UNSIGNED_INT_2_10_10_10_REV>>
@@ -8822,7 +8822,7 @@ public:
 
     /// @var unsigned_int_24_8
     /// @glconstwrap{UNSIGNED_INT_24_8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_INT_24_8
       enum_type_c<GL_UNSIGNED_INT_24_8>>
@@ -8833,7 +8833,7 @@ public:
 
     /// @var unsigned_int_10f_11f_11f_rev
     /// @glconstwrap{UNSIGNED_INT_10F_11F_11F_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_INT_10F_11F_11F_REV
       enum_type_c<GL_UNSIGNED_INT_10F_11F_11F_REV>>
@@ -8844,7 +8844,7 @@ public:
 
     /// @var unsigned_int_5_9_9_9_rev
     /// @glconstwrap{UNSIGNED_INT_5_9_9_9_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_UNSIGNED_INT_5_9_9_9_REV
       enum_type_c<GL_UNSIGNED_INT_5_9_9_9_REV>>
@@ -8855,7 +8855,7 @@ public:
 
     /// @var float_32_unsigned_int_24_8_rev
     /// @glconstwrap{FLOAT_32_UNSIGNED_INT_24_8_REV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_data_type>,
 #ifdef GL_FLOAT_32_UNSIGNED_INT_24_8_REV
       enum_type_c<GL_FLOAT_32_UNSIGNED_INT_24_8_REV>>
@@ -8866,7 +8866,7 @@ public:
 
     /// @var stencil_index8
     /// @glconstwrap{STENCIL_INDEX8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_STENCIL_INDEX
       enum_type_c<GL_STENCIL_INDEX>>
@@ -8877,7 +8877,7 @@ public:
 
     /// @var bgr
     /// @glconstwrap{BGR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_BGR
       enum_type_c<GL_BGR>>
@@ -8888,7 +8888,7 @@ public:
 
     /// @var bgra
     /// @glconstwrap{BGRA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_BGRA
       enum_type_c<GL_BGRA>>
@@ -8899,7 +8899,7 @@ public:
 
     /// @var red_integer
     /// @glconstwrap{RED_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_RED_INTEGER
       enum_type_c<GL_RED_INTEGER>>
@@ -8910,7 +8910,7 @@ public:
 
     /// @var green_integer
     /// @glconstwrap{GREEN_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_GREEN_INTEGER
       enum_type_c<GL_GREEN_INTEGER>>
@@ -8921,7 +8921,7 @@ public:
 
     /// @var blue_integer
     /// @glconstwrap{BLUE_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_BLUE_INTEGER
       enum_type_c<GL_BLUE_INTEGER>>
@@ -8932,7 +8932,7 @@ public:
 
     /// @var rg_integer
     /// @glconstwrap{RG_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_RG_INTEGER
       enum_type_c<GL_RG_INTEGER>>
@@ -8943,7 +8943,7 @@ public:
 
     /// @var rgb_integer
     /// @glconstwrap{RGB_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_RGB_INTEGER
       enum_type_c<GL_RGB_INTEGER>>
@@ -8954,7 +8954,7 @@ public:
 
     /// @var rgba_integer
     /// @glconstwrap{RGBA_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_RGBA_INTEGER
       enum_type_c<GL_RGBA_INTEGER>>
@@ -8965,7 +8965,7 @@ public:
 
     /// @var bgr_integer
     /// @glconstwrap{BGR_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_BGR_INTEGER
       enum_type_c<GL_BGR_INTEGER>>
@@ -8976,7 +8976,7 @@ public:
 
     /// @var bgra_integer
     /// @glconstwrap{BGRA_INTEGER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_format>,
 #ifdef GL_BGRA_INTEGER
       enum_type_c<GL_BGRA_INTEGER>>
@@ -8987,7 +8987,7 @@ public:
 
     /// @var depth_component
     /// @glconstwrap{DEPTH_COMPONENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, pixel_format>,
 #ifdef GL_DEPTH_COMPONENT
       enum_type_c<GL_DEPTH_COMPONENT>>
@@ -8998,7 +8998,7 @@ public:
 
     /// @var depth_stencil
     /// @glconstwrap{DEPTH_STENCIL}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, pixel_format, framebuffer_buffer>,
 #ifdef GL_DEPTH_STENCIL
       enum_type_c<GL_DEPTH_STENCIL>>
@@ -9009,7 +9009,7 @@ public:
 
     /// @var stencil_index8
     /// @glconstwrap{STENCIL_INDEX8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_STENCIL_INDEX8
       enum_type_c<GL_STENCIL_INDEX8>>
@@ -9020,7 +9020,7 @@ public:
 
     /// @var rg
     /// @glconstwrap{RG}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, pixel_format>,
 #ifdef GL_RG
       enum_type_c<GL_RG>>
@@ -9031,7 +9031,7 @@ public:
 
     /// @var rgb
     /// @glconstwrap{RGB}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, pixel_format, path_color_format_nv>,
 #ifdef GL_RGB
       enum_type_c<GL_RGB>>
@@ -9042,7 +9042,7 @@ public:
 
     /// @var rgba
     /// @glconstwrap{RGBA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, pixel_format, path_color_format_nv>,
 #ifdef GL_RGBA
       enum_type_c<GL_RGBA>>
@@ -9053,7 +9053,7 @@ public:
 
     /// @var r8
     /// @glconstwrap{R8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R8
       enum_type_c<GL_R8>>
@@ -9064,7 +9064,7 @@ public:
 
     /// @var r8_snorm
     /// @glconstwrap{R8_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R8_SNORM
       enum_type_c<GL_R8_SNORM>>
@@ -9075,7 +9075,7 @@ public:
 
     /// @var r16
     /// @glconstwrap{R16}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_R16
       enum_type_c<GL_R16>>
@@ -9086,7 +9086,7 @@ public:
 
     /// @var r16_snorm
     /// @glconstwrap{R16_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R16_SNORM
       enum_type_c<GL_R16_SNORM>>
@@ -9097,7 +9097,7 @@ public:
 
     /// @var rg8
     /// @glconstwrap{RG8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RG8
       enum_type_c<GL_RG8>>
@@ -9108,7 +9108,7 @@ public:
 
     /// @var rg8ui
     /// @glconstwrap{RG8UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<image_unit_format>,
 #ifdef GL_RG8UI
       enum_type_c<GL_RG8UI>>
@@ -9119,7 +9119,7 @@ public:
 
     /// @var rg8_snorm
     /// @glconstwrap{RG8_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RG8_SNORM
       enum_type_c<GL_RG8_SNORM>>
@@ -9130,7 +9130,7 @@ public:
 
     /// @var rg16
     /// @glconstwrap{RG16}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RG16
       enum_type_c<GL_RG16>>
@@ -9141,7 +9141,7 @@ public:
 
     /// @var rg16ui
     /// @glconstwrap{RG16UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<image_unit_format>,
 #ifdef GL_RG16UI
       enum_type_c<GL_RG16UI>>
@@ -9152,7 +9152,7 @@ public:
 
     /// @var rg16_snorm
     /// @glconstwrap{RG16_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RG16_SNORM
       enum_type_c<GL_RG16_SNORM>>
@@ -9163,7 +9163,7 @@ public:
 
     /// @var rg32ui
     /// @glconstwrap{RG32UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<image_unit_format>,
 #ifdef GL_RG32UI
       enum_type_c<GL_RG32UI>>
@@ -9174,7 +9174,7 @@ public:
 
     /// @var r3_g3_b2
     /// @glconstwrap{R3_G3_B2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_R3_G3_B2
       enum_type_c<GL_R3_G3_B2>>
@@ -9185,7 +9185,7 @@ public:
 
     /// @var rgb4
     /// @glconstwrap{RGB4}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB4
       enum_type_c<GL_RGB4>>
@@ -9196,7 +9196,7 @@ public:
 
     /// @var rgb5
     /// @glconstwrap{RGB5}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB5
       enum_type_c<GL_RGB5>>
@@ -9207,7 +9207,7 @@ public:
 
     /// @var rgb8
     /// @glconstwrap{RGB8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB8
       enum_type_c<GL_RGB8>>
@@ -9218,7 +9218,7 @@ public:
 
     /// @var rgb8_snorm
     /// @glconstwrap{RGB8_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB8_SNORM
       enum_type_c<GL_RGB8_SNORM>>
@@ -9229,7 +9229,7 @@ public:
 
     /// @var rgb10
     /// @glconstwrap{RGB10}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB10
       enum_type_c<GL_RGB10>>
@@ -9240,7 +9240,7 @@ public:
 
     /// @var rgb12
     /// @glconstwrap{RGB12}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB12
       enum_type_c<GL_RGB12>>
@@ -9251,7 +9251,7 @@ public:
 
     /// @var rgb16
     /// @glconstwrap{RGB16}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB16
       enum_type_c<GL_RGB16>>
@@ -9262,7 +9262,7 @@ public:
 
     /// @var rgb16_snorm
     /// @glconstwrap{RGB16_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB16_SNORM
       enum_type_c<GL_RGB16_SNORM>>
@@ -9273,7 +9273,7 @@ public:
 
     /// @var rgba2
     /// @glconstwrap{RGBA2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGBA2
       enum_type_c<GL_RGBA2>>
@@ -9284,7 +9284,7 @@ public:
 
     /// @var rgba4
     /// @glconstwrap{RGBA4}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGBA4
       enum_type_c<GL_RGBA4>>
@@ -9295,7 +9295,7 @@ public:
 
     /// @var rgb5_a1
     /// @glconstwrap{RGB5_A1}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB5_A1
       enum_type_c<GL_RGB5_A1>>
@@ -9306,7 +9306,7 @@ public:
 
     /// @var rgba8
     /// @glconstwrap{RGBA8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGBA8
       enum_type_c<GL_RGBA8>>
@@ -9317,7 +9317,7 @@ public:
 
     /// @var rgba8ui
     /// @glconstwrap{RGBA8UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<image_unit_format>,
 #ifdef GL_RGBA8
       enum_type_c<GL_RGBA8UI>>
@@ -9328,7 +9328,7 @@ public:
 
     /// @var rgba8_snorm
     /// @glconstwrap{RGBA8_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGBA8_SNORM
       enum_type_c<GL_RGBA8_SNORM>>
@@ -9339,7 +9339,7 @@ public:
 
     /// @var rgb10_a2
     /// @glconstwrap{RGB10_A2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB10_A2
       enum_type_c<GL_RGB10_A2>>
@@ -9350,7 +9350,7 @@ public:
 
     /// @var rgb10_a2ui
     /// @glconstwrap{RGB10_A2UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGB10_A2UI
       enum_type_c<GL_RGB10_A2UI>>
@@ -9361,7 +9361,7 @@ public:
 
     /// @var rgba12
     /// @glconstwrap{RGBA12}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGBA12
       enum_type_c<GL_RGBA12>>
@@ -9372,7 +9372,7 @@ public:
 
     /// @var rgba16
     /// @glconstwrap{RGBA16}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGBA16
       enum_type_c<GL_RGBA16>>
@@ -9383,7 +9383,7 @@ public:
 
     /// @var rgba16ui
     /// @glconstwrap{RGBA16UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGBA16UI
       enum_type_c<GL_RGBA16UI>>
@@ -9394,7 +9394,7 @@ public:
 
     /// @var rgba16_snorm
     /// @glconstwrap{RGBA16_SNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGBA16_SNORM
       enum_type_c<GL_RGBA16_SNORM>>
@@ -9405,7 +9405,7 @@ public:
 
     /// @var r16f
     /// @glconstwrap{R16F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R16F
       enum_type_c<GL_R16F>>
@@ -9416,7 +9416,7 @@ public:
 
     /// @var rg16f
     /// @glconstwrap{RG16F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RG16F
       enum_type_c<GL_RG16F>>
@@ -9427,7 +9427,7 @@ public:
 
     /// @var rgb16f
     /// @glconstwrap{RGB16F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB16F
       enum_type_c<GL_RGB16F>>
@@ -9438,7 +9438,7 @@ public:
 
     /// @var rgba16f
     /// @glconstwrap{RGBA16F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGBA16F
       enum_type_c<GL_RGBA16F>>
@@ -9449,7 +9449,7 @@ public:
 
     /// @var r32f
     /// @glconstwrap{R32F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R32F
       enum_type_c<GL_R32F>>
@@ -9460,7 +9460,7 @@ public:
 
     /// @var rg32f
     /// @glconstwrap{RG32F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RG32F
       enum_type_c<GL_RG32F>>
@@ -9471,7 +9471,7 @@ public:
 
     /// @var rgb32f
     /// @glconstwrap{RGB32F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB32F
       enum_type_c<GL_RGB32F>>
@@ -9482,7 +9482,7 @@ public:
 
     /// @var rgba32f
     /// @glconstwrap{RGBA32F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGBA32F
       enum_type_c<GL_RGBA32F>>
@@ -9493,7 +9493,7 @@ public:
 
     /// @var rgba32ui
     /// @glconstwrap{RGBA32UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_RGBA32UI
       enum_type_c<GL_RGBA32UI>>
@@ -9504,7 +9504,7 @@ public:
 
     /// @var r11f_g11f_b10f
     /// @glconstwrap{R11F_G11F_B10F}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R11F_G11F_B10F
       enum_type_c<GL_R11F_G11F_B10F>>
@@ -9515,7 +9515,7 @@ public:
 
     /// @var rgb9_e5
     /// @glconstwrap{RGB9_E5}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_RGB9_E5
       enum_type_c<GL_RGB9_E5>>
@@ -9526,7 +9526,7 @@ public:
 
     /// @var r8i
     /// @glconstwrap{R8I}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_R8I
       enum_type_c<GL_R8I>>
@@ -9537,7 +9537,7 @@ public:
 
     /// @var r8ui
     /// @glconstwrap{R8UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R8UI
       enum_type_c<GL_R8UI>>
@@ -9548,7 +9548,7 @@ public:
 
     /// @var r16i
     /// @glconstwrap{R16I}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_R16I
       enum_type_c<GL_R16I>>
@@ -9559,7 +9559,7 @@ public:
 
     /// @var r16ui
     /// @glconstwrap{R16UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R16UI
       enum_type_c<GL_R16UI>>
@@ -9570,7 +9570,7 @@ public:
 
     /// @var r32i
     /// @glconstwrap{R32I}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R32I
       enum_type_c<GL_R32I>>
@@ -9581,7 +9581,7 @@ public:
 
     /// @var r32ui
     /// @glconstwrap{R32UI}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format, image_unit_format>,
 #ifdef GL_R16UI
       enum_type_c<GL_R32UI>>
@@ -9592,7 +9592,7 @@ public:
 
     /// @var srgb
     /// @glconstwrap{SRGB}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_SRGB
       enum_type_c<GL_SRGB>>
@@ -9603,7 +9603,7 @@ public:
 
     /// @var srgb8
     /// @glconstwrap{SRGB8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_SRGB8
       enum_type_c<GL_SRGB8>>
@@ -9614,7 +9614,7 @@ public:
 
     /// @var srgb_alpha
     /// @glconstwrap{SRGB_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_SRGB_ALPHA
       enum_type_c<GL_SRGB_ALPHA>>
@@ -9625,7 +9625,7 @@ public:
 
     /// @var srgb8_alpha8
     /// @glconstwrap{SRGB8_ALPHA8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_SRGB8_ALPHA8
       enum_type_c<GL_SRGB8_ALPHA8>>
@@ -9636,7 +9636,7 @@ public:
 
     /// @var compressed_srgb
     /// @glconstwrap{COMPRESSED_SRGB}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_COMPRESSED_SRGB
       enum_type_c<GL_COMPRESSED_SRGB>>
@@ -9647,7 +9647,7 @@ public:
 
     /// @var compressed_srgb8_etc2
     /// @glconstwrap{COMPRESSED_SRGB8_ETC2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_COMPRESSED_SRGB8_ETC2
       enum_type_c<GL_COMPRESSED_SRGB8_ETC2>>
@@ -9658,7 +9658,7 @@ public:
 
     /// @var compressed_srgb_alpha
     /// @glconstwrap{COMPRESSED_SRGB_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_COMPRESSED_SRGB_ALPHA
       enum_type_c<GL_COMPRESSED_SRGB_ALPHA>>
@@ -9669,7 +9669,7 @@ public:
 
     /// @var compressed_srgb8_alpha8_etc2_eac
     /// @glconstwrap{COMPRESSED_SRGB8_ALPHA8_ETC2_EAC}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC
       enum_type_c<GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC>>
@@ -9680,7 +9680,7 @@ public:
 
     /// @var compressed_srgb8_punchthrough_alpha1_etc2
     /// @glconstwrap{COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2
       enum_type_c<GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2>>
@@ -9691,7 +9691,7 @@ public:
 
     /// @var compressed_srgb_alpha_bptc_unorm
     /// @glconstwrap{COMPRESSED_SRGB_ALPHA_BPTC_UNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_internal_format>,
 #ifdef GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM
       enum_type_c<GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM>>
@@ -9702,7 +9702,7 @@ public:
 
     /// @var pack_swap_bytes
     /// @glconstwrap{PACK_SWAP_BYTES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_SWAP_BYTES
       enum_type_c<GL_PACK_SWAP_BYTES>,
@@ -9714,7 +9714,7 @@ public:
 
     /// @var pack_lsb_first
     /// @glconstwrap{PACK_LSB_FIRST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_LSB_FIRST
       enum_type_c<GL_PACK_LSB_FIRST>,
@@ -9726,7 +9726,7 @@ public:
 
     /// @var pack_row_length
     /// @glconstwrap{PACK_ROW_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_ROW_LENGTH
       enum_type_c<GL_PACK_ROW_LENGTH>>
@@ -9737,7 +9737,7 @@ public:
 
     /// @var pack_skip_rows
     /// @glconstwrap{PACK_SKIP_ROWS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_SKIP_ROWS
       enum_type_c<GL_PACK_SKIP_ROWS>>
@@ -9748,7 +9748,7 @@ public:
 
     /// @var pack_skip_pixels
     /// @glconstwrap{PACK_SKIP_PIXELS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_SKIP_PIXELS
       enum_type_c<GL_PACK_SKIP_PIXELS>>
@@ -9759,7 +9759,7 @@ public:
 
     /// @var pack_alignment
     /// @glconstwrap{PACK_ALIGNMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_ALIGNMENT
       enum_type_c<GL_PACK_ALIGNMENT>>
@@ -9770,7 +9770,7 @@ public:
 
     /// @var pack_image_height
     /// @glconstwrap{PACK_IMAGE_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_IMAGE_HEIGHT
       enum_type_c<GL_PACK_IMAGE_HEIGHT>>
@@ -9781,7 +9781,7 @@ public:
 
     /// @var pack_skip_images
     /// @glconstwrap{PACK_SKIP_IMAGES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_SKIP_IMAGES
       enum_type_c<GL_PACK_SKIP_IMAGES>>
@@ -9792,7 +9792,7 @@ public:
 
     /// @var pack_compressed_block_width
     /// @glconstwrap{PACK_COMPRESSED_BLOCK_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_COMPRESSED_BLOCK_WIDTH
       enum_type_c<GL_PACK_COMPRESSED_BLOCK_WIDTH>>
@@ -9803,7 +9803,7 @@ public:
 
     /// @var pack_compressed_block_height
     /// @glconstwrap{PACK_COMPRESSED_BLOCK_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_COMPRESSED_BLOCK_HEIGHT
       enum_type_c<GL_PACK_COMPRESSED_BLOCK_HEIGHT>>
@@ -9814,7 +9814,7 @@ public:
 
     /// @var pack_compressed_block_depth
     /// @glconstwrap{PACK_COMPRESSED_BLOCK_DEPTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_COMPRESSED_BLOCK_DEPTH
       enum_type_c<GL_PACK_COMPRESSED_BLOCK_DEPTH>>
@@ -9825,7 +9825,7 @@ public:
 
     /// @var pack_compressed_block_size
     /// @glconstwrap{PACK_COMPRESSED_BLOCK_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_PACK_COMPRESSED_BLOCK_SIZE
       enum_type_c<GL_PACK_COMPRESSED_BLOCK_SIZE>>
@@ -9836,7 +9836,7 @@ public:
 
     /// @var unpack_swap_bytes
     /// @glconstwrap{UNPACK_SWAP_BYTES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_SWAP_BYTES
       enum_type_c<GL_UNPACK_SWAP_BYTES>,
@@ -9848,7 +9848,7 @@ public:
 
     /// @var unpack_lsb_first
     /// @glconstwrap{UNPACK_LSB_FIRST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_LSB_FIRST
       enum_type_c<GL_UNPACK_LSB_FIRST>,
@@ -9860,7 +9860,7 @@ public:
 
     /// @var unpack_row_length
     /// @glconstwrap{UNPACK_ROW_LENGTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_ROW_LENGTH
       enum_type_c<GL_UNPACK_ROW_LENGTH>>
@@ -9871,7 +9871,7 @@ public:
 
     /// @var unpack_skip_rows
     /// @glconstwrap{UNPACK_SKIP_ROWS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_SKIP_ROWS
       enum_type_c<GL_UNPACK_SKIP_ROWS>>
@@ -9882,7 +9882,7 @@ public:
 
     /// @var unpack_skip_pixels
     /// @glconstwrap{UNPACK_SKIP_PIXELS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_SKIP_PIXELS
       enum_type_c<GL_UNPACK_SKIP_PIXELS>>
@@ -9893,7 +9893,7 @@ public:
 
     /// @var unpack_alignment
     /// @glconstwrap{UNPACK_ALIGNMENT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_ALIGNMENT
       enum_type_c<GL_UNPACK_ALIGNMENT>>
@@ -9904,7 +9904,7 @@ public:
 
     /// @var unpack_image_height
     /// @glconstwrap{UNPACK_IMAGE_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_IMAGE_HEIGHT
       enum_type_c<GL_UNPACK_IMAGE_HEIGHT>>
@@ -9915,7 +9915,7 @@ public:
 
     /// @var unpack_skip_images
     /// @glconstwrap{UNPACK_SKIP_IMAGES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_SKIP_IMAGES
       enum_type_c<GL_UNPACK_SKIP_IMAGES>>
@@ -9926,7 +9926,7 @@ public:
 
     /// @var unpack_compressed_block_width
     /// @glconstwrap{UNPACK_COMPRESSED_BLOCK_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_COMPRESSED_BLOCK_WIDTH
       enum_type_c<GL_UNPACK_COMPRESSED_BLOCK_WIDTH>>
@@ -9937,7 +9937,7 @@ public:
 
     /// @var unpack_compressed_block_height
     /// @glconstwrap{UNPACK_COMPRESSED_BLOCK_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_COMPRESSED_BLOCK_HEIGHT
       enum_type_c<GL_UNPACK_COMPRESSED_BLOCK_HEIGHT>>
@@ -9948,7 +9948,7 @@ public:
 
     /// @var unpack_compressed_block_depth
     /// @glconstwrap{UNPACK_COMPRESSED_BLOCK_DEPTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_COMPRESSED_BLOCK_DEPTH
       enum_type_c<GL_UNPACK_COMPRESSED_BLOCK_DEPTH>>
@@ -9959,7 +9959,7 @@ public:
 
     /// @var unpack_compressed_block_size
     /// @glconstwrap{UNPACK_COMPRESSED_BLOCK_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<pixel_store_parameter>,
 #ifdef GL_UNPACK_COMPRESSED_BLOCK_SIZE
       enum_type_c<GL_UNPACK_COMPRESSED_BLOCK_SIZE>>
@@ -9970,7 +9970,7 @@ public:
 
     /// @var image_class_4_x_32
     /// @glconstwrap{IMAGE_CLASS_4_X_32}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_4_X_32
       enum_type_c<GL_IMAGE_CLASS_4_X_32>>
@@ -9981,7 +9981,7 @@ public:
 
     /// @var image_class_2_x_32
     /// @glconstwrap{IMAGE_CLASS_2_X_32}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_2_X_32
       enum_type_c<GL_IMAGE_CLASS_2_X_32>>
@@ -9992,7 +9992,7 @@ public:
 
     /// @var image_class_1_x_32
     /// @glconstwrap{IMAGE_CLASS_1_X_32}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_1_X_32
       enum_type_c<GL_IMAGE_CLASS_1_X_32>>
@@ -10003,7 +10003,7 @@ public:
 
     /// @var image_class_4_x_16
     /// @glconstwrap{IMAGE_CLASS_4_X_16}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_4_X_16
       enum_type_c<GL_IMAGE_CLASS_4_X_16>>
@@ -10014,7 +10014,7 @@ public:
 
     /// @var image_class_2_x_16
     /// @glconstwrap{IMAGE_CLASS_2_X_16}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_2_X_16
       enum_type_c<GL_IMAGE_CLASS_2_X_16>>
@@ -10025,7 +10025,7 @@ public:
 
     /// @var image_class_1_x_16
     /// @glconstwrap{IMAGE_CLASS_1_X_16}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_1_X_16
       enum_type_c<GL_IMAGE_CLASS_1_X_16>>
@@ -10036,7 +10036,7 @@ public:
 
     /// @var image_class_4_x_8
     /// @glconstwrap{IMAGE_CLASS_4_X_8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_4_X_8
       enum_type_c<GL_IMAGE_CLASS_4_X_8>>
@@ -10047,7 +10047,7 @@ public:
 
     /// @var image_class_2_x_8
     /// @glconstwrap{IMAGE_CLASS_2_X_8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_2_X_8
       enum_type_c<GL_IMAGE_CLASS_2_X_8>>
@@ -10058,7 +10058,7 @@ public:
 
     /// @var image_class_1_x_8
     /// @glconstwrap{IMAGE_CLASS_1_X_8}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_1_X_8
       enum_type_c<GL_IMAGE_CLASS_1_X_8>>
@@ -10069,7 +10069,7 @@ public:
 
     /// @var image_class_11_11_10
     /// @glconstwrap{IMAGE_CLASS_11_11_10}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_11_11_10
       enum_type_c<GL_IMAGE_CLASS_11_11_10>>
@@ -10080,7 +10080,7 @@ public:
 
     /// @var image_class_10_10_10_2
     /// @glconstwrap{IMAGE_CLASS_10_10_10_2}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::image_compatibility_class>,
 #ifdef GL_IMAGE_CLASS_10_10_10_2
       enum_type_c<GL_IMAGE_CLASS_10_10_10_2>>
@@ -10091,7 +10091,7 @@ public:
 
     /// @var view_class_128_bits
     /// @glconstwrap{VIEW_CLASS_128_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_128_BITS
       enum_type_c<GL_VIEW_CLASS_128_BITS>>
@@ -10102,7 +10102,7 @@ public:
 
     /// @var view_class_96_bits
     /// @glconstwrap{VIEW_CLASS_96_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_96_BITS
       enum_type_c<GL_VIEW_CLASS_96_BITS>>
@@ -10113,7 +10113,7 @@ public:
 
     /// @var view_class_64_bits
     /// @glconstwrap{VIEW_CLASS_64_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_64_BITS
       enum_type_c<GL_VIEW_CLASS_64_BITS>>
@@ -10124,7 +10124,7 @@ public:
 
     /// @var view_class_48_bits
     /// @glconstwrap{VIEW_CLASS_48_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_48_BITS
       enum_type_c<GL_VIEW_CLASS_48_BITS>>
@@ -10135,7 +10135,7 @@ public:
 
     /// @var view_class_32_bits
     /// @glconstwrap{VIEW_CLASS_32_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_32_BITS
       enum_type_c<GL_VIEW_CLASS_32_BITS>>
@@ -10146,7 +10146,7 @@ public:
 
     /// @var view_class_24_bits
     /// @glconstwrap{VIEW_CLASS_24_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_24_BITS
       enum_type_c<GL_VIEW_CLASS_24_BITS>>
@@ -10157,7 +10157,7 @@ public:
 
     /// @var view_class_16_bits
     /// @glconstwrap{VIEW_CLASS_16_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_16_BITS
       enum_type_c<GL_VIEW_CLASS_16_BITS>>
@@ -10168,7 +10168,7 @@ public:
 
     /// @var view_class_8_bits
     /// @glconstwrap{VIEW_CLASS_8_BITS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_8_BITS
       enum_type_c<GL_VIEW_CLASS_8_BITS>>
@@ -10179,7 +10179,7 @@ public:
 
     /// @var view_class_s3tc_dxt1_rgb
     /// @glconstwrap{VIEW_CLASS_S3TC_DXT1_RGB}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_S3TC_DXT1_RGB
       enum_type_c<GL_VIEW_CLASS_S3TC_DXT1_RGB>>
@@ -10190,7 +10190,7 @@ public:
 
     /// @var view_class_s3tc_dxt1_rgba
     /// @glconstwrap{VIEW_CLASS_S3TC_DXT1_RGBA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_S3TC_DXT1_RGBA
       enum_type_c<GL_VIEW_CLASS_S3TC_DXT1_RGBA>>
@@ -10201,7 +10201,7 @@ public:
 
     /// @var view_class_s3tc_dxt3_rgba
     /// @glconstwrap{VIEW_CLASS_S3TC_DXT3_RGBA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_S3TC_DXT3_RGBA
       enum_type_c<GL_VIEW_CLASS_S3TC_DXT3_RGBA>>
@@ -10212,7 +10212,7 @@ public:
 
     /// @var view_class_s3tc_dxt5_rgba
     /// @glconstwrap{VIEW_CLASS_S3TC_DXT5_RGBA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_S3TC_DXT5_RGBA
       enum_type_c<GL_VIEW_CLASS_S3TC_DXT5_RGBA>>
@@ -10223,7 +10223,7 @@ public:
 
     /// @var view_class_rgtc1_red
     /// @glconstwrap{VIEW_CLASS_RGTC1_RED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_RGTC1_RED
       enum_type_c<GL_VIEW_CLASS_RGTC1_RED>>
@@ -10234,7 +10234,7 @@ public:
 
     /// @var view_class_rgtc2_rg
     /// @glconstwrap{VIEW_CLASS_RGTC2_RG}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_RGTC2_RG
       enum_type_c<GL_VIEW_CLASS_RGTC2_RG>>
@@ -10245,7 +10245,7 @@ public:
 
     /// @var view_class_bptc_unorm
     /// @glconstwrap{VIEW_CLASS_BPTC_UNORM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_BPTC_UNORM
       enum_type_c<GL_VIEW_CLASS_BPTC_UNORM>>
@@ -10256,7 +10256,7 @@ public:
 
     /// @var view_class_bptc_float
     /// @glconstwrap{VIEW_CLASS_BPTC_FLOAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::view_compatibility_class>,
 #ifdef GL_VIEW_CLASS_BPTC_FLOAT
       enum_type_c<GL_VIEW_CLASS_BPTC_FLOAT>>
@@ -10267,7 +10267,7 @@ public:
 
     /// @var num_sample_counts
     /// @glconstwrap{NUM_SAMPLE_COUNTS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_NUM_SAMPLE_COUNTS
       enum_type_c<GL_NUM_SAMPLE_COUNTS>>
@@ -10278,7 +10278,7 @@ public:
 
     /// @var samples
     /// @glconstwrap{SAMPLES}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter, integer_query>,
 #ifdef GL_SAMPLES
       enum_type_c<GL_SAMPLES>>
@@ -10289,7 +10289,7 @@ public:
 
     /// @var internalformat_supported
     /// @glconstwrap{INTERNALFORMAT_SUPPORTED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_SUPPORTED
       enum_type_c<GL_INTERNALFORMAT_SUPPORTED>>
@@ -10300,7 +10300,7 @@ public:
 
     /// @var internalformat_preferred
     /// @glconstwrap{INTERNALFORMAT_PREFERRED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_PREFERRED
       enum_type_c<GL_INTERNALFORMAT_PREFERRED>>
@@ -10311,7 +10311,7 @@ public:
 
     /// @var internalformat_red_size
     /// @glconstwrap{INTERNALFORMAT_RED_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_RED_SIZE
       enum_type_c<GL_INTERNALFORMAT_RED_SIZE>>
@@ -10322,7 +10322,7 @@ public:
 
     /// @var internalformat_green_size
     /// @glconstwrap{INTERNALFORMAT_GREEN_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_GREEN_SIZE
       enum_type_c<GL_INTERNALFORMAT_GREEN_SIZE>>
@@ -10333,7 +10333,7 @@ public:
 
     /// @var internalformat_blue_size
     /// @glconstwrap{INTERNALFORMAT_BLUE_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_BLUE_SIZE
       enum_type_c<GL_INTERNALFORMAT_BLUE_SIZE>>
@@ -10344,7 +10344,7 @@ public:
 
     /// @var internalformat_alpha_size
     /// @glconstwrap{INTERNALFORMAT_ALPHA_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_ALPHA_SIZE
       enum_type_c<GL_INTERNALFORMAT_ALPHA_SIZE>>
@@ -10355,7 +10355,7 @@ public:
 
     /// @var internalformat_depth_size
     /// @glconstwrap{INTERNALFORMAT_DEPTH_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_DEPTH_SIZE
       enum_type_c<GL_INTERNALFORMAT_DEPTH_SIZE>>
@@ -10366,7 +10366,7 @@ public:
 
     /// @var internalformat_stencil_size
     /// @glconstwrap{INTERNALFORMAT_STENCIL_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_STENCIL_SIZE
       enum_type_c<GL_INTERNALFORMAT_STENCIL_SIZE>>
@@ -10377,7 +10377,7 @@ public:
 
     /// @var internalformat_shared_size
     /// @glconstwrap{INTERNALFORMAT_SHARED_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_SHARED_SIZE
       enum_type_c<GL_INTERNALFORMAT_SHARED_SIZE>>
@@ -10388,7 +10388,7 @@ public:
 
     /// @var internalformat_red_type
     /// @glconstwrap{INTERNALFORMAT_RED_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_RED_TYPE
       enum_type_c<GL_INTERNALFORMAT_RED_TYPE>>
@@ -10399,7 +10399,7 @@ public:
 
     /// @var internalformat_green_type
     /// @glconstwrap{INTERNALFORMAT_GREEN_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_GREEN_TYPE
       enum_type_c<GL_INTERNALFORMAT_GREEN_TYPE>>
@@ -10410,7 +10410,7 @@ public:
 
     /// @var internalformat_blue_type
     /// @glconstwrap{INTERNALFORMAT_BLUE_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_BLUE_TYPE
       enum_type_c<GL_INTERNALFORMAT_BLUE_TYPE>>
@@ -10421,7 +10421,7 @@ public:
 
     /// @var internalformat_alpha_type
     /// @glconstwrap{INTERNALFORMAT_ALPHA_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_ALPHA_TYPE
       enum_type_c<GL_INTERNALFORMAT_ALPHA_TYPE>>
@@ -10432,7 +10432,7 @@ public:
 
     /// @var internalformat_depth_type
     /// @glconstwrap{INTERNALFORMAT_DEPTH_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_DEPTH_TYPE
       enum_type_c<GL_INTERNALFORMAT_DEPTH_TYPE>>
@@ -10443,7 +10443,7 @@ public:
 
     /// @var internalformat_stencil_type
     /// @glconstwrap{INTERNALFORMAT_STENCIL_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_INTERNALFORMAT_STENCIL_TYPE
       enum_type_c<GL_INTERNALFORMAT_STENCIL_TYPE>>
@@ -10454,7 +10454,7 @@ public:
 
     /// @var max_width
     /// @glconstwrap{MAX_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_MAX_WIDTH
       enum_type_c<GL_MAX_WIDTH>>
@@ -10465,7 +10465,7 @@ public:
 
     /// @var max_height
     /// @glconstwrap{MAX_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_MAX_HEIGHT
       enum_type_c<GL_MAX_HEIGHT>>
@@ -10476,7 +10476,7 @@ public:
 
     /// @var max_depth
     /// @glconstwrap{MAX_DEPTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_MAX_DEPTH
       enum_type_c<GL_MAX_DEPTH>>
@@ -10487,7 +10487,7 @@ public:
 
     /// @var max_layers
     /// @glconstwrap{MAX_LAYERS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_MAX_LAYERS
       enum_type_c<GL_MAX_LAYERS>>
@@ -10498,7 +10498,7 @@ public:
 
     /// @var max_combined_dimensions
     /// @glconstwrap{MAX_COMBINED_DIMENSIONS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_MAX_COMBINED_DIMENSIONS
       enum_type_c<GL_MAX_COMBINED_DIMENSIONS>>
@@ -10509,7 +10509,7 @@ public:
 
     /// @var color_components
     /// @glconstwrap{COLOR_COMPONENTS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_COLOR_COMPONENTS
       enum_type_c<GL_COLOR_COMPONENTS>>
@@ -10520,7 +10520,7 @@ public:
 
     /// @var depth_components
     /// @glconstwrap{DEPTH_COMPONENTS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_DEPTH_COMPONENTS
       enum_type_c<GL_DEPTH_COMPONENTS>>
@@ -10531,7 +10531,7 @@ public:
 
     /// @var stencil_components
     /// @glconstwrap{STENCIL_COMPONENTS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_STENCIL_COMPONENTS
       enum_type_c<GL_STENCIL_COMPONENTS>>
@@ -10542,7 +10542,7 @@ public:
 
     /// @var color_renderable
     /// @glconstwrap{COLOR_RENDERABLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_COLOR_RENDERABLE
       enum_type_c<GL_COLOR_RENDERABLE>>
@@ -10553,7 +10553,7 @@ public:
 
     /// @var depth_renderable
     /// @glconstwrap{DEPTH_RENDERABLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_DEPTH_RENDERABLE
       enum_type_c<GL_DEPTH_RENDERABLE>>
@@ -10564,7 +10564,7 @@ public:
 
     /// @var stencil_renderable
     /// @glconstwrap{STENCIL_RENDERABLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_STENCIL_RENDERABLE
       enum_type_c<GL_STENCIL_RENDERABLE>>
@@ -10575,7 +10575,7 @@ public:
 
     /// @var framebuffer_renderable
     /// @glconstwrap{FRAMEBUFFER_RENDERABLE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_FRAMEBUFFER_RENDERABLE
       enum_type_c<GL_FRAMEBUFFER_RENDERABLE>>
@@ -10586,7 +10586,7 @@ public:
 
     /// @var framebuffer_renderable_layered
     /// @glconstwrap{FRAMEBUFFER_RENDERABLE_LAYERED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_FRAMEBUFFER_RENDERABLE_LAYERED
       enum_type_c<GL_FRAMEBUFFER_RENDERABLE_LAYERED>>
@@ -10597,7 +10597,7 @@ public:
 
     /// @var framebuffer_buffer
     /// @glconstwrap{FRAMEBUFFER_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_FRAMEBUFFER_BLEND
       enum_type_c<GL_FRAMEBUFFER_BLEND>>
@@ -10608,7 +10608,7 @@ public:
 
     /// @var read_pixels
     /// @glconstwrap{READ_PIXELS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_READ_PIXELS
       enum_type_c<GL_READ_PIXELS>>
@@ -10619,7 +10619,7 @@ public:
 
     /// @var read_pixels_format
     /// @glconstwrap{READ_PIXELS_FORMAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_READ_PIXELS_FORMAT
       enum_type_c<GL_READ_PIXELS_FORMAT>>
@@ -10630,7 +10630,7 @@ public:
 
     /// @var read_pixels_type
     /// @glconstwrap{READ_PIXELS_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_READ_PIXELS_TYPE
       enum_type_c<GL_READ_PIXELS_TYPE>>
@@ -10641,7 +10641,7 @@ public:
 
     /// @var texture_image_format
     /// @glconstwrap{TEXTURE_IMAGE_FORMAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_IMAGE_FORMAT
       enum_type_c<GL_TEXTURE_IMAGE_FORMAT>>
@@ -10652,7 +10652,7 @@ public:
 
     /// @var texture_image_type
     /// @glconstwrap{TEXTURE_IMAGE_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_IMAGE_TYPE
       enum_type_c<GL_TEXTURE_IMAGE_TYPE>>
@@ -10663,7 +10663,7 @@ public:
 
     /// @var texture_image_format
     /// @glconstwrap{TEXTURE_IMAGE_FORMAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_GET_TEXTURE_IMAGE_FORMAT
       enum_type_c<GL_GET_TEXTURE_IMAGE_FORMAT>>
@@ -10674,7 +10674,7 @@ public:
 
     /// @var get_texture_image_type
     /// @glconstwrap{GET_TEXTURE_IMAGE_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_GET_TEXTURE_IMAGE_TYPE
       enum_type_c<GL_GET_TEXTURE_IMAGE_TYPE>>
@@ -10685,7 +10685,7 @@ public:
 
     /// @var mipmap
     /// @glconstwrap{MIPMAP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_MIPMAP
       enum_type_c<GL_MIPMAP>>
@@ -10696,7 +10696,7 @@ public:
 
     /// @var generate_mipmap
     /// @glconstwrap{GENERATE_MIPMAP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_GENERATE_MIPMAP
       enum_type_c<GL_GENERATE_MIPMAP>>
@@ -10707,7 +10707,7 @@ public:
 
     /// @var auto_generate_mipmap
     /// @glconstwrap{AUTO_GENERATE_MIPMAP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_AUTO_GENERATE_MIPMAP
       enum_type_c<GL_AUTO_GENERATE_MIPMAP>>
@@ -10718,7 +10718,7 @@ public:
 
     /// @var color_encoding
     /// @glconstwrap{COLOR_ENCODING}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_COLOR_ENCODING
       enum_type_c<GL_COLOR_ENCODING>>
@@ -10729,7 +10729,7 @@ public:
 
     /// @var srgb_read
     /// @glconstwrap{SRGB_READ}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SRGB_READ
       enum_type_c<GL_SRGB_READ>>
@@ -10740,7 +10740,7 @@ public:
 
     /// @var srgb_write
     /// @glconstwrap{SRGB_WRITE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SRGB_WRITE
       enum_type_c<GL_SRGB_WRITE>>
@@ -10751,7 +10751,7 @@ public:
 
     /// @var filter
     /// @glconstwrap{FILTER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_FILTER
       enum_type_c<GL_FILTER>>
@@ -10762,7 +10762,7 @@ public:
 
     /// @var vertex_texture
     /// @glconstwrap{VERTEX_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_VERTEX_TEXTURE
       enum_type_c<GL_VERTEX_TEXTURE>>
@@ -10773,7 +10773,7 @@ public:
 
     /// @var tess_control_texture
     /// @glconstwrap{TESS_CONTROL_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TESS_CONTROL_TEXTURE
       enum_type_c<GL_TESS_CONTROL_TEXTURE>>
@@ -10784,7 +10784,7 @@ public:
 
     /// @var tess_evaluation_texture
     /// @glconstwrap{TESS_EVALUATION_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TESS_EVALUATION_TEXTURE
       enum_type_c<GL_TESS_EVALUATION_TEXTURE>>
@@ -10795,7 +10795,7 @@ public:
 
     /// @var geometry_texture
     /// @glconstwrap{GEOMETRY_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_GEOMETRY_TEXTURE
       enum_type_c<GL_GEOMETRY_TEXTURE>>
@@ -10806,7 +10806,7 @@ public:
 
     /// @var fragment_texture
     /// @glconstwrap{FRAGMENT_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_FRAGMENT_TEXTURE
       enum_type_c<GL_FRAGMENT_TEXTURE>>
@@ -10817,7 +10817,7 @@ public:
 
     /// @var compute_texture
     /// @glconstwrap{COMPUTE_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_COMPUTE_TEXTURE
       enum_type_c<GL_COMPUTE_TEXTURE>>
@@ -10828,7 +10828,7 @@ public:
 
     /// @var texture_shadow
     /// @glconstwrap{TEXTURE_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_SHADOW
       enum_type_c<GL_TEXTURE_SHADOW>>
@@ -10839,7 +10839,7 @@ public:
 
     /// @var texture_gather
     /// @glconstwrap{TEXTURE_GATHER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_GATHER
       enum_type_c<GL_TEXTURE_GATHER>>
@@ -10850,7 +10850,7 @@ public:
 
     /// @var texture_gather_shadow
     /// @glconstwrap{TEXTURE_GATHER_SHADOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_GATHER_SHADOW
       enum_type_c<GL_TEXTURE_GATHER_SHADOW>>
@@ -10861,7 +10861,7 @@ public:
 
     /// @var shader_image_load
     /// @glconstwrap{SHADER_IMAGE_LOAD}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SHADER_IMAGE_LOAD
       enum_type_c<GL_SHADER_IMAGE_LOAD>>
@@ -10872,7 +10872,7 @@ public:
 
     /// @var shader_image_store
     /// @glconstwrap{SHADER_IMAGE_STORE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SHADER_IMAGE_STORE
       enum_type_c<GL_SHADER_IMAGE_STORE>>
@@ -10883,7 +10883,7 @@ public:
 
     /// @var shader_image_atomic
     /// @glconstwrap{SHADER_IMAGE_ATOMIC}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SHADER_IMAGE_ATOMIC
       enum_type_c<GL_SHADER_IMAGE_ATOMIC>>
@@ -10894,7 +10894,7 @@ public:
 
     /// @var image_texel_size
     /// @glconstwrap{IMAGE_TEXEL_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_IMAGE_TEXEL_SIZE
       enum_type_c<GL_IMAGE_TEXEL_SIZE>>
@@ -10905,7 +10905,7 @@ public:
 
     /// @var image_compatibility_class
     /// @glconstwrap{IMAGE_COMPATIBILITY_CLASS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_IMAGE_COMPATIBILITY_CLASS
       enum_type_c<GL_IMAGE_COMPATIBILITY_CLASS>>
@@ -10916,7 +10916,7 @@ public:
 
     /// @var image_pixel_format
     /// @glconstwrap{IMAGE_PIXEL_FORMAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_IMAGE_PIXEL_FORMAT
       enum_type_c<GL_IMAGE_PIXEL_FORMAT>>
@@ -10927,7 +10927,7 @@ public:
 
     /// @var image_pixel_type
     /// @glconstwrap{IMAGE_PIXEL_TYPE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_IMAGE_PIXEL_TYPE
       enum_type_c<GL_IMAGE_PIXEL_TYPE>>
@@ -10938,7 +10938,7 @@ public:
 
     /// @var simultaneous_texture_and_depth_test
     /// @glconstwrap{SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST
       enum_type_c<GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST>>
@@ -10949,7 +10949,7 @@ public:
 
     /// @var simultaneous_texture_and_stencil_test
     /// @glconstwrap{SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST
       enum_type_c<GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST>>
@@ -10960,7 +10960,7 @@ public:
 
     /// @var simultaneous_texture_and_depth_write
     /// @glconstwrap{SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE
       enum_type_c<GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE>>
@@ -10971,7 +10971,7 @@ public:
 
     /// @var simultaneous_texture_and_stencil_write
     /// @glconstwrap{SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE
       enum_type_c<GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE>>
@@ -10982,7 +10982,7 @@ public:
 
     /// @var texture_compressed
     /// @glconstwrap{TEXTURE_COMPRESSED}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter, texture_level_parameter>,
 #ifdef GL_TEXTURE_COMPRESSED
       enum_type_c<GL_TEXTURE_COMPRESSED>,
@@ -10994,7 +10994,7 @@ public:
 
     /// @var texture_compressed_image_size
     /// @glconstwrap{TEXTURE_COMPRESSED_IMAGE_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<texture_level_parameter>,
 #ifdef GL_TEXTURE_COMPRESSED_IMAGE_SIZE
       enum_type_c<GL_TEXTURE_COMPRESSED_IMAGE_SIZE>>
@@ -11005,7 +11005,7 @@ public:
 
     /// @var texture_compressed_block_width
     /// @glconstwrap{TEXTURE_COMPRESSED_BLOCK_WIDTH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_COMPRESSED_BLOCK_WIDTH
       enum_type_c<GL_TEXTURE_COMPRESSED_BLOCK_WIDTH>>
@@ -11016,7 +11016,7 @@ public:
 
     /// @var texture_compressed_block_height
     /// @glconstwrap{TEXTURE_COMPRESSED_BLOCK_HEIGHT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT
       enum_type_c<GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT>>
@@ -11027,7 +11027,7 @@ public:
 
     /// @var texture_compressed_block_size
     /// @glconstwrap{TEXTURE_COMPRESSED_BLOCK_SIZE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_COMPRESSED_BLOCK_SIZE
       enum_type_c<GL_TEXTURE_COMPRESSED_BLOCK_SIZE>>
@@ -11038,7 +11038,7 @@ public:
 
     /// @var clear_buffer
     /// @glconstwrap{CLEAR_BUFFER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_CLEAR_BUFFER
       enum_type_c<GL_CLEAR_BUFFER>>
@@ -11049,7 +11049,7 @@ public:
 
     /// @var clear_texture
     /// @glconstwrap{CLEAR_TEXTURE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_CLEAR_TEXTURE
       enum_type_c<GL_CLEAR_TEXTURE>>
@@ -11060,7 +11060,7 @@ public:
 
     /// @var texture_view
     /// @glconstwrap{TEXTURE_VIEW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_TEXTURE_VIEW
       enum_type_c<GL_TEXTURE_VIEW>>
@@ -11071,7 +11071,7 @@ public:
 
     /// @var view_compatibility_class
     /// @glconstwrap{VIEW_COMPATIBILITY_CLASS}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<internal_format_parameter>,
 #ifdef GL_VIEW_COMPATIBILITY_CLASS
       enum_type_c<GL_VIEW_COMPATIBILITY_CLASS>>
@@ -11082,7 +11082,7 @@ public:
 
     /// @var sample_position
     /// @glconstwrap{SAMPLE_POSITION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<sample_parameter>,
 #ifdef GL_SAMPLE_POSITION
       enum_type_c<GL_SAMPLE_POSITION>>
@@ -11093,7 +11093,7 @@ public:
 
     /// @var projection
     /// @glconstwrap{PROJECTION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<matrix_mode>,
 #ifdef GL_PROJECTION
       enum_type_c<GL_PROJECTION>>
@@ -11104,7 +11104,7 @@ public:
 
     /// @var modelview
     /// @glconstwrap{MODELVIEW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<matrix_mode>,
 #ifdef GL_MODELVIEW
       enum_type_c<GL_MODELVIEW>>
@@ -11115,7 +11115,7 @@ public:
 
     /// @var debug_severity_high
     /// @glconstwrap{DEBUG_SEVERITY_HIGH}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_severity>,
 #ifdef GL_DEBUG_SEVERITY_HIGH
       enum_type_c<GL_DEBUG_SEVERITY_HIGH>>
@@ -11128,7 +11128,7 @@ public:
 
     /// @var debug_severity_medium
     /// @glconstwrap{DEBUG_SEVERITY_MEDIUM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_severity>,
 #ifdef GL_DEBUG_SEVERITY_MEDIUM
       enum_type_c<GL_DEBUG_SEVERITY_MEDIUM>>
@@ -11141,7 +11141,7 @@ public:
 
     /// @var debug_severity_low
     /// @glconstwrap{DEBUG_SEVERITY_LOW}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_severity>,
 #ifdef GL_DEBUG_SEVERITY_LOW
       enum_type_c<GL_DEBUG_SEVERITY_LOW>>
@@ -11154,7 +11154,7 @@ public:
 
     /// @var debug_severity_notification
     /// @glconstwrap{DEBUG_SEVERITY_NOTIFICATION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_severity>,
 #ifdef GL_DEBUG_SEVERITY_NOTIFICATION
       enum_type_c<GL_DEBUG_SEVERITY_NOTIFICATION>>
@@ -11167,7 +11167,7 @@ public:
 
     /// @var debug_source_api
     /// @glconstwrap{DEBUG_SOURCE_API}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_source>,
 #ifdef GL_DEBUG_SOURCE_API
       enum_type_c<GL_DEBUG_SOURCE_API>>
@@ -11180,7 +11180,7 @@ public:
 
     /// @var debug_source_window_system
     /// @glconstwrap{DEBUG_SOURCE_WINDOW_SYSTEM}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_source>,
 #ifdef GL_DEBUG_SOURCE_WINDOW_SYSTEM
       enum_type_c<GL_DEBUG_SOURCE_WINDOW_SYSTEM>>
@@ -11193,7 +11193,7 @@ public:
 
     /// @var debug_source_shader_compiler
     /// @glconstwrap{DEBUG_SOURCE_SHADER_COMPILER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_source>,
 #ifdef GL_DEBUG_SOURCE_SHADER_COMPILER
       enum_type_c<GL_DEBUG_SOURCE_SHADER_COMPILER>>
@@ -11206,7 +11206,7 @@ public:
 
     /// @var debug_source_third_party
     /// @glconstwrap{DEBUG_SOURCE_THIRD_PARTY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_source>,
 #ifdef GL_DEBUG_SOURCE_THIRD_PARTY
       enum_type_c<GL_DEBUG_SOURCE_THIRD_PARTY>>
@@ -11219,7 +11219,7 @@ public:
 
     /// @var debug_source_application
     /// @glconstwrap{DEBUG_SOURCE_APPLICATION}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_source>,
 #ifdef GL_DEBUG_SOURCE_APPLICATION
       enum_type_c<GL_DEBUG_SOURCE_APPLICATION>>
@@ -11232,7 +11232,7 @@ public:
 
     /// @var debug_source_other
     /// @glconstwrap{DEBUG_SOURCE_OTHER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_source>,
 #ifdef GL_DEBUG_SOURCE_OTHER
       enum_type_c<GL_DEBUG_SOURCE_OTHER>>
@@ -11245,7 +11245,7 @@ public:
 
     /// @var debug_type_error
     /// @glconstwrap{DEBUG_TYPE_ERROR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_ERROR
       enum_type_c<GL_DEBUG_TYPE_ERROR>>
@@ -11258,7 +11258,7 @@ public:
 
     /// @var debug_type_deprecated_behavior
     /// @glconstwrap{DEBUG_TYPE_DEPRECATED_BEHAVIOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR
       enum_type_c<GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR>>
@@ -11271,7 +11271,7 @@ public:
 
     /// @var debug_type_undefined_behavior
     /// @glconstwrap{DEBUG_TYPE_UNDEFINED_BEHAVIOR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR
       enum_type_c<GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR>>
@@ -11284,7 +11284,7 @@ public:
 
     /// @var debug_type_portability
     /// @glconstwrap{DEBUG_TYPE_PORTABILITY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_PORTABILITY
       enum_type_c<GL_DEBUG_TYPE_PORTABILITY>>
@@ -11297,7 +11297,7 @@ public:
 
     /// @var debug_type_performance
     /// @glconstwrap{DEBUG_TYPE_PERFORMANCE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_PERFORMANCE
       enum_type_c<GL_DEBUG_TYPE_PERFORMANCE>>
@@ -11310,7 +11310,7 @@ public:
 
     /// @var debug_type_marker
     /// @glconstwrap{DEBUG_TYPE_MARKER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_MARKER
       enum_type_c<GL_DEBUG_TYPE_MARKER>>
@@ -11323,7 +11323,7 @@ public:
 
     /// @var debug_type_push_group
     /// @glconstwrap{DEBUG_TYPE_PUSH_GROUP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_PUSH_GROUP
       enum_type_c<GL_DEBUG_TYPE_PUSH_GROUP>>
@@ -11336,7 +11336,7 @@ public:
 
     /// @var debug_type_pop_group
     /// @glconstwrap{DEBUG_TYPE_POP_GROUP}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_POP_GROUP
       enum_type_c<GL_DEBUG_TYPE_POP_GROUP>>
@@ -11349,7 +11349,7 @@ public:
 
     /// @var debug_type_other
     /// @glconstwrap{DEBUG_TYPE_OTHER}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<debug_output_type>,
 #ifdef GL_DEBUG_TYPE_OTHER
       enum_type_c<GL_DEBUG_TYPE_OTHER>>
@@ -11362,7 +11362,7 @@ public:
 
     /// @var line_smooth_hint
     /// @glconstwrap{LINE_SMOOTH_HINT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<hint_target>,
 #ifdef GL_LINE_SMOOTH_HINT
       enum_type_c<GL_LINE_SMOOTH_HINT>,
@@ -11374,7 +11374,7 @@ public:
 
     /// @var polygon_smooth_hint
     /// @glconstwrap{POLYGON_SMOOTH_HINT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<hint_target>,
 #ifdef GL_POLYGON_SMOOTH_HINT
       enum_type_c<GL_POLYGON_SMOOTH_HINT>,
@@ -11386,7 +11386,7 @@ public:
 
     /// @var texture_compression_hint
     /// @glconstwrap{TEXTURE_COMPRESSION_HINT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<hint_target>,
 #ifdef GL_TEXTURE_COMPRESSION_HINT
       enum_type_c<GL_TEXTURE_COMPRESSION_HINT>,
@@ -11398,7 +11398,7 @@ public:
 
     /// @var fragment_shader_derivative_hint
     /// @glconstwrap{FRAGMENT_SHADER_DERIVATIVE_HINT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<hint_target>,
 #ifdef GL_FRAGMENT_SHADER_DERIVATIVE_HINT
       enum_type_c<GL_FRAGMENT_SHADER_DERIVATIVE_HINT>,
@@ -11410,7 +11410,7 @@ public:
 
     /// @var fastest
     /// @glconstwrap{FASTEST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<hint_option>,
 #ifdef GL_FASTEST
       enum_type_c<GL_FASTEST>>
@@ -11421,7 +11421,7 @@ public:
 
     /// @var nicest
     /// @glconstwrap{NICEST}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<hint_option>,
 #ifdef GL_NICEST
       enum_type_c<GL_NICEST>>
@@ -11432,7 +11432,7 @@ public:
 
     /// @var dont_care
     /// @glconstwrap{DONT_CARE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<
         debug_output_severity,
         debug_output_source,
@@ -11447,7 +11447,7 @@ public:
 
     /// @var full_support
     /// @glconstwrap{FULL_SUPPORT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<support_level>,
 #ifdef GL_FULL_SUPPORT
       enum_type_c<GL_FULL_SUPPORT>>
@@ -11458,7 +11458,7 @@ public:
 
     /// @var caveat_support
     /// @glconstwrap{CAVEAT_SUPPORT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<support_level>,
 #ifdef GL_CAVEAT_SUPPORT
       enum_type_c<GL_CAVEAT_SUPPORT>>
@@ -11469,7 +11469,7 @@ public:
 
     /// @var close_path_nv
     /// @glconstwrap{CLOSE_PATH_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_CLOSE_PATH_NV
       ubyte_type_c<GL_CLOSE_PATH_NV>>
@@ -11480,7 +11480,7 @@ public:
 
     /// @var move_to_nv
     /// @glconstwrap{MOVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_MOVE_TO_NV
       ubyte_type_c<GL_MOVE_TO_NV>>
@@ -11491,7 +11491,7 @@ public:
 
     /// @var relative_move_to_nv
     /// @glconstwrap{RELATIVE_MOVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_MOVE_TO_NV
       ubyte_type_c<GL_RELATIVE_MOVE_TO_NV>>
@@ -11502,7 +11502,7 @@ public:
 
     /// @var line_to_nv
     /// @glconstwrap{LINE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_LINE_TO_NV
       ubyte_type_c<GL_LINE_TO_NV>>
@@ -11513,7 +11513,7 @@ public:
 
     /// @var relative_line_to_nv
     /// @glconstwrap{RELATIVE_LINE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_LINE_TO_NV
       ubyte_type_c<GL_RELATIVE_LINE_TO_NV>>
@@ -11524,7 +11524,7 @@ public:
 
     /// @var horizontal_line_to_nv
     /// @glconstwrap{HORIZONTAL_LINE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_HORIZONTAL_LINE_TO_NV
       ubyte_type_c<GL_HORIZONTAL_LINE_TO_NV>>
@@ -11535,7 +11535,7 @@ public:
 
     /// @var relative_horizontal_line_to_nv
     /// @glconstwrap{RELATIVE_HORIZONTAL_LINE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_HORIZONTAL_LINE_TO_NV
       ubyte_type_c<GL_RELATIVE_HORIZONTAL_LINE_TO_NV>>
@@ -11546,7 +11546,7 @@ public:
 
     /// @var vertical_line_to_nv
     /// @glconstwrap{VERTICAL_LINE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_VERTICAL_LINE_TO_NV
       ubyte_type_c<GL_VERTICAL_LINE_TO_NV>>
@@ -11557,7 +11557,7 @@ public:
 
     /// @var relative_vertical_line_to_nv
     /// @glconstwrap{RELATIVE_VERTICAL_LINE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_VERTICAL_LINE_TO_NV
       ubyte_type_c<GL_RELATIVE_VERTICAL_LINE_TO_NV>>
@@ -11568,7 +11568,7 @@ public:
 
     /// @var quadratic_curve_to_nv
     /// @glconstwrap{QUADRATIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_QUADRATIC_CURVE_TO_NV
       ubyte_type_c<GL_QUADRATIC_CURVE_TO_NV>>
@@ -11579,7 +11579,7 @@ public:
 
     /// @var relative_quadratic_curve_to_nv
     /// @glconstwrap{RELATIVE_QUADRATIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_QUADRATIC_CURVE_TO_NV
       ubyte_type_c<GL_RELATIVE_QUADRATIC_CURVE_TO_NV>>
@@ -11590,7 +11590,7 @@ public:
 
     /// @var cubic_curve_to_nv
     /// @glconstwrap{CUBIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_CUBIC_CURVE_TO_NV
       ubyte_type_c<GL_CUBIC_CURVE_TO_NV>>
@@ -11601,7 +11601,7 @@ public:
 
     /// @var relative_cubic_curve_to_nv
     /// @glconstwrap{RELATIVE_CUBIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_CUBIC_CURVE_TO_NV
       ubyte_type_c<GL_RELATIVE_CUBIC_CURVE_TO_NV>>
@@ -11612,7 +11612,7 @@ public:
 
     /// @var smooth_quadratic_curve_to_nv
     /// @glconstwrap{SMOOTH_QUADRATIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_SMOOTH_QUADRATIC_CURVE_TO_NV
       ubyte_type_c<GL_SMOOTH_QUADRATIC_CURVE_TO_NV>>
@@ -11623,7 +11623,7 @@ public:
 
     /// @var relative_smooth_quadratic_curve_to_nv
     /// @glconstwrap{RELATIVE_SMOOTH_QUADRATIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_SMOOTH_QUADRATIC_CURVE_TO_NV
       ubyte_type_c<GL_RELATIVE_SMOOTH_QUADRATIC_CURVE_TO_NV>>
@@ -11634,7 +11634,7 @@ public:
 
     /// @var smooth_cubic_curve_to_nv
     /// @glconstwrap{SMOOTH_CUBIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_SMOOTH_CUBIC_CURVE_TO_NV
       ubyte_type_c<GL_SMOOTH_CUBIC_CURVE_TO_NV>>
@@ -11645,7 +11645,7 @@ public:
 
     /// @var relative_smooth_cubic_curve_to_nv
     /// @glconstwrap{RELATIVE_SMOOTH_CUBIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_SMOOTH_CUBIC_CURVE_TO_NV
       ubyte_type_c<GL_RELATIVE_SMOOTH_CUBIC_CURVE_TO_NV>>
@@ -11656,7 +11656,7 @@ public:
 
     /// @var small_ccw_arc_to_nv
     /// @glconstwrap{SMALL_CCW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_SMALL_CCW_ARC_TO_NV
       ubyte_type_c<GL_SMALL_CCW_ARC_TO_NV>>
@@ -11667,7 +11667,7 @@ public:
 
     /// @var relative_small_ccw_arc_to_nv
     /// @glconstwrap{RELATIVE_SMALL_CCW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_SMALL_CCW_ARC_TO_NV
       ubyte_type_c<GL_RELATIVE_SMALL_CCW_ARC_TO_NV>>
@@ -11678,7 +11678,7 @@ public:
 
     /// @var small_cw_arc_to_nv
     /// @glconstwrap{SMALL_CW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_SMALL_CW_ARC_TO_NV
       ubyte_type_c<GL_SMALL_CW_ARC_TO_NV>>
@@ -11689,7 +11689,7 @@ public:
 
     /// @var relative_small_cw_arc_to_nv
     /// @glconstwrap{RELATIVE_SMALL_CW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_SMALL_CW_ARC_TO_NV
       ubyte_type_c<GL_RELATIVE_SMALL_CW_ARC_TO_NV>>
@@ -11700,7 +11700,7 @@ public:
 
     /// @var large_ccw_arc_to_nv
     /// @glconstwrap{LARGE_CCW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_LARGE_CCW_ARC_TO_NV
       ubyte_type_c<GL_LARGE_CCW_ARC_TO_NV>>
@@ -11711,7 +11711,7 @@ public:
 
     /// @var relative_large_ccw_arc_to_nv
     /// @glconstwrap{RELATIVE_LARGE_CCW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_LARGE_CCW_ARC_TO_NV
       ubyte_type_c<GL_RELATIVE_LARGE_CCW_ARC_TO_NV>>
@@ -11722,7 +11722,7 @@ public:
 
     /// @var large_cw_arc_to_nv
     /// @glconstwrap{LARGE_CW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_LARGE_CW_ARC_TO_NV
       ubyte_type_c<GL_LARGE_CW_ARC_TO_NV>>
@@ -11733,7 +11733,7 @@ public:
 
     /// @var relative_large_ccw_arc_to_nv
     /// @glconstwrap{RELATIVE_LARGE_CCW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_LARGE_CW_ARC_TO_NV
       ubyte_type_c<GL_RELATIVE_LARGE_CW_ARC_TO_NV>>
@@ -11744,7 +11744,7 @@ public:
 
     /// @var restart_path_nv
     /// @glconstwrap{RESTART_PATH_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RESTART_PATH_NV
       ubyte_type_c<GL_RESTART_PATH_NV>>
@@ -11755,7 +11755,7 @@ public:
 
     /// @var dup_first_cubic_curve_to_nv
     /// @glconstwrap{DUP_FIRST_CUBIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_DUP_FIRST_CUBIC_CURVE_TO_NV
       ubyte_type_c<GL_DUP_FIRST_CUBIC_CURVE_TO_NV>>
@@ -11766,7 +11766,7 @@ public:
 
     /// @var dup_last_cubic_curve_to_nv
     /// @glconstwrap{DUP_LAST_CUBIC_CURVE_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_DUP_LAST_CUBIC_CURVE_TO_NV
       ubyte_type_c<GL_DUP_LAST_CUBIC_CURVE_TO_NV>>
@@ -11777,7 +11777,7 @@ public:
 
     /// @var rect_nv
     /// @glconstwrap{RECT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RECT_NV
       ubyte_type_c<GL_RECT_NV>>
@@ -11788,7 +11788,7 @@ public:
 
     /// @var circular_ccw_arc_to_nv
     /// @glconstwrap{CIRCULAR_CCW_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_CIRCULAR_CCW_ARC_TO_NV
       ubyte_type_c<GL_CIRCULAR_CCW_ARC_TO_NV>>
@@ -11799,7 +11799,7 @@ public:
 
     /// @var circular_cw_arc_to_nv
     /// @glconstwrap{circular_cw_arc_to_nv}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_CIRCULAR_CW_ARC_TO_NV
       ubyte_type_c<GL_CIRCULAR_CW_ARC_TO_NV>>
@@ -11810,7 +11810,7 @@ public:
 
     /// @var circular_tangent_arc_to_nv
     /// @glconstwrap{CIRCULAR_TANGENT_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_CIRCULAR_TANGENT_ARC_TO_NV
       ubyte_type_c<GL_CIRCULAR_TANGENT_ARC_TO_NV>>
@@ -11821,7 +11821,7 @@ public:
 
     /// @var arc_to_nv
     /// @glconstwrap{ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_ARC_TO_NV
       ubyte_type_c<GL_ARC_TO_NV>>
@@ -11832,7 +11832,7 @@ public:
 
     /// @var relative_arc_to_nv
     /// @glconstwrap{RELATIVE_ARC_TO_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_command_nv>,
 #ifdef GL_RELATIVE_ARC_TO_NV
       ubyte_type_c<GL_RELATIVE_ARC_TO_NV>>
@@ -11843,7 +11843,7 @@ public:
 
     /// @var flat
     /// @glconstwrap{FLAT}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_cap_style_nv>,
 #ifdef GL_FLAT
       enum_type_c<GL_FLAT>>
@@ -11854,7 +11854,7 @@ public:
 
     /// @var square_nv
     /// @glconstwrap{SQUARE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_cap_style_nv>,
 #ifdef GL_SQUARE_NV
       enum_type_c<GL_SQUARE_NV>>
@@ -11865,7 +11865,7 @@ public:
 
     /// @var round_nv
     /// @glconstwrap{ROUND_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_cap_style_nv, oglplus::path_join_style_nv>,
 #ifdef GL_ROUND_NV
       enum_type_c<GL_ROUND_NV>>
@@ -11876,7 +11876,7 @@ public:
 
     /// @var triangular_nv
     /// @glconstwrap{TRIANGULAR_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_cap_style_nv>,
 #ifdef GL_TRIANGULAR_NV
       enum_type_c<GL_TRIANGULAR_NV>>
@@ -11887,7 +11887,7 @@ public:
 
     /// @var luminance
     /// @glconstwrap{LUMINANCE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_color_format_nv>,
 #ifdef GL_LUMINANCE
       enum_type_c<GL_LUMINANCE>>
@@ -11898,7 +11898,7 @@ public:
 
     /// @var intensity
     /// @glconstwrap{INTENSITY}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_color_format_nv>,
 #ifdef GL_INTENSITY
       enum_type_c<GL_INTENSITY>>
@@ -11909,7 +11909,7 @@ public:
 
     /// @var luminance_alpha
     /// @glconstwrap{LUMINANCE_ALPHA}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_color_format_nv>,
 #ifdef GL_LUMINANCE_ALPHA
       enum_type_c<GL_LUMINANCE_ALPHA>>
@@ -11920,7 +11920,7 @@ public:
 
     /// @var primary_color_nv
     /// @glconstwrap{PRIMARY_COLOR_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_color_nv>,
 #ifdef GL_PRIMARY_COLOR_NV
       enum_type_c<GL_PRIMARY_COLOR_NV>>
@@ -11931,7 +11931,7 @@ public:
 
     /// @var secondary_color_nv
     /// @glconstwrap{SECONDARY_COLOR_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_color_nv>,
 #ifdef GL_SECONDARY_COLOR_NV
       enum_type_c<GL_SECONDARY_COLOR_NV>>
@@ -11942,7 +11942,7 @@ public:
 
     /// @var move_to_resets_nv
     /// @glconstwrap{MOVE_TO_RESETS_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_dash_offset_reset_nv>,
 #ifdef GL_MOVE_TO_RESETS_NV
       enum_type_c<GL_MOVE_TO_RESETS_NV>>
@@ -11953,7 +11953,7 @@ public:
 
     /// @var move_to_continues_nv
     /// @glconstwrap{MOVE_TO_CONTINUES_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_dash_offset_reset_nv>,
 #ifdef GL_MOVE_TO_CONTINUES_NV
       enum_type_c<GL_MOVE_TO_CONTINUES_NV>>
@@ -11964,7 +11964,7 @@ public:
 
     /// @var convex_hull_nv
     /// @glconstwrap{CONVEX_HULL_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_stroke_cover_mode_nv, oglplus::path_fill_cover_mode_nv>,
 #ifdef GL_CONVEX_HULL_NV
       enum_type_c<GL_CONVEX_HULL_NV>>
@@ -11975,7 +11975,7 @@ public:
 
     /// @var bounding_box_nv
     /// @glconstwrap{BOUNDING_BOX_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_stroke_cover_mode_nv, oglplus::path_fill_cover_mode_nv>,
 #ifdef GL_BOUNDING_BOX_NV
       enum_type_c<GL_BOUNDING_BOX_NV>>
@@ -11986,7 +11986,7 @@ public:
 
     /// @var bounding_box_of_bounding_boxes_nv
     /// @glconstwrap{BOUNDING_BOX_OF_BOUNDING_BOXES_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_stroke_cover_mode_nv, oglplus::path_fill_cover_mode_nv>,
 #ifdef GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV
       enum_type_c<GL_BOUNDING_BOX_OF_BOUNDING_BOXES_NV>>
@@ -11997,7 +11997,7 @@ public:
 
     /// @var count_up_nv
     /// @glconstwrap{COUNT_UP_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_fill_mode_nv>,
 #ifdef GL_COUNT_UP_NV
       enum_type_c<GL_COUNT_UP_NV>>
@@ -12008,7 +12008,7 @@ public:
 
     /// @var count_down_nv
     /// @glconstwrap{COUNT_DOWN_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_fill_mode_nv>,
 #ifdef GL_COUNT_DOWN_NV
       enum_type_c<GL_COUNT_DOWN_NV>>
@@ -12019,7 +12019,7 @@ public:
 
     /// @var bevel_nv
     /// @glconstwrap{BEVEL_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_join_style_nv>,
 #ifdef GL_BEVEL_NV
       enum_type_c<GL_BEVEL_NV>>
@@ -12030,7 +12030,7 @@ public:
 
     /// @var miter_revert_nv
     /// @glconstwrap{MITER_REVERT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_join_style_nv>,
 #ifdef GL_MITER_REVERT_NV
       enum_type_c<GL_MITER_REVERT_NV>>
@@ -12041,7 +12041,7 @@ public:
 
     /// @var miter_truncate_nv
     /// @glconstwrap{MITER_TRUNCATE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_join_style_nv>,
 #ifdef GL_MITER_TRUNCATE_NV
       enum_type_c<GL_MITER_TRUNCATE_NV>>
@@ -12052,7 +12052,7 @@ public:
 
     /// @var bold_bit_nv
     /// @glconstwrap{BOLD_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_font_style_nv>,
 #ifdef GL_BOLD_BIT_NV
       bitfield_type_c<GL_BOLD_BIT_NV>>
@@ -12063,7 +12063,7 @@ public:
 
     /// @var italic_bit_nv
     /// @glconstwrap{ITALIC_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_font_style_nv>,
 #ifdef GL_ITALIC_BIT_NV
       bitfield_type_c<GL_ITALIC_BIT_NV>>
@@ -12074,7 +12074,7 @@ public:
 
     /// @var standard_font_name_nv
     /// @glconstwrap{STANDARD_FONT_NAME_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_font_target_nv>,
 #ifdef GL_STANDARD_FONT_NAME_NV
       enum_type_c<GL_STANDARD_FONT_NAME_NV>>
@@ -12085,7 +12085,7 @@ public:
 
     /// @var system_font_name_nv
     /// @glconstwrap{SYSTEM_FONT_NAME_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_font_target_nv>,
 #ifdef GL_SYSTEM_FONT_NAME_NV
       enum_type_c<GL_SYSTEM_FONT_NAME_NV>>
@@ -12096,7 +12096,7 @@ public:
 
     /// @var file_name_nv
     /// @glconstwrap{file_name_nv}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_font_target_nv>,
 #ifdef GL_FILE_NAME_NV
       enum_type_c<GL_FILE_NAME_NV>>
@@ -12107,7 +12107,7 @@ public:
 
     /// @var path_format_svg_nv
     /// @glconstwrap{PATH_FORMAT_SVG_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_format_nv>,
 #ifdef GL_PATH_FORMAT_SVG_NV
       enum_type_c<GL_PATH_FORMAT_SVG_NV>>
@@ -12118,7 +12118,7 @@ public:
 
     /// @var path_format_ps_nv
     /// @glconstwrap{PATH_FORMAT_PS_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_format_nv>,
 #ifdef GL_PATH_FORMAT_PS_NV
       enum_type_c<GL_PATH_FORMAT_PS_NV>>
@@ -12129,7 +12129,7 @@ public:
 
     /// @var eye_linear
     /// @glconstwrap{EYE_LINEAR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_gen_mode_nv>,
 #ifdef GL_EYE_LINEAR
       enum_type_c<GL_EYE_LINEAR>>
@@ -12140,7 +12140,7 @@ public:
 
     /// @var object_linear
     /// @glconstwrap{OBJECT_LINEAR}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_gen_mode_nv>,
 #ifdef GL_OBJECT_LINEAR
       enum_type_c<GL_OBJECT_LINEAR>>
@@ -12151,7 +12151,7 @@ public:
 
     /// @var path_object_bounding_box_nv
     /// @glconstwrap{PATH_OBJECT_BOUNDING_BOX_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<oglplus::path_gen_mode_nv, path_parameter_nv>,
 #ifdef GL_PATH_OBJECT_BOUNDING_BOX_NV
       enum_type_c<GL_PATH_OBJECT_BOUNDING_BOX_NV>>
@@ -12162,7 +12162,7 @@ public:
 
     /// @var accum_adjacent_pairs_nv
     /// @glconstwrap{ACCUM_ADJACENT_PAIRS_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_list_mode_nv>,
 #ifdef GL_ACCUM_ADJACENT_PAIRS_NV
       enum_type_c<GL_ACCUM_ADJACENT_PAIRS_NV>>
@@ -12173,7 +12173,7 @@ public:
 
     /// @var adjacent_pairs_nv
     /// @glconstwrap{ADJACENT_PAIRS_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_list_mode_nv>,
 #ifdef GL_ADJACENT_PAIRS_NV
       enum_type_c<GL_ADJACENT_PAIRS_NV>>
@@ -12184,7 +12184,7 @@ public:
 
     /// @var first_to_rest_nv
     /// @glconstwrap{FIRST_TO_REST_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_list_mode_nv>,
 #ifdef GL_FIRST_TO_REST_NV
       enum_type_c<GL_FIRST_TO_REST_NV>>
@@ -12195,7 +12195,7 @@ public:
 
     /// @var glyph_width_bit_nv
     /// @glconstwrap{GLYPH_WIDTH_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_WIDTH_BIT_NV
       bitfield_type_c<GL_GLYPH_WIDTH_BIT_NV>>
@@ -12206,7 +12206,7 @@ public:
 
     /// @var glyph_height_bit_nv
     /// @glconstwrap{GLYPH_HEIGHT_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_HEIGHT_BIT_NV
       bitfield_type_c<GL_GLYPH_HEIGHT_BIT_NV>>
@@ -12217,7 +12217,7 @@ public:
 
     /// @var glyph_horizontal_bearing_x_bit_nv
     /// @glconstwrap{GLYPH_HORIZONTAL_BEARING_X_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_HORIZONTAL_BEARING_X_BIT_NV
       bitfield_type_c<GL_GLYPH_HORIZONTAL_BEARING_X_BIT_NV>>
@@ -12228,7 +12228,7 @@ public:
 
     /// @var glyph_horizontal_bearing_y_bit_nv
     /// @glconstwrap{GLYPH_HORIZONTAL_BEARING_Y_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_HORIZONTAL_BEARING_Y_BIT_NV
       bitfield_type_c<GL_GLYPH_HORIZONTAL_BEARING_Y_BIT_NV>>
@@ -12239,7 +12239,7 @@ public:
 
     /// @var glyph_horizontal_bearing_advance_bit_nv
     /// @glconstwrap{GLYPH_HORIZONTAL_BEARING_ADVANCE_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_HORIZONTAL_BEARING_ADVANCE_BIT_NV
       bitfield_type_c<GL_GLYPH_HORIZONTAL_BEARING_ADVANCE_BIT_NV>>
@@ -12250,7 +12250,7 @@ public:
 
     /// @var glyph_vertical_bearing_x_bit_nv
     /// @glconstwrap{GLYPH_VERTICAL_BEARING_X_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_VERTICAL_BEARING_X_BIT_NV
       bitfield_type_c<GL_GLYPH_VERTICAL_BEARING_X_BIT_NV>>
@@ -12261,7 +12261,7 @@ public:
 
     /// @var glyph_vertical_bearing_y_bit_nv
     /// @glconstwrap{GLYPH_VERTICAL_BEARING_Y_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_VERTICAL_BEARING_Y_BIT_NV
       bitfield_type_c<GL_GLYPH_VERTICAL_BEARING_Y_BIT_NV>>
@@ -12272,7 +12272,7 @@ public:
 
     /// @var glyph_vertical_bearing_advance_bit_nv
     /// @glconstwrap{GLYPH_VERTICAL_BEARING_ADVANCE_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_VERTICAL_BEARING_ADVANCE_BIT_NV
       bitfield_type_c<GL_GLYPH_VERTICAL_BEARING_ADVANCE_BIT_NV>>
@@ -12283,7 +12283,7 @@ public:
 
     /// @var glyph_has_kerning_bit_nv
     /// @glconstwrap{GLYPH_HAS_KERNING_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_GLYPH_HAS_KERNING_BIT_NV
       bitfield_type_c<GL_GLYPH_HAS_KERNING_BIT_NV>>
@@ -12294,7 +12294,7 @@ public:
 
     /// @var font_x_max_bounds_bit_nv
     /// @glconstwrap{FONT_X_MAX_BOUNDS_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_X_MIN_BOUNDS_BIT_NV
       bitfield_type_c<GL_FONT_X_MIN_BOUNDS_BIT_NV>>
@@ -12305,7 +12305,7 @@ public:
 
     /// @var font_y_min_bounds_bit_nv
     /// @glconstwrap{FONT_Y_MIN_BOUNDS_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_Y_MIN_BOUNDS_BIT_NV
       bitfield_type_c<GL_FONT_Y_MIN_BOUNDS_BIT_NV>>
@@ -12316,7 +12316,7 @@ public:
 
     /// @var font_x_max_bounds_bit_nv
     /// @glconstwrap{FONT_X_MAX_BOUNDS_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_X_MAX_BOUNDS_BIT_NV
       bitfield_type_c<GL_FONT_X_MAX_BOUNDS_BIT_NV>>
@@ -12327,7 +12327,7 @@ public:
 
     /// @var font_y_max_bounds_bit_nv
     /// @glconstwrap{FONT_Y_MAX_BOUNDS_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_Y_MAX_BOUNDS_BIT_NV
       bitfield_type_c<GL_FONT_Y_MAX_BOUNDS_BIT_NV>>
@@ -12338,7 +12338,7 @@ public:
 
     /// @var font_units_per_em_bit_nv
     /// @glconstwrap{FONT_UNITS_PER_EM_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_UNITS_PER_EM_BIT_NV
       bitfield_type_c<GL_FONT_UNITS_PER_EM_BIT_NV>>
@@ -12349,7 +12349,7 @@ public:
 
     /// @var font_ascender_bit_nv
     /// @glconstwrap{FONT_ASCENDER_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_ASCENDER_BIT_NV
       bitfield_type_c<GL_FONT_ASCENDER_BIT_NV>>
@@ -12360,7 +12360,7 @@ public:
 
     /// @var font_descender_bit_nv
     /// @glconstwrap{FONT_DESCENDER_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_DESCENDER_BIT_NV
       bitfield_type_c<GL_FONT_DESCENDER_BIT_NV>>
@@ -12371,7 +12371,7 @@ public:
 
     /// @var font_height_bit_nv
     /// @glconstwrap{FONT_HEIGHT_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_HEIGHT_BIT_NV
       bitfield_type_c<GL_FONT_HEIGHT_BIT_NV>>
@@ -12382,7 +12382,7 @@ public:
 
     /// @var font_max_advance_width_bit_nv
     /// @glconstwrap{FONT_MAX_ADVANCE_WIDTH_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_MAX_ADVANCE_WIDTH_BIT_NV
       bitfield_type_c<GL_FONT_MAX_ADVANCE_WIDTH_BIT_NV>>
@@ -12393,7 +12393,7 @@ public:
 
     /// @var font_max_advance_height_bit_nv
     /// @glconstwrap{FONT_MAX_ADVANCE_HEIGHT_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_MAX_ADVANCE_HEIGHT_BIT_NV
       bitfield_type_c<GL_FONT_MAX_ADVANCE_HEIGHT_BIT_NV>>
@@ -12404,7 +12404,7 @@ public:
 
     /// @var font_underline_position_bit_nv
     /// @glconstwrap{FONT_UNDERLINE_POSITION_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_UNDERLINE_POSITION_BIT_NV
       bitfield_type_c<GL_FONT_UNDERLINE_POSITION_BIT_NV>>
@@ -12415,7 +12415,7 @@ public:
 
     /// @var font_underline_thickness_bit_nv
     /// @glconstwrap{font_underline_thickness_bit_nv}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_UNDERLINE_THICKNESS_BIT_NV
       bitfield_type_c<GL_FONT_UNDERLINE_THICKNESS_BIT_NV>>
@@ -12426,7 +12426,7 @@ public:
 
     /// @var font_has_kerning_bit_nv
     /// @glconstwrap{FONT_HAS_KERNING_BIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_metric_query_nv>,
 #ifdef GL_FONT_HAS_KERNING_BIT_NV
       bitfield_type_c<GL_FONT_HAS_KERNING_BIT_NV>>
@@ -12437,7 +12437,7 @@ public:
 
     /// @var skip_missing_glyph_nv
     /// @glconstwrap{SKIP_MISSING_GLYPH_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_missing_glyph_nv>,
 #ifdef GL_SKIP_MISSING_GLYPH_NV
       enum_type_c<GL_SKIP_MISSING_GLYPH_NV>>
@@ -12448,7 +12448,7 @@ public:
 
     /// @var use_missing_glyph_nv
     /// @glconstwrap{USE_MISSING_GLYPH_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_missing_glyph_nv>,
 #ifdef GL_USE_MISSING_GLYPH_NV
       enum_type_c<GL_USE_MISSING_GLYPH_NV>>
@@ -12459,7 +12459,7 @@ public:
 
     /// @var path_command_count_nv
     /// @glconstwrap{PATH_COMMAND_COUNT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_COMMAND_COUNT_NV
       enum_type_c<GL_PATH_COMMAND_COUNT_NV>>
@@ -12470,7 +12470,7 @@ public:
 
     /// @var path_coord_count_nv
     /// @glconstwrap{PATH_COORD_COUNT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_COORD_COUNT_NV
       enum_type_c<GL_PATH_COORD_COUNT_NV>>
@@ -12481,7 +12481,7 @@ public:
 
     /// @var path_computed_length_nv
     /// @glconstwrap{PATH_COMPUTED_LENGTH_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_COMPUTED_LENGTH_NV
       enum_type_c<GL_PATH_COMPUTED_LENGTH_NV>>
@@ -12492,7 +12492,7 @@ public:
 
     /// @var path_stroke_width_nv
     /// @glconstwrap{PATH_STROKE_WIDTH_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_STROKE_WIDTH_NV
       enum_type_c<GL_PATH_STROKE_WIDTH_NV>>
@@ -12503,7 +12503,7 @@ public:
 
     /// @var path_initial_end_cap_nv
     /// @glconstwrap{PATH_INITIAL_END_CAP_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_INITIAL_END_CAP_NV
       enum_type_c<GL_PATH_INITIAL_END_CAP_NV>>
@@ -12514,7 +12514,7 @@ public:
 
     /// @var path_terminal_end_cap_nv
     /// @glconstwrap{PATH_TERMINAL_END_CAP_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_TERMINAL_END_CAP_NV
       enum_type_c<GL_PATH_TERMINAL_END_CAP_NV>>
@@ -12525,7 +12525,7 @@ public:
 
     /// @var path_join_style_nv
     /// @glconstwrap{PATH_JOIN_STYLE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_JOIN_STYLE_NV
       enum_type_c<GL_PATH_JOIN_STYLE_NV>>
@@ -12536,7 +12536,7 @@ public:
 
     /// @var path_miter_limit_nv
     /// @glconstwrap{PATH_MITER_LIMIT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_MITER_LIMIT_NV
       enum_type_c<GL_PATH_MITER_LIMIT_NV>>
@@ -12547,7 +12547,7 @@ public:
 
     /// @var path_dash_array_count_nv
     /// @glconstwrap{PATH_DASH_ARRAY_COUNT_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_DASH_ARRAY_COUNT_NV
       enum_type_c<GL_PATH_DASH_ARRAY_COUNT_NV>>
@@ -12558,7 +12558,7 @@ public:
 
     /// @var path_dash_offset_nv
     /// @glconstwrap{PATH_DASH_OFFSET_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_DASH_OFFSET_NV
       enum_type_c<GL_PATH_DASH_OFFSET_NV>>
@@ -12569,7 +12569,7 @@ public:
 
     /// @var path_dash_offset_reset_nv
     /// @glconstwrap{PATH_DASH_OFFSET_RESET_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_DASH_OFFSET_RESET_NV
       enum_type_c<GL_PATH_DASH_OFFSET_RESET_NV>>
@@ -12580,7 +12580,7 @@ public:
 
     /// @var path_client_length_nv
     /// @glconstwrap{PATH_CLIENT_LENGTH_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_CLIENT_LENGTH_NV
       enum_type_c<GL_PATH_CLIENT_LENGTH_NV>>
@@ -12591,7 +12591,7 @@ public:
 
     /// @var path_initial_dash_cap_nv
     /// @glconstwrap{PATH_INITIAL_DASH_CAP_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_INITIAL_DASH_CAP_NV
       enum_type_c<GL_PATH_INITIAL_DASH_CAP_NV>>
@@ -12602,7 +12602,7 @@ public:
 
     /// @var path_terminal_dash_cap_nv
     /// @glconstwrap{PATH_TERMINAL_DASH_CAP_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_TERMINAL_DASH_CAP_NV
       enum_type_c<GL_PATH_TERMINAL_DASH_CAP_NV>>
@@ -12613,7 +12613,7 @@ public:
 
     /// @var path_fill_mode_nv
     /// @glconstwrap{PATH_FILL_MODE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_FILL_MODE_NV
       enum_type_c<GL_PATH_FILL_MODE_NV>>
@@ -12624,7 +12624,7 @@ public:
 
     /// @var path_fill_mask_nv
     /// @glconstwrap{PATH_FILL_MASK_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_FILL_MASK_NV
       enum_type_c<GL_PATH_FILL_MASK_NV>>
@@ -12635,7 +12635,7 @@ public:
 
     /// @var path_fill_cover_mode_nv
     /// @glconstwrap{PATH_FILL_COVER_MODE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_FILL_COVER_MODE_NV
       enum_type_c<GL_PATH_FILL_COVER_MODE_NV>>
@@ -12646,7 +12646,7 @@ public:
 
     /// @var path_stroke_cover_mode_nv
     /// @glconstwrap{PATH_STROKE_COVER_MODE_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_STROKE_COVER_MODE_NV
       enum_type_c<GL_PATH_STROKE_COVER_MODE_NV>>
@@ -12657,7 +12657,7 @@ public:
 
     /// @var path_stroke_mask_nv
     /// @glconstwrap{PATH_STROKE_MASK_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_STROKE_MASK_NV
       enum_type_c<GL_PATH_STROKE_MASK_NV>>
@@ -12668,7 +12668,7 @@ public:
 
     /// @var path_stroke_bound_nv
     /// @glconstwrap{PATH_STROKE_BOUND_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_STROKE_BOUND_NV
       enum_type_c<GL_PATH_STROKE_BOUND_NV>>
@@ -12679,7 +12679,7 @@ public:
 
     /// @var path_fill_bounding_box_nv
     /// @glconstwrap{PATH_FILL_BOUNDING_BOX_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_FILL_BOUNDING_BOX_NV
       enum_type_c<GL_PATH_FILL_BOUNDING_BOX_NV>>
@@ -12690,7 +12690,7 @@ public:
 
     /// @var path_stroke_bounding_box_nv
     /// @glconstwrap{PATH_STROKE_BOUNDING_BOX_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_parameter_nv>,
 #ifdef GL_PATH_STROKE_BOUNDING_BOX_NV
       enum_type_c<GL_PATH_STROKE_BOUNDING_BOX_NV>>
@@ -12701,7 +12701,7 @@ public:
 
     /// @var translate_x_nv
     /// @glconstwrap{TRANSLATE_X_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_TRANSLATE_X_NV
       enum_type_c<GL_TRANSLATE_X_NV>>
@@ -12712,7 +12712,7 @@ public:
 
     /// @var translate_y_nv
     /// @glconstwrap{TRANSLATE_Y_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_TRANSLATE_Y_NV
       enum_type_c<GL_TRANSLATE_Y_NV>>
@@ -12723,7 +12723,7 @@ public:
 
     /// @var translate_2d_nv
     /// @glconstwrap{TRANSLATE_2D_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_TRANSLATE_2D_NV
       enum_type_c<GL_TRANSLATE_2D_NV>>
@@ -12734,7 +12734,7 @@ public:
 
     /// @var translate_3d_nv
     /// @glconstwrap{TRANSLATE_3D_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_TRANSLATE_3D_NV
       enum_type_c<GL_TRANSLATE_3D_NV>>
@@ -12745,7 +12745,7 @@ public:
 
     /// @var affine_2d_nv
     /// @glconstwrap{AFFINE_2D_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_AFFINE_2D_NV
       enum_type_c<GL_AFFINE_2D_NV>>
@@ -12756,7 +12756,7 @@ public:
 
     /// @var affine_3d_nv
     /// @glconstwrap{AFFINE_3D_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_AFFINE_3D_NV
       enum_type_c<GL_AFFINE_3D_NV>>
@@ -12767,7 +12767,7 @@ public:
 
     /// @var transpose_affine_2d_nv
     /// @glconstwrap{TRANSPOSE_AFFINE_2D_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_TRANSPOSE_AFFINE_2D_NV
       enum_type_c<GL_TRANSPOSE_AFFINE_2D_NV>>
@@ -12778,7 +12778,7 @@ public:
 
     /// @var transpose_affine_3d_nv
     /// @glconstwrap{TRANSPOSE_AFFINE_3D_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_transform_type_nv>,
 #ifdef GL_TRANSPOSE_AFFINE_3D_NV
       enum_type_c<GL_TRANSPOSE_AFFINE_3D_NV>>
@@ -12789,7 +12789,7 @@ public:
 
     /// @var utf8_nv
     /// @glconstwrap{UTF8_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_text_encoding_nv>,
 #ifdef GL_UTF8_NV
       enum_type_c<GL_UTF8_NV>>
@@ -12800,7 +12800,7 @@ public:
 
     /// @var utf16_nv
     /// @glconstwrap{UTF16_NV}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<path_text_encoding_nv>,
 #ifdef GL_UTF16_NV
       enum_type_c<GL_UTF16_NV>>
@@ -12811,7 +12811,7 @@ public:
 
     /// @var none
     /// @glconstwrap{NONE}
-    opt_c_api_constant<
+    c_api::opt_constant<
       mp_list<
         support_level,
         surface_buffer,

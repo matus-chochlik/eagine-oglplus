@@ -117,21 +117,21 @@ private:
 /// @see gl_result
 /// @see gl_opt_result
 template <typename Result>
-using gl_no_result = api_no_result<Result, gl_no_result_info>;
+using gl_no_result = c_api::no_result<Result, gl_no_result_info>;
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the result of a GL API function call.
 /// @ingroup gl_api_wrap
 /// @see gl_no_result
 /// @see gl_opt_result
 template <typename Result>
-using gl_result = api_result<Result, gl_result_info>;
+using gl_result = c_api::result<Result, gl_result_info>;
 //------------------------------------------------------------------------------
 /// @brief Alias for conditionally-valid result of a GL API function call.
 /// @ingroup gl_api_wrap
 /// @see gl_result
 /// @see gl_opt_result
 template <typename Result>
-using gl_opt_result = api_opt_result<Result, gl_result_info>;
+using gl_opt_result = c_api::opt_result<Result, gl_result_info>;
 //------------------------------------------------------------------------------
 /// @brief Alias for a result that may come from mutiple difference GL API functions.
 /// @ingroup gl_api_wrap
@@ -139,7 +139,7 @@ using gl_opt_result = api_opt_result<Result, gl_result_info>;
 /// @see gl_no_result
 /// @see gl_opt_result
 template <typename Result>
-using gl_combined_result = api_combined_result<Result, gl_result_info>;
+using gl_combined_result = c_api::combined_result<Result, gl_result_info>;
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

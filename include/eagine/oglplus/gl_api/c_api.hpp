@@ -93,8 +93,8 @@ public:
     /// @brief Alias for GL C-API function wrapper template.
     template <
       typename Signature,
-      c_api_function_ptr<api_traits, nothing_t, Signature> Function>
-    using gl_api_function = eagine::opt_c_api_function<
+      c_api::function_ptr<api_traits, nothing_t, Signature> Function>
+    using gl_api_function = c_api::opt_function<
       api_traits,
       nothing_t,
       Signature,
