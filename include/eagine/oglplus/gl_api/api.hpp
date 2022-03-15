@@ -3983,10 +3983,12 @@ public:
         using func<OGLPAFP(GetString)>::func;
 
         constexpr auto operator()(string_query query) const noexcept {
-            return this->_cnvchkcall(query).transformed([](auto src) {
-                return src ? string_view{reinterpret_cast<const char*>(src)}
+            return this->_cnvchkcall(query).transformed(
+              [](auto src, bool valid) {
+                  return valid && src
+                           ? string_view{reinterpret_cast<const char*>(src)}
                            : string_view{};
-            });
+              });
         }
 
         constexpr auto operator()() const noexcept {
@@ -3997,7 +3999,7 @@ public:
 
     // get_strings
     auto get_strings(string_query query, char separator) const noexcept {
-        return get_string(query).transformed([separator](auto src) {
+        return get_string(query).transformed([separator](auto src, bool) {
             return split_into_string_list(src, separator);
         });
     }
@@ -4010,7 +4012,7 @@ public:
         return get_string(string_query(0x1F03))
 #endif
           .transformed(
-            [](auto src) { return split_into_string_list(src, ' '); });
+            [](auto src, bool) { return split_into_string_list(src, ' '); });
     }
 
     // has_extension
