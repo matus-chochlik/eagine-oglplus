@@ -9,7 +9,6 @@
 #define EAGINE_OGLPLUS_GL_API_CONFIG_HPP
 
 #include "../config/basic.hpp"
-#include <eagine/maybe_unused.hpp>
 
 #ifndef OGLPLUS_HAS_GL
 #if defined(GL_NO_ERROR)
@@ -133,12 +132,11 @@ struct gl_types {
     }
 
     /// @brief Tests if the specified error code represents no-error value.
-    static constexpr auto error_code_no_error(const enum_type ec) noexcept
-      -> bool {
+    static constexpr auto error_code_no_error(
+      [[maybe_unused]] const enum_type ec) noexcept -> bool {
 #if OGLPLUS_HAS_GL
         return ec == GL_NO_ERROR;
 #else
-        EAGINE_MAYBE_UNUSED(ec);
         return false;
 #endif
     }

@@ -222,8 +222,7 @@ public:
         for(const auto l : integer_range(node_count.size())) {
             const auto ls = signedness_cast(l);
             node_count[l] = 1;
-            for(const auto p : integer_range(l)) {
-                EAGINE_MAYBE_UNUSED(p);
+            for([[maybe_unused]] const auto p : integer_range(l)) {
                 node_count[l] *= 8;
             }
 

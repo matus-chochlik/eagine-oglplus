@@ -955,14 +955,14 @@ public:
             return this->_cnvchkcall(prog, 1, &varyings, mode);
         }
 
-        auto operator()(program_name prog, string_view name) const noexcept {
+        auto operator()(
+          [[maybe_unused]] program_name prog,
+          [[maybe_unused]] string_view name) const noexcept {
 #ifdef GL_SEPARATE_ATTRIBS
             const auto name_c_str{c_str(name)};
             const char* varyings = name_c_str;
             return this->_cnvchkcall(prog, 1, &varyings, GL_SEPARATE_ATTRIBS);
 #else
-            EAGINE_MAYBE_UNUSED(prog);
-            EAGINE_MAYBE_UNUSED(name);
             return this->_fake();
 #endif
         }
@@ -3556,13 +3556,13 @@ public:
         using func<OGLPAFP(GetPathSpacingNV)>::func;
 
         constexpr auto operator()(
-          path_list_mode_nv mode,
-          string_view glyphs,
-          path_nv_name pth,
-          float_type advance_scale,
-          float_type kerning_scale,
-          path_transform_type_nv transf,
-          span<float_type> dst) const noexcept {
+          [[maybe_unused]] path_list_mode_nv mode,
+          [[maybe_unused]] string_view glyphs,
+          [[maybe_unused]] path_nv_name pth,
+          [[maybe_unused]] float_type advance_scale,
+          [[maybe_unused]] float_type kerning_scale,
+          [[maybe_unused]] path_transform_type_nv transf,
+          [[maybe_unused]] span<float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               mode,
@@ -3575,13 +3575,6 @@ public:
               transf,
               dst.data());
 #else
-            EAGINE_MAYBE_UNUSED(mode);
-            EAGINE_MAYBE_UNUSED(glyphs);
-            EAGINE_MAYBE_UNUSED(pth);
-            EAGINE_MAYBE_UNUSED(advance_scale);
-            EAGINE_MAYBE_UNUSED(kerning_scale);
-            EAGINE_MAYBE_UNUSED(transf);
-            EAGINE_MAYBE_UNUSED(dst);
             return this->_fake();
 #endif
         }
@@ -3598,12 +3591,12 @@ public:
     struct : func<OGLPAFP(StencilFillPathInstancedNV)> {
         using func<OGLPAFP(StencilFillPathInstancedNV)>::func;
         constexpr auto operator()(
-          string_view glyphs,
-          path_nv_name pth,
-          path_fill_mode_nv mode,
-          uint_type mask,
-          path_transform_type_nv transf,
-          span<const float_type> dst) const noexcept {
+          [[maybe_unused]] string_view glyphs,
+          [[maybe_unused]] path_nv_name pth,
+          [[maybe_unused]] path_fill_mode_nv mode,
+          [[maybe_unused]] uint_type mask,
+          [[maybe_unused]] path_transform_type_nv transf,
+          [[maybe_unused]] span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
@@ -3615,12 +3608,6 @@ public:
               transf,
               dst.data());
 #else
-            EAGINE_MAYBE_UNUSED(glyphs);
-            EAGINE_MAYBE_UNUSED(pth);
-            EAGINE_MAYBE_UNUSED(mode);
-            EAGINE_MAYBE_UNUSED(mask);
-            EAGINE_MAYBE_UNUSED(transf);
-            EAGINE_MAYBE_UNUSED(dst);
             return this->_fake();
 #endif
         }
@@ -3629,12 +3616,12 @@ public:
     struct : func<OGLPAFP(StencilStrokePathInstancedNV)> {
         using func<OGLPAFP(StencilStrokePathInstancedNV)>::func;
         constexpr auto operator()(
-          string_view glyphs,
-          path_nv_name pth,
-          int_type reference,
-          uint_type mask,
-          path_transform_type_nv transf,
-          span<const float_type> dst) const noexcept {
+          [[maybe_unused]] string_view glyphs,
+          [[maybe_unused]] path_nv_name pth,
+          [[maybe_unused]] int_type reference,
+          [[maybe_unused]] uint_type mask,
+          [[maybe_unused]] path_transform_type_nv transf,
+          [[maybe_unused]] span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
@@ -3646,12 +3633,6 @@ public:
               transf,
               dst.data());
 #else
-            EAGINE_MAYBE_UNUSED(glyphs);
-            EAGINE_MAYBE_UNUSED(pth);
-            EAGINE_MAYBE_UNUSED(reference);
-            EAGINE_MAYBE_UNUSED(mask);
-            EAGINE_MAYBE_UNUSED(transf);
-            EAGINE_MAYBE_UNUSED(dst);
             return this->_fake();
 #endif
         }
@@ -3668,11 +3649,11 @@ public:
     struct : func<OGLPAFP(CoverFillPathInstancedNV)> {
         using func<OGLPAFP(CoverFillPathInstancedNV)>::func;
         constexpr auto operator()(
-          string_view glyphs,
-          path_nv_name pth,
-          path_fill_cover_mode_nv mode,
-          path_transform_type_nv transf,
-          span<const float_type> dst) const noexcept {
+          [[maybe_unused]] string_view glyphs,
+          [[maybe_unused]] path_nv_name pth,
+          [[maybe_unused]] path_fill_cover_mode_nv mode,
+          [[maybe_unused]] path_transform_type_nv transf,
+          [[maybe_unused]] span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
@@ -3683,11 +3664,6 @@ public:
               transf,
               dst.data());
 #else
-            EAGINE_MAYBE_UNUSED(glyphs);
-            EAGINE_MAYBE_UNUSED(pth);
-            EAGINE_MAYBE_UNUSED(mode);
-            EAGINE_MAYBE_UNUSED(transf);
-            EAGINE_MAYBE_UNUSED(dst);
             return this->_fake();
 #endif
         }
@@ -3696,11 +3672,11 @@ public:
     struct : func<OGLPAFP(CoverStrokePathInstancedNV)> {
         using func<OGLPAFP(CoverStrokePathInstancedNV)>::func;
         constexpr auto operator()(
-          string_view glyphs,
-          path_nv_name pth,
-          path_stroke_cover_mode_nv mode,
-          path_transform_type_nv transf,
-          span<const float_type> dst) const noexcept {
+          [[maybe_unused]] string_view glyphs,
+          [[maybe_unused]] path_nv_name pth,
+          [[maybe_unused]] path_stroke_cover_mode_nv mode,
+          [[maybe_unused]] path_transform_type_nv transf,
+          [[maybe_unused]] span<const float_type> dst) const noexcept {
 #ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
@@ -3711,11 +3687,6 @@ public:
               transf,
               dst.data());
 #else
-            EAGINE_MAYBE_UNUSED(glyphs);
-            EAGINE_MAYBE_UNUSED(pth);
-            EAGINE_MAYBE_UNUSED(mode);
-            EAGINE_MAYBE_UNUSED(transf);
-            EAGINE_MAYBE_UNUSED(dst);
             return this->_fake();
 #endif
         }
