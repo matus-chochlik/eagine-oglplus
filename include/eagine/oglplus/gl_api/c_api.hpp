@@ -33,6 +33,8 @@ namespace eagine::oglplus {
 /// @see basic_gl_operations
 template <typename ApiTraits>
 class basic_gl_c_api {
+    ApiTraits& _traits;
+
 public:
     using this_api = basic_gl_c_api;
 
@@ -5673,6 +5675,10 @@ public:
     gl_api_function<void(), OGLPLUS_GL_STATIC_FUNC(Finish)> Finish;
 
     basic_gl_c_api(api_traits& traits);
+
+    auto traits() noexcept -> api_traits& {
+        return _traits;
+    }
 };
 //------------------------------------------------------------------------------
 /// @brief Alias for the default GL operations wrapper instantiation.
