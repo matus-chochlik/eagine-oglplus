@@ -33,12 +33,12 @@ public:
 
 private:
     void _do_log(
-      const gl_types::enum_type source,
-      const gl_types::enum_type type,
-      const gl_types::uint_type id,
-      const gl_types::enum_type severity,
-      const gl_types::sizei_type length,
-      const gl_types::char_type* message) const {
+      [[maybe_unused]] const gl_types::enum_type source,
+      [[maybe_unused]] const gl_types::enum_type type,
+      [[maybe_unused]] const gl_types::uint_type id,
+      [[maybe_unused]] const gl_types::enum_type severity,
+      [[maybe_unused]] const gl_types::sizei_type length,
+      [[maybe_unused]] const gl_types::char_type* message) const {
         const auto msg = length >= 0 ? string_view(message, span_size(length))
                                      : string_view(message);
         this->log_debug(msg)
@@ -46,13 +46,6 @@ private:
           .arg(EAGINE_ID(source), EAGINE_ID(DbgOutSrce), source)
           .arg(EAGINE_ID(type), EAGINE_ID(DbgOutType), type)
           .arg(EAGINE_ID(id), id);
-
-        EAGINE_MAYBE_UNUSED(source);
-        EAGINE_MAYBE_UNUSED(type);
-        EAGINE_MAYBE_UNUSED(id);
-        EAGINE_MAYBE_UNUSED(severity);
-        EAGINE_MAYBE_UNUSED(length);
-        EAGINE_MAYBE_UNUSED(message);
     }
 
     static void _callback(

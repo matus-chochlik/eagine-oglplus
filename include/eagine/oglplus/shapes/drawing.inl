@@ -222,7 +222,7 @@ inline void draw_using_instructions(
   const span<const shape_draw_operation> ops,
   const shape_draw_subset& subs) noexcept {
     for(const auto i : integer_range(subs.first, subs.first + subs.count)) {
-        if(EAGINE_LIKELY(i < ops.size())) {
+        if(i < ops.size()) [[likely]] {
             ops[i].draw(api);
         }
     }
@@ -235,7 +235,7 @@ inline void draw_using_instructions(
   const shape_draw_subset& subs,
   const gl_types::sizei_type inst_count) noexcept {
     for(const auto i : integer_range(subs.first, subs.first + subs.count)) {
-        if(EAGINE_LIKELY(i < ops.size())) {
+        if(i < ops.size()) [[likely]] {
             ops[i].draw_instanced(api, inst_count);
         }
     }

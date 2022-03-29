@@ -146,9 +146,8 @@ constexpr auto sl_data_type_of() noexcept -> sl_data_type {
 //------------------------------------------------------------------------------
 template <typename T>
 constexpr auto pixel_format_of(const type_identity<T>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T>&& std::is_integral_v<T>) {
 #ifdef GL_RED_INTEGER
     return GL_RED_INTEGER;
 #else
@@ -158,9 +157,8 @@ constexpr auto pixel_format_of(const type_identity<T>) noexcept
 //------------------------------------------------------------------------------
 template <typename T>
 constexpr auto pixel_format_of(const type_identity<T>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && !std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T> && !std::is_integral_v<T>) {
 #ifdef GL_RED
     return GL_RED;
 #else
@@ -170,9 +168,8 @@ constexpr auto pixel_format_of(const type_identity<T>) noexcept
 //------------------------------------------------------------------------------
 template <typename T, bool V>
 constexpr auto pixel_format_of(const type_identity<vector<T, 2, V>>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T>&& std::is_integral_v<T>) {
 #ifdef GL_RG_INTEGER
     return GL_RG_INTEGER;
 #else
@@ -182,9 +179,8 @@ constexpr auto pixel_format_of(const type_identity<vector<T, 2, V>>) noexcept
 //------------------------------------------------------------------------------
 template <typename T, bool V>
 constexpr auto pixel_format_of(const type_identity<vector<T, 2, V>>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && !std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T> && !std::is_integral_v<T>) {
 #ifdef GL_RG
     return GL_RG;
 #else
@@ -194,9 +190,8 @@ constexpr auto pixel_format_of(const type_identity<vector<T, 2, V>>) noexcept
 //------------------------------------------------------------------------------
 template <typename T, bool V>
 constexpr auto pixel_format_of(const type_identity<vector<T, 3, V>>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T>&& std::is_integral_v<T>) {
 #ifdef GL_RGB_INTEGER
     return GL_RGB_INTEGER;
 #else
@@ -206,9 +201,8 @@ constexpr auto pixel_format_of(const type_identity<vector<T, 3, V>>) noexcept
 //------------------------------------------------------------------------------
 template <typename T, bool V>
 constexpr auto pixel_format_of(const type_identity<vector<T, 3, V>>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && !std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T> && !std::is_integral_v<T>) {
 #ifdef GL_RGB
     return GL_RGB;
 #else
@@ -218,9 +212,8 @@ constexpr auto pixel_format_of(const type_identity<vector<T, 3, V>>) noexcept
 //------------------------------------------------------------------------------
 template <typename T, bool V>
 constexpr auto pixel_format_of(const type_identity<vector<T, 4, V>>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T>&& std::is_integral_v<T>) {
 #ifdef GL_RGBA_INTEGER
     return GL_RGBA_INTEGER;
 #else
@@ -230,9 +223,8 @@ constexpr auto pixel_format_of(const type_identity<vector<T, 4, V>>) noexcept
 //------------------------------------------------------------------------------
 template <typename T, bool V>
 constexpr auto pixel_format_of(const type_identity<vector<T, 4, V>>) noexcept
-  -> std::enable_if_t<
-    is_gl_data_type_v<T> && !std::is_integral_v<T>,
-    gl_types::enum_type> {
+  -> gl_types::enum_type
+  requires(is_gl_data_type_v<T> && !std::is_integral_v<T>) {
 #ifdef GL_RGBA
     return GL_RGBA;
 #else
@@ -240,13 +232,9 @@ constexpr auto pixel_format_of(const type_identity<vector<T, 4, V>>) noexcept
 #endif
 }
 //------------------------------------------------------------------------------
-template <
-  typename T,
-  int N,
-  bool V,
-  typename = std::enable_if_t<is_gl_data_type_v<T>>>
+template <typename T, int N, bool V>
 constexpr auto pixel_format_of(const type_identity<tvec<T, N, V>>) noexcept
-  -> gl_types::enum_type {
+  -> gl_types::enum_type requires(is_gl_data_type_v<T>) {
     return pixel_format_of(type_identity<vector<T, N, V>>{});
 }
 //------------------------------------------------------------------------------

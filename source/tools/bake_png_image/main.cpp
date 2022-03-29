@@ -11,6 +11,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/image_file_io.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/not_empty.hpp>
 #include <cassert>
 #include <fstream>
@@ -29,41 +30,35 @@ constexpr const bool has_rgba16 = false;
 //------------------------------------------------------------------------------
 // program options
 struct options {
-
-    program_parameter<std::vector<valid_if_not_empty<string_view>>> input_paths;
-    program_parameter<valid_if_not_empty<string_view>> output_path;
-
-    program_parameters all;
-
-    options()
-      : input_paths("-i", "--input")
-      , output_path("-o", "--output", string_view("a.oglptex"))
-      , all(input_paths, output_path) {
-        input_paths.description(
-          "Path to existing PNG input file, or '-' for standard input.");
-        output_path.description(
-          "Path to output file, or '-' for standard output.");
-    }
+    std::vector<valid_if_existing_file<string_view>> input_paths;
+    valid_if_in_writable_directory<string_view> output_path;
 
     void print_usage(std::ostream& log) {
-        all.print_usage(log, "bake_png_image");
-    }
-
-    auto check(std::ostream& log) -> bool {
-        return all.validate(log);
+        log << "bake_noise_image options\n";
+        log << "  options:\n";
+        log << "   -i|--input PATH: Existing PNG file path or '-' for stdin.\n";
+        log << "   -o|--output PATH: Output file path or '-' for stdout.\n";
     }
 
     auto parse(program_arg& arg, std::ostream& log) -> bool {
-        return all.parse(arg, log);
+        if(arg.is_tag("-o", "--output")) {
+            if(!arg.parse_next(output_path, log)) {
+                return false;
+            }
+        } else if(arg.is_tag("-i", "--input")) {
+            if(!arg.parse_next(input_paths, log)) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    auto from_stdin() const -> bool {
-        return !input_paths.value().empty() &&
-               are_equal(input_paths.value().front().value(), string_view("-"));
+    auto from_stdin() const -> tribool {
+        return !input_paths.empty() && input_paths.front() == string_view("-");
     }
 
-    auto to_stdout() const -> bool {
-        return are_equal(output_path.value(), string_view("-"));
+    auto to_stdout() const -> tribool {
+        return output_path == string_view("-");
     }
 };
 //------------------------------------------------------------------------------
@@ -266,29 +261,29 @@ auto main(main_ctx& ctx) -> int {
             return err;
         }
 
-        const bool from_stdin = opts.from_stdin();
-        const bool to_stdout = opts.to_stdout();
+        const auto from_stdin = opts.from_stdin();
+        const auto to_stdout = opts.to_stdout();
 
         if(from_stdin && to_stdout) {
             convert_image(std::cin, std::cout);
         } else if(from_stdin) {
-            std::ofstream output_file(c_str(opts.output_path.value()));
+            std::ofstream output_file(c_str(opts.output_path));
             convert_image(std::cin, output_file);
         } else if(to_stdout) {
             oglplus::image_data_header header{};
-            header.depth = limit_cast<int>(opts.input_paths.value().size());
+            header.depth = limit_cast<int>(opts.input_paths.size());
             int layer = 0;
-            for(auto& input_path : opts.input_paths.value()) {
-                std::ifstream input_file(c_str(input_path.value()));
+            for(auto& input_path : opts.input_paths) {
+                std::ifstream input_file(c_str(input_path));
                 do_convert_image(input_file, std::cout, header, layer++);
             }
         } else {
             oglplus::image_data_header header{};
-            header.depth = limit_cast<int>(opts.input_paths.value().size());
-            std::ofstream output_file(c_str(opts.output_path.value()));
+            header.depth = limit_cast<int>(opts.input_paths.size());
+            std::ofstream output_file(c_str(opts.output_path));
             int layer = 0;
-            for(auto& input_path : opts.input_paths.value()) {
-                std::ifstream input_file(c_str(input_path.value()));
+            for(auto& input_path : opts.input_paths) {
+                std::ifstream input_file(c_str(input_path));
                 do_convert_image(input_file, output_file, header, layer++);
             }
         }
@@ -298,30 +293,16 @@ auto main(main_ctx& ctx) -> int {
     return 0;
 }
 //------------------------------------------------------------------------------
-auto parse_argument(program_arg& a, options& opts) -> bool {
-    if(!opts.parse(a, std::cerr)) {
-        std::cerr << "Failed to parse argument '" << a.get() << "'"
-                  << std::endl;
-        return false;
-    }
-    return true;
-}
-//------------------------------------------------------------------------------
 auto parse_options(const program_args& args, options& opts) -> int {
 
-    for(program_arg a = args.first(); a; a = a.next()) {
+    for(auto a : args) {
         if(a.is_help_arg()) {
             opts.print_usage(std::cout);
             return 1;
-        } else if(!parse_argument(a, opts)) {
+        } else if(!opts.parse(a, std::cerr)) {
             opts.print_usage(std::cerr);
             return 2;
         }
-    }
-
-    if(!opts.check(std::cerr)) {
-        opts.print_usage(std::cerr);
-        return 3;
     }
 
     return 0;

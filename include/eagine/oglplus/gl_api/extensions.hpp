@@ -22,7 +22,6 @@ class basic_gl_extension {
 public:
     constexpr basic_gl_extension(
       const string_view name,
-      ApiTraits&,
       const basic_gl_operations<ApiTraits>& api) noexcept
       : _api{api}
       , _name{name} {}

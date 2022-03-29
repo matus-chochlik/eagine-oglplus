@@ -14,6 +14,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/program_file_hdr.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/not_empty.hpp>
 #include <fstream>
 #include <iostream>
@@ -21,96 +22,58 @@
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
-    using _str_param_t = program_parameter<valid_if_not_empty<string_view>>;
+    std::vector<valid_if_existing_file<string_view>> vertex_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> geometry_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> tess_control_shader_paths;
+    std::vector<valid_if_existing_file<string_view>>
+      tess_evaluation_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> fragment_shader_paths;
+    std::vector<valid_if_existing_file<string_view>> compute_shader_paths;
+    valid_if_in_writable_directory<string_view> output_path{"a.oglpprog"};
 
-    using _str_list_param_t =
-      program_parameter<std::vector<valid_if_not_empty<string_view>>>;
-
-    _str_list_param_t vertex_shader_paths;
-#ifdef GL_GEOMETRY_SHADER
-    _str_list_param_t geometry_shader_paths;
-#endif
-#ifdef GL_TESS_CONTROL_SHADER
-    _str_list_param_t tess_control_shader_paths;
-#endif
-#ifdef GL_TESS_EVALUATION_SHADER
-    _str_list_param_t tess_evaluation_shader_paths;
-#endif
-    _str_list_param_t fragment_shader_paths;
-#ifdef GL_COMPUTE_SHADER
-    _str_list_param_t compute_shader_paths;
-#endif
-
-    _str_param_t output_path;
-
-    program_parameters all;
-
-    options()
-      : vertex_shader_paths("-vx", "--vertex", {})
-#ifdef GL_GEOMETRY_SHADER
-      , geometry_shader_paths("-gy", "--geometry", {})
-#endif
-#ifdef GL_TESS_CONTROL_SHADER
-      , tess_control_shader_paths("-tc", "--tess-control", {})
-#endif
-#ifdef GL_TESS_EVALUATION_SHADER
-      , tess_evaluation_shader_paths("-te", "--tess-evaluation", {})
-#endif
-      , fragment_shader_paths("-ft", "--fragment", {})
-#ifdef GL_COMPUTE_SHADER
-      , compute_shader_paths("-ce", "--compute", {})
-#endif
-      , output_path("-o", "--output", string_view("a.oglpprog"))
-      , all(
-          vertex_shader_paths,
-#ifdef GL_GEOMETRY_SHADER
-          geometry_shader_paths,
-#endif
-#ifdef GL_TESS_CONTROL_SHADER
-          tess_control_shader_paths,
-#endif
-#ifdef GL_TESS_EVALUATION_SHADER
-          tess_evaluation_shader_paths,
-#endif
-          fragment_shader_paths,
-#ifdef GL_COMPUTE_SHADER
-          compute_shader_paths,
-#endif
-          output_path) {
-        vertex_shader_paths.description(
-          "Path to existing vertex shader source file.");
-#ifdef GL_GEOMETRY_SHADER
-        geometry_shader_paths.description(
-          "Path to existing geometry shader source file.");
-#endif
-#ifdef GL_TESS_CONTROL_SHADER
-        tess_control_shader_paths.description(
-          "Path to existing tessellation control shader source file.");
-#endif
-#ifdef GL_TESS_EVALUATION_SHADER
-        tess_evaluation_shader_paths.description(
-          "Path to existing tessellation evaluation shader source file.");
-#endif
-        fragment_shader_paths.description(
-          "Path to existing fragment shader source file.");
-#ifdef GL_COMPUTE_SHADER
-        compute_shader_paths.description(
-          "Path to existing compute shader source file.");
-#endif
-        output_path.description(
-          "Output file path, or '-' for standard output.");
+    auto parse(program_arg& a, std::ostream& log) -> bool {
+        if(a.is_tag("-o", "--output")) {
+            if(!a.parse_next(output_path, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-vx", "--vertex")) {
+            if(!a.parse_next(vertex_shader_paths, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-gy", "--geometry")) {
+            if(!a.parse_next(geometry_shader_paths, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-tc", "--tess-control")) {
+            if(!a.parse_next(tess_control_shader_paths, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-te", "--tess-evaluation")) {
+            if(!a.parse_next(tess_evaluation_shader_paths, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-ft", "--fragment")) {
+            if(!a.parse_next(fragment_shader_paths, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-ce", "--compute")) {
+            if(!a.parse_next(compute_shader_paths, log)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void print_usage(std::ostream& log) {
-        all.print_usage(log, "bake_program_source");
-    }
-
-    auto check(std::ostream& log) -> bool {
-        return all.validate(log);
-    }
-
-    auto parse(program_arg& arg, std::ostream& log) -> bool {
-        return all.parse(arg, log);
+        log << "bake_noise_image options\n";
+        log << "  options:\n";
+        log << "   -o|--output PATH: Output file path or '-' for stdout.\n";
+        log << "   -vx|--vertex PATH: Vertex shader file path.\n";
+        log << "   -gy|--geometry PATH: Geometry shader file path.\n";
+        log << "   -tc|--tess-control PATH: Tess.ctrl. shader file path.\n";
+        log << "   -te|--tess-evaluation PATH: Tess.eval. shader file path.\n";
+        log << "   -ft|--fragment PATH: Fragment shader file path.\n";
+        log << "   -ce|--compute PATH: Compute shader file path.\n";
     }
 };
 //------------------------------------------------------------------------------
@@ -118,10 +81,10 @@ void read_shader_source_texts(
   std::vector<file_contents>& source_texts,
   std::vector<GLenum>& shader_types,
   GLenum shader_type,
-  const std::vector<valid_if_not_empty<string_view>>& paths) {
+  const std::vector<valid_if_existing_file<string_view>>& paths) {
 
     for(const auto& path : paths) {
-        source_texts.emplace_back(file_contents(path.value()));
+        source_texts.emplace_back(file_contents(extract(path)));
         shader_types.push_back(shader_type);
     }
 }
@@ -217,10 +180,10 @@ auto run(const program_args& args) -> int {
         return err;
     }
 
-    if(are_equal(opts.output_path.value(), string_view("-"))) {
+    if(opts.output_path == string_view("-")) {
         write_output(std::cout, opts);
     } else {
-        std::ofstream output_file(c_str(opts.output_path.value()));
+        std::ofstream output_file(c_str(opts.output_path));
         write_output(output_file, opts);
     }
     return 0;
@@ -236,31 +199,16 @@ auto main(main_ctx& ctx) -> int {
     return 1;
 }
 //------------------------------------------------------------------------------
-auto parse_argument(program_arg& a, options& opts) -> bool {
-
-    if(!opts.parse(a, std::cerr)) {
-        std::cerr << "Failed to parse argument '" << a.get() << "'"
-                  << std::endl;
-        return false;
-    }
-    return true;
-}
-//------------------------------------------------------------------------------
 auto parse_options(const program_args& args, options& opts) -> int {
 
-    for(auto a = args.first(); a; a = a.next()) {
+    for(auto a : args) {
         if(a.is_help_arg()) {
             opts.print_usage(std::cout);
             return 1;
-        } else if(!parse_argument(a, opts)) {
+        } else if(!opts.parse(a, std::cerr)) {
             opts.print_usage(std::cerr);
             return 2;
         }
-    }
-
-    if(!opts.check(std::cerr)) {
-        opts.print_usage(std::cerr);
-        return 3;
     }
 
     return 0;

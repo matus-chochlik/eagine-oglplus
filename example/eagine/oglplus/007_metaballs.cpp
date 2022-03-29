@@ -158,8 +158,7 @@ static void run_loop(
         std::vector<math::cubic_bezier_loop<oglplus::vec4, float>> loops;
         std::vector<oglplus::vec4> cp_data;
         std::default_random_engine rnd_eng{std::random_device{}()};
-        for(const auto l : integer_range(12)) {
-            EAGINE_MAYBE_UNUSED(l);
+        for([[maybe_unused]] const auto l : integer_range(12)) {
             const auto n =
               3U + std::uniform_int_distribution<unsigned>{0U, 4U}(rnd_eng);
             cp_data.resize(n);

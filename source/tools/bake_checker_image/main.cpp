@@ -11,6 +11,7 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/utils/image_file_io.hpp>
 #include <eagine/program_args.hpp>
+#include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/positive.hpp>
 #include <fstream>
 
@@ -23,48 +24,61 @@ constexpr const bool has_r3g3b2 = false;
 #endif
 //------------------------------------------------------------------------------
 struct options {
-    using _str_param_t = program_parameter<string_view>;
-    using _int_param_t = program_parameter<valid_if_positive<GLsizei>>;
-
-    _str_param_t output_path;
-    _int_param_t width;
-    _int_param_t height;
-    _int_param_t depth;
-    _int_param_t rep_x;
-    _int_param_t rep_y;
-    _int_param_t rep_z;
-
-    program_parameters all;
-
-    options()
-      : output_path("-o", "--output", "a.oglptex")
-      , width("-w", "--width", 256)
-      , height("-h", "--height", 256)
-      , depth("-d", "--depth", 1)
-      , rep_x("-x", "--x-repeat", 8)
-      , rep_y("-y", "--y-repeat", 8)
-      , rep_z("-z", "--z-repeat", 8)
-      , all(output_path, width, height, depth, rep_x, rep_y, rep_z) {
-        output_path.description(
-          "Output file path, or '-' for standard output.");
-        width.description("Output image width in pixels.");
-        height.description("Output image height in pixels.");
-        depth.description("Output image depth in pixels.");
-        rep_x.description("Pattern repeat along the X axis.");
-        rep_y.description("Pattern repeat along the Y axis.");
-        rep_z.description("Pattern repeat along the Z axis.");
-    }
+    valid_if_in_writable_directory<string_view> output_path{"a.oglptex"};
+    valid_if_positive<int> components{1};
+    valid_if_positive<int> width{256};
+    valid_if_positive<int> height{256};
+    valid_if_positive<int> depth{1};
+    valid_if_positive<int> rep_x{8};
+    valid_if_positive<int> rep_y{8};
+    valid_if_positive<int> rep_z{1};
+    int verbosity{0};
 
     void print_usage(std::ostream& log) {
-        all.print_usage(log, "bake_checker_image");
+        log << "bake_noise_image options" << std::endl;
+        log << "  options:" << std::endl;
+        log << "   -o|--output PATH: Output file path "
+               "or '-' for stdout."
+            << std::endl;
+        log << "   -w|--width N: Output image width." << std::endl;
+        log << "   -h|--height N: Output image height." << std::endl;
+        log << "   -d|--depth N: Output image depth." << std::endl;
+        log << "   -x|--x-repeat N: X-repeats." << std::endl;
+        log << "   -y|--y-repeat N: Y-repeats." << std::endl;
+        log << "   -z|--z-repeat N: Z-repeats." << std::endl;
     }
 
-    auto check(std::ostream& log) -> bool {
-        return all.validate(log);
-    }
-
-    auto parse(program_arg& arg, std::ostream& log) -> bool {
-        return all.parse(arg, log);
+    auto parse(program_arg& a, std::ostream& log) -> bool {
+        if(a.is_tag("-o", "--output")) {
+            if(!a.parse_next(output_path, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-w", "--width")) {
+            if(!a.parse_next(width, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-h", "--height")) {
+            if(!a.parse_next(height, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-d", "--depth")) {
+            if(!a.parse_next(depth, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-x", "--x_repeats")) {
+            if(!a.parse_next(width, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-y", "--y-repeats")) {
+            if(!a.parse_next(height, log)) {
+                return false;
+            }
+        } else if(a.is_tag("-z", "--z-repeats")) {
+            if(!a.parse_next(depth, log)) {
+                return false;
+            }
+        }
+        return true;
     }
 };
 //------------------------------------------------------------------------------
@@ -84,13 +98,14 @@ void write_output(std::ostream& output, const options& opts) {
     const GLsizei channels = has_r3g3b2 ? 1 : 3;
 
     const auto size = span_size(
-      opts.width.value() * opts.height.value() * opts.depth.value() * channels);
+      extract(opts.width) * extract(opts.height) * extract(opts.depth) *
+      channels);
 
     oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
-    const GLsizei fd = opts.depth.value() / opts.rep_z.value();
-    const GLsizei fh = opts.height.value() / opts.rep_y.value();
-    const GLsizei fw = opts.width.value() / opts.rep_x.value();
+    const GLsizei fd = extract(opts.depth) / extract(opts.rep_z);
+    const GLsizei fh = extract(opts.height) / extract(opts.rep_y);
+    const GLsizei fw = extract(opts.width) / extract(opts.rep_x);
 
     for(GLsizei z = 0; z < hdr.depth; ++z) {
         const GLsizei fz = (fd == 0 ? 0 : z / fd);
@@ -119,10 +134,10 @@ auto main(main_ctx& ctx) -> int {
             return err;
         }
 
-        if(are_equal(opts.output_path.value(), string_view("-"))) {
+        if(opts.output_path == string_view("-")) {
             write_output(std::cout, opts);
         } else {
-            std::ofstream output_file(c_str(opts.output_path.value()));
+            std::ofstream output_file(c_str(opts.output_path));
             write_output(output_file, opts);
         }
     } catch(const std::exception& err) {
@@ -131,30 +146,16 @@ auto main(main_ctx& ctx) -> int {
     return 0;
 }
 //------------------------------------------------------------------------------
-auto parse_argument(program_arg& a, options& opts) -> bool {
-    if(!opts.parse(a, std::cerr)) {
-        std::cerr << "Failed to parse argument '" << a.get() << "'"
-                  << std::endl;
-        return false;
-    }
-    return true;
-}
-//------------------------------------------------------------------------------
 auto parse_options(const program_args& args, options& opts) -> int {
 
-    for(program_arg a = args.first(); a; a = a.next()) {
+    for(auto a : args) {
         if(a.is_help_arg()) {
             opts.print_usage(std::cout);
             return 1;
-        } else if(!parse_argument(a, opts)) {
+        } else if(!opts.parse(a, std::cerr)) {
             opts.print_usage(std::cerr);
             return 2;
         }
-    }
-
-    if(!opts.check(std::cerr)) {
-        opts.print_usage(std::cerr);
-        return 3;
     }
 
     return 0;

@@ -235,7 +235,7 @@ public:
       const program_name prog,
       const uniform_location loc,
       const T& value) const
-      -> std::enable_if_t<is_known_vector_type_v<T>, combined_result<void>> {
+      -> combined_result<void> requires(is_known_vector_type_v<T>) {
         return set_uniform(
           prog, loc, element_view(value), canonical_compound_type<T>());
     }
@@ -381,7 +381,7 @@ public:
       const program_name prog,
       const uniform_location loc,
       const T& value) const
-      -> std::enable_if_t<is_known_matrix_type_v<T>, combined_result<void>> {
+      -> combined_result<void> requires(is_known_matrix_type_v<T>) {
         return set_uniform_matrix(
           prog,
           loc,
