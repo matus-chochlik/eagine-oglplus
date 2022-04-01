@@ -9,6 +9,7 @@
 #define EAGINE_OGLPLUS_GL_API_API_TRAITS_HPP
 
 #include "result.hpp"
+#include <eagine/c_api/api_traits.hpp>
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

@@ -15,14 +15,17 @@
 #include "object_name.hpp"
 #include "prog_var_loc.hpp"
 #include "type_utils.hpp"
+#include <eagine/c_api/adapted_function.hpp>
+#include <eagine/c_api_wrap.hpp>
 #include <eagine/oglplus/utils/buffer_data.hpp>
 #include <eagine/quantities.hpp>
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
 
 namespace eagine::oglplus {
+using c_api::adapted_function;
 //------------------------------------------------------------------------------
-#define OGLPAFP(FUNC) decltype(c_api::FUNC), &c_api::FUNC
+#define OGLPAFP(FUNC) decltype(gl_api::FUNC), &gl_api::FUNC
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the functions from the GL API.
 /// @ingroup gl_api_wrap
@@ -36,7 +39,7 @@ public:
     using api_traits = ApiTraits;
 
     /// @brief Alias for the basic GL API wrapper.
-    using c_api = basic_gl_c_api<ApiTraits>;
+    using gl_api = basic_gl_c_api<ApiTraits>;
 
     using sizei_type = typename gl_types::sizei_type;
     using sizeiptr_type = typename gl_types::sizeiptr_type;
@@ -60,7 +63,7 @@ public:
 
     using vertex_buffer_binding = uint_type;
 
-    using debug_callback_type = typename c_api::debug_callback_type;
+    using debug_callback_type = typename gl_api::debug_callback_type;
 
     /// @brief Alias for GL extension info getter.
     using extension = basic_gl_extension<ApiTraits>;
@@ -170,13 +173,14 @@ public:
 #endif
     }
 
-    template <typename W, W c_api::*F, typename Signature = typename W::signature>
+    template <typename W, W gl_api::*F, typename Signature = typename W::signature>
     class func;
 
-    template <typename W, W c_api::*F, typename RVC, typename... Params>
+    template <typename W, W gl_api::*F, typename RVC, typename... Params>
     class func<W, F, RVC(Params...)>
-      : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
-        using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
+      : public wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F> {
+        using base =
+          wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F>;
 
     public:
         using base::base;
@@ -224,13 +228,14 @@ public:
         }
     };
 
-    template <typename W, W c_api::*F, typename Signature = typename W::signature>
+    template <typename W, W gl_api::*F, typename Signature = typename W::signature>
     class unck_func;
 
-    template <typename W, W c_api::*F, typename RVC, typename... Params>
+    template <typename W, W gl_api::*F, typename RVC, typename... Params>
     class unck_func<W, F, RVC(Params...)>
-      : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
-        using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
+      : public wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F> {
+        using base =
+          wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F>;
 
     public:
         using base::base;
@@ -272,7 +277,7 @@ public:
       typename PostTypeList,
       typename QueryResult,
       typename W,
-      W c_api::*F>
+      W gl_api::*F>
     struct query_func;
 
     template <
@@ -281,7 +286,7 @@ public:
       typename... PostParams,
       typename QueryResult,
       typename W,
-      W c_api::*F>
+      W gl_api::*F>
     struct query_func<
       mp_list<PreParams...>,
       mp_list<QueryClasses...>,
@@ -320,28 +325,16 @@ public:
         }
     };
 
-    // generate / create objects
-    struct : func<OGLPAFP(FenceSync)> {
-        using func<OGLPAFP(FenceSync)>::func;
+    adapted_function<
+      &gl_api::FenceSync,
+      void(sync_condition, enum_bitfield<sync_flag_bit>)>
+      fence_sync{*this};
 
-        constexpr auto operator()(sync_condition cond) const noexcept {
-            return this->_cnvchkcall(cond, bitfield_type(0));
-        }
-
-        constexpr auto operator()(
-          sync_condition cond,
-          enum_bitfield<sync_flag_bit> flags) const noexcept {
-            return this->_cnvchkcall(cond, bitfield_type(flags));
-        }
-    } fence_sync;
-
-    template <typename ObjTag, typename W, W c_api::*GenObjects>
-    struct make_object_func : func<W, GenObjects> {
-        using func<W, GenObjects>::func;
-
-        constexpr auto operator()(span<name_type> names) const noexcept {
-            return this->_chkcall(sizei_type(names.size()), names.data());
-        }
+    template <auto Wrapper, typename ObjTag>
+    struct make_object_func : adapted_function<Wrapper, void(span<name_type>)> {
+        using base = adapted_function<Wrapper, void(span<name_type>)>;
+        using base::base;
+        using base::operator();
 
         constexpr auto operator()(
           gl_object_name_span<gl_object_name<ObjTag>> names) const noexcept {
@@ -350,82 +343,68 @@ public:
 
         constexpr auto operator()() const noexcept {
             name_type n{};
-            return this->_chkcall(1, &n).replaced_with(n).cast_to(
-              type_identity<gl_owned_object_name<ObjTag>>{});
+            return base::operator()(cover_one(n)).transformed([&n](bool valid) {
+                return gl_owned_object_name<ObjTag>(valid ? n : 0);
+            });
         }
     };
 
-    struct : func<OGLPAFP(CreateShader)> {
-        using func<OGLPAFP(CreateShader)>::func;
+    adapted_function<&gl_api::CreateShader, owned_shader_name(shader_type)>
+      create_shader{*this};
 
-        constexpr auto operator()(shader_type type) const noexcept {
-            return this->_cnvchkcall(type).cast_to(
-              type_identity<owned_shader_name>{});
-        }
-    } create_shader;
+    adapted_function<&gl_api::CreateProgram, owned_program_name()>
+      create_program{*this};
 
-    struct : func<OGLPAFP(CreateProgram)> {
-        using func<OGLPAFP(CreateProgram)>::func;
+    make_object_func<&gl_api::GenBuffers, buffer_tag> gen_buffers{*this};
 
-        constexpr auto operator()() const noexcept {
-            return this->_chkcall().cast_to(
-              type_identity<owned_program_name>{});
-        }
-    } create_program;
+    make_object_func<&gl_api::CreateBuffers, buffer_tag> create_buffers{*this};
 
-    make_object_func<buffer_tag, OGLPAFP(GenBuffers)> gen_buffers;
+    make_object_func<&gl_api::GenFramebuffers, framebuffer_tag> gen_framebuffers{
+      *this};
 
-    make_object_func<buffer_tag, OGLPAFP(CreateBuffers)> create_buffers;
+    make_object_func<&gl_api::CreateFramebuffers, framebuffer_tag>
+      create_framebuffers{*this};
 
-    make_object_func<framebuffer_tag, OGLPAFP(GenFramebuffers)> gen_framebuffers;
+    make_object_func<&gl_api::GenProgramPipelines, program_pipeline_tag>
+      gen_program_pipelines{*this};
 
-    make_object_func<framebuffer_tag, OGLPAFP(CreateFramebuffers)>
-      create_framebuffers;
+    make_object_func<&gl_api::CreateProgramPipelines, program_pipeline_tag>
+      create_program_pipelines{*this};
 
-    make_object_func<program_pipeline_tag, OGLPAFP(GenProgramPipelines)>
-      gen_program_pipelines;
+    make_object_func<&gl_api::GenQueries, query_tag> gen_queries{*this};
 
-    make_object_func<program_pipeline_tag, OGLPAFP(CreateProgramPipelines)>
-      create_program_pipelines;
+    make_object_func<&gl_api::CreateQueries, query_tag> create_queries{*this};
 
-    make_object_func<query_tag, OGLPAFP(GenQueries)> gen_queries;
+    make_object_func<&gl_api::GenRenderbuffers, renderbuffer_tag>
+      gen_renderbuffers{*this};
 
-    make_object_func<query_tag, OGLPAFP(CreateQueries)> create_queries;
+    make_object_func<&gl_api::CreateRenderbuffers, renderbuffer_tag>
+      create_renderbuffers{*this};
 
-    make_object_func<renderbuffer_tag, OGLPAFP(GenRenderbuffers)>
-      gen_renderbuffers;
+    make_object_func<&gl_api::GenSamplers, sampler_tag> gen_samplers{*this};
 
-    make_object_func<renderbuffer_tag, OGLPAFP(CreateRenderbuffers)>
-      create_renderbuffers;
+    make_object_func<&gl_api::CreateSamplers, sampler_tag> create_samplers{
+      *this};
 
-    make_object_func<sampler_tag, OGLPAFP(GenSamplers)> gen_samplers;
+    make_object_func<&gl_api::GenTextures, texture_tag> gen_textures{*this};
 
-    make_object_func<sampler_tag, OGLPAFP(CreateSamplers)> create_samplers;
+    make_object_func<&gl_api::CreateTextures, texture_tag> create_textures{
+      *this};
 
-    make_object_func<texture_tag, OGLPAFP(GenTextures)> gen_textures;
+    make_object_func<&gl_api::GenTransformFeedbacks, transform_feedback_tag>
+      gen_transform_feedbacks{*this};
 
-    make_object_func<texture_tag, OGLPAFP(CreateTextures)> create_textures;
+    make_object_func<&gl_api::CreateTransformFeedbacks, transform_feedback_tag>
+      create_transform_feedbacks{*this};
 
-    make_object_func<transform_feedback_tag, OGLPAFP(GenTransformFeedbacks)>
-      gen_transform_feedbacks;
+    make_object_func<&gl_api::GenVertexArrays, vertex_array_tag>
+      gen_vertex_arrays{*this};
 
-    make_object_func<transform_feedback_tag, OGLPAFP(CreateTransformFeedbacks)>
-      create_transform_feedbacks;
+    make_object_func<&gl_api::CreateVertexArrays, vertex_array_tag>
+      create_vertex_arrays{*this};
 
-    make_object_func<vertex_array_tag, OGLPAFP(GenVertexArrays)>
-      gen_vertex_arrays;
-
-    make_object_func<vertex_array_tag, OGLPAFP(CreateVertexArrays)>
-      create_vertex_arrays;
-
-    struct : func<OGLPAFP(GenPathsNV)> {
-        using func<OGLPAFP(GenPathsNV)>::func;
-
-        constexpr auto operator()(sizei_type count = 1) const noexcept {
-            return this->_chkcall(count).cast_to(
-              type_identity<owned_path_nv_name>{});
-        }
-    } create_paths_nv;
+    adapted_function<&gl_api::GenPathsNV, owned_path_nv_name(sizei_type)>
+      create_paths_nv{*this};
 
     // delete objects
     struct : func<OGLPAFP(DeleteSync)> {
@@ -450,7 +429,7 @@ public:
         }
     } delete_sync;
 
-    template <typename ObjTag, typename W, W c_api::*DeleteObjects>
+    template <typename ObjTag, typename W, W gl_api::*DeleteObjects>
     struct delete_object_func : func<W, DeleteObjects> {
         using func<W, DeleteObjects>::func;
 
@@ -579,7 +558,7 @@ public:
     // is_object
     func<OGLPAFP(IsSync), true_false(sync_type)> is_sync;
 
-    template <typename ObjTag, typename W, W c_api::*IsObject>
+    template <typename ObjTag, typename W, W gl_api::*IsObject>
     using is_object_func =
       func<W, IsObject, true_false(gl_object_name<ObjTag>)>;
 

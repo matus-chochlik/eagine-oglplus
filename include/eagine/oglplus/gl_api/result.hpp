@@ -10,7 +10,7 @@
 
 #include "config.hpp"
 #include <eagine/anything.hpp>
-#include <eagine/c_api_wrap.hpp>
+#include <eagine/c_api/result.hpp>
 #include <eagine/string_span.hpp>
 
 namespace eagine::oglplus {

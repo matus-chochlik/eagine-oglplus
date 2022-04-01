@@ -10,33 +10,11 @@ namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
 basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
-  : c_api{traits}
+  : gl_api{traits}
   , ARB_debug_output{"ARB_debug_output", *this}
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
   , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , fence_sync{"fence_sync", *this}
-  , create_shader{"create_shader", *this}
-  , create_program{"create_program", *this}
-  , gen_buffers{"gen_buffers", *this}
-  , create_buffers{"create_buffers", *this}
-  , gen_framebuffers{"gen_framebuffers", *this}
-  , create_framebuffers{"create_framebuffers", *this}
-  , gen_program_pipelines{"gen_program_pipelines", *this}
-  , create_program_pipelines{"create_program_pipelines", *this}
-  , gen_queries{"gen_queries", *this}
-  , create_queries{"create_queries", *this}
-  , gen_renderbuffers{"gen_renderbuffers", *this}
-  , create_renderbuffers{"create_renderbuffers", *this}
-  , gen_samplers{"gen_samplers", *this}
-  , create_samplers{"create_samplers", *this}
-  , gen_textures{"gen_textures", *this}
-  , create_textures{"create_textures", *this}
-  , gen_transform_feedbacks{"gen_transform_feedbacks", *this}
-  , create_transform_feedbacks{"create_transform_feedbacks", *this}
-  , gen_vertex_arrays{"gen_vertex_arrays", *this}
-  , create_vertex_arrays{"create_vertex_arrays", *this}
-  , create_paths_nv{"create_paths_nv", *this}
   , delete_sync{"delete_sync", *this}
   , delete_shader{"delete_shader", *this}
   , delete_program{"delete_program", *this}
