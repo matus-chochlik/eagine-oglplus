@@ -22,6 +22,50 @@
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
 
+#ifndef GL_BUFFER
+#define GL_BUFFER 0x82E0
+#endif
+
+#ifndef GL_FRAMEBUFFER
+#define GL_FRAMEBUFFER 0x8D40
+#endif
+
+#ifndef GL_PROGRAM_PIPELINE
+#define GL_PROGRAM_PIPELINE 0x82E4
+#endif
+
+#ifndef GL_PROGRAM
+#define GL_PROGRAM 0x82E2
+#endif
+
+#ifndef GL_QUERY
+#define GL_QUERY 0x82E3
+#endif
+
+#ifndef GL_RENDERBUFFER
+#define GL_RENDERBUFFER 0x8D41
+#endif
+
+#ifndef GL_SAMPLER
+#define GL_SAMPLER 0x82E6
+#endif
+
+#ifndef GL_SHADER
+#define GL_SHADER 0x82E1
+#endif
+
+#ifndef GL_TEXTURE
+#define GL_TEXTURE 0x1702
+#endif
+
+#ifndef GL_TRANSFORM_FEEDBACK
+#define GL_TRANSFORM_FEEDBACK 0x8E22
+#endif
+
+#ifndef GL_VERTEX_ARRAY
+#define GL_VERTEX_ARRAY 0x8074
+#endif
+
 namespace eagine::oglplus {
 using c_api::adapted_function;
 //------------------------------------------------------------------------------
@@ -86,91 +130,47 @@ public:
 
     // utilities
     static constexpr auto type_of(buffer_name) noexcept {
-#ifdef GL_BUFFER
         return object_type(GL_BUFFER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(framebuffer_name) noexcept {
-#ifdef GL_FRAMEBUFFER
         return object_type(GL_FRAMEBUFFER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(program_pipeline_name) noexcept {
-#ifdef GL_PROGRAM_PIPELINE
         return object_type(GL_PROGRAM_PIPELINE);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(program_name) noexcept {
-#ifdef GL_PROGRAM
         return object_type(GL_PROGRAM);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(query_name) noexcept {
-#ifdef GL_QUERY
         return object_type(GL_QUERY);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(renderbuffer_name) noexcept {
-#ifdef GL_RENDERBUFFER
         return object_type(GL_RENDERBUFFER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(sampler_name) noexcept {
-#ifdef GL_SAMPLER
         return object_type(GL_SAMPLER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(shader_name) noexcept {
-#ifdef GL_SHADER
         return object_type(GL_SHADER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(texture_name) noexcept {
-#ifdef GL_TEXTURE
         return object_type(GL_TEXTURE);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(transform_feedback_name) noexcept {
-#ifdef GL_TRANSFORM_FEEDBACK
         return object_type(GL_TRANSFORM_FEEDBACK);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(vertex_array_name) noexcept {
-#ifdef GL_VERTEX_ARRAY
         return object_type(GL_VERTEX_ARRAY);
-#else
-        return object_type(0);
-#endif
     }
 
     template <typename W, W gl_api::*F, typename Signature = typename W::signature>
@@ -407,27 +407,7 @@ public:
       create_paths_nv{*this};
 
     // delete objects
-    struct : func<OGLPAFP(DeleteSync)> {
-        using func<OGLPAFP(DeleteSync)>::func;
-
-        constexpr auto operator()(sync_type sync) const noexcept {
-            return this->_chkcall(sync);
-        }
-
-        auto bind(sync_type sync) const noexcept {
-            return [this, sync] {
-                return (*this)(sync);
-            };
-        }
-
-        auto later_by(cleanup_group& cleanup, sync_type sync) const -> auto& {
-            return cleanup.add_ret(bind(sync));
-        }
-
-        auto raii(sync_type& sync) const noexcept {
-            return eagine::finally(bind(sync));
-        }
-    } delete_sync;
+    adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{*this};
 
     template <typename ObjTag, typename W, W gl_api::*DeleteObjects>
     struct delete_object_func : func<W, DeleteObjects> {
@@ -465,28 +445,8 @@ public:
         }
     };
 
-    struct : func<OGLPAFP(DeleteShader)> {
-        using func<OGLPAFP(DeleteShader)>::func;
-
-        constexpr auto operator()(owned_shader_name name) const noexcept {
-            return this->_chkcall(name.release());
-        }
-
-        auto bind(owned_shader_name& name) const noexcept {
-            return [this, &name] {
-                return (*this)(std::move(name));
-            };
-        }
-
-        auto later_by(cleanup_group& cleanup, owned_shader_name& name) const
-          -> auto& {
-            return cleanup.add_ret(bind(name));
-        }
-
-        auto raii(owned_shader_name& name) const noexcept {
-            return eagine::finally(bind(name));
-        }
-    } delete_shader;
+    adapted_function<&gl_api::DeleteShader, void(owned_shader_name)>
+      delete_shader{*this};
 
     struct : func<OGLPAFP(DeleteProgram)> {
         using func<OGLPAFP(DeleteProgram)>::func;
