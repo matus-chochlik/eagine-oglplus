@@ -9,7 +9,7 @@
 #define EAGINE_OGLPLUS_GL_API_OBJECT_NAME_HPP
 
 #include "config.hpp"
-#include <eagine/handle.hpp>
+#include <eagine/c_api/handle.hpp>
 #include <eagine/message_id.hpp>
 
 namespace eagine::oglplus {
@@ -21,27 +21,28 @@ namespace eagine::oglplus {
 /// @see gl_object_name_span
 /// @see gl_object_name_array
 template <typename Tag>
-using gl_object_name = basic_handle<Tag, gl_types::name_type>;
+using gl_object_name = c_api::basic_handle<Tag, gl_types::name_type>;
 
 /// @brief Alias for template wrapping owned GL object handles.
 /// @ingroup gl_api_wrap
 /// @see gl_object_name
 template <typename Tag>
-using gl_owned_object_name = basic_owned_handle<Tag, gl_types::name_type>;
+using gl_owned_object_name =
+  c_api::basic_owned_handle<Tag, gl_types::name_type>;
 
 /// @brief Alias for template wrapping a mutable span of GL object handles.
 /// @ingroup gl_api_wrap
 /// @see gl_object_name_view
 /// @see gl_object_name_array
 template <typename Tag>
-using gl_object_name_span = basic_handle_span<gl_object_name<Tag>>;
+using gl_object_name_span = c_api::basic_handle_span<gl_object_name<Tag>>;
 
 /// @brief Alias for template wrapping a const span of GL object handles.
 /// @ingroup gl_api_wrap
 /// @see gl_object_name_span
 /// @see gl_object_name_array
 template <typename Tag>
-using gl_object_name_view = basic_handle_view<gl_object_name<Tag>>;
+using gl_object_name_view = c_api::basic_handle_view<gl_object_name<Tag>>;
 
 /// @brief Alias for template wrapping an array of GL object handles.
 /// @ingroup gl_api_wrap
@@ -49,7 +50,7 @@ using gl_object_name_view = basic_handle_view<gl_object_name<Tag>>;
 /// @see gl_object_name_span
 /// @see gl_object_name_view
 template <typename Tag, std::size_t N>
-using gl_object_name_array = basic_handle_array<gl_object_name<Tag>, N>;
+using gl_object_name_array = c_api::basic_handle_array<gl_object_name<Tag>, N>;
 
 /// @brief Alias for template wrapping a vector of GL object handles.
 /// @ingroup gl_api_wrap
@@ -57,7 +58,7 @@ using gl_object_name_array = basic_handle_array<gl_object_name<Tag>, N>;
 /// @see gl_object_name_span
 /// @see gl_object_name_view
 template <typename Tag>
-using gl_object_name_vector = basic_handle_vector<gl_object_name<Tag>>;
+using gl_object_name_vector = c_api::basic_handle_vector<gl_object_name<Tag>>;
 //------------------------------------------------------------------------------
 /// @brief Tag type denoting GL buffer objects.
 /// @ingroup gl_api_wrap
