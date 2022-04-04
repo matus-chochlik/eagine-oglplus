@@ -15,38 +15,7 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
   , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , delete_program{"delete_program", *this}
-  , delete_buffers{"delete_buffers", *this}
-  , delete_framebuffers{"delete_framebuffers", *this}
-  , delete_program_pipelines{"delete_program_pipelines", *this}
-  , delete_queries{"delete_queries", *this}
-  , delete_renderbuffers{"delete_renderbuffers", *this}
-  , delete_samplers{"delete_samplers", *this}
-  , delete_textures{"delete_textures", *this}
-  , delete_transform_feedbacks{"delete_transform_feedbacks", *this}
-  , delete_vertex_arrays{"delete_vertex_arrays", *this}
   , delete_paths_nv{"delete_paths_nv", *this}
-  , is_sync{"is_sync", *this}
-  , is_buffer{"is_buffer", *this}
-  , is_framebuffer{"is_framebuffer", *this}
-  , is_program_pipeline{"is_program_pipeline", *this}
-  , is_program{"is_program", *this}
-  , is_query{"is_query", *this}
-  , is_renderbuffer{"is_renderbuffer", *this}
-  , is_sampler{"is_sampler", *this}
-  , is_shader{"is_shader", *this}
-  , is_texture{"is_texture", *this}
-  , is_transform_feedback{"is_transform_feedback", *this}
-  , is_vertex_array{"is_vertex_array", *this}
-  , is_path_nv{"is_path_nv", *this}
-  , enable{"enable", *this}
-  , enablei{"enablei", *this}
-  , disable{"disable", *this}
-  , disablei{"disablei", *this}
-  , is_enabled{"is_enabled", *this}
-  , is_enabledi{"is_enabledi", *this}
-  , memory_barrier{"memory_barrier", *this}
-  , memory_barrier_by_region{"memory_barrier_by_region", *this}
   , viewport{"viewport", *this}
   , viewport_array{"viewport_array", *this}
   , stencil_func{"stencil_func", *this}

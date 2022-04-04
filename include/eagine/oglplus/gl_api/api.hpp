@@ -409,90 +409,62 @@ public:
     // delete objects
     adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{*this};
 
-    template <typename ObjTag, typename W, W gl_api::*DeleteObjects>
-    struct delete_object_func : func<W, DeleteObjects> {
-        using func<W, DeleteObjects>::func;
-
-        constexpr auto operator()(span<const name_type> names) const noexcept {
-            return this->_chkcall(sizei_type(names.size()), names.data());
-        }
-
-        constexpr auto operator()(
-          gl_object_name_view<gl_object_name<ObjTag>> names) const noexcept {
-            return (*this)(names.raw_handles());
-        }
+    template <auto Wrapper, typename ObjTag>
+    struct del_object_func : adapted_function<Wrapper, void(span<name_type>)> {
+        using base = adapted_function<Wrapper, void(span<name_type>)>;
+        using base::base;
+        using base::raii;
+        using base::operator();
 
         constexpr auto operator()(
           gl_owned_object_name<ObjTag> name) const noexcept {
             auto n = name.release();
-            return this->_chkcall(1, &n);
+            return base::operator()(cover_one(n));
         }
 
-        auto bind(gl_owned_object_name<ObjTag>& name) const noexcept {
-            return [this, &name] {
-                (*this)(std::move(name));
-            };
+        constexpr auto raii(gl_owned_object_name<ObjTag>& name) const noexcept {
+            return eagine::finally(
+              [this, &name]() { (*this)(std::move(name)); });
         }
 
-        auto later_by(
+        constexpr auto later_by(
           cleanup_group& cleanup,
-          gl_owned_object_name<ObjTag>& name) const -> auto& {
-            return cleanup.add_ret(bind(name));
-        }
-
-        auto raii(gl_owned_object_name<ObjTag>& name) const noexcept {
-            return eagine::finally(bind(name));
+          gl_owned_object_name<ObjTag>& name) const noexcept -> decltype(auto) {
+            return cleanup.add_ret(
+              [this, &name]() { (*this)(std::move(name)); });
         }
     };
 
     adapted_function<&gl_api::DeleteShader, void(owned_shader_name)>
       delete_shader{*this};
 
-    struct : func<OGLPAFP(DeleteProgram)> {
-        using func<OGLPAFP(DeleteProgram)>::func;
+    adapted_function<&gl_api::DeleteProgram, void(owned_program_name)>
+      delete_program{*this};
 
-        constexpr auto operator()(owned_program_name name) const noexcept {
-            return this->_chkcall(name.release());
-        }
+    del_object_func<&gl_api::DeleteBuffers, buffer_tag> delete_buffers{*this};
 
-        auto bind(owned_program_name& name) const noexcept {
-            return [this, &name] {
-                return (*this)(std::move(name));
-            };
-        }
+    del_object_func<&gl_api::DeleteFramebuffers, framebuffer_tag>
+      delete_framebuffers{*this};
 
-        auto later_by(cleanup_group& cleanup, owned_program_name& name) const
-          -> auto& {
-            return cleanup.add_ret(bind(name));
-        }
+    del_object_func<&gl_api::DeleteProgramPipelines, program_pipeline_tag>
+      delete_program_pipelines{*this};
 
-        auto raii(owned_program_name& name) const noexcept {
-            return eagine::finally(bind(name));
-        }
-    } delete_program;
+    del_object_func<&gl_api::DeleteQueries, query_tag> delete_queries{*this};
 
-    delete_object_func<buffer_tag, OGLPAFP(DeleteBuffers)> delete_buffers;
+    del_object_func<&gl_api::DeleteRenderbuffers, renderbuffer_tag>
+      delete_renderbuffers{*this};
 
-    delete_object_func<framebuffer_tag, OGLPAFP(DeleteFramebuffers)>
-      delete_framebuffers;
+    del_object_func<&gl_api::DeleteSamplers, sampler_tag> delete_samplers{
+      *this};
 
-    delete_object_func<program_pipeline_tag, OGLPAFP(DeleteProgramPipelines)>
-      delete_program_pipelines;
+    del_object_func<&gl_api::DeleteTextures, texture_tag> delete_textures{
+      *this};
 
-    delete_object_func<query_tag, OGLPAFP(DeleteQueries)> delete_queries;
+    del_object_func<&gl_api::DeleteTransformFeedbacks, transform_feedback_tag>
+      delete_transform_feedbacks{*this};
 
-    delete_object_func<renderbuffer_tag, OGLPAFP(DeleteRenderbuffers)>
-      delete_renderbuffers;
-
-    delete_object_func<sampler_tag, OGLPAFP(DeleteSamplers)> delete_samplers;
-
-    delete_object_func<texture_tag, OGLPAFP(DeleteTextures)> delete_textures;
-
-    delete_object_func<transform_feedback_tag, OGLPAFP(DeleteTransformFeedbacks)>
-      delete_transform_feedbacks;
-
-    delete_object_func<vertex_array_tag, OGLPAFP(DeleteVertexArrays)>
-      delete_vertex_arrays;
+    del_object_func<&gl_api::DeleteVertexArrays, vertex_array_tag>
+      delete_vertex_arrays{*this};
 
     struct : func<OGLPAFP(DeletePathsNV)> {
         using func<OGLPAFP(DeletePathsNV)>::func;
@@ -515,57 +487,69 @@ public:
         }
     } delete_paths_nv;
 
-    // is_object
-    func<OGLPAFP(IsSync), true_false(sync_type)> is_sync;
+    adapted_function<&gl_api::IsSync, true_false(sync_type)> is_sync{*this};
 
-    template <typename ObjTag, typename W, W gl_api::*IsObject>
-    using is_object_func =
-      func<W, IsObject, true_false(gl_object_name<ObjTag>)>;
+    adapted_function<&gl_api::IsBuffer, true_false(buffer_name)> is_buffer{
+      *this};
 
-    is_object_func<buffer_tag, OGLPAFP(IsBuffer)> is_buffer;
+    adapted_function<&gl_api::IsFramebuffer, true_false(framebuffer_name)>
+      is_framebuffer{*this};
 
-    is_object_func<framebuffer_tag, OGLPAFP(IsFramebuffer)> is_framebuffer;
+    adapted_function<
+      &gl_api::IsProgramPipeline,
+      true_false(program_pipeline_name)>
+      is_program_pipeline{*this};
 
-    is_object_func<program_pipeline_tag, OGLPAFP(IsProgramPipeline)>
-      is_program_pipeline;
+    adapted_function<&gl_api::IsProgram, true_false(program_name)> is_program{
+      *this};
 
-    is_object_func<program_tag, OGLPAFP(IsProgram)> is_program;
+    adapted_function<&gl_api::IsQuery, true_false(query_name)> is_query{*this};
 
-    is_object_func<query_tag, OGLPAFP(IsQuery)> is_query;
+    adapted_function<&gl_api::IsRenderbuffer, true_false(renderbuffer_name)>
+      is_renderbuffer{*this};
 
-    is_object_func<renderbuffer_tag, OGLPAFP(IsRenderbuffer)> is_renderbuffer;
+    adapted_function<&gl_api::IsSampler, true_false(sampler_name)> is_sampler{
+      *this};
 
-    is_object_func<sampler_tag, OGLPAFP(IsSampler)> is_sampler;
+    adapted_function<&gl_api::IsShader, true_false(shader_name)> is_shader{
+      *this};
 
-    is_object_func<shader_tag, OGLPAFP(IsShader)> is_shader;
+    adapted_function<&gl_api::IsTexture, true_false(texture_name)> is_texture{
+      *this};
 
-    is_object_func<texture_tag, OGLPAFP(IsTexture)> is_texture;
+    adapted_function<
+      &gl_api::IsTransformFeedback,
+      true_false(transform_feedback_name)>
+      is_transform_feedback{*this};
 
-    is_object_func<transform_feedback_tag, OGLPAFP(IsTransformFeedback)>
-      is_transform_feedback;
+    adapted_function<&gl_api::IsVertexArray, true_false(vertex_array_name)>
+      is_vertex_array{*this};
 
-    is_object_func<vertex_array_tag, OGLPAFP(IsVertexArray)> is_vertex_array;
+    adapted_function<&gl_api::IsPathNV, true_false(path_nv_name)> is_path_nv{
+      *this};
 
-    is_object_func<path_nv_tag, OGLPAFP(IsPathNV)> is_path_nv;
+    adapted_function<&gl_api::Enable, void(capability)> enable{*this};
+    adapted_function<&gl_api::Enablei, void(capability, uint_type)> enablei{
+      *this};
 
-    // enable
-    func<OGLPAFP(Enable), void(capability)> enable;
-    func<OGLPAFP(Enablei), void(capability, uint_type)> enablei;
+    adapted_function<&gl_api::Disable, void(capability)> disable{*this};
+    adapted_function<&gl_api::Disablei, void(capability, uint_type)> disablei{
+      *this};
 
-    // disable
-    func<OGLPAFP(Disable), void(capability)> disable;
-    func<OGLPAFP(Disablei), void(capability, uint_type)> disablei;
+    adapted_function<&gl_api::IsEnabled, true_false(capability)> is_enabled{
+      *this};
+    adapted_function<&gl_api::IsEnabledi, true_false(capability, uint_type)>
+      is_enabledi{*this};
 
-    // is_enabled
-    func<OGLPAFP(IsEnabled), true_false(capability)> is_enabled;
-    func<OGLPAFP(IsEnabledi), true_false(capability, uint_type)> is_enabledi;
+    adapted_function<
+      &gl_api::MemoryBarrier,
+      void(enum_bitfield<memory_barrier_bit>)>
+      memory_barrier{*this};
 
-    // memory barrier
-    func<OGLPAFP(MemoryBarrier), void(enum_bitfield<memory_barrier_bit>)>
-      memory_barrier;
-
-    func<OGLPAFP(MemoryBarrierByRegion), void(enum_bitfield<memory_barrier_bit>)>
-      memory_barrier_by_region;
+    adapted_function<
+      &gl_api::MemoryBarrierByRegion,
+      void(enum_bitfield<memory_barrier_bit>)>
+      memory_barrier_by_region{*this};
 
     // viewport
     struct : func<OGLPAFP(Viewport)> {
