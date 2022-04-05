@@ -9,6 +9,7 @@
 #define EAGINE_OGLPLUS_GL_API_PROG_VAR_LOC_HPP
 
 #include "config.hpp"
+#include <eagine/c_api/parameter_map.hpp>
 #include <eagine/identifier.hpp>
 #include <array>
 
@@ -231,5 +232,33 @@ static inline auto operator+(
 }
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
+
+namespace eagine::c_api {
+
+template <std::size_t I, identifier_t TagId>
+struct make_arg_map<
+  I,
+  I,
+  oglplus::gl_types::uint_type,
+  oglplus::prog_var_location<TagId>> {
+    template <typename... P>
+    constexpr auto operator()(size_constant<I> i, P&&... p) const noexcept {
+        return trivial_map{}(i, std::forward<P>(p)...).index();
+    }
+};
+
+template <std::size_t CI, std::size_t CppI, identifier_t TagId>
+struct make_arg_map<
+  CI,
+  CppI,
+  oglplus::gl_types::uint_type,
+  oglplus::prog_var_location<TagId>> {
+    template <typename... P>
+    constexpr auto operator()(size_constant<CI> i, P&&... p) const noexcept {
+        return reorder_arg_map<CI, CppI>{}(i, std::forward<P>(p)...).index();
+    }
+};
+
+} // namespace eagine::c_api
 
 #endif // EAGINE_OGLPLUS_GL_API_PROG_VAR_LOC_HPP

@@ -799,15 +799,15 @@ public:
         }
     } get_program_resource_f;
 
-    func<
-      OGLPAFP(BindAttribLocation),
+    adapted_function<
+      &gl_api::BindAttribLocation,
       void(program_name, vertex_attrib_location, string_view)>
-      bind_attrib_location;
+      bind_attrib_location{*this};
 
-    func<
-      OGLPAFP(GetAttribLocation),
+    adapted_function<
+      &gl_api::GetAttribLocation,
       vertex_attrib_location(program_name, string_view)>
-      get_attrib_location;
+      get_attrib_location{*this};
 
     struct : func<OGLPAFP(GetActiveAttrib)> {
         using func<OGLPAFP(GetActiveAttrib)>::func;
@@ -857,31 +857,35 @@ public:
         }
     } transform_feedback_varyings;
 
-    func<
-      OGLPAFP(BindFragDataLocation),
+    adapted_function<
+      &gl_api::BindFragDataLocation,
       void(program_name, frag_data_location, string_view)>
-      bind_frag_data_location;
+      bind_frag_data_location{*this};
 
-    func<
-      OGLPAFP(GetFragDataLocation),
+    adapted_function<
+      &gl_api::GetFragDataLocation,
       frag_data_location(program_name, string_view)>
-      get_frag_data_location;
+      get_frag_data_location{*this};
 
-    func<OGLPAFP(GetFragDataIndex), int_type(program_name, string_view)>
-      get_frag_data_index;
+    adapted_function<
+      &gl_api::GetFragDataIndex,
+      int_type(program_name, string_view)>
+      get_frag_data_index{*this};
 
-    func<
-      OGLPAFP(BindFragDataLocationIndexed),
+    adapted_function<
+      &gl_api::BindFragDataLocationIndexed,
       void(program_name, uint_type, frag_data_location, string_view)>
-      bind_frag_data_location_indexed;
+      bind_frag_data_location_indexed{*this};
 
-    func<OGLPAFP(GetUniformLocation), uniform_location(program_name, string_view)>
-      get_uniform_location;
+    adapted_function<
+      &gl_api::GetUniformLocation,
+      uniform_location(program_name, string_view)>
+      get_uniform_location{*this};
 
-    func<
-      OGLPAFP(GetUniformBlockIndex),
+    adapted_function<
+      &gl_api::GetUniformBlockIndex,
       uniform_block_index(program_name, string_view)>
-      get_uniform_block_index;
+      get_uniform_block_index{*this};
 
     struct : func<OGLPAFP(GetActiveUniformName)> {
         using func<OGLPAFP(GetActiveUniformName)>::func;
@@ -902,10 +906,10 @@ public:
         }
     } get_active_uniform_name;
 
-    func<
-      OGLPAFP(GetSubroutineUniformLocation),
+    adapted_function<
+      &gl_api::GetSubroutineUniformLocation,
       subroutine_uniform_location(program_name, shader_type, string_view)>
-      get_subroutine_uniform_location;
+      get_subroutine_uniform_location{*this};
 
     struct : func<OGLPAFP(GetActiveSubroutineUniformName)> {
         using func<OGLPAFP(GetActiveSubroutineUniformName)>::func;
@@ -928,10 +932,10 @@ public:
         }
     } get_active_subroutine_uniform_name;
 
-    func<
-      OGLPAFP(GetSubroutineIndex),
+    adapted_function<
+      &gl_api::GetSubroutineIndex,
       subroutine_location(program_name, shader_type, string_view)>
-      get_subroutine_index;
+      get_subroutine_index{*this};
 
     struct : func<OGLPAFP(GetActiveSubroutineName)> {
         using func<OGLPAFP(GetActiveSubroutineName)>::func;
@@ -979,17 +983,23 @@ public:
 
     // uniform
     // uint
-    func<OGLPAFP(Uniform1ui), void(uniform_location, uint_type)> uniform1ui;
-    func<OGLPAFP(Uniform2ui), void(uniform_location, uint_type, uint_type)>
-      uniform2ui;
-    func<
-      OGLPAFP(Uniform3ui),
+    adapted_function<&gl_api::Uniform1ui, void(uniform_location, uint_type)>
+      uniform1ui{*this};
+
+    adapted_function<
+      &gl_api::Uniform2ui,
+      void(uniform_location, uint_type, uint_type)>
+      uniform2ui{*this};
+
+    adapted_function<
+      &gl_api::Uniform3ui,
       void(uniform_location, uint_type, uint_type, uint_type)>
-      uniform3ui;
-    func<
-      OGLPAFP(Uniform4ui),
+      uniform3ui{*this};
+
+    adapted_function<
+      &gl_api::Uniform4ui,
       void(uniform_location, uint_type, uint_type, uint_type, uint_type)>
-      uniform4ui;
+      uniform4ui{*this};
 
     struct : func<OGLPAFP(Uniform1uiv)> {
         using func<OGLPAFP(Uniform1uiv)>::func;
@@ -1028,15 +1038,23 @@ public:
     } uniform4uiv;
 
     // int
-    func<OGLPAFP(Uniform1i), void(uniform_location, int_type)> uniform1i;
-    func<OGLPAFP(Uniform2i), void(uniform_location, int_type, int_type)>
-      uniform2i;
-    func<OGLPAFP(Uniform3i), void(uniform_location, int_type, int_type, int_type)>
-      uniform3i;
-    func<
-      OGLPAFP(Uniform4i),
+    adapted_function<&gl_api::Uniform1i, void(uniform_location, int_type)>
+      uniform1i{*this};
+
+    adapted_function<
+      &gl_api::Uniform2i,
+      void(uniform_location, int_type, int_type)>
+      uniform2i{*this};
+
+    adapted_function<
+      &gl_api::Uniform3i,
+      void(uniform_location, int_type, int_type, int_type)>
+      uniform3i{*this};
+
+    adapted_function<
+      &gl_api::Uniform4i,
       void(uniform_location, int_type, int_type, int_type, int_type)>
-      uniform4i;
+      uniform4i{*this};
 
     struct : func<OGLPAFP(Uniform1iv)> {
         using func<OGLPAFP(Uniform1iv)>::func;
@@ -1075,17 +1093,23 @@ public:
     } uniform4iv;
 
     // float
-    func<OGLPAFP(Uniform1f), void(uniform_location, float_type)> uniform1f;
-    func<OGLPAFP(Uniform2f), void(uniform_location, float_type, float_type)>
-      uniform2f;
-    func<
-      OGLPAFP(Uniform3f),
+    adapted_function<&gl_api::Uniform1f, void(uniform_location, float_type)>
+      uniform1f{*this};
+
+    adapted_function<
+      &gl_api::Uniform2f,
+      void(uniform_location, float_type, float_type)>
+      uniform2f{*this};
+
+    adapted_function<
+      &gl_api::Uniform3f,
       void(uniform_location, float_type, float_type, float_type)>
-      uniform3f;
-    func<
-      OGLPAFP(Uniform4f),
+      uniform3f{*this};
+
+    adapted_function<
+      &gl_api::Uniform4f,
       void(uniform_location, float_type, float_type, float_type, float_type)>
-      uniform4f;
+      uniform4f{*this};
 
     struct : func<OGLPAFP(Uniform1fv)> {
         using func<OGLPAFP(Uniform1fv)>::func;
@@ -1238,23 +1262,23 @@ public:
 
     // program uniform
     // uint
-    func<
-      OGLPAFP(ProgramUniform1ui),
+    adapted_function<
+      &gl_api::ProgramUniform1ui,
       void(program_name, uniform_location, uint_type)>
-      program_uniform1ui;
+      program_uniform1ui{*this};
 
-    func<
-      OGLPAFP(ProgramUniform2ui),
+    adapted_function<
+      &gl_api::ProgramUniform2ui,
       void(program_name, uniform_location, uint_type, uint_type)>
-      program_uniform2ui;
+      program_uniform2ui{*this};
 
-    func<
-      OGLPAFP(ProgramUniform3ui),
+    adapted_function<
+      &gl_api::ProgramUniform3ui,
       void(program_name, uniform_location, uint_type, uint_type, uint_type)>
-      program_uniform3ui;
+      program_uniform3ui{*this};
 
-    func<
-      OGLPAFP(ProgramUniform4ui),
+    adapted_function<
+      &gl_api::ProgramUniform4ui,
       void(
         program_name,
         uniform_location,
@@ -1262,7 +1286,7 @@ public:
         uint_type,
         uint_type,
         uint_type)>
-      program_uniform4ui;
+      program_uniform4ui{*this};
 
     struct : func<OGLPAFP(ProgramUniform1uiv)> {
         using func<OGLPAFP(ProgramUniform1uiv)>::func;
@@ -1313,25 +1337,25 @@ public:
     } program_uniform4uiv;
 
     // int
-    func<
-      OGLPAFP(ProgramUniform1i),
+    adapted_function<
+      &gl_api::ProgramUniform1i,
       void(program_name, uniform_location, int_type)>
-      program_uniform1i;
+      program_uniform1i{*this};
 
-    func<
-      OGLPAFP(ProgramUniform2i),
+    adapted_function<
+      &gl_api::ProgramUniform2i,
       void(program_name, uniform_location, int_type, int_type)>
-      program_uniform2i;
+      program_uniform2i{*this};
 
-    func<
-      OGLPAFP(ProgramUniform3i),
+    adapted_function<
+      &gl_api::ProgramUniform3i,
       void(program_name, uniform_location, int_type, int_type, int_type)>
-      program_uniform3i;
+      program_uniform3i{*this};
 
-    func<
-      OGLPAFP(ProgramUniform4i),
+    adapted_function<
+      &gl_api::ProgramUniform4i,
       void(program_name, uniform_location, int_type, int_type, int_type, int_type)>
-      program_uniform4i;
+      program_uniform4i{*this};
 
     struct : func<OGLPAFP(ProgramUniform1iv)> {
         using func<OGLPAFP(ProgramUniform1iv)>::func;
@@ -1382,23 +1406,23 @@ public:
     } program_uniform4iv;
 
     // float
-    func<
-      OGLPAFP(ProgramUniform1f),
+    adapted_function<
+      &gl_api::ProgramUniform1f,
       void(program_name, uniform_location, float_type)>
-      program_uniform1f;
+      program_uniform1f{*this};
 
-    func<
-      OGLPAFP(ProgramUniform2f),
+    adapted_function<
+      &gl_api::ProgramUniform2f,
       void(program_name, uniform_location, float_type, float_type)>
-      program_uniform2f;
+      program_uniform2f{*this};
 
-    func<
-      OGLPAFP(ProgramUniform3f),
+    adapted_function<
+      &gl_api::ProgramUniform3f,
       void(program_name, uniform_location, float_type, float_type, float_type)>
-      program_uniform3f;
+      program_uniform3f{*this};
 
-    func<
-      OGLPAFP(ProgramUniform4f),
+    adapted_function<
+      &gl_api::ProgramUniform4f,
       void(
         program_name,
         uniform_location,
@@ -1406,7 +1430,7 @@ public:
         float_type,
         float_type,
         float_type)>
-      program_uniform4f;
+      program_uniform4f{*this};
 
     struct : func<OGLPAFP(ProgramUniform1fv)> {
         using func<OGLPAFP(ProgramUniform1fv)>::func;
