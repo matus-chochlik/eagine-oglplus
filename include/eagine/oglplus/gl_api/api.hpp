@@ -570,46 +570,52 @@ public:
         }
     } stencil_func;
 
-    func<
-      OGLPAFP(StencilFuncSeparate),
+    adapted_function<
+      &gl_api::StencilFuncSeparate,
       void(face_mode, compare_function, int_type, uint_type)>
-      stencil_func_separate;
+      stencil_func_separate{*this};
 
-    // stencil op
-    func<
-      OGLPAFP(StencilOp),
+    adapted_function<
+      &gl_api::StencilOp,
       void(stencil_operation, stencil_operation, stencil_operation)>
-      stencil_op;
+      stencil_op{*this};
 
-    func<
-      OGLPAFP(StencilOpSeparate),
+    adapted_function<
+      &gl_api::StencilOpSeparate,
       void(face_mode, stencil_operation, stencil_operation, stencil_operation)>
-      stencil_op_separate;
+      stencil_op_separate{*this};
 
-    // depth func
-    func<OGLPAFP(DepthFunc), void(compare_function)> depth_func;
+    adapted_function<&gl_api::DepthFunc, void(compare_function)> depth_func{
+      *this};
 
-    // buffer masks
-    func<OGLPAFP(ColorMask), void(true_false, true_false, true_false, true_false)>
-      color_mask;
+    adapted_function<
+      &gl_api::ColorMask,
+      void(true_false, true_false, true_false, true_false)>
+      color_mask{*this};
 
-    func<
-      OGLPAFP(ColorMaski),
+    adapted_function<
+      &gl_api::ColorMaski,
       void(uint_type, true_false, true_false, true_false, true_false)>
-      color_mask_i;
+      color_mask_i{*this};
 
-    func<OGLPAFP(DepthMask), void(true_false)> depth_mask;
+    adapted_function<&gl_api::DepthMask, void(true_false)> depth_mask{*this};
 
-    func<OGLPAFP(StencilMask), void(uint_type)> stencil_mask;
+    adapted_function<&gl_api::StencilMask, void(uint_type)> stencil_mask{*this};
 
-    func<OGLPAFP(StencilMaskSeparate), void(face_mode, uint_type)>
-      stencil_mask_separate;
+    adapted_function<&gl_api::StencilMaskSeparate, void(face_mode, uint_type)>
+      stencil_mask_separate{*this};
 
-    // clear
-    func<OGLPAFP(ClearColor)> clear_color;
-    func<OGLPAFP(ClearDepth)> clear_depth;
-    func<OGLPAFP(ClearStencil)> clear_stencil;
-    func<OGLPAFP(Clear), void(enum_bitfield<buffer_clear_bit>)> clear;
+    adapted_function<
+      &gl_api::ClearColor,
+      void(float_type, float_type, float_type, float_type)>
+      clear_color{*this};
+
+    adapted_function<&gl_api::ClearDepth, void(float_type)> clear_depth{*this};
+    adapted_function<&gl_api::ClearStencil, void(int_type)> clear_stencil{
+      *this};
+
+    adapted_function<&gl_api::Clear, void(enum_bitfield<buffer_clear_bit>)>
+      clear{*this};
 
     // shader ops
     struct : func<OGLPAFP(ShaderSource)> {
@@ -623,7 +629,8 @@ public:
         }
     } shader_source;
 
-    func<OGLPAFP(CompileShader), void(shader_name)> compile_shader;
+    adapted_function<&gl_api::CompileShader, void(shader_name)> compile_shader{
+      *this};
 
     struct : func<OGLPAFP(CompileShaderInclude)> {
         using func<OGLPAFP(CompileShaderInclude)>::func;
@@ -657,12 +664,14 @@ public:
         }
     } get_shader_info_log;
 
-    // program ops
-    func<OGLPAFP(AttachShader), void(program_name, shader_name)> attach_shader;
+    adapted_function<&gl_api::AttachShader, void(program_name, shader_name)>
+      attach_shader{*this};
 
-    func<OGLPAFP(DetachShader), void(program_name, shader_name)> detach_shader;
+    adapted_function<&gl_api::DetachShader, void(program_name, shader_name)>
+      detach_shader{*this};
 
-    func<OGLPAFP(LinkProgram), void(program_name)> link_program;
+    adapted_function<&gl_api::LinkProgram, void(program_name)> link_program{
+      *this};
 
     query_func<
       mp_list<program_name>,
@@ -685,7 +694,8 @@ public:
         }
     } get_program_info_log;
 
-    func<OGLPAFP(UseProgram), void(program_name)> use_program;
+    adapted_function<&gl_api::UseProgram, void(program_name)> use_program{
+      *this};
 
     func<
       OGLPAFP(GetProgramResourceIndex),
@@ -707,10 +717,10 @@ public:
         }
     } get_shader_storage_block_index;
 
-    func<
-      OGLPAFP(GetProgramResourceLocation),
+    adapted_function<
+      &gl_api::GetProgramResourceLocation,
       program_resource_location(program_name, program_interface, string_view)>
-      get_program_resource_location;
+      get_program_resource_location{*this};
 
     struct : func<OGLPAFP(GetProgramResourceName)> {
         using func<OGLPAFP(GetProgramResourceName)>::func;

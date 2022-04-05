@@ -19,35 +19,16 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , viewport{"viewport", *this}
   , viewport_array{"viewport_array", *this}
   , stencil_func{"stencil_func", *this}
-  , stencil_func_separate{"stencil_func_separate", *this}
-  , stencil_op{"stencil_op", *this}
-  , stencil_op_separate{"stencil_op_separate", *this}
-  , depth_func{"depth_func", *this}
-  , color_mask{"color_mask", *this}
-  , color_mask_i{"color_mask_i", *this}
-  , depth_mask{"depth_mask", *this}
-  , stencil_mask{"stencil_mask", *this}
-  , stencil_mask_separate{"stencil_mask_separate", *this}
-  , clear_color{"clear_color", *this}
-  , clear_depth{"clear_depth", *this}
-  , clear_stencil{"clear_stencil", *this}
-  , clear{"clear", *this}
   , shader_source{"shader_source", *this}
-  , compile_shader{"compile_shader", *this}
   , compile_shader_include{"compile_shader_include", *this}
   , get_shader_i{"get_shader_i", *this}
   , get_shader_info_log{"get_shader_info_log", *this}
-  , attach_shader{"attach_shader", *this}
-  , detach_shader{"detach_shader", *this}
-  , link_program{"link_program", *this}
   , get_program_i{"get_program_i", *this}
   , get_program_info_log{"get_program_info_log", *this}
-  , use_program{"use_program", *this}
   , get_program_resource_index{"get_program_resource_index", *this}
   , get_shader_storage_block_index{
       "get_shader_storage_block_index",
       *this}
-  , get_program_resource_location{"get_program_resource_location", *this}
   , get_program_resource_name{"get_program_resource_name", *this}
   , get_program_interface_i{"get_program_interface_i", *this}
   , get_program_resource_i{"get_program_resource_i", *this}
