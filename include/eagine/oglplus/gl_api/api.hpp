@@ -15,14 +15,17 @@
 #include "object_name.hpp"
 #include "prog_var_loc.hpp"
 #include "type_utils.hpp"
+#include <eagine/c_api/adapted_function.hpp>
+#include <eagine/c_api_wrap.hpp>
 #include <eagine/oglplus/utils/buffer_data.hpp>
 #include <eagine/quantities.hpp>
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
 
 namespace eagine::oglplus {
+using c_api::adapted_function;
 //------------------------------------------------------------------------------
-#define OGLPAFP(FUNC) decltype(c_api::FUNC), &c_api::FUNC
+#define OGLPAFP(FUNC) decltype(gl_api::FUNC), &gl_api::FUNC
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the functions from the GL API.
 /// @ingroup gl_api_wrap
@@ -36,7 +39,7 @@ public:
     using api_traits = ApiTraits;
 
     /// @brief Alias for the basic GL API wrapper.
-    using c_api = basic_gl_c_api<ApiTraits>;
+    using gl_api = basic_gl_c_api<ApiTraits>;
 
     using sizei_type = typename gl_types::sizei_type;
     using sizeiptr_type = typename gl_types::sizeiptr_type;
@@ -60,7 +63,7 @@ public:
 
     using vertex_buffer_binding = uint_type;
 
-    using debug_callback_type = typename c_api::debug_callback_type;
+    using debug_callback_type = typename gl_api::debug_callback_type;
 
     /// @brief Alias for GL extension info getter.
     using extension = basic_gl_extension<ApiTraits>;
@@ -83,100 +86,57 @@ public:
 
     // utilities
     static constexpr auto type_of(buffer_name) noexcept {
-#ifdef GL_BUFFER
         return object_type(GL_BUFFER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(framebuffer_name) noexcept {
-#ifdef GL_FRAMEBUFFER
         return object_type(GL_FRAMEBUFFER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(program_pipeline_name) noexcept {
-#ifdef GL_PROGRAM_PIPELINE
         return object_type(GL_PROGRAM_PIPELINE);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(program_name) noexcept {
-#ifdef GL_PROGRAM
         return object_type(GL_PROGRAM);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(query_name) noexcept {
-#ifdef GL_QUERY
         return object_type(GL_QUERY);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(renderbuffer_name) noexcept {
-#ifdef GL_RENDERBUFFER
         return object_type(GL_RENDERBUFFER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(sampler_name) noexcept {
-#ifdef GL_SAMPLER
         return object_type(GL_SAMPLER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(shader_name) noexcept {
-#ifdef GL_SHADER
         return object_type(GL_SHADER);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(texture_name) noexcept {
-#ifdef GL_TEXTURE
         return object_type(GL_TEXTURE);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(transform_feedback_name) noexcept {
-#ifdef GL_TRANSFORM_FEEDBACK
         return object_type(GL_TRANSFORM_FEEDBACK);
-#else
-        return object_type(0);
-#endif
     }
 
     static constexpr auto type_of(vertex_array_name) noexcept {
-#ifdef GL_VERTEX_ARRAY
         return object_type(GL_VERTEX_ARRAY);
-#else
-        return object_type(0);
-#endif
     }
 
-    template <typename W, W c_api::*F, typename Signature = typename W::signature>
+    template <typename W, W gl_api::*F, typename Signature = typename W::signature>
     class func;
 
-    template <typename W, W c_api::*F, typename RVC, typename... Params>
+    template <typename W, W gl_api::*F, typename RVC, typename... Params>
     class func<W, F, RVC(Params...)>
-      : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
-        using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
+      : public wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F> {
+        using base =
+          wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F>;
 
     public:
         using base::base;
@@ -224,13 +184,14 @@ public:
         }
     };
 
-    template <typename W, W c_api::*F, typename Signature = typename W::signature>
+    template <typename W, W gl_api::*F, typename Signature = typename W::signature>
     class unck_func;
 
-    template <typename W, W c_api::*F, typename RVC, typename... Params>
+    template <typename W, W gl_api::*F, typename RVC, typename... Params>
     class unck_func<W, F, RVC(Params...)>
-      : public wrapped_c_api_function<c_api, api_traits, nothing_t, W, F> {
-        using base = wrapped_c_api_function<c_api, api_traits, nothing_t, W, F>;
+      : public wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F> {
+        using base =
+          wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F>;
 
     public:
         using base::base;
@@ -272,7 +233,7 @@ public:
       typename PostTypeList,
       typename QueryResult,
       typename W,
-      W c_api::*F>
+      W gl_api::*F>
     struct query_func;
 
     template <
@@ -281,7 +242,7 @@ public:
       typename... PostParams,
       typename QueryResult,
       typename W,
-      W c_api::*F>
+      W gl_api::*F>
     struct query_func<
       mp_list<PreParams...>,
       mp_list<QueryClasses...>,
@@ -320,28 +281,16 @@ public:
         }
     };
 
-    // generate / create objects
-    struct : func<OGLPAFP(FenceSync)> {
-        using func<OGLPAFP(FenceSync)>::func;
+    adapted_function<
+      &gl_api::FenceSync,
+      void(sync_condition, enum_bitfield<sync_flag_bit>)>
+      fence_sync{*this};
 
-        constexpr auto operator()(sync_condition cond) const noexcept {
-            return this->_cnvchkcall(cond, bitfield_type(0));
-        }
-
-        constexpr auto operator()(
-          sync_condition cond,
-          enum_bitfield<sync_flag_bit> flags) const noexcept {
-            return this->_cnvchkcall(cond, bitfield_type(flags));
-        }
-    } fence_sync;
-
-    template <typename ObjTag, typename W, W c_api::*GenObjects>
-    struct make_object_func : func<W, GenObjects> {
-        using func<W, GenObjects>::func;
-
-        constexpr auto operator()(span<name_type> names) const noexcept {
-            return this->_chkcall(sizei_type(names.size()), names.data());
-        }
+    template <auto Wrapper, typename ObjTag>
+    struct make_object_func : adapted_function<Wrapper, void(span<name_type>)> {
+        using base = adapted_function<Wrapper, void(span<name_type>)>;
+        using base::base;
+        using base::operator();
 
         constexpr auto operator()(
           gl_object_name_span<gl_object_name<ObjTag>> names) const noexcept {
@@ -350,210 +299,128 @@ public:
 
         constexpr auto operator()() const noexcept {
             name_type n{};
-            return this->_chkcall(1, &n).replaced_with(n).cast_to(
-              type_identity<gl_owned_object_name<ObjTag>>{});
+            return base::operator()(cover_one(n)).transformed([&n](bool valid) {
+                return gl_owned_object_name<ObjTag>(valid ? n : 0);
+            });
         }
     };
 
-    struct : func<OGLPAFP(CreateShader)> {
-        using func<OGLPAFP(CreateShader)>::func;
+    adapted_function<&gl_api::CreateShader, owned_shader_name(shader_type)>
+      create_shader{*this};
 
-        constexpr auto operator()(shader_type type) const noexcept {
-            return this->_cnvchkcall(type).cast_to(
-              type_identity<owned_shader_name>{});
-        }
-    } create_shader;
+    adapted_function<&gl_api::CreateProgram, owned_program_name()>
+      create_program{*this};
 
-    struct : func<OGLPAFP(CreateProgram)> {
-        using func<OGLPAFP(CreateProgram)>::func;
+    make_object_func<&gl_api::GenBuffers, buffer_tag> gen_buffers{*this};
 
-        constexpr auto operator()() const noexcept {
-            return this->_chkcall().cast_to(
-              type_identity<owned_program_name>{});
-        }
-    } create_program;
+    make_object_func<&gl_api::CreateBuffers, buffer_tag> create_buffers{*this};
 
-    make_object_func<buffer_tag, OGLPAFP(GenBuffers)> gen_buffers;
+    make_object_func<&gl_api::GenFramebuffers, framebuffer_tag> gen_framebuffers{
+      *this};
 
-    make_object_func<buffer_tag, OGLPAFP(CreateBuffers)> create_buffers;
+    make_object_func<&gl_api::CreateFramebuffers, framebuffer_tag>
+      create_framebuffers{*this};
 
-    make_object_func<framebuffer_tag, OGLPAFP(GenFramebuffers)> gen_framebuffers;
+    make_object_func<&gl_api::GenProgramPipelines, program_pipeline_tag>
+      gen_program_pipelines{*this};
 
-    make_object_func<framebuffer_tag, OGLPAFP(CreateFramebuffers)>
-      create_framebuffers;
+    make_object_func<&gl_api::CreateProgramPipelines, program_pipeline_tag>
+      create_program_pipelines{*this};
 
-    make_object_func<program_pipeline_tag, OGLPAFP(GenProgramPipelines)>
-      gen_program_pipelines;
+    make_object_func<&gl_api::GenQueries, query_tag> gen_queries{*this};
 
-    make_object_func<program_pipeline_tag, OGLPAFP(CreateProgramPipelines)>
-      create_program_pipelines;
+    make_object_func<&gl_api::CreateQueries, query_tag> create_queries{*this};
 
-    make_object_func<query_tag, OGLPAFP(GenQueries)> gen_queries;
+    make_object_func<&gl_api::GenRenderbuffers, renderbuffer_tag>
+      gen_renderbuffers{*this};
 
-    make_object_func<query_tag, OGLPAFP(CreateQueries)> create_queries;
+    make_object_func<&gl_api::CreateRenderbuffers, renderbuffer_tag>
+      create_renderbuffers{*this};
 
-    make_object_func<renderbuffer_tag, OGLPAFP(GenRenderbuffers)>
-      gen_renderbuffers;
+    make_object_func<&gl_api::GenSamplers, sampler_tag> gen_samplers{*this};
 
-    make_object_func<renderbuffer_tag, OGLPAFP(CreateRenderbuffers)>
-      create_renderbuffers;
+    make_object_func<&gl_api::CreateSamplers, sampler_tag> create_samplers{
+      *this};
 
-    make_object_func<sampler_tag, OGLPAFP(GenSamplers)> gen_samplers;
+    make_object_func<&gl_api::GenTextures, texture_tag> gen_textures{*this};
 
-    make_object_func<sampler_tag, OGLPAFP(CreateSamplers)> create_samplers;
+    make_object_func<&gl_api::CreateTextures, texture_tag> create_textures{
+      *this};
 
-    make_object_func<texture_tag, OGLPAFP(GenTextures)> gen_textures;
+    make_object_func<&gl_api::GenTransformFeedbacks, transform_feedback_tag>
+      gen_transform_feedbacks{*this};
 
-    make_object_func<texture_tag, OGLPAFP(CreateTextures)> create_textures;
+    make_object_func<&gl_api::CreateTransformFeedbacks, transform_feedback_tag>
+      create_transform_feedbacks{*this};
 
-    make_object_func<transform_feedback_tag, OGLPAFP(GenTransformFeedbacks)>
-      gen_transform_feedbacks;
+    make_object_func<&gl_api::GenVertexArrays, vertex_array_tag>
+      gen_vertex_arrays{*this};
 
-    make_object_func<transform_feedback_tag, OGLPAFP(CreateTransformFeedbacks)>
-      create_transform_feedbacks;
+    make_object_func<&gl_api::CreateVertexArrays, vertex_array_tag>
+      create_vertex_arrays{*this};
 
-    make_object_func<vertex_array_tag, OGLPAFP(GenVertexArrays)>
-      gen_vertex_arrays;
-
-    make_object_func<vertex_array_tag, OGLPAFP(CreateVertexArrays)>
-      create_vertex_arrays;
-
-    struct : func<OGLPAFP(GenPathsNV)> {
-        using func<OGLPAFP(GenPathsNV)>::func;
-
-        constexpr auto operator()(sizei_type count = 1) const noexcept {
-            return this->_chkcall(count).cast_to(
-              type_identity<owned_path_nv_name>{});
-        }
-    } create_paths_nv;
+    adapted_function<&gl_api::GenPathsNV, owned_path_nv_name(sizei_type)>
+      create_paths_nv{*this};
 
     // delete objects
-    struct : func<OGLPAFP(DeleteSync)> {
-        using func<OGLPAFP(DeleteSync)>::func;
+    adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{*this};
 
-        constexpr auto operator()(sync_type sync) const noexcept {
-            return this->_chkcall(sync);
-        }
-
-        auto bind(sync_type sync) const noexcept {
-            return [this, sync] {
-                return (*this)(sync);
-            };
-        }
-
-        auto later_by(cleanup_group& cleanup, sync_type sync) const -> auto& {
-            return cleanup.add_ret(bind(sync));
-        }
-
-        auto raii(sync_type& sync) const noexcept {
-            return eagine::finally(bind(sync));
-        }
-    } delete_sync;
-
-    template <typename ObjTag, typename W, W c_api::*DeleteObjects>
-    struct delete_object_func : func<W, DeleteObjects> {
-        using func<W, DeleteObjects>::func;
-
-        constexpr auto operator()(span<const name_type> names) const noexcept {
-            return this->_chkcall(sizei_type(names.size()), names.data());
-        }
-
-        constexpr auto operator()(
-          gl_object_name_view<gl_object_name<ObjTag>> names) const noexcept {
-            return (*this)(names.raw_handles());
-        }
+    template <auto Wrapper, typename ObjTag>
+    struct del_object_func : adapted_function<Wrapper, void(span<name_type>)> {
+        using base = adapted_function<Wrapper, void(span<name_type>)>;
+        using base::base;
+        using base::raii;
+        using base::operator();
 
         constexpr auto operator()(
           gl_owned_object_name<ObjTag> name) const noexcept {
             auto n = name.release();
-            return this->_chkcall(1, &n);
+            return base::operator()(cover_one(n));
         }
 
-        auto bind(gl_owned_object_name<ObjTag>& name) const noexcept {
-            return [this, &name] {
-                (*this)(std::move(name));
-            };
+        constexpr auto raii(gl_owned_object_name<ObjTag>& name) const noexcept {
+            return eagine::finally(
+              [this, &name]() { (*this)(std::move(name)); });
         }
 
-        auto later_by(
+        constexpr auto later_by(
           cleanup_group& cleanup,
-          gl_owned_object_name<ObjTag>& name) const -> auto& {
-            return cleanup.add_ret(bind(name));
-        }
-
-        auto raii(gl_owned_object_name<ObjTag>& name) const noexcept {
-            return eagine::finally(bind(name));
+          gl_owned_object_name<ObjTag>& name) const noexcept -> decltype(auto) {
+            return cleanup.add_ret(
+              [this, &name]() { (*this)(std::move(name)); });
         }
     };
 
-    struct : func<OGLPAFP(DeleteShader)> {
-        using func<OGLPAFP(DeleteShader)>::func;
+    adapted_function<&gl_api::DeleteShader, void(owned_shader_name)>
+      delete_shader{*this};
 
-        constexpr auto operator()(owned_shader_name name) const noexcept {
-            return this->_chkcall(name.release());
-        }
+    adapted_function<&gl_api::DeleteProgram, void(owned_program_name)>
+      delete_program{*this};
 
-        auto bind(owned_shader_name& name) const noexcept {
-            return [this, &name] {
-                return (*this)(std::move(name));
-            };
-        }
+    del_object_func<&gl_api::DeleteBuffers, buffer_tag> delete_buffers{*this};
 
-        auto later_by(cleanup_group& cleanup, owned_shader_name& name) const
-          -> auto& {
-            return cleanup.add_ret(bind(name));
-        }
+    del_object_func<&gl_api::DeleteFramebuffers, framebuffer_tag>
+      delete_framebuffers{*this};
 
-        auto raii(owned_shader_name& name) const noexcept {
-            return eagine::finally(bind(name));
-        }
-    } delete_shader;
+    del_object_func<&gl_api::DeleteProgramPipelines, program_pipeline_tag>
+      delete_program_pipelines{*this};
 
-    struct : func<OGLPAFP(DeleteProgram)> {
-        using func<OGLPAFP(DeleteProgram)>::func;
+    del_object_func<&gl_api::DeleteQueries, query_tag> delete_queries{*this};
 
-        constexpr auto operator()(owned_program_name name) const noexcept {
-            return this->_chkcall(name.release());
-        }
+    del_object_func<&gl_api::DeleteRenderbuffers, renderbuffer_tag>
+      delete_renderbuffers{*this};
 
-        auto bind(owned_program_name& name) const noexcept {
-            return [this, &name] {
-                return (*this)(std::move(name));
-            };
-        }
+    del_object_func<&gl_api::DeleteSamplers, sampler_tag> delete_samplers{
+      *this};
 
-        auto later_by(cleanup_group& cleanup, owned_program_name& name) const
-          -> auto& {
-            return cleanup.add_ret(bind(name));
-        }
+    del_object_func<&gl_api::DeleteTextures, texture_tag> delete_textures{
+      *this};
 
-        auto raii(owned_program_name& name) const noexcept {
-            return eagine::finally(bind(name));
-        }
-    } delete_program;
+    del_object_func<&gl_api::DeleteTransformFeedbacks, transform_feedback_tag>
+      delete_transform_feedbacks{*this};
 
-    delete_object_func<buffer_tag, OGLPAFP(DeleteBuffers)> delete_buffers;
-
-    delete_object_func<framebuffer_tag, OGLPAFP(DeleteFramebuffers)>
-      delete_framebuffers;
-
-    delete_object_func<program_pipeline_tag, OGLPAFP(DeleteProgramPipelines)>
-      delete_program_pipelines;
-
-    delete_object_func<query_tag, OGLPAFP(DeleteQueries)> delete_queries;
-
-    delete_object_func<renderbuffer_tag, OGLPAFP(DeleteRenderbuffers)>
-      delete_renderbuffers;
-
-    delete_object_func<sampler_tag, OGLPAFP(DeleteSamplers)> delete_samplers;
-
-    delete_object_func<texture_tag, OGLPAFP(DeleteTextures)> delete_textures;
-
-    delete_object_func<transform_feedback_tag, OGLPAFP(DeleteTransformFeedbacks)>
-      delete_transform_feedbacks;
-
-    delete_object_func<vertex_array_tag, OGLPAFP(DeleteVertexArrays)>
-      delete_vertex_arrays;
+    del_object_func<&gl_api::DeleteVertexArrays, vertex_array_tag>
+      delete_vertex_arrays{*this};
 
     struct : func<OGLPAFP(DeletePathsNV)> {
         using func<OGLPAFP(DeletePathsNV)>::func;
@@ -576,57 +443,69 @@ public:
         }
     } delete_paths_nv;
 
-    // is_object
-    func<OGLPAFP(IsSync), true_false(sync_type)> is_sync;
+    adapted_function<&gl_api::IsSync, true_false(sync_type)> is_sync{*this};
 
-    template <typename ObjTag, typename W, W c_api::*IsObject>
-    using is_object_func =
-      func<W, IsObject, true_false(gl_object_name<ObjTag>)>;
+    adapted_function<&gl_api::IsBuffer, true_false(buffer_name)> is_buffer{
+      *this};
 
-    is_object_func<buffer_tag, OGLPAFP(IsBuffer)> is_buffer;
+    adapted_function<&gl_api::IsFramebuffer, true_false(framebuffer_name)>
+      is_framebuffer{*this};
 
-    is_object_func<framebuffer_tag, OGLPAFP(IsFramebuffer)> is_framebuffer;
+    adapted_function<
+      &gl_api::IsProgramPipeline,
+      true_false(program_pipeline_name)>
+      is_program_pipeline{*this};
 
-    is_object_func<program_pipeline_tag, OGLPAFP(IsProgramPipeline)>
-      is_program_pipeline;
+    adapted_function<&gl_api::IsProgram, true_false(program_name)> is_program{
+      *this};
 
-    is_object_func<program_tag, OGLPAFP(IsProgram)> is_program;
+    adapted_function<&gl_api::IsQuery, true_false(query_name)> is_query{*this};
 
-    is_object_func<query_tag, OGLPAFP(IsQuery)> is_query;
+    adapted_function<&gl_api::IsRenderbuffer, true_false(renderbuffer_name)>
+      is_renderbuffer{*this};
 
-    is_object_func<renderbuffer_tag, OGLPAFP(IsRenderbuffer)> is_renderbuffer;
+    adapted_function<&gl_api::IsSampler, true_false(sampler_name)> is_sampler{
+      *this};
 
-    is_object_func<sampler_tag, OGLPAFP(IsSampler)> is_sampler;
+    adapted_function<&gl_api::IsShader, true_false(shader_name)> is_shader{
+      *this};
 
-    is_object_func<shader_tag, OGLPAFP(IsShader)> is_shader;
+    adapted_function<&gl_api::IsTexture, true_false(texture_name)> is_texture{
+      *this};
 
-    is_object_func<texture_tag, OGLPAFP(IsTexture)> is_texture;
+    adapted_function<
+      &gl_api::IsTransformFeedback,
+      true_false(transform_feedback_name)>
+      is_transform_feedback{*this};
 
-    is_object_func<transform_feedback_tag, OGLPAFP(IsTransformFeedback)>
-      is_transform_feedback;
+    adapted_function<&gl_api::IsVertexArray, true_false(vertex_array_name)>
+      is_vertex_array{*this};
 
-    is_object_func<vertex_array_tag, OGLPAFP(IsVertexArray)> is_vertex_array;
+    adapted_function<&gl_api::IsPathNV, true_false(path_nv_name)> is_path_nv{
+      *this};
 
-    is_object_func<path_nv_tag, OGLPAFP(IsPathNV)> is_path_nv;
+    adapted_function<&gl_api::Enable, void(capability)> enable{*this};
+    adapted_function<&gl_api::Enablei, void(capability, uint_type)> enablei{
+      *this};
 
-    // enable
-    func<OGLPAFP(Enable), void(capability)> enable;
-    func<OGLPAFP(Enablei), void(capability, uint_type)> enablei;
+    adapted_function<&gl_api::Disable, void(capability)> disable{*this};
+    adapted_function<&gl_api::Disablei, void(capability, uint_type)> disablei{
+      *this};
 
-    // disable
-    func<OGLPAFP(Disable), void(capability)> disable;
-    func<OGLPAFP(Disablei), void(capability, uint_type)> disablei;
+    adapted_function<&gl_api::IsEnabled, true_false(capability)> is_enabled{
+      *this};
+    adapted_function<&gl_api::IsEnabledi, true_false(capability, uint_type)>
+      is_enabledi{*this};
 
-    // is_enabled
-    func<OGLPAFP(IsEnabled), true_false(capability)> is_enabled;
-    func<OGLPAFP(IsEnabledi), true_false(capability, uint_type)> is_enabledi;
+    adapted_function<
+      &gl_api::MemoryBarrier,
+      void(enum_bitfield<memory_barrier_bit>)>
+      memory_barrier{*this};
 
-    // memory barrier
-    func<OGLPAFP(MemoryBarrier), void(enum_bitfield<memory_barrier_bit>)>
-      memory_barrier;
-
-    func<OGLPAFP(MemoryBarrierByRegion), void(enum_bitfield<memory_barrier_bit>)>
-      memory_barrier_by_region;
+    adapted_function<
+      &gl_api::MemoryBarrierByRegion,
+      void(enum_bitfield<memory_barrier_bit>)>
+      memory_barrier_by_region{*this};
 
     // viewport
     struct : func<OGLPAFP(Viewport)> {
@@ -691,46 +570,52 @@ public:
         }
     } stencil_func;
 
-    func<
-      OGLPAFP(StencilFuncSeparate),
+    adapted_function<
+      &gl_api::StencilFuncSeparate,
       void(face_mode, compare_function, int_type, uint_type)>
-      stencil_func_separate;
+      stencil_func_separate{*this};
 
-    // stencil op
-    func<
-      OGLPAFP(StencilOp),
+    adapted_function<
+      &gl_api::StencilOp,
       void(stencil_operation, stencil_operation, stencil_operation)>
-      stencil_op;
+      stencil_op{*this};
 
-    func<
-      OGLPAFP(StencilOpSeparate),
+    adapted_function<
+      &gl_api::StencilOpSeparate,
       void(face_mode, stencil_operation, stencil_operation, stencil_operation)>
-      stencil_op_separate;
+      stencil_op_separate{*this};
 
-    // depth func
-    func<OGLPAFP(DepthFunc), void(compare_function)> depth_func;
+    adapted_function<&gl_api::DepthFunc, void(compare_function)> depth_func{
+      *this};
 
-    // buffer masks
-    func<OGLPAFP(ColorMask), void(true_false, true_false, true_false, true_false)>
-      color_mask;
+    adapted_function<
+      &gl_api::ColorMask,
+      void(true_false, true_false, true_false, true_false)>
+      color_mask{*this};
 
-    func<
-      OGLPAFP(ColorMaski),
+    adapted_function<
+      &gl_api::ColorMaski,
       void(uint_type, true_false, true_false, true_false, true_false)>
-      color_mask_i;
+      color_mask_i{*this};
 
-    func<OGLPAFP(DepthMask), void(true_false)> depth_mask;
+    adapted_function<&gl_api::DepthMask, void(true_false)> depth_mask{*this};
 
-    func<OGLPAFP(StencilMask), void(uint_type)> stencil_mask;
+    adapted_function<&gl_api::StencilMask, void(uint_type)> stencil_mask{*this};
 
-    func<OGLPAFP(StencilMaskSeparate), void(face_mode, uint_type)>
-      stencil_mask_separate;
+    adapted_function<&gl_api::StencilMaskSeparate, void(face_mode, uint_type)>
+      stencil_mask_separate{*this};
 
-    // clear
-    func<OGLPAFP(ClearColor)> clear_color;
-    func<OGLPAFP(ClearDepth)> clear_depth;
-    func<OGLPAFP(ClearStencil)> clear_stencil;
-    func<OGLPAFP(Clear), void(enum_bitfield<buffer_clear_bit>)> clear;
+    adapted_function<
+      &gl_api::ClearColor,
+      void(float_type, float_type, float_type, float_type)>
+      clear_color{*this};
+
+    adapted_function<&gl_api::ClearDepth, void(float_type)> clear_depth{*this};
+    adapted_function<&gl_api::ClearStencil, void(int_type)> clear_stencil{
+      *this};
+
+    adapted_function<&gl_api::Clear, void(enum_bitfield<buffer_clear_bit>)>
+      clear{*this};
 
     // shader ops
     struct : func<OGLPAFP(ShaderSource)> {
@@ -744,7 +629,8 @@ public:
         }
     } shader_source;
 
-    func<OGLPAFP(CompileShader), void(shader_name)> compile_shader;
+    adapted_function<&gl_api::CompileShader, void(shader_name)> compile_shader{
+      *this};
 
     struct : func<OGLPAFP(CompileShaderInclude)> {
         using func<OGLPAFP(CompileShaderInclude)>::func;
@@ -778,12 +664,14 @@ public:
         }
     } get_shader_info_log;
 
-    // program ops
-    func<OGLPAFP(AttachShader), void(program_name, shader_name)> attach_shader;
+    adapted_function<&gl_api::AttachShader, void(program_name, shader_name)>
+      attach_shader{*this};
 
-    func<OGLPAFP(DetachShader), void(program_name, shader_name)> detach_shader;
+    adapted_function<&gl_api::DetachShader, void(program_name, shader_name)>
+      detach_shader{*this};
 
-    func<OGLPAFP(LinkProgram), void(program_name)> link_program;
+    adapted_function<&gl_api::LinkProgram, void(program_name)> link_program{
+      *this};
 
     query_func<
       mp_list<program_name>,
@@ -806,7 +694,8 @@ public:
         }
     } get_program_info_log;
 
-    func<OGLPAFP(UseProgram), void(program_name)> use_program;
+    adapted_function<&gl_api::UseProgram, void(program_name)> use_program{
+      *this};
 
     func<
       OGLPAFP(GetProgramResourceIndex),
@@ -828,10 +717,10 @@ public:
         }
     } get_shader_storage_block_index;
 
-    func<
-      OGLPAFP(GetProgramResourceLocation),
+    adapted_function<
+      &gl_api::GetProgramResourceLocation,
       program_resource_location(program_name, program_interface, string_view)>
-      get_program_resource_location;
+      get_program_resource_location{*this};
 
     struct : func<OGLPAFP(GetProgramResourceName)> {
         using func<OGLPAFP(GetProgramResourceName)>::func;
@@ -910,15 +799,15 @@ public:
         }
     } get_program_resource_f;
 
-    func<
-      OGLPAFP(BindAttribLocation),
+    adapted_function<
+      &gl_api::BindAttribLocation,
       void(program_name, vertex_attrib_location, string_view)>
-      bind_attrib_location;
+      bind_attrib_location{*this};
 
-    func<
-      OGLPAFP(GetAttribLocation),
+    adapted_function<
+      &gl_api::GetAttribLocation,
       vertex_attrib_location(program_name, string_view)>
-      get_attrib_location;
+      get_attrib_location{*this};
 
     struct : func<OGLPAFP(GetActiveAttrib)> {
         using func<OGLPAFP(GetActiveAttrib)>::func;
@@ -968,31 +857,35 @@ public:
         }
     } transform_feedback_varyings;
 
-    func<
-      OGLPAFP(BindFragDataLocation),
+    adapted_function<
+      &gl_api::BindFragDataLocation,
       void(program_name, frag_data_location, string_view)>
-      bind_frag_data_location;
+      bind_frag_data_location{*this};
 
-    func<
-      OGLPAFP(GetFragDataLocation),
+    adapted_function<
+      &gl_api::GetFragDataLocation,
       frag_data_location(program_name, string_view)>
-      get_frag_data_location;
+      get_frag_data_location{*this};
 
-    func<OGLPAFP(GetFragDataIndex), int_type(program_name, string_view)>
-      get_frag_data_index;
+    adapted_function<
+      &gl_api::GetFragDataIndex,
+      int_type(program_name, string_view)>
+      get_frag_data_index{*this};
 
-    func<
-      OGLPAFP(BindFragDataLocationIndexed),
+    adapted_function<
+      &gl_api::BindFragDataLocationIndexed,
       void(program_name, uint_type, frag_data_location, string_view)>
-      bind_frag_data_location_indexed;
+      bind_frag_data_location_indexed{*this};
 
-    func<OGLPAFP(GetUniformLocation), uniform_location(program_name, string_view)>
-      get_uniform_location;
+    adapted_function<
+      &gl_api::GetUniformLocation,
+      uniform_location(program_name, string_view)>
+      get_uniform_location{*this};
 
-    func<
-      OGLPAFP(GetUniformBlockIndex),
+    adapted_function<
+      &gl_api::GetUniformBlockIndex,
       uniform_block_index(program_name, string_view)>
-      get_uniform_block_index;
+      get_uniform_block_index{*this};
 
     struct : func<OGLPAFP(GetActiveUniformName)> {
         using func<OGLPAFP(GetActiveUniformName)>::func;
@@ -1013,10 +906,10 @@ public:
         }
     } get_active_uniform_name;
 
-    func<
-      OGLPAFP(GetSubroutineUniformLocation),
+    adapted_function<
+      &gl_api::GetSubroutineUniformLocation,
       subroutine_uniform_location(program_name, shader_type, string_view)>
-      get_subroutine_uniform_location;
+      get_subroutine_uniform_location{*this};
 
     struct : func<OGLPAFP(GetActiveSubroutineUniformName)> {
         using func<OGLPAFP(GetActiveSubroutineUniformName)>::func;
@@ -1039,10 +932,10 @@ public:
         }
     } get_active_subroutine_uniform_name;
 
-    func<
-      OGLPAFP(GetSubroutineIndex),
+    adapted_function<
+      &gl_api::GetSubroutineIndex,
       subroutine_location(program_name, shader_type, string_view)>
-      get_subroutine_index;
+      get_subroutine_index{*this};
 
     struct : func<OGLPAFP(GetActiveSubroutineName)> {
         using func<OGLPAFP(GetActiveSubroutineName)>::func;
@@ -1090,17 +983,23 @@ public:
 
     // uniform
     // uint
-    func<OGLPAFP(Uniform1ui), void(uniform_location, uint_type)> uniform1ui;
-    func<OGLPAFP(Uniform2ui), void(uniform_location, uint_type, uint_type)>
-      uniform2ui;
-    func<
-      OGLPAFP(Uniform3ui),
+    adapted_function<&gl_api::Uniform1ui, void(uniform_location, uint_type)>
+      uniform1ui{*this};
+
+    adapted_function<
+      &gl_api::Uniform2ui,
+      void(uniform_location, uint_type, uint_type)>
+      uniform2ui{*this};
+
+    adapted_function<
+      &gl_api::Uniform3ui,
       void(uniform_location, uint_type, uint_type, uint_type)>
-      uniform3ui;
-    func<
-      OGLPAFP(Uniform4ui),
+      uniform3ui{*this};
+
+    adapted_function<
+      &gl_api::Uniform4ui,
       void(uniform_location, uint_type, uint_type, uint_type, uint_type)>
-      uniform4ui;
+      uniform4ui{*this};
 
     struct : func<OGLPAFP(Uniform1uiv)> {
         using func<OGLPAFP(Uniform1uiv)>::func;
@@ -1139,15 +1038,23 @@ public:
     } uniform4uiv;
 
     // int
-    func<OGLPAFP(Uniform1i), void(uniform_location, int_type)> uniform1i;
-    func<OGLPAFP(Uniform2i), void(uniform_location, int_type, int_type)>
-      uniform2i;
-    func<OGLPAFP(Uniform3i), void(uniform_location, int_type, int_type, int_type)>
-      uniform3i;
-    func<
-      OGLPAFP(Uniform4i),
+    adapted_function<&gl_api::Uniform1i, void(uniform_location, int_type)>
+      uniform1i{*this};
+
+    adapted_function<
+      &gl_api::Uniform2i,
+      void(uniform_location, int_type, int_type)>
+      uniform2i{*this};
+
+    adapted_function<
+      &gl_api::Uniform3i,
+      void(uniform_location, int_type, int_type, int_type)>
+      uniform3i{*this};
+
+    adapted_function<
+      &gl_api::Uniform4i,
       void(uniform_location, int_type, int_type, int_type, int_type)>
-      uniform4i;
+      uniform4i{*this};
 
     struct : func<OGLPAFP(Uniform1iv)> {
         using func<OGLPAFP(Uniform1iv)>::func;
@@ -1186,17 +1093,23 @@ public:
     } uniform4iv;
 
     // float
-    func<OGLPAFP(Uniform1f), void(uniform_location, float_type)> uniform1f;
-    func<OGLPAFP(Uniform2f), void(uniform_location, float_type, float_type)>
-      uniform2f;
-    func<
-      OGLPAFP(Uniform3f),
+    adapted_function<&gl_api::Uniform1f, void(uniform_location, float_type)>
+      uniform1f{*this};
+
+    adapted_function<
+      &gl_api::Uniform2f,
+      void(uniform_location, float_type, float_type)>
+      uniform2f{*this};
+
+    adapted_function<
+      &gl_api::Uniform3f,
       void(uniform_location, float_type, float_type, float_type)>
-      uniform3f;
-    func<
-      OGLPAFP(Uniform4f),
+      uniform3f{*this};
+
+    adapted_function<
+      &gl_api::Uniform4f,
       void(uniform_location, float_type, float_type, float_type, float_type)>
-      uniform4f;
+      uniform4f{*this};
 
     struct : func<OGLPAFP(Uniform1fv)> {
         using func<OGLPAFP(Uniform1fv)>::func;
@@ -1349,23 +1262,23 @@ public:
 
     // program uniform
     // uint
-    func<
-      OGLPAFP(ProgramUniform1ui),
+    adapted_function<
+      &gl_api::ProgramUniform1ui,
       void(program_name, uniform_location, uint_type)>
-      program_uniform1ui;
+      program_uniform1ui{*this};
 
-    func<
-      OGLPAFP(ProgramUniform2ui),
+    adapted_function<
+      &gl_api::ProgramUniform2ui,
       void(program_name, uniform_location, uint_type, uint_type)>
-      program_uniform2ui;
+      program_uniform2ui{*this};
 
-    func<
-      OGLPAFP(ProgramUniform3ui),
+    adapted_function<
+      &gl_api::ProgramUniform3ui,
       void(program_name, uniform_location, uint_type, uint_type, uint_type)>
-      program_uniform3ui;
+      program_uniform3ui{*this};
 
-    func<
-      OGLPAFP(ProgramUniform4ui),
+    adapted_function<
+      &gl_api::ProgramUniform4ui,
       void(
         program_name,
         uniform_location,
@@ -1373,7 +1286,7 @@ public:
         uint_type,
         uint_type,
         uint_type)>
-      program_uniform4ui;
+      program_uniform4ui{*this};
 
     struct : func<OGLPAFP(ProgramUniform1uiv)> {
         using func<OGLPAFP(ProgramUniform1uiv)>::func;
@@ -1424,25 +1337,25 @@ public:
     } program_uniform4uiv;
 
     // int
-    func<
-      OGLPAFP(ProgramUniform1i),
+    adapted_function<
+      &gl_api::ProgramUniform1i,
       void(program_name, uniform_location, int_type)>
-      program_uniform1i;
+      program_uniform1i{*this};
 
-    func<
-      OGLPAFP(ProgramUniform2i),
+    adapted_function<
+      &gl_api::ProgramUniform2i,
       void(program_name, uniform_location, int_type, int_type)>
-      program_uniform2i;
+      program_uniform2i{*this};
 
-    func<
-      OGLPAFP(ProgramUniform3i),
+    adapted_function<
+      &gl_api::ProgramUniform3i,
       void(program_name, uniform_location, int_type, int_type, int_type)>
-      program_uniform3i;
+      program_uniform3i{*this};
 
-    func<
-      OGLPAFP(ProgramUniform4i),
+    adapted_function<
+      &gl_api::ProgramUniform4i,
       void(program_name, uniform_location, int_type, int_type, int_type, int_type)>
-      program_uniform4i;
+      program_uniform4i{*this};
 
     struct : func<OGLPAFP(ProgramUniform1iv)> {
         using func<OGLPAFP(ProgramUniform1iv)>::func;
@@ -1493,23 +1406,23 @@ public:
     } program_uniform4iv;
 
     // float
-    func<
-      OGLPAFP(ProgramUniform1f),
+    adapted_function<
+      &gl_api::ProgramUniform1f,
       void(program_name, uniform_location, float_type)>
-      program_uniform1f;
+      program_uniform1f{*this};
 
-    func<
-      OGLPAFP(ProgramUniform2f),
+    adapted_function<
+      &gl_api::ProgramUniform2f,
       void(program_name, uniform_location, float_type, float_type)>
-      program_uniform2f;
+      program_uniform2f{*this};
 
-    func<
-      OGLPAFP(ProgramUniform3f),
+    adapted_function<
+      &gl_api::ProgramUniform3f,
       void(program_name, uniform_location, float_type, float_type, float_type)>
-      program_uniform3f;
+      program_uniform3f{*this};
 
-    func<
-      OGLPAFP(ProgramUniform4f),
+    adapted_function<
+      &gl_api::ProgramUniform4f,
       void(
         program_name,
         uniform_location,
@@ -1517,7 +1430,7 @@ public:
         float_type,
         float_type,
         float_type)>
-      program_uniform4f;
+      program_uniform4f{*this};
 
     struct : func<OGLPAFP(ProgramUniform1fv)> {
         using func<OGLPAFP(ProgramUniform1fv)>::func;

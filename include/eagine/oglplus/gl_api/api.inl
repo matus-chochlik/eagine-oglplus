@@ -10,145 +10,45 @@ namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
 basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
-  : c_api{traits}
+  : gl_api{traits}
   , ARB_debug_output{"ARB_debug_output", *this}
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
   , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , fence_sync{"fence_sync", *this}
-  , create_shader{"create_shader", *this}
-  , create_program{"create_program", *this}
-  , gen_buffers{"gen_buffers", *this}
-  , create_buffers{"create_buffers", *this}
-  , gen_framebuffers{"gen_framebuffers", *this}
-  , create_framebuffers{"create_framebuffers", *this}
-  , gen_program_pipelines{"gen_program_pipelines", *this}
-  , create_program_pipelines{"create_program_pipelines", *this}
-  , gen_queries{"gen_queries", *this}
-  , create_queries{"create_queries", *this}
-  , gen_renderbuffers{"gen_renderbuffers", *this}
-  , create_renderbuffers{"create_renderbuffers", *this}
-  , gen_samplers{"gen_samplers", *this}
-  , create_samplers{"create_samplers", *this}
-  , gen_textures{"gen_textures", *this}
-  , create_textures{"create_textures", *this}
-  , gen_transform_feedbacks{"gen_transform_feedbacks", *this}
-  , create_transform_feedbacks{"create_transform_feedbacks", *this}
-  , gen_vertex_arrays{"gen_vertex_arrays", *this}
-  , create_vertex_arrays{"create_vertex_arrays", *this}
-  , create_paths_nv{"create_paths_nv", *this}
-  , delete_sync{"delete_sync", *this}
-  , delete_shader{"delete_shader", *this}
-  , delete_program{"delete_program", *this}
-  , delete_buffers{"delete_buffers", *this}
-  , delete_framebuffers{"delete_framebuffers", *this}
-  , delete_program_pipelines{"delete_program_pipelines", *this}
-  , delete_queries{"delete_queries", *this}
-  , delete_renderbuffers{"delete_renderbuffers", *this}
-  , delete_samplers{"delete_samplers", *this}
-  , delete_textures{"delete_textures", *this}
-  , delete_transform_feedbacks{"delete_transform_feedbacks", *this}
-  , delete_vertex_arrays{"delete_vertex_arrays", *this}
   , delete_paths_nv{"delete_paths_nv", *this}
-  , is_sync{"is_sync", *this}
-  , is_buffer{"is_buffer", *this}
-  , is_framebuffer{"is_framebuffer", *this}
-  , is_program_pipeline{"is_program_pipeline", *this}
-  , is_program{"is_program", *this}
-  , is_query{"is_query", *this}
-  , is_renderbuffer{"is_renderbuffer", *this}
-  , is_sampler{"is_sampler", *this}
-  , is_shader{"is_shader", *this}
-  , is_texture{"is_texture", *this}
-  , is_transform_feedback{"is_transform_feedback", *this}
-  , is_vertex_array{"is_vertex_array", *this}
-  , is_path_nv{"is_path_nv", *this}
-  , enable{"enable", *this}
-  , enablei{"enablei", *this}
-  , disable{"disable", *this}
-  , disablei{"disablei", *this}
-  , is_enabled{"is_enabled", *this}
-  , is_enabledi{"is_enabledi", *this}
-  , memory_barrier{"memory_barrier", *this}
-  , memory_barrier_by_region{"memory_barrier_by_region", *this}
   , viewport{"viewport", *this}
   , viewport_array{"viewport_array", *this}
   , stencil_func{"stencil_func", *this}
-  , stencil_func_separate{"stencil_func_separate", *this}
-  , stencil_op{"stencil_op", *this}
-  , stencil_op_separate{"stencil_op_separate", *this}
-  , depth_func{"depth_func", *this}
-  , color_mask{"color_mask", *this}
-  , color_mask_i{"color_mask_i", *this}
-  , depth_mask{"depth_mask", *this}
-  , stencil_mask{"stencil_mask", *this}
-  , stencil_mask_separate{"stencil_mask_separate", *this}
-  , clear_color{"clear_color", *this}
-  , clear_depth{"clear_depth", *this}
-  , clear_stencil{"clear_stencil", *this}
-  , clear{"clear", *this}
   , shader_source{"shader_source", *this}
-  , compile_shader{"compile_shader", *this}
   , compile_shader_include{"compile_shader_include", *this}
   , get_shader_i{"get_shader_i", *this}
   , get_shader_info_log{"get_shader_info_log", *this}
-  , attach_shader{"attach_shader", *this}
-  , detach_shader{"detach_shader", *this}
-  , link_program{"link_program", *this}
   , get_program_i{"get_program_i", *this}
   , get_program_info_log{"get_program_info_log", *this}
-  , use_program{"use_program", *this}
   , get_program_resource_index{"get_program_resource_index", *this}
   , get_shader_storage_block_index{
       "get_shader_storage_block_index",
       *this}
-  , get_program_resource_location{"get_program_resource_location", *this}
   , get_program_resource_name{"get_program_resource_name", *this}
   , get_program_interface_i{"get_program_interface_i", *this}
   , get_program_resource_i{"get_program_resource_i", *this}
   , get_program_resource_f{"get_program_resource_f", *this}
-  , bind_attrib_location{"bind_attrib_location", *this}
-  , get_attrib_location{"get_attrib_location", *this}
   , get_active_attrib_name{"get_active_attrib_name", *this}
   , transform_feedback_varyings{"transform_feedback_varyings", *this}
-  , bind_frag_data_location{"bind_frag_data_location", *this}
-  , get_frag_data_location{"get_frag_data_location", *this}
-  , get_frag_data_index{"get_frag_data_index", *this}
-  , bind_frag_data_location_indexed{
-      "bind_frag_data_location_indexed",
-      *this}
-  , get_uniform_location{"get_uniform_location", *this}
-  , get_uniform_block_index{"get_uniform_block_index", *this}
   , get_active_uniform_name{"get_active_uniform_name", *this}
-  , get_subroutine_uniform_location{
-      "get_subroutine_uniform_location",
-      *this}
   , get_active_subroutine_uniform_name{
       "get_active_subroutine_uniform_name",
       *this}
-  , get_subroutine_index{"get_subroutine_index", *this}
   , get_active_subroutine_name{"get_active_subroutine_name", *this}
   , uniform_subroutines{"uniform_subroutines", *this}
-  , uniform1ui{"uniform1ui", *this}
-  , uniform2ui{"uniform2ui", *this}
-  , uniform3ui{"uniform3ui", *this}
-  , uniform4ui{"uniform4ui", *this}
   , uniform1uiv{"uniform1uiv", *this}
   , uniform2uiv{"uniform2uiv", *this}
   , uniform3uiv{"uniform3uiv", *this}
   , uniform4uiv{"uniform4uiv", *this}
-  , uniform1i{"uniform1i", *this}
-  , uniform2i{"uniform2i", *this}
-  , uniform3i{"uniform3i", *this}
-  , uniform4i{"uniform4i", *this}
   , uniform1iv{"uniform1iv", *this}
   , uniform2iv{"uniform2iv", *this}
   , uniform3iv{"uniform3iv", *this}
   , uniform4iv{"uniform4iv", *this}
-  , uniform1f{"uniform1f", *this}
-  , uniform2f{"uniform2f", *this}
-  , uniform3f{"uniform3f", *this}
-  , uniform4f{"uniform4f", *this}
   , uniform1fv{"uniform1fv", *this}
   , uniform2fv{"uniform2fv", *this}
   , uniform3fv{"uniform3fv", *this}
@@ -162,26 +62,14 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , uniform_matrix3x4fv{"uniform_matrix3x4fv", *this}
   , uniform_matrix4x2fv{"uniform_matrix4x2fv", *this}
   , uniform_matrix4x3fv{"uniform_matrix4x3fv", *this}
-  , program_uniform1ui{"program_uniform1ui", *this}
-  , program_uniform2ui{"program_uniform2ui", *this}
-  , program_uniform3ui{"program_uniform3ui", *this}
-  , program_uniform4ui{"program_uniform4ui", *this}
   , program_uniform1uiv{"program_uniform1uiv", *this}
   , program_uniform2uiv{"program_uniform2uiv", *this}
   , program_uniform3uiv{"program_uniform3uiv", *this}
   , program_uniform4uiv{"program_uniform4uiv", *this}
-  , program_uniform1i{"program_uniform1i", *this}
-  , program_uniform2i{"program_uniform2i", *this}
-  , program_uniform3i{"program_uniform3i", *this}
-  , program_uniform4i{"program_uniform4i", *this}
   , program_uniform1iv{"program_uniform1iv", *this}
   , program_uniform2iv{"program_uniform2iv", *this}
   , program_uniform3iv{"program_uniform3iv", *this}
   , program_uniform4iv{"program_uniform4iv", *this}
-  , program_uniform1f{"program_uniform1f", *this}
-  , program_uniform2f{"program_uniform2f", *this}
-  , program_uniform3f{"program_uniform3f", *this}
-  , program_uniform4f{"program_uniform4f", *this}
   , program_uniform1fv{"program_uniform1fv", *this}
   , program_uniform2fv{"program_uniform2fv", *this}
   , program_uniform3fv{"program_uniform3fv", *this}

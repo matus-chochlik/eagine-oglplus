@@ -10,6 +10,7 @@
 
 #include "api_traits.hpp"
 #include "config.hpp"
+#include <eagine/c_api/function.hpp>
 #include <eagine/nothing.hpp>
 #include <eagine/preprocessor.hpp>
 
@@ -103,6 +104,12 @@ public:
       Function,
       gl_types::has_api,
       gl_types::has_static_api>;
+
+    template <typename Result, typename... U>
+    constexpr auto check_result(Result res, U&&...) const noexcept {
+        res.error_code(this->GetError());
+        return res;
+    }
 
     /// @var GetError
     /// @glfuncwrap{GetError}
