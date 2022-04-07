@@ -617,31 +617,18 @@ public:
     adapted_function<&gl_api::Clear, void(enum_bitfield<buffer_clear_bit>)>
       clear{*this};
 
-    // shader ops
-    struct : func<OGLPAFP(ShaderSource)> {
-        using func<OGLPAFP(ShaderSource)>::func;
-
-        constexpr auto operator()(
-          shader_name shdr,
-          const glsl_source_ref& source) const noexcept {
-            return this->_chkcall(
-              name_type(shdr), source.count(), source.parts(), source.lengths());
-        }
-    } shader_source;
+    adapted_function<
+      &gl_api::ShaderSource,
+      void(shader_name, const glsl_source_ref&)>
+      shader_source{*this};
 
     adapted_function<&gl_api::CompileShader, void(shader_name)> compile_shader{
       *this};
 
-    struct : func<OGLPAFP(CompileShaderInclude)> {
-        using func<OGLPAFP(CompileShaderInclude)>::func;
-
-        constexpr auto operator()(
-          shader_name shdr,
-          const glsl_source_ref& paths) const noexcept {
-            return this->_chkcall(
-              name_type(shdr), paths.count(), paths.parts(), paths.lengths());
-        }
-    } compile_shader_include;
+    adapted_function<
+      &gl_api::CompileShaderInclude,
+      void(shader_name, const glsl_source_ref&)>
+      compile_shader_include{*this};
 
     query_func<
       mp_list<shader_name>,
@@ -697,10 +684,10 @@ public:
     adapted_function<&gl_api::UseProgram, void(program_name)> use_program{
       *this};
 
-    func<
-      OGLPAFP(GetProgramResourceIndex),
+    adapted_function<
+      &gl_api::GetProgramResourceIndex,
       uint_type(program_name, program_interface, string_view)>
-      get_program_resource_index;
+      get_program_resource_index{*this};
 
     struct : func<OGLPAFP(GetProgramResourceIndex)> {
         using func<OGLPAFP(GetProgramResourceIndex)>::func;
@@ -1598,27 +1585,29 @@ public:
         }
     } program_uniform_matrix4x3fv;
 
-    // shader block ops
-    func<
-      OGLPAFP(UniformBlockBinding),
+    adapted_function<
+      &gl_api::UniformBlockBinding,
       void(program_name, uniform_block_index, uint_type)>
-      uniform_block_binding;
+      uniform_block_binding{*this};
 
-    func<
-      OGLPAFP(ShaderStorageBlockBinding),
+    adapted_function<
+      &gl_api::ShaderStorageBlockBinding,
       void(program_name, shader_storage_block_index, uint_type)>
-      shader_storage_block_binding;
+      shader_storage_block_binding{*this};
 
     // buffer ops
-    func<OGLPAFP(BindBuffer), void(buffer_target, buffer_name)> bind_buffer;
+    adapted_function<&gl_api::BindBuffer, void(buffer_target, buffer_name)>
+      bind_buffer{*this};
 
-    func<OGLPAFP(BindBufferBase), void(buffer_target, uint_type, buffer_name)>
-      bind_buffer_base;
+    adapted_function<
+      &gl_api::BindBufferBase,
+      void(buffer_target, uint_type, buffer_name)>
+      bind_buffer_base{*this};
 
-    func<
-      OGLPAFP(BindBufferRange),
+    adapted_function<
+      &gl_api::BindBufferRange,
       void(buffer_target, uint_type, buffer_name, intptr_type, sizeiptr_type)>
-      bind_buffer_range;
+      bind_buffer_range{*this};
 
     struct : func<OGLPAFP(BufferStorage)> {
         using func<OGLPAFP(BufferStorage)>::func;
@@ -1871,66 +1860,67 @@ public:
         }
     } clear_named_buffer_sub_data;
 
-    func<
-      OGLPAFP(MapBuffer),
+    adapted_function<
+      &gl_api::MapBuffer,
       void_ptr_type(buffer_target, enum_bitfield<buffer_map_access_bit>)>
-      map_buffer;
+      map_buffer{*this};
 
-    func<
-      OGLPAFP(MapNamedBuffer),
+    adapted_function<
+      &gl_api::MapNamedBuffer,
       void_ptr_type(buffer_name, enum_bitfield<buffer_map_access_bit>)>
-      map_named_buffer;
+      map_named_buffer{*this};
 
-    func<
-      OGLPAFP(MapBufferRange),
+    adapted_function<
+      &gl_api::MapBufferRange,
       void_ptr_type(
         buffer_target,
         intptr_type,
         sizeiptr_type,
         enum_bitfield<buffer_map_access_bit>)>
-      map_buffer_range;
+      map_buffer_range{*this};
 
-    func<
-      OGLPAFP(MapNamedBufferRange),
+    adapted_function<
+      &gl_api::MapNamedBufferRange,
       void_ptr_type(
         buffer_name,
         intptr_type,
         sizeiptr_type,
         enum_bitfield<buffer_map_access_bit>)>
-      map_named_buffer_range;
+      map_named_buffer_range{*this};
 
-    func<
-      OGLPAFP(FlushMappedBufferRange),
+    adapted_function<
+      &gl_api::FlushMappedBufferRange,
       void_ptr_type(buffer_target, intptr_type, sizeiptr_type)>
-      flush_mapped_buffer_range;
+      flush_mapped_buffer_range{*this};
 
-    func<
-      OGLPAFP(FlushMappedNamedBufferRange),
+    adapted_function<
+      &gl_api::FlushMappedNamedBufferRange,
       void_ptr_type(buffer_name, intptr_type, sizeiptr_type)>
-      flush_mapped_named_buffer_range;
+      flush_mapped_named_buffer_range{*this};
 
-    func<OGLPAFP(UnmapBuffer), void_ptr_type(buffer_target)> unmap_buffer;
+    adapted_function<&gl_api::UnmapBuffer, void_ptr_type(buffer_target)>
+      unmap_buffer{*this};
 
-    func<OGLPAFP(UnmapNamedBuffer), void_ptr_type(buffer_name)>
-      unmap_named_buffer;
+    adapted_function<&gl_api::UnmapNamedBuffer, void_ptr_type(buffer_name)>
+      unmap_named_buffer{*this};
 
-    func<OGLPAFP(InvalidateBufferData), void(buffer_name)>
-      invalidate_buffer_data;
+    adapted_function<&gl_api::InvalidateBufferData, void(buffer_name)>
+      invalidate_buffer_data{*this};
 
-    func<
-      OGLPAFP(InvalidateBufferData),
+    adapted_function<
+      &gl_api::InvalidateBufferSubData,
       void(buffer_name, intptr_type, sizeiptr_type)>
-      invalidate_buffer_sub_data;
+      invalidate_buffer_sub_data{*this};
 
-    func<
-      OGLPAFP(CopyBufferSubData),
+    adapted_function<
+      &gl_api::CopyBufferSubData,
       void(buffer_target, buffer_target, intptr_type, intptr_type, sizeiptr_type)>
-      copy_buffer_sub_data;
+      copy_buffer_sub_data{*this};
 
-    func<
-      OGLPAFP(CopyNamedBufferSubData),
+    adapted_function<
+      &gl_api::CopyNamedBufferSubData,
       void(buffer_name, buffer_name, intptr_type, intptr_type, sizeiptr_type)>
-      copy_named_buffer_sub_data;
+      copy_named_buffer_sub_data{*this};
 
     query_func<
       mp_list<buffer_target>,
@@ -1965,59 +1955,66 @@ public:
       get_named_buffer_parameter_i64;
 
     // vertex_array ops
-    func<OGLPAFP(BindVertexArray), void(vertex_array_name)> bind_vertex_array;
+    adapted_function<&gl_api::BindVertexArray, void(vertex_array_name)>
+      bind_vertex_array{*this};
 
-    func<
-      OGLPAFP(BindVertexBuffer),
+    adapted_function<
+      &gl_api::BindVertexBuffer,
       void(vertex_buffer_binding, buffer_name, intptr_type, sizei_type)>
-      bind_vertex_buffer;
+      bind_vertex_buffer{*this};
 
-    func<
-      OGLPAFP(VertexArrayVertexBuffer),
+    adapted_function<
+      &gl_api::VertexArrayVertexBuffer,
       void(
         vertex_array_name,
         vertex_buffer_binding,
         buffer_name,
         intptr_type,
         sizei_type)>
-      vertex_array_vertex_buffer;
+      vertex_array_vertex_buffer{*this};
 
-    func<OGLPAFP(VertexArrayElementBuffer), void(vertex_array_name, buffer_name)>
-      vertex_array_element_buffer;
+    adapted_function<
+      &gl_api::VertexArrayElementBuffer,
+      void(vertex_array_name, buffer_name)>
+      vertex_array_element_buffer{*this};
 
-    func<OGLPAFP(EnableVertexAttribArray), void(vertex_attrib_location)>
-      enable_vertex_attrib_array;
+    adapted_function<
+      &gl_api::EnableVertexAttribArray,
+      void(vertex_attrib_location)>
+      enable_vertex_attrib_array{*this};
 
-    func<
-      OGLPAFP(EnableVertexArrayAttrib),
+    adapted_function<
+      &gl_api::EnableVertexArrayAttrib,
       void(vertex_array_name, vertex_attrib_location)>
-      enable_vertex_array_attrib;
+      enable_vertex_array_attrib{*this};
 
-    func<OGLPAFP(DisableVertexAttribArray), void(vertex_attrib_location)>
-      disable_vertex_attrib_array;
+    adapted_function<
+      &gl_api::DisableVertexAttribArray,
+      void(vertex_attrib_location)>
+      disable_vertex_attrib_array{*this};
 
-    func<
-      OGLPAFP(DisableVertexArrayAttrib),
+    adapted_function<
+      &gl_api::DisableVertexArrayAttrib,
       void(vertex_array_name, vertex_attrib_location)>
-      disable_vertex_array_attrib;
+      disable_vertex_array_attrib{*this};
 
-    func<
-      OGLPAFP(VertexAttribFormat),
+    adapted_function<
+      &gl_api::VertexAttribFormat,
       void(vertex_attrib_location, int_type, data_type, true_false, uint_type)>
-      vertex_attrib_format;
+      vertex_attrib_format{*this};
 
-    func<
-      OGLPAFP(VertexAttribIFormat),
+    adapted_function<
+      &gl_api::VertexAttribIFormat,
       void(vertex_attrib_location, int_type, data_type, uint_type)>
-      vertex_attrib_iformat;
+      vertex_attrib_iformat{*this};
 
-    func<
-      OGLPAFP(VertexAttribLFormat),
+    adapted_function<
+      &gl_api::VertexAttribLFormat,
       void(vertex_attrib_location, int_type, data_type, uint_type)>
-      vertex_attrib_lformat;
+      vertex_attrib_lformat{*this};
 
-    func<
-      OGLPAFP(VertexArrayAttribFormat),
+    adapted_function<
+      &gl_api::VertexArrayAttribFormat,
       void(
         vertex_array_name,
         vertex_attrib_location,
@@ -2025,27 +2022,27 @@ public:
         data_type,
         true_false,
         uint_type)>
-      vertex_array_attrib_format;
+      vertex_array_attrib_format{*this};
 
-    func<
-      OGLPAFP(VertexArrayAttribIFormat),
+    adapted_function<
+      &gl_api::VertexArrayAttribIFormat,
       void(
         vertex_array_name,
         vertex_attrib_location,
         int_type,
         data_type,
         uint_type)>
-      vertex_array_attrib_iformat;
+      vertex_array_attrib_iformat{*this};
 
-    func<
-      OGLPAFP(VertexArrayAttribLFormat),
+    adapted_function<
+      &gl_api::VertexArrayAttribLFormat,
       void(
         vertex_array_name,
         vertex_attrib_location,
         int_type,
         data_type,
         uint_type)>
-      vertex_array_attrib_lformat;
+      vertex_array_attrib_lformat{*this};
 
     struct : func<OGLPAFP(VertexAttribPointer)> {
         using func<OGLPAFP(VertexAttribPointer)>::func;
@@ -2109,18 +2106,20 @@ public:
         }
     } vertex_attrib_lpointer;
 
-    func<
-      OGLPAFP(VertexAttribBinding),
+    adapted_function<
+      &gl_api::VertexAttribBinding,
       void(vertex_attrib_location, vertex_buffer_binding)>
-      vertex_attrib_binding;
+      vertex_attrib_binding{*this};
 
-    func<
-      OGLPAFP(VertexArrayAttribBinding),
+    adapted_function<
+      &gl_api::VertexArrayAttribBinding,
       void(vertex_array_name, vertex_attrib_location, vertex_buffer_binding)>
-      vertex_array_attrib_binding;
+      vertex_array_attrib_binding{*this};
 
-    func<OGLPAFP(VertexBindingDivisor), void(vertex_buffer_binding, uint_type)>
-      vertex_binding_divisor;
+    adapted_function<
+      &gl_api::VertexBindingDivisor,
+      void(vertex_buffer_binding, uint_type)>
+      vertex_binding_divisor{*this};
 
     func<
       OGLPAFP(VertexArrayBindingDivisor),

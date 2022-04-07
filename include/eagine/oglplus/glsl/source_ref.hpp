@@ -10,6 +10,7 @@
 
 #include "../gl_api/config.hpp"
 #include <eagine/assert.hpp>
+#include <eagine/c_api/parameter_map.hpp>
 #include <eagine/string_span.hpp>
 #include <cstddef>
 
@@ -88,5 +89,39 @@ private:
 };
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
+
+namespace eagine::c_api {
+
+template <std::size_t I, typename... CT, typename... CppT>
+struct make_args_map<
+  I,
+  I,
+  mp_list<
+    oglplus::gl_types::sizei_type,
+    const oglplus::gl_types::char_type* const*,
+    const oglplus::gl_types::int_type*,
+    CT...>,
+  mp_list<const oglplus::glsl_source_ref&, CppT...>>
+  : make_args_map<I + 3, I + 1, mp_list<CT...>, mp_list<CppT...>> {
+    using make_args_map<I + 3, I + 1, mp_list<CT...>, mp_list<CppT...>>::
+    operator();
+
+    template <typename... P>
+    constexpr auto operator()(size_constant<I> i, P&&... p) const noexcept {
+        return reorder_arg_map<I, I>{}(i, std::forward<P>(p)...).count();
+    }
+
+    template <typename... P>
+    constexpr auto operator()(size_constant<I + 1> i, P&&... p) const noexcept {
+        return reorder_arg_map<I + 1, I>{}(i, std::forward<P>(p)...).parts();
+    }
+
+    template <typename... P>
+    constexpr auto operator()(size_constant<I + 2> i, P&&... p) const noexcept {
+        return reorder_arg_map<I + 2, I>{}(i, std::forward<P>(p)...).lengths();
+    }
+};
+//
+} // namespace eagine::c_api
 
 #endif // EAGINE_OGLPLUS_GLSL_SOURCE_REF_HPP

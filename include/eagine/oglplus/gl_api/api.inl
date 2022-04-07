@@ -19,13 +19,10 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , viewport{"viewport", *this}
   , viewport_array{"viewport_array", *this}
   , stencil_func{"stencil_func", *this}
-  , shader_source{"shader_source", *this}
-  , compile_shader_include{"compile_shader_include", *this}
   , get_shader_i{"get_shader_i", *this}
   , get_shader_info_log{"get_shader_info_log", *this}
   , get_program_i{"get_program_i", *this}
   , get_program_info_log{"get_program_info_log", *this}
-  , get_program_resource_index{"get_program_resource_index", *this}
   , get_shader_storage_block_index{
       "get_shader_storage_block_index",
       *this}
@@ -83,11 +80,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , program_uniform_matrix3x4fv{"program_uniform_matrix3x4fv", *this}
   , program_uniform_matrix4x2fv{"program_uniform_matrix4x2fv", *this}
   , program_uniform_matrix4x3fv{"program_uniform_matrix4x3fv", *this}
-  , uniform_block_binding{"uniform_block_binding", *this}
-  , shader_storage_block_binding{"shader_storage_block_binding", *this}
-  , bind_buffer{"bind_buffer", *this}
-  , bind_buffer_base{"bind_buffer_base", *this}
-  , bind_buffer_range{"bind_buffer_range", *this}
   , buffer_storage{"buffer_storage", *this}
   , named_buffer_storage{"named_buffer_storage", *this}
   , buffer_data{"buffer_data", *this}
@@ -98,46 +90,15 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , clear_named_buffer_data{"clear_named_buffer_data", *this}
   , clear_buffer_sub_data{"clear_buffer_sub_data", *this}
   , clear_named_buffer_sub_data{"clear_named_buffer_sub_data", *this}
-  , map_buffer{"map_buffer", *this}
-  , map_named_buffer{"map_named_buffer", *this}
-  , map_buffer_range{"map_buffer_range", *this}
-  , map_named_buffer_range{"map_named_buffer_range", *this}
-  , flush_mapped_buffer_range{"flush_mapped_buffer_range", *this}
-  , flush_mapped_named_buffer_range{
-      "flush_mapped_named_buffer_range",
-      *this}
-  , unmap_buffer{"unmap_buffer", *this}
-  , unmap_named_buffer{"unmap_named_buffer", *this}
-  , invalidate_buffer_data{"invalidate_buffer_data", *this}
-  , invalidate_buffer_sub_data{"invalidate_buffer_sub_data", *this}
-  , copy_buffer_sub_data{"copy_buffer_sub_data", *this}
-  , copy_named_buffer_sub_data{"copy_named_buffer_sub_data", *this}
   , get_buffer_parameter_i{"get_buffer_parameter_i", *this}
   , get_named_buffer_parameter_i{"get_named_buffer_parameter_i", *this}
   , get_buffer_parameter_i64{"get_buffer_parameter_i64", *this}
   , get_named_buffer_parameter_i64{
       "get_named_buffer_parameter_i64",
       *this}
-  , bind_vertex_array{"bind_vertex_array", *this}
-  , bind_vertex_buffer{"bind_vertex_buffer", *this}
-  , vertex_array_vertex_buffer{"vertex_array_vertex_buffer", *this}
-  , vertex_array_element_buffer{"vertex_array_element_buffer", *this}
-  , enable_vertex_attrib_array{"enable_vertex_attrib_array", *this}
-  , enable_vertex_array_attrib{"enable_vertex_array_attrib", *this}
-  , disable_vertex_attrib_array{"disable_vertex_attrib_array", *this}
-  , disable_vertex_array_attrib{"disable_vertex_array_attrib", *this}
-  , vertex_attrib_format{"vertex_attrib_format", *this}
-  , vertex_attrib_iformat{"vertex_attrib_iformat", *this}
-  , vertex_attrib_lformat{"vertex_attrib_lformat", *this}
-  , vertex_array_attrib_format{"vertex_array_attrib_format", *this}
-  , vertex_array_attrib_iformat{"vertex_array_attrib_iformat", *this}
-  , vertex_array_attrib_lformat{"vertex_array_attrib_lformat", *this}
   , vertex_attrib_pointer{"vertex_attrib_pointer", *this}
   , vertex_attrib_ipointer{"vertex_attrib_ipointer", *this}
   , vertex_attrib_lpointer{"vertex_attrib_lpointer", *this}
-  , vertex_attrib_binding{"vertex_attrib_binding", *this}
-  , vertex_array_attrib_binding{"vertex_array_attrib_binding", *this}
-  , vertex_binding_divisor{"vertex_binding_divisor", *this}
   , vertex_array_binding_divisor{"vertex_array_binding_divisor", *this}
   , vertex_attrib_divisor{"vertex_attrib_divisor", *this}
   , active_texture{"active_texture", *this}
