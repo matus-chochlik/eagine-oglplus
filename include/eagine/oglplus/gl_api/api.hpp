@@ -530,29 +530,37 @@ public:
         }
     } viewport_array;
 
-    // stencil func
-    struct : func<OGLPAFP(StencilFunc)> {
-        using base = func<OGLPAFP(StencilFunc)>;
+    using _stencil_func_t = adapted_function<
+      &gl_api::StencilFunc,
+      void(compare_function, int_type, uint_type)>;
 
+    struct : _stencil_func_t {
+        using base = _stencil_func_t;
         using base::base;
-
-        constexpr auto operator()(
-          compare_function fnc,
-          int_type ref,
-          uint_type mask) const noexcept {
-            return this->_cnvchkcall(fnc, ref, mask);
-        }
+        using base::operator();
 
         constexpr auto operator()(compare_function fnc, int_type ref)
           const noexcept {
             return (*this)(fnc, ref, ~uint_type{0U});
         }
-    } stencil_func;
+    } stencil_func{*this};
 
-    adapted_function<
+    using _stencil_func_separate_t = adapted_function<
       &gl_api::StencilFuncSeparate,
-      void(face_mode, compare_function, int_type, uint_type)>
-      stencil_func_separate{*this};
+      void(face_mode, compare_function, int_type, uint_type)>;
+
+    struct : _stencil_func_separate_t {
+        using base = _stencil_func_separate_t;
+        using base::base;
+        using base::operator();
+
+        constexpr auto operator()(
+          face_mode fce,
+          compare_function fnc,
+          int_type ref) const noexcept {
+            return (*this)(fce, fnc, ref, ~uint_type{0U});
+        }
+    } stencil_func_separate{*this};
 
     adapted_function<
       &gl_api::StencilOp,
@@ -2100,17 +2108,22 @@ public:
       void(vertex_buffer_binding, uint_type)>
       vertex_binding_divisor{*this};
 
-    func<
-      OGLPAFP(VertexArrayBindingDivisor),
+    adapted_function<
+      &gl_api::VertexArrayBindingDivisor,
       void(vertex_buffer_binding, uint_type)>
-      vertex_array_binding_divisor;
+      vertex_array_binding_divisor{*this};
 
-    func<OGLPAFP(VertexAttribDivisor), void(vertex_attrib_location, uint_type)>
-      vertex_attrib_divisor;
+    adapted_function<
+      &gl_api::VertexAttribDivisor,
+      void(vertex_attrib_location, uint_type)>
+      vertex_attrib_divisor{*this};
 
     // texture ops
-    func<OGLPAFP(ActiveTexture), void(texture_unit)> active_texture;
-    func<OGLPAFP(BindTexture), void(texture_target, texture_name)> bind_texture;
+    adapted_function<&gl_api::ActiveTexture, void(texture_unit)> active_texture{
+      *this};
+
+    adapted_function<&gl_api::BindTexture, void(texture_target, texture_name)>
+      bind_texture{*this};
 
     struct : func<OGLPAFP(BindTextures), void(uint_type, sizei_type, const name_type*)> {
         using base = func<
@@ -2126,11 +2139,11 @@ public:
         }
     } bind_textures;
 
-    func<OGLPAFP(BindTextureUnit), void(uint_type, texture_name)>
-      bind_texture_unit;
+    adapted_function<&gl_api::BindTextureUnit, void(uint_type, texture_name)>
+      bind_texture_unit{*this};
 
-    func<
-      OGLPAFP(BindImageTexture),
+    adapted_function<
+      &gl_api::BindImageTexture,
       void(
         uint_type,
         texture_name,
@@ -2139,10 +2152,10 @@ public:
         int_type,
         access_specifier,
         image_unit_format)>
-      bind_image_texture;
+      bind_image_texture{*this};
 
-    func<
-      OGLPAFP(TexStorage3D),
+    adapted_function<
+      &gl_api::TexStorage3D,
       void(
         texture_target,
         sizei_type,
@@ -2150,10 +2163,10 @@ public:
         sizei_type,
         sizei_type,
         sizei_type)>
-      tex_storage3d;
+      tex_storage3d{*this};
 
-    func<
-      OGLPAFP(TextureStorage3D),
+    adapted_function<
+      &gl_api::TextureStorage3D,
       void(
         texture_name,
         sizei_type,
@@ -2161,35 +2174,35 @@ public:
         sizei_type,
         sizei_type,
         sizei_type)>
-      texture_storage3d;
+      texture_storage3d{*this};
 
-    func<
-      OGLPAFP(TexStorage2D),
+    adapted_function<
+      &gl_api::TexStorage2D,
       void(
         texture_target,
         sizei_type,
         pixel_internal_format,
         sizei_type,
         sizei_type)>
-      tex_storage2d;
+      tex_storage2d{*this};
 
-    func<
-      OGLPAFP(TextureStorage2D),
+    adapted_function<
+      &gl_api::TextureStorage2D,
       void(texture_name, sizei_type, pixel_internal_format, sizei_type, sizei_type)>
-      texture_storage2d;
+      texture_storage2d{*this};
 
-    func<
-      OGLPAFP(TexStorage1D),
+    adapted_function<
+      &gl_api::TexStorage1D,
       void(texture_target, sizei_type, pixel_internal_format, sizei_type)>
-      tex_storage1d;
+      tex_storage1d{*this};
 
-    func<
-      OGLPAFP(TextureStorage1D),
+    adapted_function<
+      &gl_api::TextureStorage1D,
       void(texture_name, sizei_type, pixel_internal_format, sizei_type)>
-      texture_storage1d;
+      texture_storage1d{*this};
 
-    func<
-      OGLPAFP(TexStorage3DMultisample),
+    adapted_function<
+      &gl_api::TexStorage3DMultisample,
       void(
         texture_target,
         sizei_type,
@@ -2198,10 +2211,10 @@ public:
         sizei_type,
         sizei_type,
         bool_type)>
-      tex_storage3d_multisample;
+      tex_storage3d_multisample{*this};
 
-    func<
-      OGLPAFP(TextureStorage3DMultisample),
+    adapted_function<
+      &gl_api::TextureStorage3DMultisample,
       void(
         texture_name,
         sizei_type,
@@ -2210,10 +2223,10 @@ public:
         sizei_type,
         sizei_type,
         bool_type)>
-      texture_storage3d_multisample;
+      texture_storage3d_multisample{*this};
 
-    func<
-      OGLPAFP(TexStorage2DMultisample),
+    adapted_function<
+      &gl_api::TexStorage2DMultisample,
       void(
         texture_target,
         sizei_type,
@@ -2221,10 +2234,10 @@ public:
         sizei_type,
         sizei_type,
         bool_type)>
-      tex_storage2d_multisample;
+      tex_storage2d_multisample{*this};
 
-    func<
-      OGLPAFP(TextureStorage2DMultisample),
+    adapted_function<
+      &gl_api::TextureStorage2DMultisample,
       void(
         texture_name,
         sizei_type,
@@ -2232,7 +2245,7 @@ public:
         sizei_type,
         sizei_type,
         bool_type)>
-      texture_storage2d_multisample;
+      texture_storage2d_multisample{*this};
 
     func<
       OGLPAFP(TexImage3D),

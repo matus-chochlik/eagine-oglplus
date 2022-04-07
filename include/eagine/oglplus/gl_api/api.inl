@@ -18,7 +18,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , delete_paths_nv{"delete_paths_nv", *this}
   , viewport{"viewport", *this}
   , viewport_array{"viewport_array", *this}
-  , stencil_func{"stencil_func", *this}
   , get_shader_i{"get_shader_i", *this}
   , get_shader_info_log{"get_shader_info_log", *this}
   , get_program_i{"get_program_i", *this}
@@ -99,23 +98,7 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , vertex_attrib_pointer{"vertex_attrib_pointer", *this}
   , vertex_attrib_ipointer{"vertex_attrib_ipointer", *this}
   , vertex_attrib_lpointer{"vertex_attrib_lpointer", *this}
-  , vertex_array_binding_divisor{"vertex_array_binding_divisor", *this}
-  , vertex_attrib_divisor{"vertex_attrib_divisor", *this}
-  , active_texture{"active_texture", *this}
-  , bind_texture{"bind_texture", *this}
   , bind_textures{"bind_textures", *this}
-  , bind_texture_unit{"bind_texture_unit", *this}
-  , bind_image_texture{"bind_image_texture", *this}
-  , tex_storage3d{"tex_storage3d", *this}
-  , texture_storage3d{"texture_storage3d", *this}
-  , tex_storage2d{"tex_storage2d", *this}
-  , texture_storage2d{"texture_storage2d", *this}
-  , tex_storage1d{"tex_storage1d", *this}
-  , texture_storage1d{"texture_storage1d", *this}
-  , tex_storage3d_multisample{"tex_storage3d_multisample", *this}
-  , texture_storage3d_multisample{"texture_storage3d_multisample", *this}
-  , tex_storage2d_multisample{"tex_storage2d_multisample", *this}
-  , texture_storage2d_multisample{"texture_storage2d_multisample", *this}
   , tex_image3d{"tex_image3d", *this}
   , tex_image2d{"tex_image2d", *this}
   , tex_image1d{"tex_image1d", *this}
