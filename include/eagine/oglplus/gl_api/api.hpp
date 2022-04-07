@@ -366,30 +366,9 @@ public:
     adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{*this};
 
     template <auto Wrapper, typename ObjTag>
-    struct del_object_func : adapted_function<Wrapper, void(span<name_type>)> {
-        using base = adapted_function<Wrapper, void(span<name_type>)>;
-        using base::base;
-        using base::raii;
-        using base::operator();
-
-        constexpr auto operator()(
-          gl_owned_object_name<ObjTag> name) const noexcept {
-            auto n = name.release();
-            return base::operator()(cover_one(n));
-        }
-
-        constexpr auto raii(gl_owned_object_name<ObjTag>& name) const noexcept {
-            return eagine::finally(
-              [this, &name]() { (*this)(std::move(name)); });
-        }
-
-        constexpr auto later_by(
-          cleanup_group& cleanup,
-          gl_owned_object_name<ObjTag>& name) const noexcept -> decltype(auto) {
-            return cleanup.add_ret(
-              [this, &name]() { (*this)(std::move(name)); });
-        }
-    };
+    using del_object_func = c_api::combined<
+      adapted_function<Wrapper, void(span<name_type>)>,
+      adapted_function<Wrapper, void(gl_owned_object_name<ObjTag>)>>;
 
     adapted_function<&gl_api::DeleteShader, void(owned_shader_name)>
       delete_shader{*this};
