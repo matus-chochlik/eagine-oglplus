@@ -15,7 +15,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
   , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , delete_paths_nv{"delete_paths_nv", *this}
   , viewport{"viewport", *this}
   , viewport_array{"viewport_array", *this}
   , get_shader_i{"get_shader_i", *this}
@@ -83,38 +82,17 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , named_buffer_data{"named_buffer_data", *this}
   , buffer_sub_data{"buffer_sub_data", *this}
   , named_buffer_sub_data{"named_buffer_sub_data", *this}
-  , clear_buffer_data{"clear_buffer_data", *this}
-  , clear_named_buffer_data{"clear_named_buffer_data", *this}
-  , clear_buffer_sub_data{"clear_buffer_sub_data", *this}
-  , clear_named_buffer_sub_data{"clear_named_buffer_sub_data", *this}
   , get_buffer_parameter_i{"get_buffer_parameter_i", *this}
   , get_named_buffer_parameter_i{"get_named_buffer_parameter_i", *this}
   , get_buffer_parameter_i64{"get_buffer_parameter_i64", *this}
   , get_named_buffer_parameter_i64{
       "get_named_buffer_parameter_i64",
       *this}
-  , vertex_attrib_pointer{"vertex_attrib_pointer", *this}
-  , vertex_attrib_ipointer{"vertex_attrib_ipointer", *this}
-  , vertex_attrib_lpointer{"vertex_attrib_lpointer", *this}
   , tex_image3d{"tex_image3d", *this}
   , tex_image2d{"tex_image2d", *this}
   , tex_image1d{"tex_image1d", *this}
-  , tex_buffer{"tex_buffer", *this}
-  , texture_buffer{"texture_buffer", *this}
-  , tex_buffer_range{"tex_buffer_range", *this}
-  , texture_buffer_range{"texture_buffer_range", *this}
-  , tex_parameter_f{"tex_parameter_f", *this}
-  , texture_parameter_f{"texture_parameter_f", *this}
   , tex_parameter_i{"tex_parameter_i", *this}
   , texture_parameter_i{"texture_parameter_i", *this}
-  , tex_parameter_fv{"tex_parameter_fv", *this}
-  , texture_parameter_fv{"texture_parameter_fv", *this}
-  , tex_parameter_iv{"tex_parameter_iv", *this}
-  , texture_parameter_iv{"texture_parameter_iv", *this}
-  , tex_parameter_iiv{"tex_parameter_iiv", *this}
-  , texture_parameter_iiv{"texture_parameter_iiv", *this}
-  , tex_parameter_iuiv{"tex_parameter_iuiv", *this}
-  , texture_parameter_iuiv{"texture_parameter_iuiv", *this}
   , get_tex_parameter_f{"get_tex_parameter_f", *this}
   , get_texture_parameter_f{"get_texture_parameter_f", *this}
   , get_tex_parameter_i{"get_tex_parameter_i", *this}

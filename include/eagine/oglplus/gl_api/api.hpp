@@ -401,26 +401,8 @@ public:
     del_object_func<&gl_api::DeleteVertexArrays, vertex_array_tag>
       delete_vertex_arrays{*this};
 
-    struct : func<OGLPAFP(DeletePathsNV)> {
-        using func<OGLPAFP(DeletePathsNV)>::func;
-
-        auto bind(owned_path_nv_name& name, sizei_type count = 1)
-          const noexcept {
-            return [this, &name, count] {
-                (*this)(std::move(name), count);
-            };
-        }
-
-        constexpr auto operator()(owned_path_nv_name name, sizei_type count = 1)
-          const noexcept {
-            return this->_chkcall(name.release(), count);
-        }
-
-        auto raii(owned_path_nv_name& name, sizei_type count = 1)
-          const noexcept {
-            return eagine::finally(bind(name, count));
-        }
-    } delete_paths_nv;
+    adapted_function<&gl_api::DeletePathsNV, void(owned_path_nv_name, sizei_type)>
+      delete_paths_nv{*this};
 
     adapted_function<&gl_api::IsSync, true_false(sync_type)> is_sync{*this};
 
@@ -1668,17 +1650,19 @@ public:
         }
     } named_buffer_sub_data;
 
-    struct : func<OGLPAFP(ClearBufferData)> {
-        using func<OGLPAFP(ClearBufferData)>::func;
+    using _clear_buffer_data_t = adapted_function<
+      &gl_api::ClearBufferData,
+      void(
+        buffer_target,
+        pixel_internal_format,
+        pixel_format,
+        pixel_data_type,
+        const_void_ptr_type)>;
 
-        constexpr auto operator()(
-          buffer_target tgt,
-          pixel_internal_format ifmt,
-          pixel_format fmt,
-          pixel_data_type type,
-          const_void_ptr_type data) const noexcept {
-            return this->_cnvchkcall(tgt, ifmt, fmt, type, data);
-        }
+    struct : _clear_buffer_data_t {
+        using base = _clear_buffer_data_t;
+        using base::base;
+        using base::operator();
 
         template <typename T>
         constexpr auto operator()(
@@ -1709,19 +1693,21 @@ public:
           const noexcept {
             return (*this)(tgt, internal_format_of<T>(), tid);
         }
-    } clear_buffer_data;
+    } clear_buffer_data{*this};
 
-    struct : func<OGLPAFP(ClearNamedBufferData)> {
-        using func<OGLPAFP(ClearNamedBufferData)>::func;
+    using _clear_named_buffer_data_t = adapted_function<
+      &gl_api::ClearNamedBufferData,
+      void(
+        buffer_name,
+        pixel_internal_format,
+        pixel_format,
+        pixel_data_type,
+        const_void_ptr_type)>;
 
-        constexpr auto operator()(
-          buffer_name buf,
-          pixel_internal_format ifmt,
-          pixel_format fmt,
-          pixel_data_type type,
-          const_void_ptr_type data) const noexcept {
-            return this->_cnvchkcall(buf, ifmt, fmt, type, data);
-        }
+    struct : _clear_named_buffer_data_t {
+        using base = _clear_named_buffer_data_t;
+        using base::base;
+        using base::operator();
 
         template <typename T>
         constexpr auto operator()(
@@ -1752,21 +1738,23 @@ public:
           const noexcept {
             return (*this)(buf, internal_format_of<T>(), tid);
         }
-    } clear_named_buffer_data;
+    } clear_named_buffer_data{*this};
 
-    struct : func<OGLPAFP(ClearBufferSubData)> {
-        using func<OGLPAFP(ClearBufferSubData)>::func;
+    using _clear_buffer_sub_data_t = adapted_function<
+      &gl_api::ClearBufferSubData,
+      void(
+        buffer_target,
+        pixel_internal_format,
+        intptr_type,
+        sizeiptr_type,
+        pixel_format,
+        pixel_data_type,
+        const_void_ptr_type)>;
 
-        constexpr auto operator()(
-          buffer_target tgt,
-          pixel_internal_format ifmt,
-          intptr_type offs,
-          sizeiptr_type size,
-          pixel_format fmt,
-          pixel_data_type type,
-          const_void_ptr_type data) const noexcept {
-            return this->_cnvchkcall(tgt, ifmt, offs, size, fmt, type, data);
-        }
+    struct : _clear_buffer_sub_data_t {
+        using base = _clear_buffer_sub_data_t;
+        using base::base;
+        using base::operator();
 
         template <typename T>
         constexpr auto operator()(
@@ -1793,21 +1781,23 @@ public:
           const T& value) const noexcept {
             return (*this)(tgt, offs, count, internal_format_of<T>(), value);
         }
-    } clear_buffer_sub_data;
+    } clear_buffer_sub_data{*this};
 
-    struct : func<OGLPAFP(ClearNamedBufferSubData)> {
-        using func<OGLPAFP(ClearNamedBufferSubData)>::func;
+    using _clear_named_buffer_sub_data_t = adapted_function<
+      &gl_api::ClearNamedBufferSubData,
+      void(
+        buffer_name,
+        pixel_internal_format,
+        intptr_type,
+        sizeiptr_type,
+        pixel_format,
+        pixel_data_type,
+        const_void_ptr_type)>;
 
-        constexpr auto operator()(
-          buffer_name buf,
-          pixel_internal_format ifmt,
-          intptr_type offs,
-          sizeiptr_type size,
-          pixel_format fmt,
-          pixel_data_type type,
-          const_void_ptr_type data) const noexcept {
-            return this->_cnvchkcall(buf, ifmt, offs, size, fmt, type, data);
-        }
+    struct : _clear_named_buffer_sub_data_t {
+        using base = _clear_named_buffer_sub_data_t;
+        using base::base;
+        using base::operator();
 
         template <typename T>
         constexpr auto operator()(
@@ -1834,7 +1824,7 @@ public:
           const T& value) const noexcept {
             return (*this)(buf, offs, count, internal_format_of<T>(), value);
         }
-    } clear_named_buffer_sub_data;
+    } clear_named_buffer_sub_data{*this};
 
     adapted_function<
       &gl_api::MapBuffer,
@@ -2020,67 +2010,64 @@ public:
         uint_type)>
       vertex_array_attrib_lformat{*this};
 
-    struct : func<OGLPAFP(VertexAttribPointer)> {
-        using func<OGLPAFP(VertexAttribPointer)>::func;
+    c_api::combined<
+      adapted_function<
+        &gl_api::VertexAttribPointer,
+        void(
+          vertex_attrib_location,
+          int_type,
+          data_type,
+          true_false,
+          sizei_type,
+          const_void_ptr_type)>,
+      adapted_function<
+        &gl_api::VertexAttribPointer,
+        void(
+          vertex_attrib_location,
+          int_type,
+          data_type,
+          true_false,
+          c_api::substituted<0>,
+          c_api::substituted<nullptr>)>>
+      vertex_attrib_pointer{*this};
 
-        constexpr auto operator()(
-          vertex_attrib_location loc,
-          int_type size,
-          data_type type,
-          true_false norm) const noexcept {
-            return this->_cnvchkcall(loc, size, type, norm, 0, nullptr);
-        }
+    c_api::combined<
+      adapted_function<
+        &gl_api::VertexAttribIPointer,
+        void(
+          vertex_attrib_location,
+          int_type,
+          data_type,
+          sizei_type,
+          const_void_ptr_type)>,
+      adapted_function<
+        &gl_api::VertexAttribIPointer,
+        void(
+          vertex_attrib_location,
+          int_type,
+          data_type,
+          c_api::substituted<0>,
+          c_api::substituted<nullptr>)>>
+      vertex_attrib_ipointer{*this};
 
-        constexpr auto operator()(
-          vertex_attrib_location loc,
-          int_type size,
-          data_type type,
-          true_false norm,
-          sizei_type stride,
-          const_void_ptr_type pointer) const noexcept {
-            return this->_cnvchkcall(loc, size, type, norm, stride, pointer);
-        }
-    } vertex_attrib_pointer;
-
-    struct : func<OGLPAFP(VertexAttribIPointer)> {
-        using func<OGLPAFP(VertexAttribIPointer)>::func;
-
-        constexpr auto operator()(
-          vertex_attrib_location loc,
-          int_type size,
-          data_type type) const noexcept {
-            return this->_cnvchkcall(loc, size, type, 0, nullptr);
-        }
-
-        constexpr auto operator()(
-          vertex_attrib_location loc,
-          int_type size,
-          data_type type,
-          sizei_type stride,
-          const_void_ptr_type pointer) const noexcept {
-            return this->_cnvchkcall(loc, size, type, stride, pointer);
-        }
-    } vertex_attrib_ipointer;
-
-    struct : func<OGLPAFP(VertexAttribLPointer)> {
-        using func<OGLPAFP(VertexAttribLPointer)>::func;
-
-        constexpr auto operator()(
-          vertex_attrib_location loc,
-          int_type size,
-          data_type type) const noexcept {
-            return this->_cnvchkcall(loc, size, type, 0, nullptr);
-        }
-
-        constexpr auto operator()(
-          vertex_attrib_location loc,
-          int_type size,
-          data_type type,
-          sizei_type stride,
-          const_void_ptr_type pointer) const noexcept {
-            return this->_cnvchkcall(loc, size, type, stride, pointer);
-        }
-    } vertex_attrib_lpointer;
+    c_api::combined<
+      adapted_function<
+        &gl_api::VertexAttribLPointer,
+        void(
+          vertex_attrib_location,
+          int_type,
+          data_type,
+          sizei_type,
+          const_void_ptr_type)>,
+      adapted_function<
+        &gl_api::VertexAttribLPointer,
+        void(
+          vertex_attrib_location,
+          int_type,
+          data_type,
+          c_api::substituted<0>,
+          c_api::substituted<nullptr>)>>
+      vertex_attrib_lpointer{*this};
 
     adapted_function<
       &gl_api::VertexAttribBinding,
@@ -2540,45 +2527,45 @@ public:
         memory::const_block)>
       compressed_texture_sub_image1d{*this};
 
-    func<
-      OGLPAFP(TexBuffer),
+    adapted_function<
+      &gl_api::TexBuffer,
       void(texture_target, pixel_internal_format, buffer_name)>
-      tex_buffer;
+      tex_buffer{*this};
 
-    func<
-      OGLPAFP(TextureBuffer),
+    adapted_function<
+      &gl_api::TextureBuffer,
       void(texture_name, pixel_internal_format, buffer_name)>
-      texture_buffer;
+      texture_buffer{*this};
 
-    func<
-      OGLPAFP(TexBufferRange),
+    adapted_function<
+      &gl_api::TexBufferRange,
       void(
         texture_target,
         pixel_internal_format,
         buffer_name,
         intptr_type,
         sizeiptr_type)>
-      tex_buffer_range;
+      tex_buffer_range{*this};
 
-    func<
-      OGLPAFP(TextureBufferRange),
+    adapted_function<
+      &gl_api::TextureBufferRange,
       void(
         texture_name,
         pixel_internal_format,
         buffer_name,
         intptr_type,
         sizeiptr_type)>
-      texture_buffer_range;
+      texture_buffer_range{*this};
 
-    func<
-      OGLPAFP(TexParameterf),
+    adapted_function<
+      &gl_api::TexParameterf,
       void(texture_target, texture_parameter, float_type)>
-      tex_parameter_f;
+      tex_parameter_f{*this};
 
-    func<
-      OGLPAFP(TextureParameterf),
+    adapted_function<
+      &gl_api::TextureParameterf,
       void(texture_name, texture_parameter, float_type)>
-      texture_parameter_f;
+      texture_parameter_f{*this};
 
     struct : func<OGLPAFP(TexParameteri)> {
         using func<OGLPAFP(TexParameteri)>::func;
@@ -2613,93 +2600,45 @@ public:
         }
     } texture_parameter_i;
 
-    struct : func<OGLPAFP(TexParameterfv)> {
-        using func<OGLPAFP(TexParameterfv)>::func;
+    adapted_function<
+      &gl_api::TexParameterfv,
+      void(texture_target, texture_parameter, span<const float_type>)>
+      tex_parameter_fv{*this};
 
-        constexpr auto operator()(
-          texture_target tgt,
-          texture_parameter param,
-          span<const float_type> values) const noexcept {
-            return this->_cnvchkcall(tgt, param, values.data());
-        }
-    } tex_parameter_fv;
+    adapted_function<
+      &gl_api::TextureParameterfv,
+      void(texture_name, texture_parameter, span<const float_type>)>
+      texture_parameter_fv{*this};
 
-    struct : func<OGLPAFP(TextureParameterfv)> {
-        using func<OGLPAFP(TextureParameterfv)>::func;
+    adapted_function<
+      &gl_api::TexParameteriv,
+      void(texture_target, texture_parameter, span<const int_type>)>
+      tex_parameter_iv{*this};
 
-        constexpr auto operator()(
-          texture_name tex,
-          texture_parameter param,
-          span<const float_type> values) const noexcept {
-            return this->_cnvchkcall(tex, param, values.data());
-        }
-    } texture_parameter_fv;
+    adapted_function<
+      &gl_api::TextureParameteriv,
+      void(texture_name, texture_parameter, span<const int_type>)>
+      texture_parameter_iv{*this};
 
-    struct : func<OGLPAFP(TexParameteriv)> {
-        using func<OGLPAFP(TexParameteriv)>::func;
+    adapted_function<
+      &gl_api::TexParameterIiv,
+      void(texture_target, texture_parameter, span<const int_type>)>
+      tex_parameter_iiv{*this};
 
-        constexpr auto operator()(
-          texture_target tgt,
-          texture_parameter param,
-          span<const int_type> values) const noexcept {
-            return this->_cnvchkcall(tgt, param, values.data());
-        }
-    } tex_parameter_iv;
+    adapted_function<
+      &gl_api::TextureParameterIiv,
+      void(texture_name, texture_parameter, span<const int_type>)>
+      texture_parameter_iiv{*this};
 
-    struct : func<OGLPAFP(TextureParameteriv)> {
-        using func<OGLPAFP(TextureParameteriv)>::func;
+    adapted_function<
+      &gl_api::TexParameterIuiv,
+      void(texture_target, texture_parameter, span<const uint_type>)>
+      tex_parameter_iuiv{*this};
 
-        constexpr auto operator()(
-          texture_name tex,
-          texture_parameter param,
-          span<const int_type> values) const noexcept {
-            return this->_cnvchkcall(tex, param, values.data());
-        }
-    } texture_parameter_iv;
-
-    struct : func<OGLPAFP(TexParameterIiv)> {
-        using func<OGLPAFP(TexParameterIiv)>::func;
-
-        constexpr auto operator()(
-          texture_target tgt,
-          texture_parameter param,
-          span<const int_type> values) const noexcept {
-            return this->_cnvchkcall(tgt, param, values.data());
-        }
-    } tex_parameter_iiv;
-
-    struct : func<OGLPAFP(TextureParameterIiv)> {
-        using func<OGLPAFP(TextureParameterIiv)>::func;
-
-        constexpr auto operator()(
-          texture_name tex,
-          texture_parameter param,
-          span<const int_type> values) const noexcept {
-            return this->_cnvchkcall(tex, param, values.data());
-        }
-    } texture_parameter_iiv;
-
-    struct : func<OGLPAFP(TexParameterIuiv)> {
-        using func<OGLPAFP(TexParameterIuiv)>::func;
-
-        constexpr auto operator()(
-          texture_target tgt,
-          texture_parameter param,
-          span<const uint_type> values) const noexcept {
-            return this->_cnvchkcall(tgt, param, values.data());
-        }
-    } tex_parameter_iuiv;
-
-    struct : func<OGLPAFP(TextureParameterIuiv)> {
-        using func<OGLPAFP(TextureParameterIuiv)>::func;
-
-        constexpr auto operator()(
-          texture_name tex,
-          texture_parameter param,
-          span<const uint_type> values) const noexcept {
-            return this->_cnvchkcall(tex, param, values.data());
-        }
-    } texture_parameter_iuiv;
+    adapted_function<
+      &gl_api::TextureParameterIuiv,
+      void(texture_name, texture_parameter, span<const uint_type>)>
+      texture_parameter_iuiv{*this};
 
     query_func<
       mp_list<texture_target>,
