@@ -2125,19 +2125,10 @@ public:
     adapted_function<&gl_api::BindTexture, void(texture_target, texture_name)>
       bind_texture{*this};
 
-    struct : func<OGLPAFP(BindTextures), void(uint_type, sizei_type, const name_type*)> {
-        using base = func<
-          OGLPAFP(BindTextures),
-          void(uint_type, sizei_type, const name_type*)>;
-
-        using base::base;
-
-        constexpr auto operator()(uint_type first, span<const name_type> texs)
-          const noexcept {
-            return base::operator()(
-              first, sizei_type(texs.size()), texs.data());
-        }
-    } bind_textures;
+    adapted_function<
+      &gl_api::BindTextures,
+      void(uint_type, span<const name_type>)>
+      bind_textures{*this};
 
     adapted_function<&gl_api::BindTextureUnit, void(uint_type, texture_name)>
       bind_texture_unit{*this};
@@ -2289,8 +2280,8 @@ public:
         memory::const_block)>
       tex_image1d;
 
-    func<
-      OGLPAFP(TexSubImage3D),
+    adapted_function<
+      &gl_api::TexSubImage3D,
       void(
         texture_target,
         int_type,
@@ -2303,10 +2294,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_sub_image3d;
+      tex_sub_image3d{*this};
 
-    func<
-      OGLPAFP(TextureSubImage3D),
+    adapted_function<
+      &gl_api::TextureSubImage3D,
       void(
         texture_name,
         int_type,
@@ -2319,10 +2310,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      texture_sub_image3d;
+      texture_sub_image3d{*this};
 
-    func<
-      OGLPAFP(TexSubImage2D),
+    adapted_function<
+      &gl_api::TexSubImage2D,
       void(
         texture_target,
         int_type,
@@ -2333,10 +2324,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_sub_image2d;
+      tex_sub_image2d{*this};
 
-    func<
-      OGLPAFP(TextureSubImage2D),
+    adapted_function<
+      &gl_api::TextureSubImage2D,
       void(
         texture_name,
         int_type,
@@ -2347,10 +2338,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      texture_sub_image2d;
+      texture_sub_image2d{*this};
 
-    func<
-      OGLPAFP(TexSubImage1D),
+    adapted_function<
+      &gl_api::TexSubImage1D,
       void(
         texture_target,
         int_type,
@@ -2359,10 +2350,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_sub_image1d;
+      tex_sub_image1d{*this};
 
-    func<
-      OGLPAFP(TexSubImage1D),
+    adapted_function<
+      &gl_api::TextureSubImage1D,
       void(
         texture_name,
         int_type,
@@ -2371,10 +2362,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      texture_sub_image1d;
+      texture_sub_image1d{*this};
 
-    func<
-      OGLPAFP(CopyTexImage2D),
+    adapted_function<
+      &gl_api::CopyTexImage2D,
       void(
         texture_target,
         int_type,
@@ -2384,10 +2375,10 @@ public:
         sizei_type,
         sizei_type,
         int_type)>
-      copy_tex_image2d;
+      copy_tex_image2d{*this};
 
-    func<
-      OGLPAFP(CopyTexImage1D),
+    adapted_function<
+      &gl_api::CopyTexImage1D,
       void(
         texture_target,
         int_type,
@@ -2396,10 +2387,10 @@ public:
         int_type,
         sizei_type,
         int_type)>
-      copy_tex_image1d;
+      copy_tex_image1d{*this};
 
-    func<
-      OGLPAFP(CopyTexSubImage3D),
+    adapted_function<
+      &gl_api::CopyTexSubImage3D,
       void(
         texture_target,
         int_type,
@@ -2410,270 +2401,155 @@ public:
         int_type,
         sizei_type,
         sizei_type)>
-      copy_tex_sub_image3d;
+      copy_tex_sub_image3d{*this};
 
-    func<
-      OGLPAFP(CopyTextureSubImage3D),
-      void(
-        texture_name,
-        int_type,
-        int_type,
-        int_type,
-        int_type,
-        int_type,
-        int_type,
-        sizei_type,
-        sizei_type)>
-      copy_texture_sub_image3d;
-
-    func<
-      OGLPAFP(CopyTexSubImage2D),
+    adapted_function<
+      &gl_api::CopyTexSubImage2D,
       void(
         texture_target,
         int_type,
         int_type,
         int_type,
         int_type,
-        int_type,
         sizei_type,
         sizei_type)>
-      copy_tex_sub_image2d;
+      copy_tex_sub_image2d{*this};
 
-    func<
-      OGLPAFP(CopyTextureSubImage2D),
+    adapted_function<
+      &gl_api::CopyTextureSubImage2D,
       void(
         texture_name,
         int_type,
         int_type,
         int_type,
         int_type,
-        int_type,
         sizei_type,
         sizei_type)>
-      copy_texture_sub_image2d;
+      copy_texture_sub_image2d{*this};
 
-    func<
-      OGLPAFP(CopyTexSubImage1D),
+    adapted_function<
+      &gl_api::CopyTexSubImage1D,
       void(texture_target, int_type, int_type, int_type, int_type, sizei_type)>
-      copy_tex_sub_image1d;
+      copy_tex_sub_image1d{*this};
 
-    func<
-      OGLPAFP(CopyTextureSubImage1D),
+    adapted_function<
+      &gl_api::CopyTextureSubImage1D,
       void(texture_name, int_type, int_type, int_type, int_type, sizei_type)>
-      copy_texture_sub_image1d;
+      copy_texture_sub_image1d{*this};
 
-    struct : func<OGLPAFP(CompressedTexImage3D)> {
-        using func<OGLPAFP(CompressedTexImage3D)>::func;
+    adapted_function<
+      &gl_api::CompressedTexImage3D,
+      void(
+        texture_target,
+        int_type,
+        pixel_internal_format,
+        sizei_type,
+        sizei_type,
+        sizei_type,
+        int_type,
+        memory::const_block)>
+      compressed_tex_image3d{*this};
 
-        constexpr auto operator()(
-          texture_target tgt,
-          int_type level,
-          pixel_internal_format ifmt,
-          sizei_type width,
-          sizei_type height,
-          sizei_type depth,
-          int_type border,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tgt,
-              level,
-              ifmt,
-              width,
-              height,
-              depth,
-              border,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_tex_image3d;
+    adapted_function<
+      &gl_api::CompressedTexImage2D,
+      void(
+        texture_target,
+        int_type,
+        pixel_internal_format,
+        sizei_type,
+        sizei_type,
+        int_type,
+        memory::const_block)>
+      compressed_tex_image2d{*this};
 
-    struct : func<OGLPAFP(CompressedTexImage2D)> {
-        using func<OGLPAFP(CompressedTexImage2D)>::func;
+    adapted_function<
+      &gl_api::CompressedTexImage1D,
+      void(
+        texture_target,
+        int_type,
+        pixel_internal_format,
+        sizei_type,
+        int_type,
+        memory::const_block)>
+      compressed_tex_image1d{*this};
 
-        constexpr auto operator()(
-          texture_target tgt,
-          int_type level,
-          pixel_internal_format ifmt,
-          sizei_type width,
-          sizei_type height,
-          int_type border,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tgt,
-              level,
-              ifmt,
-              width,
-              height,
-              border,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_tex_image2d;
+    adapted_function<
+      &gl_api::CompressedTexSubImage3D,
+      void(
+        texture_target,
+        int_type,
+        int_type,
+        int_type,
+        int_type,
+        sizei_type,
+        sizei_type,
+        sizei_type,
+        pixel_format,
+        memory::const_block)>
+      compressed_tex_sub_image3d{*this};
 
-    struct : func<OGLPAFP(CompressedTexImage1D)> {
-        using func<OGLPAFP(CompressedTexImage1D)>::func;
+    adapted_function<
+      &gl_api::CompressedTextureSubImage3D,
+      void(
+        texture_name,
+        int_type,
+        int_type,
+        int_type,
+        int_type,
+        sizei_type,
+        sizei_type,
+        sizei_type,
+        pixel_format,
+        memory::const_block)>
+      compressed_texture_sub_image3d{*this};
 
-        constexpr auto operator()(
-          texture_target tgt,
-          int_type level,
-          pixel_internal_format ifmt,
-          sizei_type width,
-          int_type border,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tgt,
-              level,
-              ifmt,
-              width,
-              border,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_tex_image1d;
+    adapted_function<
+      &gl_api::CompressedTexSubImage2D,
+      void(
+        texture_target,
+        int_type,
+        int_type,
+        int_type,
+        sizei_type,
+        sizei_type,
+        pixel_format,
+        memory::const_block)>
+      compressed_tex_sub_image2d{*this};
 
-    struct : func<OGLPAFP(CompressedTexSubImage3D)> {
-        using func<OGLPAFP(CompressedTexSubImage3D)>::func;
-        constexpr auto operator()(
-          texture_target tgt,
-          int_type level,
-          int_type xoffset,
-          int_type yoffset,
-          int_type zoffset,
-          sizei_type width,
-          sizei_type height,
-          sizei_type depth,
-          pixel_format fmt,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tgt,
-              level,
-              xoffset,
-              yoffset,
-              zoffset,
-              width,
-              height,
-              depth,
-              fmt,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_tex_sub_image3d;
+    adapted_function<
+      &gl_api::CompressedTextureSubImage2D,
+      void(
+        texture_name,
+        int_type,
+        int_type,
+        int_type,
+        sizei_type,
+        sizei_type,
+        pixel_format,
+        memory::const_block)>
+      compressed_texture_sub_image2d{*this};
 
-    struct : func<OGLPAFP(CompressedTextureSubImage3D)> {
-        using func<OGLPAFP(CompressedTextureSubImage3D)>::func;
-        constexpr auto operator()(
-          texture_name tex,
-          int_type level,
-          int_type xoffset,
-          int_type yoffset,
-          int_type zoffset,
-          sizei_type width,
-          sizei_type height,
-          sizei_type depth,
-          pixel_format fmt,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tex,
-              level,
-              xoffset,
-              yoffset,
-              zoffset,
-              width,
-              height,
-              depth,
-              fmt,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_texture_sub_image3d;
+    adapted_function<
+      &gl_api::CompressedTexSubImage1D,
+      void(
+        texture_target,
+        int_type,
+        int_type,
+        sizei_type,
+        pixel_format,
+        memory::const_block)>
+      compressed_tex_sub_image1d{*this};
 
-    struct : func<OGLPAFP(CompressedTexSubImage2D)> {
-        using func<OGLPAFP(CompressedTexSubImage2D)>::func;
-        constexpr auto operator()(
-          texture_target tgt,
-          int_type level,
-          int_type xoffset,
-          int_type yoffset,
-          sizei_type width,
-          sizei_type height,
-          pixel_format fmt,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tgt,
-              level,
-              xoffset,
-              yoffset,
-              width,
-              height,
-              fmt,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_tex_sub_image2d;
-
-    struct : func<OGLPAFP(CompressedTextureSubImage2D)> {
-        using func<OGLPAFP(CompressedTextureSubImage2D)>::func;
-        constexpr auto operator()(
-          texture_name tex,
-          int_type level,
-          int_type xoffset,
-          int_type yoffset,
-          sizei_type width,
-          sizei_type height,
-          pixel_format fmt,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tex,
-              level,
-              xoffset,
-              yoffset,
-              width,
-              height,
-              fmt,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_texture_sub_image2d;
-
-    struct : func<OGLPAFP(CompressedTexSubImage1D)> {
-        using func<OGLPAFP(CompressedTexSubImage1D)>::func;
-        constexpr auto operator()(
-          texture_target tgt,
-          int_type level,
-          int_type xoffset,
-          sizei_type width,
-          pixel_format fmt,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tgt,
-              level,
-              xoffset,
-              width,
-              fmt,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_tex_sub_image1d;
-
-    struct : func<OGLPAFP(CompressedTextureSubImage1D)> {
-        using func<OGLPAFP(CompressedTextureSubImage1D)>::func;
-        constexpr auto operator()(
-          texture_name tex,
-          int_type level,
-          int_type xoffset,
-          sizei_type width,
-          pixel_format fmt,
-          memory::const_block data) const noexcept {
-            return this->_cnvchkcall(
-              tex,
-              level,
-              xoffset,
-              width,
-              fmt,
-              sizei_type(data.size()),
-              data.data());
-        }
-    } compressed_texture_sub_image1d;
+    adapted_function<
+      &gl_api::CompressedTextureSubImage1D,
+      void(
+        texture_name,
+        int_type,
+        int_type,
+        sizei_type,
+        pixel_format,
+        memory::const_block)>
+      compressed_texture_sub_image1d{*this};
 
     func<
       OGLPAFP(TexBuffer),

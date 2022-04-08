@@ -98,39 +98,9 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , vertex_attrib_pointer{"vertex_attrib_pointer", *this}
   , vertex_attrib_ipointer{"vertex_attrib_ipointer", *this}
   , vertex_attrib_lpointer{"vertex_attrib_lpointer", *this}
-  , bind_textures{"bind_textures", *this}
   , tex_image3d{"tex_image3d", *this}
   , tex_image2d{"tex_image2d", *this}
   , tex_image1d{"tex_image1d", *this}
-  , tex_sub_image3d{"tex_sub_image3d", *this}
-  , texture_sub_image3d{"texture_sub_image3d", *this}
-  , tex_sub_image2d{"tex_sub_image2d", *this}
-  , texture_sub_image2d{"texture_sub_image2d", *this}
-  , tex_sub_image1d{"tex_sub_image1d", *this}
-  , texture_sub_image1d{"texture_sub_image1d", *this}
-  , copy_tex_image2d{"copy_tex_image2d", *this}
-  , copy_tex_image1d{"copy_tex_image1d", *this}
-  , copy_tex_sub_image3d{"copy_tex_sub_image3d", *this}
-  , copy_texture_sub_image3d{"copy_texture_sub_image3d", *this}
-  , copy_tex_sub_image2d{"copy_tex_sub_image2d", *this}
-  , copy_texture_sub_image2d{"copy_texture_sub_image2d", *this}
-  , copy_tex_sub_image1d{"copy_tex_sub_image1d", *this}
-  , copy_texture_sub_image1d{"copy_texture_sub_image1d", *this}
-  , compressed_tex_image3d{"compressed_tex_image3d", *this}
-  , compressed_tex_image2d{"compressed_tex_image2d", *this}
-  , compressed_tex_image1d{"compressed_tex_image1d", *this}
-  , compressed_tex_sub_image3d{"compressed_tex_sub_image3d", *this}
-  , compressed_texture_sub_image3d{
-      "compressed_texture_sub_image3d",
-      *this}
-  , compressed_tex_sub_image2d{"compressed_tex_sub_image2d", *this}
-  , compressed_texture_sub_image2d{
-      "compressed_texture_sub_image2d",
-      *this}
-  , compressed_tex_sub_image1d{"compressed_tex_sub_image1d", *this}
-  , compressed_texture_sub_image1d{
-      "compressed_texture_sub_image1d",
-      *this}
   , tex_buffer{"tex_buffer", *this}
   , texture_buffer{"texture_buffer", *this}
   , tex_buffer_range{"tex_buffer_range", *this}
