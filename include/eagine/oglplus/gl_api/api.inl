@@ -79,8 +79,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , program_uniform_matrix3x4fv{"program_uniform_matrix3x4fv", *this}
   , program_uniform_matrix4x2fv{"program_uniform_matrix4x2fv", *this}
   , program_uniform_matrix4x3fv{"program_uniform_matrix4x3fv", *this}
-  , buffer_storage{"buffer_storage", *this}
-  , named_buffer_storage{"named_buffer_storage", *this}
   , buffer_data{"buffer_data", *this}
   , named_buffer_data{"named_buffer_data", *this}
   , buffer_sub_data{"buffer_sub_data", *this}

@@ -530,37 +530,27 @@ public:
         }
     } viewport_array;
 
-    using _stencil_func_t = adapted_function<
-      &gl_api::StencilFunc,
-      void(compare_function, int_type, uint_type)>;
+    c_api::combined<
+      adapted_function<
+        &gl_api::StencilFunc,
+        void(compare_function, int_type, uint_type)>,
+      adapted_function<
+        &gl_api::StencilFunc,
+        void(compare_function, int_type, c_api::substituted<~uint_type{0U}>)>>
+      stencil_func{*this};
 
-    struct : _stencil_func_t {
-        using base = _stencil_func_t;
-        using base::base;
-        using base::operator();
-
-        constexpr auto operator()(compare_function fnc, int_type ref)
-          const noexcept {
-            return (*this)(fnc, ref, ~uint_type{0U});
-        }
-    } stencil_func{*this};
-
-    using _stencil_func_separate_t = adapted_function<
-      &gl_api::StencilFuncSeparate,
-      void(face_mode, compare_function, int_type, uint_type)>;
-
-    struct : _stencil_func_separate_t {
-        using base = _stencil_func_separate_t;
-        using base::base;
-        using base::operator();
-
-        constexpr auto operator()(
-          face_mode fce,
-          compare_function fnc,
-          int_type ref) const noexcept {
-            return (*this)(fce, fnc, ref, ~uint_type{0U});
-        }
-    } stencil_func_separate{*this};
+    c_api::combined<
+      adapted_function<
+        &gl_api::StencilFuncSeparate,
+        void(face_mode, compare_function, int_type, uint_type)>,
+      adapted_function<
+        &gl_api::StencilFuncSeparate,
+        void(
+          face_mode,
+          compare_function,
+          int_type,
+          c_api::substituted<~uint_type{0U}>)>>
+      stencil_func_separate{*this};
 
     adapted_function<
       &gl_api::StencilOp,
@@ -1596,40 +1586,39 @@ public:
       void(buffer_target, uint_type, buffer_name, intptr_type, sizeiptr_type)>
       bind_buffer_range{*this};
 
-    struct : func<OGLPAFP(BufferStorage)> {
-        using func<OGLPAFP(BufferStorage)>::func;
+    c_api::combined<
+      adapted_function<
+        &gl_api::BufferStorage,
+        void(
+          buffer_target,
+          sizeiptr_type,
+          const_void_ptr_type,
+          enum_bitfield<buffer_storage_bit>)>,
+      adapted_function<
+        &gl_api::BufferStorage,
+        void(
+          buffer_target,
+          sizeiptr_type,
+          c_api::substituted<nullptr>,
+          c_api::substituted<0U>)>>
+      buffer_storage{*this};
 
-        constexpr auto operator()(
-          buffer_target tgt,
-          sizeiptr_type size,
-          const_void_ptr_type data,
-          enum_bitfield<buffer_storage_bit> flags) const noexcept {
-            return this->_cnvchkcall(tgt, size, data, flags);
-        }
-
-        constexpr auto operator()(buffer_target tgt, sizeiptr_type size)
-          const noexcept {
-            return (*this)(tgt, size, nullptr, {});
-        }
-
-    } buffer_storage;
-
-    struct : func<OGLPAFP(NamedBufferStorage)> {
-        using func<OGLPAFP(NamedBufferStorage)>::func;
-
-        constexpr auto operator()(
-          buffer_name buf,
-          sizeiptr_type size,
-          const_void_ptr_type data,
-          enum_bitfield<buffer_storage_bit> flags) const noexcept {
-            return this->_cnvchkcall(buf, size, data, flags);
-        }
-
-        constexpr auto operator()(buffer_name buf, sizeiptr_type size)
-          const noexcept {
-            return (*this)(buf, size, nullptr, {});
-        }
-    } named_buffer_storage;
+    c_api::combined<
+      adapted_function<
+        &gl_api::NamedBufferStorage,
+        void(
+          buffer_name,
+          sizeiptr_type,
+          const_void_ptr_type,
+          enum_bitfield<buffer_storage_bit>)>,
+      adapted_function<
+        &gl_api::NamedBufferStorage,
+        void(
+          buffer_name,
+          sizeiptr_type,
+          c_api::substituted<nullptr>,
+          c_api::substituted<0U>)>>
+      named_buffer_storage{*this};
 
     struct : func<OGLPAFP(BufferData)> {
         using func<OGLPAFP(BufferData)>::func;
