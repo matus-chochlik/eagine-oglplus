@@ -202,48 +202,6 @@ public:
         }
     };
 
-    template <typename W, W gl_api::*F, typename Signature = typename W::signature>
-    class unck_func;
-
-    template <typename W, W gl_api::*F, typename RVC, typename... Params>
-    class unck_func<W, F, RVC(Params...)>
-      : public wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F> {
-        using base =
-          wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F>;
-
-    public:
-        using base::base;
-
-        constexpr auto operator()(Params... params) const noexcept {
-            return this->_call(_conv(params)...).cast_to(type_identity<RVC>{});
-        }
-
-        auto bind(Params... params) const noexcept {
-            return [this, params...] {
-                return (*this)(params...);
-            };
-        }
-
-    protected:
-        using base::_conv;
-
-        template <identifier_t I>
-        static constexpr auto _conv(prog_var_location<I> loc) noexcept {
-            return loc.index();
-        }
-
-        template <typename T>
-        static constexpr auto _conv(degrees_t<T> angle) noexcept {
-            return angle.value();
-        }
-
-        template <typename... Args>
-        constexpr auto _cnvcall(Args&&... args) const noexcept {
-            return this->_call(_conv(std::forward<Args>(args))...)
-              .cast_to(type_identity<RVC>{});
-        }
-    };
-
     // numeric query function
     template <
       typename PreTypeList,
