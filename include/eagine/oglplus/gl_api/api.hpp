@@ -469,29 +469,14 @@ public:
       void(enum_bitfield<memory_barrier_bit>)>
       memory_barrier_by_region{*this};
 
-    // viewport
-    struct : func<OGLPAFP(Viewport)> {
-        using base = func<OGLPAFP(Viewport)>;
-
-        using base::base;
-        using base::operator();
-
-        constexpr auto operator()(sizei_type w, sizei_type h) const noexcept {
-            return base::operator()(0, 0, w, h);
-        }
-
-        constexpr auto operator()(
-          std::tuple<sizei_type, sizei_type> wh) const noexcept {
-            return base::operator()(0, 0, std::get<0>(wh), std::get<1>(wh));
-        }
-
-        constexpr auto operator()(
-          std::tuple<int_type, int_type, sizei_type, sizei_type> c)
-          const noexcept {
-            return base::operator()(
-              std::get<0>(c), std::get<1>(c), std::get<2>(c), std::get<3>(c));
-        }
-    } viewport;
+    c_api::combined<
+      adapted_function<
+        &gl_api::Viewport,
+        void(int_type, int_type, sizei_type, sizei_type)>,
+      adapted_function<
+        &gl_api::Viewport,
+        void(c_api::substituted<0>, c_api::substituted<0>, sizei_type, sizei_type)>>
+      viewport{*this};
 
     // viewport_array
     struct : func<OGLPAFP(ViewportArrayv)> {
@@ -2711,61 +2696,38 @@ public:
       generate_texture_mipmap;
 
     // sampler ops
-    func<OGLPAFP(BindSampler), void(uint_type, sampler_name)> bind_sampler;
+    adapted_function<&gl_api::BindSampler, void(uint_type, sampler_name)>
+      bind_sampler{*this};
 
-    func<
-      OGLPAFP(SamplerParameterf),
+    adapted_function<
+      &gl_api::SamplerParameterf,
       void(sampler_name, sampler_parameter, float_type)>
-      sampler_parameter_f;
+      sampler_parameter_f{*this};
 
-    func<
-      OGLPAFP(SamplerParameteri),
+    adapted_function<
+      &gl_api::SamplerParameteri,
       void(sampler_name, sampler_parameter, int_type)>
-      sampler_parameter_i;
+      sampler_parameter_i{*this};
 
-    struct : func<OGLPAFP(SamplerParameterfv)> {
-        using func<OGLPAFP(SamplerParameterfv)>::func;
+    adapted_function<
+      &gl_api::SamplerParameterfv,
+      void(sampler_name, sampler_parameter, span<const float_type>)>
+      sampler_parameter_fv{*this};
 
-        constexpr auto operator()(
-          sampler_name sam,
-          sampler_parameter param,
-          span<const float_type> values) const noexcept {
-            return this->_cnvchkcall(sam, param, values.data());
-        }
-    } sampler_parameter_fv;
+    adapted_function<
+      &gl_api::SamplerParameteriv,
+      void(sampler_name, sampler_parameter, span<const int_type>)>
+      sampler_parameter_iv{*this};
 
-    struct : func<OGLPAFP(SamplerParameteriv)> {
-        using func<OGLPAFP(SamplerParameteriv)>::func;
+    adapted_function<
+      &gl_api::SamplerParameterIiv,
+      void(sampler_name, sampler_parameter, span<const int_type>)>
+      sampler_parameter_iiv{*this};
 
-        constexpr auto operator()(
-          sampler_name sam,
-          sampler_parameter param,
-          span<const int_type> values) const noexcept {
-            return this->_cnvchkcall(sam, param, values.data());
-        }
-    } sampler_parameter_iv;
-
-    struct : func<OGLPAFP(SamplerParameterIiv)> {
-        using func<OGLPAFP(SamplerParameterIiv)>::func;
-
-        constexpr auto operator()(
-          sampler_name sam,
-          sampler_parameter param,
-          span<const int_type> values) const noexcept {
-            return this->_cnvchkcall(sam, param, values.data());
-        }
-    } sampler_parameter_iiv;
-
-    struct : func<OGLPAFP(SamplerParameterIuiv)> {
-        using func<OGLPAFP(SamplerParameterIuiv)>::func;
-
-        constexpr auto operator()(
-          sampler_name sam,
-          sampler_parameter param,
-          span<const uint_type> values) const noexcept {
-            return this->_cnvchkcall(sam, param, values.data());
-        }
-    } sampler_parameter_iuiv;
+    adapted_function<
+      &gl_api::SamplerParameterIuiv,
+      void(sampler_name, sampler_parameter, span<const uint_type>)>
+      sampler_parameter_iuiv{*this};
 
     query_func<
       mp_list<sampler_name>,
@@ -3708,38 +3670,16 @@ public:
     }
 
     // named strings
-    struct : func<OGLPAFP(NamedString)> {
-        using func<OGLPAFP(NamedString)>::func;
+    adapted_function<
+      &gl_api::NamedString,
+      void(named_string_kind, string_view, string_view)>
+      named_string{*this};
 
-        constexpr auto operator()(
-          named_string_kind kind,
-          string_view name,
-          string_view str) const noexcept {
-            return this->_cnvchkcall(
-              kind,
-              sizei_type(name.size()),
-              name.data(),
-              sizei_type(str.size()),
-              str.data());
-        }
-    } named_string;
+    adapted_function<&gl_api::DeleteNamedString, void(string_view)>
+      delete_named_string{*this};
 
-    struct : func<OGLPAFP(DeleteNamedString)> {
-        using func<OGLPAFP(DeleteNamedString)>::func;
-
-        constexpr auto operator()(string_view name) const noexcept {
-            return this->_cnvchkcall(sizei_type(name.size()), name.data());
-        }
-    } delete_named_string;
-
-    struct : func<OGLPAFP(IsNamedString)> {
-        using func<OGLPAFP(IsNamedString)>::func;
-
-        constexpr auto operator()(string_view name) const noexcept {
-            return this->_cnvchkcall(sizei_type(name.size()), name.data())
-              .cast_to(type_identity<true_false>{});
-        }
-    } is_named_string;
+    adapted_function<&gl_api::IsNamedString, true_false(string_view)>
+      is_named_string{*this};
 
     // arb compatibility
     adapted_function<&gl_api::Begin, void(old_primitive_type)> begin{*this};

@@ -15,7 +15,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
   , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , viewport{"viewport", *this}
   , viewport_array{"viewport_array", *this}
   , get_shader_i{"get_shader_i", *this}
   , get_shader_info_log{"get_shader_info_log", *this}
@@ -103,13 +102,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_texture_parameter_iui{"get_texture_parameter_iui", *this}
   , generate_mipmap{"generate_mipmap", *this}
   , generate_texture_mipmap{"generate_texture_mipmap", *this}
-  , bind_sampler{"bind_sampler", *this}
-  , sampler_parameter_f{"sampler_parameter_f", *this}
-  , sampler_parameter_i{"sampler_parameter_i", *this}
-  , sampler_parameter_fv{"sampler_parameter_fv", *this}
-  , sampler_parameter_iv{"sampler_parameter_iv", *this}
-  , sampler_parameter_iiv{"sampler_parameter_iiv", *this}
-  , sampler_parameter_iuiv{"sampler_parameter_iuiv", *this}
   , get_sampler_parameter_f{"get_sampler_parameter_f", *this}
   , get_sampler_parameter_i{"get_sampler_parameter_i", *this}
   , get_sampler_parameter_ii{"get_sampler_parameter_ii", *this}
@@ -278,9 +270,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_integer64{"get_integer64", *this}
   , get_float{"get_float", *this}
   , get_double{"get_double", *this}
-  , get_string{"get_string", *this}
-  , named_string{"named_string", *this}
-  , delete_named_string{"delete_named_string", *this}
-  , is_named_string{"is_named_string", *this} {}
+  , get_string{"get_string", *this} {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
