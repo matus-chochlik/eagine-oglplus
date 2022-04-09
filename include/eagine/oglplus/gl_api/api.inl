@@ -104,13 +104,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_named_renderbuffer_parameter_i{
       "get_named_renderbuffer_parameter_i",
       *this}
-  , bind_framebuffer{"bind_framebuffer", *this}
-  , draw_buffer{"draw_buffer", *this}
-  , named_framebuffer_draw_buffer{"named_framebuffer_draw_buffer", *this}
-  , read_buffer{"read_buffer", *this}
-  , named_framebuffer_read_buffer{"named_framebuffer_read_buffer", *this}
-  , framebuffer_parameter_i{"framebuffer_parameter_i", *this}
-  , named_framebuffer_parameter_i{"named_framebuffer_parameter_i", *this}
   , get_framebuffer_parameter_i{"get_framebuffer_parameter_i", *this}
   , get_named_framebuffer_parameter_i{
       "get_named_framebuffer_parameter_i",
@@ -121,25 +114,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_named_framebuffer_attachment_parameter_i{
       "get_named_framebuffer_attachment_parameter_i",
       *this}
-  , framebuffer_renderbuffer{"framebuffer_renderbuffer", *this}
-  , named_framebuffer_renderbuffer{
-      "named_framebuffer_renderbuffer",
-      *this}
-  , framebuffer_texture{"framebuffer_texture", *this}
-  , named_framebuffer_texture{"named_framebuffer_texture", *this}
-  , framebuffer_texture1d{"framebuffer_texture1d", *this}
-  , framebuffer_texture2d{"framebuffer_texture2d", *this}
-  , framebuffer_texture3d{"framebuffer_texture3d", *this}
-  , framebuffer_texture_layer{"framebuffer_texture_layer", *this}
-  , named_framebuffer_texture_layer{
-      "named_framebuffer_texture_layer",
-      *this}
-  , check_framebuffer_status{"check_framebuffer_status", *this}
-  , check_named_framebuffer_status{
-      "check_named_framebuffer_status",
-      *this}
-  , blit_framebuffer{"blit_framebuffer", *this}
-  , blit_named_framebuffer{"blit_named_framebuffer", *this}
   , bind_transform_feedback{"bind_transform_feedback", *this}
   , begin_transform_feedback{"begin_transform_feedback", *this}
   , pause_transform_feedback{"pause_transform_feedback", *this}
@@ -195,35 +169,10 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , cover_stroke_path_instanced_nv{
       "cover_stroke_path_instanced_nv",
       *this}
-  , primitive_restart_index{"primitive_restart_index", *this}
-  , provoking_vertex{"provoking_vertex", *this}
-  , point_size{"point_size", *this}
-  , line_width{"line_width", *this}
-  , point_parameter_i{"point_parameter_i", *this}
-  , point_parameter_f{"point_parameter_f", *this}
-  , patch_parameter_i{"patch_parameter_i", *this}
-  , patch_parameter_fv{"patch_parameter_fv", *this}
-  , front_face{"front_face", *this}
-  , cull_face{"cull_face", *this}
-  , polygon_mode{"polygon_mode", *this}
-  , polygon_offset{"polygon_offset", *this}
-  , polygon_offset_clamp{"polygon_offset_clamp", *this}
-  , blend_equation{"blend_equation", *this}
-  , blend_equation_separate{"blend_equation_separate", *this}
-  , blend_equationi{"blend_equationi", *this}
-  , blend_equation_separatei{"blend_equation_separatei", *this}
-  , blend_func{"blend_func", *this}
-  , blend_func_separate{"blend_func_separate", *this}
-  , blend_funci{"blend_funci", *this}
-  , blend_func_separatei{"blend_func_separatei", *this}
-  , sample_coverage{"sample_coverage", *this}
-  , sample_mask_i{"sample_mask_i", *this}
-  , min_sample_shading{"min_sample_shading", *this}
   , get_multisample_f{"get_multisample_f", *this}
   , get_integer{"get_integer", *this}
   , get_integer64{"get_integer64", *this}
   , get_float{"get_float", *this}
-  , get_double{"get_double", *this}
-  , get_string{"get_string", *this} {}
+  , get_double{"get_double", *this} {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus

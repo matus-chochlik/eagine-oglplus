@@ -22,6 +22,23 @@
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
 
+namespace eagine::c_api {
+
+template <>
+struct cast_to_map<const oglplus::gl_types::ubyte_type*, string_view> {
+    template <typename... P>
+    constexpr auto operator()(size_constant<0> i, P&&... p) const noexcept {
+        return trivial_map{}(i, std::forward<P>(p)...)
+          .transformed([](auto src, bool valid) {
+              return valid && src
+                       ? string_view{reinterpret_cast<const char*>(src)}
+                       : string_view{};
+          });
+    }
+};
+
+} // namespace eagine::c_api
+
 namespace eagine::oglplus {
 class gl_debug_logger;
 using c_api::adapted_function;
@@ -2786,32 +2803,36 @@ public:
       get_named_renderbuffer_parameter_i;
 
     // framebuffer ops
-    func<OGLPAFP(BindFramebuffer), void(framebuffer_target, framebuffer_name)>
-      bind_framebuffer;
+    adapted_function<
+      &gl_api::BindFramebuffer,
+      void(framebuffer_target, framebuffer_name)>
+      bind_framebuffer{*this};
 
-    func<OGLPAFP(DrawBuffer), void(surface_buffer)> draw_buffer;
+    adapted_function<&gl_api::DrawBuffer, void(surface_buffer)> draw_buffer{
+      *this};
 
-    func<
-      OGLPAFP(NamedFramebufferDrawBuffer),
+    adapted_function<
+      &gl_api::NamedFramebufferDrawBuffer,
       void(framebuffer_name, surface_buffer)>
-      named_framebuffer_draw_buffer;
+      named_framebuffer_draw_buffer{*this};
 
-    func<OGLPAFP(ReadBuffer), void(surface_buffer)> read_buffer;
+    adapted_function<&gl_api::ReadBuffer, void(surface_buffer)> read_buffer{
+      *this};
 
-    func<
-      OGLPAFP(NamedFramebufferReadBuffer),
+    adapted_function<
+      &gl_api::NamedFramebufferReadBuffer,
       void(framebuffer_name, surface_buffer)>
-      named_framebuffer_read_buffer;
+      named_framebuffer_read_buffer{*this};
 
-    func<
-      OGLPAFP(FramebufferParameteri),
+    adapted_function<
+      &gl_api::FramebufferParameteri,
       void(framebuffer_target, framebuffer_parameter, int_type)>
-      framebuffer_parameter_i;
+      framebuffer_parameter_i{*this};
 
-    func<
-      OGLPAFP(NamedFramebufferParameteri),
+    adapted_function<
+      &gl_api::NamedFramebufferParameteri,
       void(framebuffer_name, framebuffer_parameter, int_type)>
-      named_framebuffer_parameter_i;
+      named_framebuffer_parameter_i{*this};
 
     query_func<
       mp_list<framebuffer_target>,
@@ -2845,101 +2866,103 @@ public:
       OGLPAFP(GetNamedFramebufferAttachmentParameteriv)>
       get_named_framebuffer_attachment_parameter_i;
 
-    func<
-      OGLPAFP(FramebufferRenderbuffer),
+    adapted_function<
+      &gl_api::FramebufferRenderbuffer,
       void(
         framebuffer_target,
         oglplus::framebuffer_attachment,
         renderbuffer_target,
         renderbuffer_name)>
-      framebuffer_renderbuffer;
+      framebuffer_renderbuffer{*this};
 
-    func<
-      OGLPAFP(NamedFramebufferRenderbuffer),
+    adapted_function<
+      &gl_api::NamedFramebufferRenderbuffer,
       void(
         framebuffer_name,
         oglplus::framebuffer_attachment,
         renderbuffer_target,
         renderbuffer_name)>
-      named_framebuffer_renderbuffer;
+      named_framebuffer_renderbuffer{*this};
 
-    func<
-      OGLPAFP(FramebufferTexture),
+    adapted_function<
+      &gl_api::FramebufferTexture,
       void(
         framebuffer_target,
         oglplus::framebuffer_attachment,
         texture_name,
         int_type)>
-      framebuffer_texture;
+      framebuffer_texture{*this};
 
-    func<
-      OGLPAFP(NamedFramebufferTexture),
+    adapted_function<
+      &gl_api::NamedFramebufferTexture,
       void(
         framebuffer_name,
         oglplus::framebuffer_attachment,
         texture_name,
         int_type)>
-      named_framebuffer_texture;
+      named_framebuffer_texture{*this};
 
-    func<
-      OGLPAFP(FramebufferTexture1D),
+    adapted_function<
+      &gl_api::FramebufferTexture1D,
       void(
         framebuffer_target,
         oglplus::framebuffer_attachment,
         texture_name,
         int_type)>
-      framebuffer_texture1d;
+      framebuffer_texture1d{*this};
 
-    func<
-      OGLPAFP(FramebufferTexture2D),
+    adapted_function<
+      &gl_api::FramebufferTexture2D,
       void(
         framebuffer_target,
         oglplus::framebuffer_attachment,
         oglplus::texture_target,
         texture_name,
         int_type)>
-      framebuffer_texture2d;
+      framebuffer_texture2d{*this};
 
-    func<
-      OGLPAFP(FramebufferTexture3D),
+    adapted_function<
+      &gl_api::FramebufferTexture3D,
       void(
         framebuffer_target,
         oglplus::framebuffer_attachment,
         oglplus::texture_target,
         texture_name,
         int_type)>
-      framebuffer_texture3d;
+      framebuffer_texture3d{*this};
 
-    func<
-      OGLPAFP(FramebufferTextureLayer),
+    adapted_function<
+      &gl_api::FramebufferTextureLayer,
       void(
         framebuffer_target,
         oglplus::framebuffer_attachment,
         texture_name,
         int_type,
         int_type)>
-      framebuffer_texture_layer;
+      framebuffer_texture_layer{*this};
 
-    func<
-      OGLPAFP(NamedFramebufferTextureLayer),
+    adapted_function<
+      &gl_api::NamedFramebufferTextureLayer,
       void(
         framebuffer_name,
         oglplus::framebuffer_attachment,
         texture_name,
         int_type,
         int_type)>
-      named_framebuffer_texture_layer;
+      named_framebuffer_texture_layer{*this};
 
-    func<OGLPAFP(CheckFramebufferStatus), framebuffer_status(framebuffer_target)>
-      check_framebuffer_status;
+    adapted_function<
+      &gl_api::CheckFramebufferStatus,
+      framebuffer_status(framebuffer_target)>
+      check_framebuffer_status{*this};
 
-    func<
-      OGLPAFP(CheckNamedFramebufferStatus),
+    adapted_function<
+      &gl_api::CheckNamedFramebufferStatus,
       framebuffer_status(framebuffer_name, framebuffer_target)>
-      check_named_framebuffer_status;
+      check_named_framebuffer_status{*this};
 
-    func<
-      OGLPAFP(BlitFramebuffer),
+    adapted_function<
+      &gl_api::BlitFramebuffer,
       void(
         int_type,
         int_type,
@@ -2951,10 +2974,10 @@ public:
         int_type,
         enum_bitfield<buffer_blit_bit>,
         blit_filter)>
-      blit_framebuffer;
+      blit_framebuffer{*this};
 
-    func<
-      OGLPAFP(BlitNamedFramebuffer),
+    adapted_function<
+      &gl_api::BlitNamedFramebuffer,
       void(
         framebuffer_name,
         framebuffer_name,
@@ -2968,7 +2991,7 @@ public:
         int_type,
         enum_bitfield<buffer_blit_bit>,
         blit_filter)>
-      blit_named_framebuffer;
+      blit_named_framebuffer{*this};
 
     // transform feedback ops
     func<
@@ -3338,79 +3361,89 @@ public:
     } cover_stroke_path_instanced_nv;
 
     // draw parameters
-    func<OGLPAFP(PrimitiveRestartIndex)> primitive_restart_index;
+    adapted_function<&gl_api::PrimitiveRestartIndex> primitive_restart_index{
+      *this};
 
-    func<OGLPAFP(ProvokingVertex), void(provoke_mode)> provoking_vertex;
+    adapted_function<&gl_api::ProvokingVertex, void(provoke_mode)>
+      provoking_vertex{*this};
 
-    func<OGLPAFP(PointSize)> point_size;
-    func<OGLPAFP(LineWidth)> line_width;
+    adapted_function<&gl_api::PointSize> point_size{*this};
+    adapted_function<&gl_api::LineWidth> line_width{*this};
 
-    func<OGLPAFP(PointParameteri), void(point_parameter, int_type)>
-      point_parameter_i;
+    adapted_function<&gl_api::PointParameteri, void(point_parameter, int_type)>
+      point_parameter_i{*this};
 
-    func<OGLPAFP(PointParameterf), void(point_parameter, float_type)>
-      point_parameter_f;
+    adapted_function<&gl_api::PointParameterf, void(point_parameter, float_type)>
+      point_parameter_f{*this};
 
-    func<OGLPAFP(PatchParameteri), void(patch_parameter, int_type)>
-      patch_parameter_i;
+    adapted_function<&gl_api::PatchParameteri, void(patch_parameter, int_type)>
+      patch_parameter_i{*this};
 
-    func<OGLPAFP(PatchParameterfv), void(patch_parameter, span<const float_type>)>
-      patch_parameter_fv;
+    adapted_function<
+      &gl_api::PatchParameterfv,
+      void(patch_parameter, span<const float_type>)>
+      patch_parameter_fv{*this};
 
-    func<OGLPAFP(FrontFace), void(face_orientation)> front_face;
-    func<OGLPAFP(CullFace), void(face_mode)> cull_face;
+    adapted_function<&gl_api::FrontFace, void(face_orientation)> front_face{
+      *this};
+    adapted_function<&gl_api::CullFace, void(face_mode)> cull_face{*this};
 
-    func<OGLPAFP(PolygonMode), void(face_mode, oglplus::polygon_mode)>
-      polygon_mode;
+    adapted_function<&gl_api::PolygonMode, void(face_mode, oglplus::polygon_mode)>
+      polygon_mode{*this};
 
-    func<OGLPAFP(PolygonOffset)> polygon_offset;
-    func<OGLPAFP(PolygonOffsetClamp)> polygon_offset_clamp;
+    adapted_function<&gl_api::PolygonOffset> polygon_offset{*this};
+    adapted_function<&gl_api::PolygonOffsetClamp> polygon_offset_clamp{*this};
 
-    func<OGLPAFP(BlendEquation), void(oglplus::blend_equation)> blend_equation;
-    func<
-      OGLPAFP(BlendEquation),
+    adapted_function<&gl_api::BlendEquation, void(oglplus::blend_equation)>
+      blend_equation{*this};
+
+    adapted_function<
+      &gl_api::BlendEquationSeparate,
       void(oglplus::blend_equation, oglplus::blend_equation)>
-      blend_equation_separate;
+      blend_equation_separate{*this};
 
-    func<OGLPAFP(BlendEquation), void(uint_type, oglplus::blend_equation)>
-      blend_equationi;
-    func<
-      OGLPAFP(BlendEquation),
+    adapted_function<
+      &gl_api::BlendEquationi,
+      void(uint_type, oglplus::blend_equation)>
+      blend_equationi{*this};
+
+    adapted_function<
+      &gl_api::BlendEquationSeparatei,
       void(uint_type, oglplus::blend_equation, oglplus::blend_equation)>
-      blend_equation_separatei;
+      blend_equation_separatei{*this};
 
-    func<
-      OGLPAFP(BlendFunc),
+    adapted_function<
+      &gl_api::BlendFunc,
       void(oglplus::blend_function, oglplus::blend_function)>
-      blend_func;
+      blend_func{*this};
 
-    func<
-      OGLPAFP(BlendFunc),
+    adapted_function<
+      &gl_api::BlendFuncSeparate,
       void(
         oglplus::blend_function,
         oglplus::blend_function,
         oglplus::blend_function,
         oglplus::blend_function)>
-      blend_func_separate;
+      blend_func_separate{*this};
 
-    func<
-      OGLPAFP(BlendFunc),
+    adapted_function<
+      &gl_api::BlendFunci,
       void(uint_type, oglplus::blend_function, oglplus::blend_function)>
-      blend_funci;
+      blend_funci{*this};
 
-    func<
-      OGLPAFP(BlendFunc),
+    adapted_function<
+      &gl_api::BlendFuncSeparatei,
       void(
         uint_type,
         oglplus::blend_function,
         oglplus::blend_function,
         oglplus::blend_function,
         oglplus::blend_function)>
-      blend_func_separatei;
+      blend_func_separatei{*this};
 
-    func<OGLPAFP(SampleCoverage)> sample_coverage;
-    func<OGLPAFP(SampleMaski)> sample_mask_i;
-    func<OGLPAFP(MinSampleShading)> min_sample_shading;
+    adapted_function<&gl_api::SampleCoverage> sample_coverage{*this};
+    adapted_function<&gl_api::SampleMaski> sample_mask_i{*this};
+    adapted_function<&gl_api::MinSampleShading> min_sample_shading{*this};
 
     query_func<
       mp_list<>,
@@ -3599,24 +3632,8 @@ public:
       OGLPAFP(GetDoublev)>
       get_double;
 
-    // get_string
-    struct : func<OGLPAFP(GetString)> {
-        using func<OGLPAFP(GetString)>::func;
-
-        constexpr auto operator()(string_query query) const noexcept {
-            return this->_cnvchkcall(query).transformed(
-              [](auto src, bool valid) {
-                  return valid && src
-                           ? string_view{reinterpret_cast<const char*>(src)}
-                           : string_view{};
-              });
-        }
-
-        constexpr auto operator()() const noexcept {
-            return this->fake_empty_c_str().cast_to(
-              type_identity<string_view>{});
-        }
-    } get_string;
+    adapted_function<&gl_api::GetString, string_view(string_query)> get_string{
+      *this};
 
     // get_strings
     auto get_strings(string_query query, char separator) const noexcept {
