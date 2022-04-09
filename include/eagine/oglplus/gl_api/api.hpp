@@ -23,6 +23,7 @@
 #include <eagine/string_list.hpp>
 
 namespace eagine::oglplus {
+class gl_debug_logger;
 using c_api::adapted_function;
 //------------------------------------------------------------------------------
 #define OGLPAFP(FUNC) decltype(gl_api::FUNC), &gl_api::FUNC
@@ -3822,113 +3823,92 @@ public:
     func<OGLPAFP(Frustum)> frustum;
     func<OGLPAFP(Ortho)> ortho;
 
-    func<OGLPAFP(LoadMatrixf)> load_matrix_f;
-    func<OGLPAFP(LoadMatrixd)> load_matrix_d;
+    adapted_function<&gl_api::LoadMatrixf> load_matrix_f{*this};
+    adapted_function<&gl_api::LoadMatrixd> load_matrix_d{*this};
 
-    func<OGLPAFP(MultMatrixf)> mult_matrix_f;
-    func<OGLPAFP(MultMatrixd)> mult_matrix_d;
+    adapted_function<&gl_api::MultMatrixf> mult_matrix_f{*this};
+    adapted_function<&gl_api::MultMatrixd> mult_matrix_d{*this};
 
-    func<OGLPAFP(LoadTransposeMatrixf)> load_transpose_matrix_f;
-    func<OGLPAFP(LoadTransposeMatrixd)> load_transpose_matrix_d;
+    adapted_function<&gl_api::LoadTransposeMatrixf> load_transpose_matrix_f{
+      *this};
+    adapted_function<&gl_api::LoadTransposeMatrixd> load_transpose_matrix_d{
+      *this};
 
-    func<OGLPAFP(MultTransposeMatrixf)> mult_transpose_matrix_f;
-    func<OGLPAFP(MultTransposeMatrixd)> mult_transpose_matrix_d;
+    adapted_function<&gl_api::MultTransposeMatrixf> mult_transpose_matrix_f{
+      *this};
+    adapted_function<&gl_api::MultTransposeMatrixd> mult_transpose_matrix_d{
+      *this};
 
-    struct : func<OGLPAFP(DebugMessageControl)> {
-        using func<OGLPAFP(DebugMessageControl)>::func;
+    c_api::combined<
+      adapted_function<
+        &gl_api::DebugMessageControl,
+        void(
+          debug_output_source,
+          debug_output_type,
+          debug_output_severity,
+          c_api::substituted<0>,
+          c_api::substituted<nullptr>,
+          true_false)>,
+      adapted_function<
+        &gl_api::DebugMessageControl,
+        void(
+          debug_output_source,
+          debug_output_type,
+          debug_output_severity,
+          span<const uint_type>,
+          true_false)>>
+      debug_message_control{*this};
 
-        constexpr auto operator()(
-          debug_output_source source,
-          debug_output_type type,
-          debug_output_severity severity,
-          span<const uint_type> ids,
-          true_false enabled) const noexcept {
-            return this->_cnvchkcall(
-              source,
-              type,
-              severity,
-              sizei_type(ids.size()),
-              ids.data(),
-              enabled);
+    adapted_function<
+      &gl_api::DebugMessageInsert,
+      void(
+        debug_output_source,
+        debug_output_type,
+        debug_output_severity,
+        uint_type,
+        string_view)>
+      debug_message_insert{*this};
+
+    using _debug_message_callback_t = adapted_function<
+      &gl_api::DebugMessageCallback,
+      void(debug_callback_type*, const_void_ptr_type)>;
+
+    struct : _debug_message_callback_t {
+        using base = _debug_message_callback_t;
+        using base::base;
+        using base::operator();
+
+        template <typename Log>
+        requires(std::is_same_v<Log, gl_debug_logger>) constexpr auto operator()(
+          const Log& log) const noexcept {
+            return base::operator()(log.callback(), log.data());
         }
+    } debug_message_callback{*this};
 
-        constexpr auto operator()(
-          debug_output_source source,
-          debug_output_type type,
-          debug_output_severity severity,
-          true_false enabled) const noexcept {
-            return (*this)(source, type, severity, {}, enabled);
-        }
+    adapted_function<
+      &gl_api::PushDebugGroup,
+      void(debug_output_source, uint_type, string_view)>
+      push_debug_group{*this};
 
-    } debug_message_control;
+    adapted_function<&gl_api::PopDebugGroup> pop_debug_group{*this};
 
-    struct : func<OGLPAFP(DebugMessageInsert)> {
-        using func<OGLPAFP(DebugMessageInsert)>::func;
+    using _object_label_t = adapted_function<
+      &gl_api::ObjectLabel,
+      void(object_type, name_type, string_view)>;
 
-        constexpr auto operator()(
-          debug_output_source source,
-          debug_output_type type,
-          debug_output_severity severity,
-          uint_type id,
-          string_view message) const noexcept {
-            return this->_cnvchkcall(
-              source,
-              type,
-              id,
-              severity,
-              sizei_type(message.size()),
-              message.data());
-        }
-
-    } debug_message_insert;
-
-    struct : func<OGLPAFP(DebugMessageCallback)> {
-        using func<OGLPAFP(DebugMessageCallback)>::func;
-
-        constexpr auto operator()(
-          debug_callback_type* callback,
-          const_void_ptr_type user_data) const noexcept {
-            return this->_chkcall(callback, user_data);
-        }
-
-        constexpr auto operator()(
-          std::tuple<debug_callback_type*, const_void_ptr_type> callback)
-          const noexcept {
-            return this->_chkcall(std::get<0>(callback), std::get<1>(callback));
-        }
-
-    } debug_message_callback;
-
-    struct : func<OGLPAFP(PushDebugGroup)> {
-        using func<OGLPAFP(PushDebugGroup)>::func;
-
-        constexpr auto operator()(
-          debug_output_source source,
-          uint_type id,
-          string_view message) const noexcept {
-            return this->_cnvchkcall(
-              source, id, sizei_type(message.size()), message.data());
-        }
-
-    } push_debug_group;
-
-    func<OGLPAFP(PopDebugGroup)> pop_debug_group;
-
-    struct : func<OGLPAFP(ObjectLabel)> {
-        using func<OGLPAFP(ObjectLabel)>::func;
-
+    struct : _object_label_t {
+        using base = _object_label_t;
+        using base::base;
         template <typename ObjTag>
         constexpr auto operator()(
           gl_object_name<ObjTag> name,
           string_view label) const noexcept {
-            return this->_cnvchkcall(
-              type_of(name), name, sizei_type(label.size()), label.data());
+            return base::operator()(type_of(name), name_type{name}, label);
         }
+    } object_label{*this};
 
-    } object_label;
-
-    func<OGLPAFP(Flush)> flush;
-    func<OGLPAFP(Finish)> finish;
+    adapted_function<&gl_api::Flush> flush{*this};
+    adapted_function<&gl_api::Finish> finish{*this};
 
     basic_gl_operations(api_traits& traits);
 };

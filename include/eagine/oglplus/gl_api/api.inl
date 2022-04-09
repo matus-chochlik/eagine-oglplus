@@ -325,22 +325,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , scale_f{"scale_f", *this}
   , scale_d{"scale_d", *this}
   , frustum{"frustum", *this}
-  , ortho{"ortho", *this}
-  , load_matrix_f{"load_matrix_f", *this}
-  , load_matrix_d{"load_matrix_d", *this}
-  , mult_matrix_f{"mult_matrix_f", *this}
-  , mult_matrix_d{"mult_matrix_d", *this}
-  , load_transpose_matrix_f{"load_transpose_matrix_f", *this}
-  , load_transpose_matrix_d{"load_transpose_matrix_d", *this}
-  , mult_transpose_matrix_f{"mult_transpose_matrix_f", *this}
-  , mult_transpose_matrix_d{"mult_transpose_matrix_d", *this}
-  , debug_message_control{"debug_message_control", *this}
-  , debug_message_insert{"debug_message_insert", *this}
-  , debug_message_callback{"debug_message_callback", *this}
-  , push_debug_group{"push_debug_group", *this}
-  , pop_debug_group{"pop_debug_group", *this}
-  , object_label{"object_label", *this}
-  , flush{"flush", *this}
-  , finish{"finish", *this} {}
+  , ortho{"ortho", *this} {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
