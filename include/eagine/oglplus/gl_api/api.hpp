@@ -3422,45 +3422,49 @@ public:
 
     // drawing
     // arrays
-    func<OGLPAFP(DrawArrays), void(primitive_type, int_type, sizei_type)>
-      draw_arrays;
+    adapted_function<
+      &gl_api::DrawArrays,
+      void(primitive_type, int_type, sizei_type)>
+      draw_arrays{*this};
 
-    func<
-      OGLPAFP(DrawArraysInstancedBaseInstance),
+    adapted_function<
+      &gl_api::DrawArraysInstancedBaseInstance,
       void(primitive_type, int_type, sizei_type, sizei_type, uint_type)>
-      draw_arrays_instanced_base_instance;
+      draw_arrays_instanced_base_instance{*this};
 
-    func<
-      OGLPAFP(DrawArraysInstanced),
+    adapted_function<
+      &gl_api::DrawArraysInstanced,
       void(primitive_type, int_type, sizei_type, sizei_type)>
-      draw_arrays_instanced;
+      draw_arrays_instanced{*this};
 
-    func<OGLPAFP(DrawArraysIndirect), void(primitive_type, const_void_ptr_type)>
-      draw_arrays_indirect;
+    adapted_function<
+      &gl_api::DrawArraysIndirect,
+      void(primitive_type, const_void_ptr_type)>
+      draw_arrays_indirect{*this};
 
-    func<
-      OGLPAFP(MultiDrawArrays),
+    adapted_function<
+      &gl_api::MultiDrawArrays,
       void(primitive_type, const int_type*, const sizei_type*, sizei_type)>
-      multi_draw_arrays;
+      multi_draw_arrays{*this};
 
-    func<
-      OGLPAFP(MultiDrawArraysIndirect),
+    adapted_function<
+      &gl_api::MultiDrawArraysIndirect,
       void(primitive_type, const_void_ptr_type, sizei_type, sizei_type)>
-      multi_draw_arrays_indirect;
+      multi_draw_arrays_indirect{*this};
 
-    func<
-      OGLPAFP(MultiDrawArraysIndirectCount),
+    adapted_function<
+      &gl_api::MultiDrawArraysIndirectCount,
       void(primitive_type, const_void_ptr_type, intptr_type, sizei_type, sizei_type)>
-      multi_draw_arrays_indirect_count;
+      multi_draw_arrays_indirect_count{*this};
 
     // elements
-    func<
-      OGLPAFP(DrawElements),
+    adapted_function<
+      &gl_api::DrawElements,
       void(primitive_type, sizei_type, index_data_type, const_void_ptr_type)>
-      draw_elements;
+      draw_elements{*this};
 
-    func<
-      OGLPAFP(DrawRangeElements),
+    adapted_function<
+      &gl_api::DrawRangeElements,
       void(
         primitive_type,
         uint_type,
@@ -3468,10 +3472,10 @@ public:
         sizei_type,
         index_data_type,
         const_void_ptr_type)>
-      draw_range_elements;
+      draw_range_elements{*this};
 
-    func<
-      OGLPAFP(DrawElementsInstancedBaseInstance),
+    adapted_function<
+      &gl_api::DrawElementsInstancedBaseInstance,
       void(
         primitive_type,
         sizei_type,
@@ -3479,35 +3483,35 @@ public:
         const_void_ptr_type,
         sizei_type,
         uint_type)>
-      draw_elements_instanced_base_instance;
+      draw_elements_instanced_base_instance{*this};
 
-    func<
-      OGLPAFP(DrawElementsInstanced),
+    adapted_function<
+      &gl_api::DrawElementsInstanced,
       void(
         primitive_type,
         sizei_type,
         index_data_type,
         const_void_ptr_type,
         sizei_type)>
-      draw_elements_instanced;
+      draw_elements_instanced{*this};
 
-    func<
-      OGLPAFP(DrawElementsIndirect),
+    adapted_function<
+      &gl_api::DrawElementsIndirect,
       void(primitive_type, index_data_type, const_void_ptr_type)>
-      draw_elements_indirect;
+      draw_elements_indirect{*this};
 
-    func<
-      OGLPAFP(DrawElementsBaseVertex),
+    adapted_function<
+      &gl_api::DrawElementsBaseVertex,
       void(
         primitive_type,
         sizei_type,
         index_data_type,
         const_void_ptr_type,
         int_type)>
-      draw_elements_base_vertex;
+      draw_elements_base_vertex{*this};
 
-    func<
-      OGLPAFP(DrawRangeElements),
+    adapted_function<
+      &gl_api::DrawRangeElements,
       void(
         primitive_type,
         uint_type,
@@ -3516,10 +3520,10 @@ public:
         index_data_type,
         const_void_ptr_type,
         int_type)>
-      draw_range_elements_base_vertex;
+      draw_range_elements_base_vertex{*this};
 
-    func<
-      OGLPAFP(DrawElementsInstancedBaseVertex),
+    adapted_function<
+      &gl_api::DrawElementsInstancedBaseVertex,
       void(
         primitive_type,
         sizei_type,
@@ -3527,10 +3531,10 @@ public:
         const_void_ptr_type,
         sizei_type,
         int_type)>
-      draw_elements_instanced_base_vertex;
+      draw_elements_instanced_base_vertex{*this};
 
-    func<
-      OGLPAFP(DrawElementsInstancedBaseVertexBaseInstance),
+    adapted_function<
+      &gl_api::DrawElementsInstancedBaseVertexBaseInstance,
       void(
         primitive_type,
         sizei_type,
@@ -3539,15 +3543,16 @@ public:
         sizei_type,
         int_type,
         uint_type)>
-      draw_elements_instanced_base_vertex_base_instance;
+      draw_elements_instanced_base_vertex_base_instance{*this};
 
     // computing
-    func<OGLPAFP(DispatchCompute)> dispatch_compute;
-    func<OGLPAFP(DispatchComputeIndirect)> dispatch_compute_indirect;
+    adapted_function<&gl_api::DispatchCompute> dispatch_compute{*this};
+    adapted_function<&gl_api::DispatchComputeIndirect> dispatch_compute_indirect{
+      *this};
 
     // pixel transfer
-    func<
-      OGLPAFP(ReadPixels),
+    adapted_function<
+      &gl_api::ReadPixels,
       void(
         int_type,
         int_type,
@@ -3556,7 +3561,7 @@ public:
         pixel_format,
         pixel_data_type,
         memory::block)>
-      read_pixels;
+      read_pixels{*this};
 
     // get_integer
     query_func<

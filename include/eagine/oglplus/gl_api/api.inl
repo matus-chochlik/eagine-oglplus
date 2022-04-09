@@ -220,37 +220,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , sample_mask_i{"sample_mask_i", *this}
   , min_sample_shading{"min_sample_shading", *this}
   , get_multisample_f{"get_multisample_f", *this}
-  , draw_arrays{"draw_arrays", *this}
-  , draw_arrays_instanced_base_instance{
-      "draw_arrays_instanced_base_instance",
-      *this}
-  , draw_arrays_instanced{"draw_arrays_instanced", *this}
-  , draw_arrays_indirect{"draw_arrays_indirect", *this}
-  , multi_draw_arrays{"multi_draw_arrays", *this}
-  , multi_draw_arrays_indirect{"multi_draw_arrays_indirect", *this}
-  , multi_draw_arrays_indirect_count{
-      "multi_draw_arrays_indirect_count",
-      *this}
-  , draw_elements{"draw_elements", *this}
-  , draw_range_elements{"draw_range_elements", *this}
-  , draw_elements_instanced_base_instance{
-      "draw_elements_instanced_base_instance",
-      *this}
-  , draw_elements_instanced{"draw_elements_instanced", *this}
-  , draw_elements_indirect{"draw_elements_indirect", *this}
-  , draw_elements_base_vertex{"draw_elements_base_vertex", *this}
-  , draw_range_elements_base_vertex{
-      "draw_range_elements_base_vertex",
-      *this}
-  , draw_elements_instanced_base_vertex{
-      "draw_elements_instanced_base_vertex",
-      *this}
-  , draw_elements_instanced_base_vertex_base_instance{
-      "draw_elements_instanced_base_vertex_base_instance",
-      *this}
-  , dispatch_compute{"dispatch_compute", *this}
-  , dispatch_compute_indirect{"dispatch_compute_indirect", *this}
-  , read_pixels{"read_pixels", *this}
   , get_integer{"get_integer", *this}
   , get_integer64{"get_integer64", *this}
   , get_float{"get_float", *this}
