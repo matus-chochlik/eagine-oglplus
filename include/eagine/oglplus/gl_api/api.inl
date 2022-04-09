@@ -281,50 +281,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_string{"get_string", *this}
   , named_string{"named_string", *this}
   , delete_named_string{"delete_named_string", *this}
-  , is_named_string{"is_named_string", *this}
-  , begin{"begin", *this}
-  , end{"end", *this}
-  , vertex2i{"vertex2i", *this}
-  , vertex3i{"vertex3i", *this}
-  , vertex4i{"vertex4i", *this}
-  , vertex2f{"vertex2f", *this}
-  , vertex3f{"vertex3f", *this}
-  , vertex4f{"vertex4f", *this}
-  , color3i{"color3i", *this}
-  , color4i{"color4i", *this}
-  , color3f{"color3f", *this}
-  , color4f{"color4f", *this}
-  , secondary_color3i{"secondary_color3i", *this}
-  , secondary_color4i{"secondary_color4i", *this}
-  , secondary_color3f{"secondary_color3f", *this}
-  , secondary_color4f{"secondary_color4f", *this}
-  , tex_coord1i{"tex_coord1i", *this}
-  , tex_coord2i{"tex_coord2i", *this}
-  , tex_coord3i{"tex_coord3i", *this}
-  , tex_coord4i{"tex_coord4i", *this}
-  , tex_coord1f{"tex_coord1f", *this}
-  , tex_coord2f{"tex_coord2f", *this}
-  , tex_coord3f{"tex_coord3f", *this}
-  , tex_coord4f{"tex_coord4f", *this}
-  , multi_tex_coord1i{"multi_tex_coord1i", *this}
-  , multi_tex_coord2i{"multi_tex_coord2i", *this}
-  , multi_tex_coord3i{"multi_tex_coord3i", *this}
-  , multi_tex_coord4i{"multi_tex_coord4i", *this}
-  , multi_tex_coord1f{"multi_tex_coord1f", *this}
-  , multi_tex_coord2f{"multi_tex_coord2f", *this}
-  , multi_tex_coord3f{"multi_tex_coord3f", *this}
-  , multi_tex_coord4f{"multi_tex_coord4f", *this}
-  , matrix_mode{"matrix_mode", *this}
-  , push_matrix{"push_matrix", *this}
-  , pop_matrix{"pop_matrix", *this}
-  , load_identity{"load_identity", *this}
-  , translate_f{"translate_f", *this}
-  , translate_d{"translate_d", *this}
-  , rotate_f{"rotate_f", *this}
-  , rotate_d{"rotate_d", *this}
-  , scale_f{"scale_f", *this}
-  , scale_d{"scale_d", *this}
-  , frustum{"frustum", *this}
-  , ortho{"ortho", *this} {}
+  , is_named_string{"is_named_string", *this} {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus

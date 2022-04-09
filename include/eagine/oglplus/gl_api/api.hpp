@@ -3742,86 +3742,89 @@ public:
     } is_named_string;
 
     // arb compatibility
-    unck_func<OGLPAFP(Begin), void(old_primitive_type)> begin;
-    func<OGLPAFP(End)> end;
+    adapted_function<&gl_api::Begin, void(old_primitive_type)> begin{*this};
+    adapted_function<&gl_api::End> end{*this};
 
-    unck_func<OGLPAFP(Vertex2i)> vertex2i;
-    unck_func<OGLPAFP(Vertex3i)> vertex3i;
-    unck_func<OGLPAFP(Vertex4i)> vertex4i;
-    unck_func<OGLPAFP(Vertex2f)> vertex2f;
-    unck_func<OGLPAFP(Vertex3f)> vertex3f;
-    unck_func<OGLPAFP(Vertex4f)> vertex4f;
+    adapted_function<&gl_api::Vertex2i> vertex2i{*this};
+    adapted_function<&gl_api::Vertex3i> vertex3i{*this};
+    adapted_function<&gl_api::Vertex4i> vertex4i{*this};
+    adapted_function<&gl_api::Vertex2f> vertex2f{*this};
+    adapted_function<&gl_api::Vertex3f> vertex3f{*this};
+    adapted_function<&gl_api::Vertex4f> vertex4f{*this};
 
-    unck_func<OGLPAFP(Color3i)> color3i;
-    unck_func<OGLPAFP(Color4i)> color4i;
-    unck_func<OGLPAFP(Color3f)> color3f;
-    unck_func<OGLPAFP(Color4f)> color4f;
+    adapted_function<&gl_api::Color3i> color3i{*this};
+    adapted_function<&gl_api::Color4i> color4i{*this};
+    adapted_function<&gl_api::Color3f> color3f{*this};
+    adapted_function<&gl_api::Color4f> color4f{*this};
 
-    unck_func<OGLPAFP(SecondaryColor3i)> secondary_color3i;
-    unck_func<OGLPAFP(SecondaryColor4i)> secondary_color4i;
-    unck_func<OGLPAFP(SecondaryColor3f)> secondary_color3f;
-    unck_func<OGLPAFP(SecondaryColor4f)> secondary_color4f;
+    adapted_function<&gl_api::SecondaryColor3i> secondary_color3i{*this};
+    adapted_function<&gl_api::SecondaryColor4i> csecondary_olor4i{*this};
+    adapted_function<&gl_api::SecondaryColor3f> csecondary_olor3f{*this};
+    adapted_function<&gl_api::SecondaryColor4f> csecondary_olor4f{*this};
 
-    unck_func<OGLPAFP(TexCoord1i)> tex_coord1i;
-    unck_func<OGLPAFP(TexCoord2i)> tex_coord2i;
-    unck_func<OGLPAFP(TexCoord3i)> tex_coord3i;
-    unck_func<OGLPAFP(TexCoord4i)> tex_coord4i;
-    unck_func<OGLPAFP(TexCoord1f)> tex_coord1f;
-    unck_func<OGLPAFP(TexCoord2f)> tex_coord2f;
-    unck_func<OGLPAFP(TexCoord3f)> tex_coord3f;
-    unck_func<OGLPAFP(TexCoord4f)> tex_coord4f;
+    adapted_function<&gl_api::TexCoord1i> tex_coord1i{*this};
+    adapted_function<&gl_api::TexCoord2i> tex_coord2i{*this};
+    adapted_function<&gl_api::TexCoord3i> tex_coord3i{*this};
+    adapted_function<&gl_api::TexCoord4i> tex_coord4i{*this};
+    adapted_function<&gl_api::TexCoord1f> tex_coord1f{*this};
+    adapted_function<&gl_api::TexCoord2f> tex_coord2f{*this};
+    adapted_function<&gl_api::TexCoord3f> tex_coord3f{*this};
+    adapted_function<&gl_api::TexCoord4f> tex_coord4f{*this};
 
-    unck_func<OGLPAFP(MultiTexCoord1i), void(texture_unit, int_type)>
-      multi_tex_coord1i;
-    unck_func<OGLPAFP(MultiTexCoord2i), void(texture_unit, int_type, int_type)>
-      multi_tex_coord2i;
-    unck_func<
-      OGLPAFP(MultiTexCoord3i),
+    adapted_function<&gl_api::MultiTexCoord1i, void(texture_unit, int_type)>
+      multi_tex_coord1i{*this};
+    adapted_function<
+      &gl_api::MultiTexCoord2i,
+      void(texture_unit, int_type, int_type)>
+      multi_tex_coord2i{*this};
+    adapted_function<
+      &gl_api::MultiTexCoord3i,
       void(texture_unit, int_type, int_type, int_type)>
-      multi_tex_coord3i;
-    unck_func<
-      OGLPAFP(MultiTexCoord4i),
+      multi_tex_coord3i{*this};
+    adapted_function<
+      &gl_api::MultiTexCoord4i,
       void(texture_unit, int_type, int_type, int_type, int_type)>
-      multi_tex_coord4i;
-    unck_func<OGLPAFP(MultiTexCoord1f), void(texture_unit, float_type)>
-      multi_tex_coord1f;
-    unck_func<
-      OGLPAFP(MultiTexCoord2f),
+      multi_tex_coord4i{*this};
+
+    adapted_function<&gl_api::MultiTexCoord1f, void(texture_unit, float_type)>
+      multi_tex_coord1f{*this};
+    adapted_function<
+      &gl_api::MultiTexCoord2f,
       void(texture_unit, float_type, float_type)>
-      multi_tex_coord2f;
-    unck_func<
-      OGLPAFP(MultiTexCoord3f),
+      multi_tex_coord2f{*this};
+    adapted_function<
+      &gl_api::MultiTexCoord3f,
       void(texture_unit, float_type, float_type, float_type)>
-      multi_tex_coord3f;
-    unck_func<
-      OGLPAFP(MultiTexCoord4f),
+      multi_tex_coord3f{*this};
+    adapted_function<
+      &gl_api::MultiTexCoord4f,
       void(texture_unit, float_type, float_type, float_type, float_type)>
-      multi_tex_coord4f;
+      multi_tex_coord4f{*this};
 
-    func<OGLPAFP(MatrixMode), void(matrix_mode)> matrix_mode;
-    func<OGLPAFP(PushMatrix)> push_matrix;
-    func<OGLPAFP(PopMatrix)> pop_matrix;
+    adapted_function<&gl_api::MatrixMode, void(matrix_mode)> matrix_mode{*this};
+    adapted_function<&gl_api::PushMatrix> push_matrix{*this};
+    adapted_function<&gl_api::PopMatrix> pop_matrix{*this};
 
-    func<OGLPAFP(LoadIdentity)> load_identity;
+    adapted_function<&gl_api::LoadIdentity> load_identity{*this};
 
-    func<OGLPAFP(Translatef)> translate_f;
-    func<OGLPAFP(Translated)> translate_d;
+    adapted_function<&gl_api::Translatef> translate_f{*this};
+    adapted_function<&gl_api::Translated> translate_d{*this};
 
-    func<
-      OGLPAFP(Rotatef),
+    adapted_function<
+      &gl_api::Rotatef,
       void(degrees_t<float_type>, float_type, float_type, float_type)>
-      rotate_f;
+      rotate_f{*this};
 
-    func<
-      OGLPAFP(Rotated),
+    adapted_function<
+      &gl_api::Rotated,
       void(degrees_t<double_type>, double_type, double_type, double_type)>
-      rotate_d;
+      rotate_d{*this};
 
-    func<OGLPAFP(Scalef)> scale_f;
-    func<OGLPAFP(Scaled)> scale_d;
+    adapted_function<&gl_api::Scalef> scale_f{*this};
+    adapted_function<&gl_api::Scaled> scale_d{*this};
 
-    func<OGLPAFP(Frustum)> frustum;
-    func<OGLPAFP(Ortho)> ortho;
+    adapted_function<&gl_api::Frustum> frustum{*this};
+    adapted_function<&gl_api::Ortho> ortho{*this};
 
     adapted_function<&gl_api::LoadMatrixf> load_matrix_f{*this};
     adapted_function<&gl_api::LoadMatrixd> load_matrix_d{*this};
