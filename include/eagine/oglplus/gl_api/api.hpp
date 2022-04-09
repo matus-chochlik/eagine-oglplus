@@ -1588,53 +1588,25 @@ public:
           c_api::substituted<0U>)>>
       named_buffer_storage{*this};
 
-    struct : func<OGLPAFP(BufferData)> {
-        using func<OGLPAFP(BufferData)>::func;
+    adapted_function<
+      &gl_api::BufferData,
+      void(buffer_target, buffer_data_spec, buffer_usage)>
+      buffer_data{*this};
 
-        constexpr auto operator()(
-          buffer_target tgt,
-          const buffer_data_spec& values,
-          buffer_usage usg) const noexcept {
-            return this->_cnvchkcall(
-              tgt, sizei_type(values.size()), values.data(), usg);
-        }
-    } buffer_data;
+    adapted_function<
+      &gl_api::NamedBufferData,
+      void(buffer_name, buffer_data_spec, buffer_usage)>
+      named_buffer_data{*this};
 
-    struct : func<OGLPAFP(NamedBufferData)> {
-        using func<OGLPAFP(NamedBufferData)>::func;
+    adapted_function<
+      &gl_api::BufferSubData,
+      void(buffer_target, intptr_type, buffer_data_spec)>
+      buffer_sub_data{*this};
 
-        constexpr auto operator()(
-          buffer_name buf,
-          const buffer_data_spec& values,
-          buffer_usage usg) const noexcept {
-            return this->_cnvchkcall(
-              buf, sizei_type(values.size()), values.data(), usg);
-        }
-    } named_buffer_data;
-
-    struct : func<OGLPAFP(BufferSubData)> {
-        using func<OGLPAFP(BufferSubData)>::func;
-
-        constexpr auto operator()(
-          buffer_target tgt,
-          intptr_type offs,
-          const buffer_data_spec& values) const noexcept {
-            return this->_cnvchkcall(
-              tgt, offs, sizei_type(values.size()), values.data());
-        }
-    } buffer_sub_data;
-
-    struct : func<OGLPAFP(NamedBufferSubData)> {
-        using func<OGLPAFP(NamedBufferSubData)>::func;
-
-        constexpr auto operator()(
-          buffer_name buf,
-          intptr_type offs,
-          const buffer_data_spec& values) const noexcept {
-            return this->_cnvchkcall(
-              buf, offs, sizei_type(values.size()), values.data());
-        }
-    } named_buffer_sub_data;
+    adapted_function<
+      &gl_api::NamedBufferSubData,
+      void(buffer_name, intptr_type, buffer_data_spec)>
+      named_buffer_sub_data{*this};
 
     using _clear_buffer_data_t = adapted_function<
       &gl_api::ClearBufferData,
@@ -2690,10 +2662,10 @@ public:
       OGLPAFP(GetTextureParameterIuiv)>
       get_texture_parameter_iui;
 
-    func<OGLPAFP(GenerateMipmap), void(texture_target)> generate_mipmap;
-
-    func<OGLPAFP(GenerateTextureMipmap), void(texture_name)>
-      generate_texture_mipmap;
+    adapted_function<&gl_api::GenerateMipmap, void(texture_target)>
+      generate_mipmap{*this};
+    adapted_function<&gl_api::GenerateTextureMipmap, void(texture_name)>
+      generate_texture_mipmap{*this};
 
     // sampler ops
     adapted_function<&gl_api::BindSampler, void(uint_type, sampler_name)>
@@ -2762,38 +2734,40 @@ public:
       get_sampler_parameter_iui;
 
     // renderbuffer ops
-    func<OGLPAFP(BindRenderbuffer), void(renderbuffer_target, renderbuffer_name)>
-      bind_renderbuffer;
+    adapted_function<
+      &gl_api::BindRenderbuffer,
+      void(renderbuffer_target, renderbuffer_name)>
+      bind_renderbuffer{*this};
 
-    func<
-      OGLPAFP(RenderbufferStorage),
+    adapted_function<
+      &gl_api::RenderbufferStorage,
       void(renderbuffer_target, pixel_internal_format, sizei_type, sizei_type)>
-      renderbuffer_storage;
+      renderbuffer_storage{*this};
 
-    func<
-      OGLPAFP(NamedRenderbufferStorage),
-      void(renderbuffer_target, pixel_internal_format, sizei_type, sizei_type)>
-      named_renderbuffer_storage;
+    adapted_function<
+      &gl_api::NamedRenderbufferStorage,
+      void(renderbuffer_name, pixel_internal_format, sizei_type, sizei_type)>
+      named_renderbuffer_storage{*this};
 
-    func<
-      OGLPAFP(RenderbufferStorageMultisample),
+    adapted_function<
+      &gl_api::RenderbufferStorageMultisample,
       void(
         renderbuffer_target,
         sizei_type,
         pixel_internal_format,
         sizei_type,
         sizei_type)>
-      renderbuffer_storage_multisample;
+      renderbuffer_storage_multisample{*this};
 
-    func<
-      OGLPAFP(NamedRenderbufferStorageMultisample),
+    adapted_function<
+      &gl_api::NamedRenderbufferStorageMultisample,
       void(
-        renderbuffer_target,
+        renderbuffer_name,
         sizei_type,
         pixel_internal_format,
         sizei_type,
         sizei_type)>
-      named_renderbuffer_storage_multisample;
+      named_renderbuffer_storage_multisample{*this};
 
     query_func<
       mp_list<renderbuffer_target>,

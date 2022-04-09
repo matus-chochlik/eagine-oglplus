@@ -77,10 +77,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , program_uniform_matrix3x4fv{"program_uniform_matrix3x4fv", *this}
   , program_uniform_matrix4x2fv{"program_uniform_matrix4x2fv", *this}
   , program_uniform_matrix4x3fv{"program_uniform_matrix4x3fv", *this}
-  , buffer_data{"buffer_data", *this}
-  , named_buffer_data{"named_buffer_data", *this}
-  , buffer_sub_data{"buffer_sub_data", *this}
-  , named_buffer_sub_data{"named_buffer_sub_data", *this}
   , get_buffer_parameter_i{"get_buffer_parameter_i", *this}
   , get_named_buffer_parameter_i{"get_named_buffer_parameter_i", *this}
   , get_buffer_parameter_i64{"get_buffer_parameter_i64", *this}
@@ -100,21 +96,10 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_texture_parameter_ii{"get_texture_parameter_ii", *this}
   , get_tex_parameter_iui{"get_tex_parameter_iui", *this}
   , get_texture_parameter_iui{"get_texture_parameter_iui", *this}
-  , generate_mipmap{"generate_mipmap", *this}
-  , generate_texture_mipmap{"generate_texture_mipmap", *this}
   , get_sampler_parameter_f{"get_sampler_parameter_f", *this}
   , get_sampler_parameter_i{"get_sampler_parameter_i", *this}
   , get_sampler_parameter_ii{"get_sampler_parameter_ii", *this}
   , get_sampler_parameter_iui{"get_sampler_parameter_iui", *this}
-  , bind_renderbuffer{"bind_renderbuffer", *this}
-  , renderbuffer_storage{"renderbuffer_storage", *this}
-  , named_renderbuffer_storage{"named_renderbuffer_storage", *this}
-  , renderbuffer_storage_multisample{
-      "renderbuffer_storage_multisample",
-      *this}
-  , named_renderbuffer_storage_multisample{
-      "named_renderbuffer_storage_multisample",
-      *this}
   , get_renderbuffer_parameter_i{"get_renderbuffer_parameter_i", *this}
   , get_named_renderbuffer_parameter_i{
       "get_named_renderbuffer_parameter_i",
