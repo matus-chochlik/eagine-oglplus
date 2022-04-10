@@ -36,6 +36,33 @@ struct cast_to_map<const oglplus::gl_types::ubyte_type*, string_view> {
     }
 };
 
+template <
+  std::size_t CI,
+  std::size_t CppI,
+  typename CS,
+  typename... CT,
+  typename CppV,
+  typename CppP,
+  typename CppS,
+  CppS chunkSize,
+  typename... CppT>
+struct make_args_map<
+  CI,
+  CppI,
+  mp_list<CS, oglplus::gl_types::bool_type, CppV*, CT...>,
+  mp_list<
+    oglplus::true_false,
+    memory::basic_chunk_span<CppV, CppP, CppS, chunkSize>,
+    CppT...>>
+  : convert<CS, get_chunk_size_map<CI, CppI + 1, chunkSize>>
+  , convert<oglplus::gl_types::bool_type, reorder_arg_map<CI + 1, CppI>>
+  , get_data_map<CI + 2, CppI + 1> {
+    using convert<CS, get_chunk_size_map<CI, CppI + 1, chunkSize>>::operator();
+    using convert<oglplus::gl_types::bool_type, reorder_arg_map<CI + 1, CppI>>::
+    operator();
+    using get_data_map<CI + 2, CppI + 1>::operator();
+};
+
 } // namespace eagine::c_api
 
 namespace eagine::oglplus {
@@ -995,113 +1022,50 @@ public:
       uniform4fv{*this};
 
     // matrix float
-    struct : func<OGLPAFP(UniformMatrix2fv)> {
-        using func<OGLPAFP(UniformMatrix2fv)>::func;
+    adapted_function<
+      &gl_api::UniformMatrix2fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 4>)>
+      uniform_matrix2fv{*this};
 
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 4), transp, v.data());
-        }
-    } uniform_matrix2fv;
+    adapted_function<
+      &gl_api::UniformMatrix3fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 9>)>
+      uniform_matrix3fv{*this};
 
-    struct : func<OGLPAFP(UniformMatrix3fv)> {
-        using func<OGLPAFP(UniformMatrix3fv)>::func;
+    adapted_function<
+      &gl_api::UniformMatrix4fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 16>)>
+      uniform_matrix4fv{*this};
 
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 9), transp, v.data());
-        }
-    } uniform_matrix3fv;
+    adapted_function<
+      &gl_api::UniformMatrix2x3fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 6>)>
+      uniform_matrix2x3fv{*this};
 
-    struct : func<OGLPAFP(UniformMatrix4fv)> {
-        using func<OGLPAFP(UniformMatrix4fv)>::func;
+    adapted_function<
+      &gl_api::UniformMatrix2x4fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 8>)>
+      uniform_matrix2x4fv{*this};
 
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 16), transp, v.data());
-        }
-    } uniform_matrix4fv;
+    adapted_function<
+      &gl_api::UniformMatrix3x2fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 6>)>
+      uniform_matrix3x2fv{*this};
 
-    struct : func<OGLPAFP(UniformMatrix2x3fv)> {
-        using func<OGLPAFP(UniformMatrix2x3fv)>::func;
+    adapted_function<
+      &gl_api::UniformMatrix3x4fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 12>)>
+      uniform_matrix3x4fv{*this};
 
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 6), transp, v.data());
-        }
-    } uniform_matrix2x3fv;
+    adapted_function<
+      &gl_api::UniformMatrix4x2fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 8>)>
+      uniform_matrix4x2fv{*this};
 
-    struct : func<OGLPAFP(UniformMatrix2x4fv)> {
-        using func<OGLPAFP(UniformMatrix2x4fv)>::func;
-
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 8), transp, v.data());
-        }
-    } uniform_matrix2x4fv;
-
-    struct : func<OGLPAFP(UniformMatrix3x2fv)> {
-        using func<OGLPAFP(UniformMatrix3x2fv)>::func;
-
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 6), transp, v.data());
-        }
-    } uniform_matrix3x2fv;
-
-    struct : func<OGLPAFP(UniformMatrix3x4fv)> {
-        using func<OGLPAFP(UniformMatrix3x4fv)>::func;
-
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 12), transp, v.data());
-        }
-    } uniform_matrix3x4fv;
-
-    struct : func<OGLPAFP(UniformMatrix4x2fv)> {
-        using func<OGLPAFP(UniformMatrix4x2fv)>::func;
-
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 8), transp, v.data());
-        }
-    } uniform_matrix4x2fv;
-
-    struct : func<OGLPAFP(UniformMatrix4x3fv)> {
-        using func<OGLPAFP(UniformMatrix4x3fv)>::func;
-
-        constexpr auto operator()(
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              loc, sizei_type(v.size() / 12), transp, v.data());
-        }
-    } uniform_matrix4x3fv;
+    adapted_function<
+      &gl_api::UniformMatrix4x3fv,
+      void(uniform_location, true_false transp, chunk_span<const float_type, 12>)>
+      uniform_matrix4x3fv{*this};
 
     // program uniform
     // uint
@@ -1131,53 +1095,25 @@ public:
         uint_type)>
       program_uniform4ui{*this};
 
-    struct : func<OGLPAFP(ProgramUniform1uiv)> {
-        using func<OGLPAFP(ProgramUniform1uiv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniform1uiv,
+      void(program_name, uniform_location, chunk_span<const uint_type, 1>)>
+      program_uniform1uiv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const uint_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 1), v.data());
-        }
-    } program_uniform1uiv;
+    adapted_function<
+      &gl_api::ProgramUniform2uiv,
+      void(program_name, uniform_location, chunk_span<const uint_type, 2>)>
+      program_uniform2uiv{*this};
 
-    struct : func<OGLPAFP(ProgramUniform2uiv)> {
-        using func<OGLPAFP(ProgramUniform2uiv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniform3uiv,
+      void(program_name, uniform_location, chunk_span<const uint_type, 3>)>
+      program_uniform3uiv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const uint_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 2), v.data());
-        }
-    } program_uniform2uiv;
-
-    struct : func<OGLPAFP(ProgramUniform3uiv)> {
-        using func<OGLPAFP(ProgramUniform3uiv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const uint_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 3), v.data());
-        }
-    } program_uniform3uiv;
-
-    struct : func<OGLPAFP(ProgramUniform4uiv)> {
-        using func<OGLPAFP(ProgramUniform4uiv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const uint_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 4), v.data());
-        }
-    } program_uniform4uiv;
+    adapted_function<
+      &gl_api::ProgramUniform4uiv,
+      void(program_name, uniform_location, chunk_span<const uint_type, 4>)>
+      program_uniform4uiv{*this};
 
     // int
     adapted_function<
@@ -1200,53 +1136,25 @@ public:
       void(program_name, uniform_location, int_type, int_type, int_type, int_type)>
       program_uniform4i{*this};
 
-    struct : func<OGLPAFP(ProgramUniform1iv)> {
-        using func<OGLPAFP(ProgramUniform1iv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniform1iv,
+      void(program_name, uniform_location, chunk_span<const int_type, 1>)>
+      program_uniform1iv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const int_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 1), v.data());
-        }
-    } program_uniform1iv;
+    adapted_function<
+      &gl_api::ProgramUniform2iv,
+      void(program_name, uniform_location, chunk_span<const int_type, 2>)>
+      program_uniform2iv{*this};
 
-    struct : func<OGLPAFP(ProgramUniform2iv)> {
-        using func<OGLPAFP(ProgramUniform2iv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniform3iv,
+      void(program_name, uniform_location, chunk_span<const int_type, 3>)>
+      program_uniform3iv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const int_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 2), v.data());
-        }
-    } program_uniform2iv;
-
-    struct : func<OGLPAFP(ProgramUniform3iv)> {
-        using func<OGLPAFP(ProgramUniform3iv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const int_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 3), v.data());
-        }
-    } program_uniform3iv;
-
-    struct : func<OGLPAFP(ProgramUniform4iv)> {
-        using func<OGLPAFP(ProgramUniform4iv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const int_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 4), v.data());
-        }
-    } program_uniform4iv;
+    adapted_function<
+      &gl_api::ProgramUniform4iv,
+      void(program_name, uniform_location, chunk_span<const int_type, 4>)>
+      program_uniform4iv{*this};
 
     // float
     adapted_function<
@@ -1275,171 +1183,107 @@ public:
         float_type)>
       program_uniform4f{*this};
 
-    struct : func<OGLPAFP(ProgramUniform1fv)> {
-        using func<OGLPAFP(ProgramUniform1fv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniform1fv,
+      void(program_name, uniform_location, chunk_span<const float_type, 1>)>
+      program_uniform1fv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 1), v.data());
-        }
-    } program_uniform1fv;
+    adapted_function<
+      &gl_api::ProgramUniform2fv,
+      void(program_name, uniform_location, chunk_span<const float_type, 2>)>
+      program_uniform2fv{*this};
 
-    struct : func<OGLPAFP(ProgramUniform2fv)> {
-        using func<OGLPAFP(ProgramUniform2fv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniform3fv,
+      void(program_name, uniform_location, chunk_span<const float_type, 3>)>
+      program_uniform3fv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 2), v.data());
-        }
-    } program_uniform2fv;
-
-    struct : func<OGLPAFP(ProgramUniform3fv)> {
-        using func<OGLPAFP(ProgramUniform3fv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 3), v.data());
-        }
-    } program_uniform3fv;
-
-    struct : func<OGLPAFP(ProgramUniform4fv)> {
-        using func<OGLPAFP(ProgramUniform4fv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 4), v.data());
-        }
-    } program_uniform4fv;
+    adapted_function<
+      &gl_api::ProgramUniform4fv,
+      void(program_name, uniform_location, chunk_span<const float_type, 4>)>
+      program_uniform4fv{*this};
 
     // matrix float
-    struct : func<OGLPAFP(ProgramUniformMatrix2fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix2fv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix2fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 4>)>
+      program_uniform_matrix2fv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 4), transp, v.data());
-        }
-    } program_uniform_matrix2fv;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix3fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 9>)>
+      program_uniform_matrix3fv{*this};
 
-    struct : func<OGLPAFP(ProgramUniformMatrix3fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix3fv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix4fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 16>)>
+      program_uniform_matrix4fv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 9), transp, v.data());
-        }
-    } program_uniform_matrix3fv;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix2x3fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 6>)>
+      program_uniform_matrix2x3fv{*this};
 
-    struct : func<OGLPAFP(ProgramUniformMatrix4fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix4fv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix2x4fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 8>)>
+      program_uniform_matrix2x4fv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 16), transp, v.data());
-        }
-    } program_uniform_matrix4fv;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix3x2fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 6>)>
+      program_uniform_matrix3x2fv{*this};
 
-    struct : func<OGLPAFP(ProgramUniformMatrix2x3fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix2x3fv)>::func;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix3x4fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 12>)>
+      program_uniform_matrix3x4fv{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 6), transp, v.data());
-        }
-    } program_uniform_matrix2x3fv;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix4x2fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 8>)>
+      program_uniform_matrix4x2fv{*this};
 
-    struct : func<OGLPAFP(ProgramUniformMatrix2x4fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix2x4fv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 8), transp, v.data());
-        }
-    } program_uniform_matrix2x4fv;
-
-    struct : func<OGLPAFP(ProgramUniformMatrix3x2fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix3x2fv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 6), transp, v.data());
-        }
-    } program_uniform_matrix3x2fv;
-
-    struct : func<OGLPAFP(ProgramUniformMatrix3x4fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix3x4fv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 12), transp, v.data());
-        }
-    } program_uniform_matrix3x4fv;
-
-    struct : func<OGLPAFP(ProgramUniformMatrix4x2fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix4x2fv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 8), transp, v.data());
-        }
-    } program_uniform_matrix4x2fv;
-
-    struct : func<OGLPAFP(ProgramUniformMatrix4x3fv)> {
-        using func<OGLPAFP(ProgramUniformMatrix4x3fv)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          true_false transp,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(
-              prog, loc, sizei_type(v.size() / 12), transp, v.data());
-        }
-    } program_uniform_matrix4x3fv;
+    adapted_function<
+      &gl_api::ProgramUniformMatrix4x3fv,
+      void(
+        program_name,
+        uniform_location,
+        true_false transp,
+        chunk_span<const float_type, 12>)>
+      program_uniform_matrix4x3fv{*this};
 
     adapted_function<
       &gl_api::UniformBlockBinding,

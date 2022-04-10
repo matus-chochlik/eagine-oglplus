@@ -34,36 +34,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
       *this}
   , get_active_subroutine_name{"get_active_subroutine_name", *this}
   , uniform_subroutines{"uniform_subroutines", *this}
-  , uniform_matrix2fv{"uniform_matrix2fv", *this}
-  , uniform_matrix3fv{"uniform_matrix3fv", *this}
-  , uniform_matrix4fv{"uniform_matrix4fv", *this}
-  , uniform_matrix2x3fv{"uniform_matrix2x3fv", *this}
-  , uniform_matrix2x4fv{"uniform_matrix2x4fv", *this}
-  , uniform_matrix3x2fv{"uniform_matrix3x2fv", *this}
-  , uniform_matrix3x4fv{"uniform_matrix3x4fv", *this}
-  , uniform_matrix4x2fv{"uniform_matrix4x2fv", *this}
-  , uniform_matrix4x3fv{"uniform_matrix4x3fv", *this}
-  , program_uniform1uiv{"program_uniform1uiv", *this}
-  , program_uniform2uiv{"program_uniform2uiv", *this}
-  , program_uniform3uiv{"program_uniform3uiv", *this}
-  , program_uniform4uiv{"program_uniform4uiv", *this}
-  , program_uniform1iv{"program_uniform1iv", *this}
-  , program_uniform2iv{"program_uniform2iv", *this}
-  , program_uniform3iv{"program_uniform3iv", *this}
-  , program_uniform4iv{"program_uniform4iv", *this}
-  , program_uniform1fv{"program_uniform1fv", *this}
-  , program_uniform2fv{"program_uniform2fv", *this}
-  , program_uniform3fv{"program_uniform3fv", *this}
-  , program_uniform4fv{"program_uniform4fv", *this}
-  , program_uniform_matrix2fv{"program_uniform_matrix2fv", *this}
-  , program_uniform_matrix3fv{"program_uniform_matrix3fv", *this}
-  , program_uniform_matrix4fv{"program_uniform_matrix4fv", *this}
-  , program_uniform_matrix2x3fv{"program_uniform_matrix2x3fv", *this}
-  , program_uniform_matrix2x4fv{"program_uniform_matrix2x4fv", *this}
-  , program_uniform_matrix3x2fv{"program_uniform_matrix3x2fv", *this}
-  , program_uniform_matrix3x4fv{"program_uniform_matrix3x4fv", *this}
-  , program_uniform_matrix4x2fv{"program_uniform_matrix4x2fv", *this}
-  , program_uniform_matrix4x3fv{"program_uniform_matrix4x3fv", *this}
   , get_buffer_parameter_i{"get_buffer_parameter_i", *this}
   , get_named_buffer_parameter_i{"get_named_buffer_parameter_i", *this}
   , get_buffer_parameter_i64{"get_buffer_parameter_i64", *this}
