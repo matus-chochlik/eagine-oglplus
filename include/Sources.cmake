@@ -36,8 +36,6 @@ set(HEADERS
     eagine/oglplus/math/vector.hpp
     eagine/oglplus/shapes/drawing.hpp
     eagine/oglplus/shapes/generator.hpp
-    eagine/oglplus/utils/buffer_data.hpp
-    eagine/oglplus/utils/buffer_size.hpp
     eagine/oglplus/utils/image_file_hdr.hpp
     eagine/oglplus/utils/image_file.hpp
     eagine/oglplus/utils/image_file_io.hpp

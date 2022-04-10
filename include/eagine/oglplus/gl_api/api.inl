@@ -15,7 +15,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
   , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , viewport_array{"viewport_array", *this}
   , get_shader_i{"get_shader_i", *this}
   , get_shader_info_log{"get_shader_info_log", *this}
   , get_program_i{"get_program_i", *this}
@@ -35,18 +34,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
       *this}
   , get_active_subroutine_name{"get_active_subroutine_name", *this}
   , uniform_subroutines{"uniform_subroutines", *this}
-  , uniform1uiv{"uniform1uiv", *this}
-  , uniform2uiv{"uniform2uiv", *this}
-  , uniform3uiv{"uniform3uiv", *this}
-  , uniform4uiv{"uniform4uiv", *this}
-  , uniform1iv{"uniform1iv", *this}
-  , uniform2iv{"uniform2iv", *this}
-  , uniform3iv{"uniform3iv", *this}
-  , uniform4iv{"uniform4iv", *this}
-  , uniform1fv{"uniform1fv", *this}
-  , uniform2fv{"uniform2fv", *this}
-  , uniform3fv{"uniform3fv", *this}
-  , uniform4fv{"uniform4fv", *this}
   , uniform_matrix2fv{"uniform_matrix2fv", *this}
   , uniform_matrix3fv{"uniform_matrix3fv", *this}
   , uniform_matrix4fv{"uniform_matrix4fv", *this}

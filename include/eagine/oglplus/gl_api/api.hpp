@@ -452,25 +452,14 @@ public:
         void(c_api::substituted<0>, c_api::substituted<0>, sizei_type, sizei_type)>>
       viewport{*this};
 
-    // viewport_array
-    struct : func<OGLPAFP(ViewportArrayv)> {
-        using base = func<OGLPAFP(ViewportArrayv)>;
-
-        using base::base;
-
-        constexpr auto operator()(
-          uint_type first,
-          const span<const float_type> coords) const noexcept {
-            EAGINE_ASSERT(coords.size() % 4 == 0);
-            return base::operator()(
-              first, limit_cast<sizei_type>(coords.size() / 4), coords.data());
-        }
-
-        constexpr auto operator()(
-          const span<const float_type> coords) const noexcept {
-            return (*this)(0U, coords);
-        }
-    } viewport_array;
+    c_api::combined<
+      adapted_function<
+        &gl_api::ViewportArrayv,
+        void(uint_type, chunk_span<const float_type, 4>)>,
+      adapted_function<
+        &gl_api::ViewportArrayv,
+        void(c_api::substituted<0U>, chunk_span<const float_type, 4>)>>
+      viewport_array{*this};
 
     c_api::combined<
       adapted_function<
@@ -907,41 +896,25 @@ public:
       void(uniform_location, uint_type, uint_type, uint_type, uint_type)>
       uniform4ui{*this};
 
-    struct : func<OGLPAFP(Uniform1uiv)> {
-        using func<OGLPAFP(Uniform1uiv)>::func;
+    adapted_function<
+      &gl_api::Uniform1uiv,
+      void(uniform_location, chunk_span<const uint_type, 1>)>
+      uniform1uiv{*this};
 
-        constexpr auto operator()(uniform_location loc, span<const uint_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 1), v.data());
-        }
-    } uniform1uiv;
+    adapted_function<
+      &gl_api::Uniform2uiv,
+      void(uniform_location, chunk_span<const uint_type, 2>)>
+      uniform2uiv{*this};
 
-    struct : func<OGLPAFP(Uniform2uiv)> {
-        using func<OGLPAFP(Uniform2uiv)>::func;
+    adapted_function<
+      &gl_api::Uniform3uiv,
+      void(uniform_location, chunk_span<const uint_type, 3>)>
+      uniform3uiv{*this};
 
-        constexpr auto operator()(uniform_location loc, span<const uint_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 2), v.data());
-        }
-    } uniform2uiv;
-
-    struct : func<OGLPAFP(Uniform3uiv)> {
-        using func<OGLPAFP(Uniform3uiv)>::func;
-
-        constexpr auto operator()(uniform_location loc, span<const uint_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 3), v.data());
-        }
-    } uniform3uiv;
-
-    struct : func<OGLPAFP(Uniform4uiv)> {
-        using func<OGLPAFP(Uniform4uiv)>::func;
-
-        constexpr auto operator()(uniform_location loc, span<const uint_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 4), v.data());
-        }
-    } uniform4uiv;
+    adapted_function<
+      &gl_api::Uniform4uiv,
+      void(uniform_location, chunk_span<const uint_type, 4>)>
+      uniform4uiv{*this};
 
     // int
     adapted_function<&gl_api::Uniform1i, void(uniform_location, int_type)>
@@ -962,41 +935,25 @@ public:
       void(uniform_location, int_type, int_type, int_type, int_type)>
       uniform4i{*this};
 
-    struct : func<OGLPAFP(Uniform1iv)> {
-        using func<OGLPAFP(Uniform1iv)>::func;
+    adapted_function<
+      &gl_api::Uniform1iv,
+      void(uniform_location, chunk_span<const int_type, 1>)>
+      uniform1iv{*this};
 
-        constexpr auto operator()(uniform_location loc, span<const int_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 1), v.data());
-        }
-    } uniform1iv;
+    adapted_function<
+      &gl_api::Uniform2iv,
+      void(uniform_location, chunk_span<const int_type, 2>)>
+      uniform2iv{*this};
 
-    struct : func<OGLPAFP(Uniform2iv)> {
-        using func<OGLPAFP(Uniform2iv)>::func;
+    adapted_function<
+      &gl_api::Uniform3iv,
+      void(uniform_location, chunk_span<const int_type, 3>)>
+      uniform3iv{*this};
 
-        constexpr auto operator()(uniform_location loc, span<const int_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 2), v.data());
-        }
-    } uniform2iv;
-
-    struct : func<OGLPAFP(Uniform3iv)> {
-        using func<OGLPAFP(Uniform3iv)>::func;
-
-        constexpr auto operator()(uniform_location loc, span<const int_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 3), v.data());
-        }
-    } uniform3iv;
-
-    struct : func<OGLPAFP(Uniform4iv)> {
-        using func<OGLPAFP(Uniform4iv)>::func;
-
-        constexpr auto operator()(uniform_location loc, span<const int_type> v)
-          const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 4), v.data());
-        }
-    } uniform4iv;
+    adapted_function<
+      &gl_api::Uniform4iv,
+      void(uniform_location, chunk_span<const int_type, 4>)>
+      uniform4iv{*this};
 
     // float
     adapted_function<&gl_api::Uniform1f, void(uniform_location, float_type)>
@@ -1017,45 +974,25 @@ public:
       void(uniform_location, float_type, float_type, float_type, float_type)>
       uniform4f{*this};
 
-    struct : func<OGLPAFP(Uniform1fv)> {
-        using func<OGLPAFP(Uniform1fv)>::func;
+    adapted_function<
+      &gl_api::Uniform1fv,
+      void(uniform_location, chunk_span<const float_type, 1>)>
+      uniform1fv{*this};
 
-        constexpr auto operator()(
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 1), v.data());
-        }
-    } uniform1fv;
+    adapted_function<
+      &gl_api::Uniform2fv,
+      void(uniform_location, chunk_span<const float_type, 2>)>
+      uniform2fv{*this};
 
-    struct : func<OGLPAFP(Uniform2fv)> {
-        using func<OGLPAFP(Uniform2fv)>::func;
+    adapted_function<
+      &gl_api::Uniform3fv,
+      void(uniform_location, chunk_span<const float_type, 3>)>
+      uniform3fv{*this};
 
-        constexpr auto operator()(
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 2), v.data());
-        }
-    } uniform2fv;
-
-    struct : func<OGLPAFP(Uniform3fv)> {
-        using func<OGLPAFP(Uniform3fv)>::func;
-
-        constexpr auto operator()(
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 3), v.data());
-        }
-    } uniform3fv;
-
-    struct : func<OGLPAFP(Uniform4fv)> {
-        using func<OGLPAFP(Uniform4fv)>::func;
-
-        constexpr auto operator()(
-          uniform_location loc,
-          span<const float_type> v) const noexcept {
-            return this->_cnvchkcall(loc, sizei_type(v.size() / 4), v.data());
-        }
-    } uniform4fv;
+    adapted_function<
+      &gl_api::Uniform4fv,
+      void(uniform_location, chunk_span<const float_type, 4>)>
+      uniform4fv{*this};
 
     // matrix float
     struct : func<OGLPAFP(UniformMatrix2fv)> {
