@@ -17,7 +17,6 @@
 #include "type_utils.hpp"
 #include <eagine/c_api/adapted_function.hpp>
 #include <eagine/c_api_wrap.hpp>
-#include <eagine/oglplus/utils/buffer_data.hpp>
 #include <eagine/quantities.hpp>
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
@@ -2952,34 +2951,38 @@ public:
       blit_named_framebuffer{*this};
 
     // transform feedback ops
-    func<
-      OGLPAFP(BindTransformFeedback),
+    adapted_function<
+      &gl_api::BindTransformFeedback,
       void(transform_feedback_target, transform_feedback_name)>
-      bind_transform_feedback;
+      bind_transform_feedback{*this};
 
-    func<OGLPAFP(BeginTransformFeedback), void(transform_feedback_primitive_type)>
-      begin_transform_feedback;
+    adapted_function<
+      &gl_api::BeginTransformFeedback,
+      void(transform_feedback_primitive_type)>
+      begin_transform_feedback{*this};
 
-    func<OGLPAFP(PauseTransformFeedback)> pause_transform_feedback;
+    adapted_function<&gl_api::PauseTransformFeedback> pause_transform_feedback{
+      *this};
 
-    func<OGLPAFP(ResumeTransformFeedback)> resume_transform_feedback;
+    adapted_function<&gl_api::ResumeTransformFeedback> resume_transform_feedback{
+      *this};
 
     func<OGLPAFP(EndTransformFeedback)> end_transform_feedback;
 
-    func<
-      OGLPAFP(TransformFeedbackBufferBase),
+    adapted_function<
+      &gl_api::TransformFeedbackBufferBase,
       void(transform_feedback_name, uint_type, buffer_name)>
-      transform_feedback_buffer_base;
+      transform_feedback_buffer_base{*this};
 
-    func<
-      OGLPAFP(TransformFeedbackBufferRange),
+    adapted_function<
+      &gl_api::TransformFeedbackBufferRange,
       void(
         transform_feedback_name,
         uint_type,
         buffer_name,
         intptr_type,
         sizeiptr_type)>
-      transform_feedback_buffer_range;
+      transform_feedback_buffer_range{*this};
 
     query_func<
       mp_list<transform_feedback_name>,
@@ -3054,57 +3057,65 @@ public:
       OGLPAFP(GetQueryObjectui64v)>
       get_query_object_ui64;
 
-    func<
-      OGLPAFP(GetQueryBufferObjectiv),
+    adapted_function<
+      &gl_api::GetQueryBufferObjectiv,
       void(query_name, buffer_name, query_parameter, intptr_type)>
-      get_query_buffer_object_i;
+      get_query_buffer_object_i{*this};
 
-    func<
-      OGLPAFP(GetQueryBufferObjectuiv),
+    adapted_function<
+      &gl_api::GetQueryBufferObjectuiv,
       void(query_name, buffer_name, query_parameter, intptr_type)>
-      get_query_buffer_object_ui;
+      get_query_buffer_object_ui{*this};
 
-    func<
-      OGLPAFP(GetQueryBufferObjecti64v),
+    adapted_function<
+      &gl_api::GetQueryBufferObjecti64v,
       void(query_name, buffer_name, query_parameter, intptr_type)>
-      get_query_buffer_object_i64;
+      get_query_buffer_object_i64{*this};
 
-    func<
-      OGLPAFP(GetQueryBufferObjectui64v),
+    adapted_function<
+      &gl_api::GetQueryBufferObjectui64v,
       void(query_name, buffer_name, query_parameter, intptr_type)>
-      get_query_buffer_object_ui64;
+      get_query_buffer_object_ui64{*this};
 
-    func<OGLPAFP(BeginQuery), void(query_target, query_name)> begin_query;
+    adapted_function<&gl_api::BeginQuery, void(query_target, query_name)>
+      begin_query{*this};
 
-    func<OGLPAFP(BeginQueryIndexed), void(query_target, uint_type, query_name)>
-      begin_query_indexed;
+    adapted_function<
+      &gl_api::BeginQueryIndexed,
+      void(query_target, uint_type, query_name)>
+      begin_query_indexed{*this};
 
-    func<OGLPAFP(EndQuery), void(query_target)> end_query;
+    adapted_function<&gl_api::EndQuery, void(query_target)> end_query{*this};
 
-    func<OGLPAFP(EndQueryIndexed), void(query_target, uint_type)>
-      end_query_indexed;
+    adapted_function<&gl_api::EndQueryIndexed, void(query_target, uint_type)>
+      end_query_indexed{*this};
 
-    func<OGLPAFP(QueryCounter), void(query_name, counter_query_target)>
-      query_counter;
+    adapted_function<
+      &gl_api::QueryCounter,
+      void(query_name, counter_query_target)>
+      query_counter{*this};
 
-    func<
-      OGLPAFP(BeginConditionalRender),
+    adapted_function<
+      &gl_api::BeginConditionalRender,
       void(query_name, conditional_render_mode)>
-      begin_conditional_render;
+      begin_conditional_render{*this};
 
-    func<OGLPAFP(EndConditionalRender)> end_conditional_render;
+    adapted_function<&gl_api::EndConditionalRender> end_conditional_render{
+      *this};
 
     // program pipeline ops
-    func<OGLPAFP(BindProgramPipeline), void(program_pipeline_name)>
-      bind_program_pipeline;
+    adapted_function<&gl_api::BindProgramPipeline, void(program_pipeline_name)>
+      bind_program_pipeline{*this};
 
-    func<OGLPAFP(ValidateProgramPipeline), void(program_pipeline_name)>
-      validate_program_pipeline;
+    adapted_function<
+      &gl_api::ValidateProgramPipeline,
+      void(program_pipeline_name)>
+      validate_program_pipeline{*this};
 
-    func<
-      OGLPAFP(UseProgramStages),
+    adapted_function<
+      &gl_api::UseProgramStages,
       void(program_pipeline_name, enum_bitfield<program_stage_bit>, program_name)>
-      use_program_stages;
+      use_program_stages{*this};
 
     query_func<
       mp_list<program_name, shader_type>,
@@ -3189,7 +3200,6 @@ public:
           [[maybe_unused]] float_type kerning_scale,
           [[maybe_unused]] path_transform_type_nv transf,
           [[maybe_unused]] span<float_type> dst) const noexcept {
-#ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               mode,
               sizei_type(glyphs.size()),
@@ -3200,9 +3210,6 @@ public:
               kerning_scale,
               transf,
               dst.data());
-#else
-            return this->_fake();
-#endif
         }
     } get_path_spacing_nv;
 
@@ -3223,7 +3230,6 @@ public:
           [[maybe_unused]] uint_type mask,
           [[maybe_unused]] path_transform_type_nv transf,
           [[maybe_unused]] span<const float_type> dst) const noexcept {
-#ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
               GL_UTF8_NV,
@@ -3233,9 +3239,6 @@ public:
               mask,
               transf,
               dst.data());
-#else
-            return this->_fake();
-#endif
         }
     } stencil_fill_path_instanced_nv;
 
@@ -3248,7 +3251,6 @@ public:
           [[maybe_unused]] uint_type mask,
           [[maybe_unused]] path_transform_type_nv transf,
           [[maybe_unused]] span<const float_type> dst) const noexcept {
-#ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
               GL_UTF8_NV,
@@ -3258,9 +3260,6 @@ public:
               mask,
               transf,
               dst.data());
-#else
-            return this->_fake();
-#endif
         }
     } stencil_stroke_path_instanced_nv;
 
@@ -3280,7 +3279,6 @@ public:
           [[maybe_unused]] path_fill_cover_mode_nv mode,
           [[maybe_unused]] path_transform_type_nv transf,
           [[maybe_unused]] span<const float_type> dst) const noexcept {
-#ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
               GL_UTF8_NV,
@@ -3289,9 +3287,6 @@ public:
               mode,
               transf,
               dst.data());
-#else
-            return this->_fake();
-#endif
         }
     } cover_fill_path_instanced_nv;
 
@@ -3303,7 +3298,6 @@ public:
           [[maybe_unused]] path_stroke_cover_mode_nv mode,
           [[maybe_unused]] path_transform_type_nv transf,
           [[maybe_unused]] span<const float_type> dst) const noexcept {
-#ifdef GL_UTF8_NV
             return this->_cnvchkcall(
               sizei_type(glyphs.size()),
               GL_UTF8_NV,
@@ -3312,9 +3306,6 @@ public:
               mode,
               transf,
               dst.data());
-#else
-            return this->_fake();
-#endif
         }
     } cover_stroke_path_instanced_nv;
 

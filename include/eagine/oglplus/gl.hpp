@@ -54,6 +54,10 @@
 #define GL_VERTEX_ARRAY 0x8074
 #endif
 
+#ifndef GL_UTF8_NV
+#define GL_UTF8_NV 0x909A
+#endif
+
 #ifndef APIENTRY
 #define APIENTRY
 #endif

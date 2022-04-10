@@ -11,10 +11,13 @@
 #include "../math/vector.hpp"
 #include "config.hpp"
 #include "enum_types.hpp"
+#include <eagine/c_api/buffer_data.hpp>
 #include <eagine/type_identity.hpp>
 #include <type_traits>
 
 namespace eagine::oglplus {
+using buffer_data_spec =
+  eagine::c_api::buffer_data_spec<gl_types::sizeiptr_type>;
 //------------------------------------------------------------------------------
 /// @brief Trait indicating that T is one of GL basic (pixel) data types.
 /// @ingroup gl_api_wrap

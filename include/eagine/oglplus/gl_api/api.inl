@@ -114,17 +114,7 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_named_framebuffer_attachment_parameter_i{
       "get_named_framebuffer_attachment_parameter_i",
       *this}
-  , bind_transform_feedback{"bind_transform_feedback", *this}
-  , begin_transform_feedback{"begin_transform_feedback", *this}
-  , pause_transform_feedback{"pause_transform_feedback", *this}
-  , resume_transform_feedback{"resume_transform_feedback", *this}
   , end_transform_feedback{"end_transform_feedback", *this}
-  , transform_feedback_buffer_base{
-      "transform_feedback_buffer_base",
-      *this}
-  , transform_feedback_buffer_range{
-      "transform_feedback_buffer_range",
-      *this}
   , get_transform_feedback_i{"get_transform_feedback_i", *this}
   , get_transform_feedback_ii{"get_transform_feedback_ii", *this}
   , get_transform_feedback_i64i{"get_transform_feedback_i64i", *this}
@@ -134,20 +124,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , get_query_object_ui{"get_query_object_ui", *this}
   , get_query_object_i64{"get_query_object_i64", *this}
   , get_query_object_ui64{"get_query_object_ui64", *this}
-  , get_query_buffer_object_i{"get_query_buffer_object_i", *this}
-  , get_query_buffer_object_ui{"get_query_buffer_object_ui", *this}
-  , get_query_buffer_object_i64{"get_query_buffer_object_i64", *this}
-  , get_query_buffer_object_ui64{"get_query_buffer_object_ui64", *this}
-  , begin_query{"begin_query", *this}
-  , begin_query_indexed{"begin_query_indexed", *this}
-  , end_query{"end_query", *this}
-  , end_query_indexed{"end_query_indexed", *this}
-  , query_counter{"query_counter", *this}
-  , begin_conditional_render{"begin_conditional_render", *this}
-  , end_conditional_render{"end_conditional_render", *this}
-  , bind_program_pipeline{"bind_program_pipeline", *this}
-  , validate_program_pipeline{"validate_program_pipeline", *this}
-  , use_program_stages{"use_program_stages", *this}
   , get_program_stage_i{"get_program_stage_i", *this}
   , get_program_pipeline_i{"get_program_pipeline_i", *this}
   , get_program_pipeline_info_log{"get_program_pipeline_info_log", *this}
