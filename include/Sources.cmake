@@ -4,9 +4,9 @@
 #  http://www.boost.org/LICENSE_1_0.txt
 #
 set(HEADERS
-    eagine/oglplus/config/basic.hpp
     eagine/oglplus/basic_gl_api.hpp
     eagine/oglplus/camera.hpp
+    eagine/oglplus/config/basic.hpp
     eagine/oglplus/gl_api/api.hpp
     eagine/oglplus/gl_api/api_traits.hpp
     eagine/oglplus/gl_api/c_api.hpp
@@ -21,7 +21,9 @@ set(HEADERS
     eagine/oglplus/gl_api/prog_var_loc.hpp
     eagine/oglplus/gl_api/result.hpp
     eagine/oglplus/gl_api/type_utils.hpp
+    eagine/oglplus/gl_debug_logger.hpp
     eagine/oglplus/gl_def.hpp
+    eagine/oglplus/gl_fallback.hpp
     eagine/oglplus/gl.hpp
     eagine/oglplus/glsl/container.hpp
     eagine/oglplus/glsl/source_ref.hpp
@@ -45,17 +47,17 @@ set(HEADERS
 )
 
 set(PUB_INLS
-    eagine/oglplus/camera.inl
     eagine/oglplus/gl_api/api.inl
     eagine/oglplus/gl_api/api_traits.inl
     eagine/oglplus/gl_api/c_api.inl
     eagine/oglplus/gl_api/constants.inl
     eagine/oglplus/gl_api.inl
-    eagine/oglplus/gl_def.inl
     eagine/oglplus/shapes/drawing.inl
     eagine/oglplus/shapes/generator.inl
 )
 
 set(LIB_INLS
+    eagine/oglplus/camera.inl
+    eagine/oglplus/gl_def.inl
 )
 
