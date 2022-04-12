@@ -18,6 +18,15 @@ public:
     gl_debug_logger(main_ctx_parent parent)
       : main_ctx_object{EAGINE_ID(GLDbgLoger), parent} {}
 
+    auto callback() const noexcept -> decltype(auto) {
+        return &_callback;
+    }
+
+    auto data() const noexcept -> const void* {
+        return static_cast<const void*>(this);
+    }
+
+    /*
     operator std::tuple<
       void (*)(
         gl_types::enum_type,
@@ -28,8 +37,8 @@ public:
         const gl_types::char_type*,
         const void*),
       gl_types::const_void_ptr_type>() const noexcept {
-        return {&_callback, static_cast<const void*>(this)};
-    }
+        return {callback(), data()};
+    }*/
 
 private:
     void _do_log(
