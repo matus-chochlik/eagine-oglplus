@@ -230,29 +230,32 @@ public:
 
     // numeric query function
     template <
+      auto wrapper,
+      typename QueryResult,
       typename PreTypeList,
       typename QueryClassList,
-      typename PostTypeList,
-      typename QueryResult,
-      typename W,
-      W gl_api::*F>
-    struct query_func;
+      typename PostTypeList = mp_list<>>
+    struct _query_func;
 
     template <
+      auto wrapper,
+      typename QueryResult,
       typename... PreParams,
       typename... QueryClasses,
-      typename... PostParams,
-      typename QueryResult,
-      typename W,
-      W gl_api::*F>
-    struct query_func<
+      typename... PostParams>
+    struct _query_func<
+      wrapper,
+      QueryResult,
       mp_list<PreParams...>,
       mp_list<QueryClasses...>,
-      mp_list<PostParams...>,
-      QueryResult,
-      W,
-      F> : func<W, F> {
-        using func<W, F>::func;
+      mp_list<PostParams...>>
+      : adapted_function<
+          wrapper,
+          void(PreParams..., enum_type, PostParams..., QueryResult*)> {
+        using base = adapted_function<
+          wrapper,
+          void(PreParams..., enum_type, PostParams..., QueryResult*)>;
+        using base::base;
 
         template <typename Query>
         constexpr auto operator()(
@@ -263,9 +266,8 @@ public:
             !std::is_array_v<typename Query::tag_type>)) {
             using RV = typename Query::tag_type;
             QueryResult result{};
-            return this
-              ->_cnvchkcall(
-                pre_params..., enum_type(query), post_params..., &result)
+            return base::operator()(
+                     pre_params..., enum_type(query), post_params..., &result)
               .replaced_with(result)
               .cast_to(type_identity<RV>{});
         }
@@ -277,8 +279,13 @@ public:
           PostParams... post_params,
           span<QueryResult> dest) const noexcept
           requires(true || ... || is_enum_class_value_v<QueryClasses, Query>) {
-            EAGINE_ASSERT(dest.size());
-            return this->_cnvchkcall(
+            if constexpr(std::is_array_v<typename Query::tag_type>) {
+                EAGINE_ASSERT(
+                  dest.size() >= std::extent_v<typename Query::tag_type>);
+            } else {
+                EAGINE_ASSERT(dest.size() > 0);
+            }
+            return base::operator()(
               pre_params..., enum_type(query), post_params..., dest.data());
         }
     };
@@ -565,13 +572,12 @@ public:
       void(shader_name, const glsl_source_ref&)>
       compile_shader_include{*this};
 
-    query_func<
-      mp_list<shader_name>,
-      mp_list<shader_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetShaderiv,
       int_type,
-      OGLPAFP(GetShaderiv)>
-      get_shader_i;
+      mp_list<shader_name>,
+      mp_list<shader_parameter>>
+      get_shader_i{*this};
 
     struct : func<OGLPAFP(GetShaderInfoLog)> {
         using func<OGLPAFP(GetShaderInfoLog)>::func;
@@ -595,13 +601,12 @@ public:
     adapted_function<&gl_api::LinkProgram, void(program_name)> link_program{
       *this};
 
-    query_func<
-      mp_list<program_name>,
-      mp_list<program_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetProgramiv,
       int_type,
-      OGLPAFP(GetProgramiv)>
-      get_program_i;
+      mp_list<program_name>,
+      mp_list<program_parameter>>
+      get_program_i{*this};
 
     struct : func<OGLPAFP(GetProgramInfoLog)> {
         using func<OGLPAFP(GetProgramInfoLog)>::func;
@@ -665,13 +670,12 @@ public:
         }
     } get_program_resource_name;
 
-    query_func<
-      mp_list<program_name, program_interface>,
-      mp_list<program_property>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetProgramInterfaceiv,
       int_type,
-      OGLPAFP(GetProgramInterfaceiv)>
-      get_program_interface_i;
+      mp_list<program_name, program_interface>,
+      mp_list<program_property>>
+      get_program_interface_i{*this};
 
     struct : func<OGLPAFP(GetProgramResourceiv)> {
         using func<OGLPAFP(GetProgramResourceiv)>::func;
@@ -1593,37 +1597,33 @@ public:
       void(buffer_name, buffer_name, intptr_type, intptr_type, sizeiptr_type)>
       copy_named_buffer_sub_data{*this};
 
-    query_func<
-      mp_list<buffer_target>,
-      mp_list<buffer_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetBufferParameteriv,
       int_type,
-      OGLPAFP(GetBufferParameteriv)>
-      get_buffer_parameter_i;
-
-    query_func<
-      mp_list<buffer_name>,
-      mp_list<buffer_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetNamedBufferParameteriv)>
-      get_named_buffer_parameter_i;
-
-    query_func<
       mp_list<buffer_target>,
-      mp_list<buffer_parameter>,
-      mp_list<>,
-      int64_type,
-      OGLPAFP(GetBufferParameteri64v)>
-      get_buffer_parameter_i64;
+      mp_list<buffer_parameter>>
+      get_buffer_parameter_i{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetNamedBufferParameteriv,
+      int_type,
       mp_list<buffer_name>,
-      mp_list<buffer_parameter>,
-      mp_list<>,
+      mp_list<buffer_parameter>>
+      get_named_buffer_parameter_i{*this};
+
+    _query_func<
+      &gl_api::GetBufferParameteri64v,
       int64_type,
-      OGLPAFP(GetNamedBufferParameteri64v)>
-      get_named_buffer_parameter_i64;
+      mp_list<buffer_target>,
+      mp_list<buffer_parameter>>
+      get_buffer_parameter_i64{*this};
+
+    _query_func<
+      &gl_api::GetNamedBufferParameteri64v,
+      int64_type,
+      mp_list<buffer_name>,
+      mp_list<buffer_parameter>>
+      get_named_buffer_parameter_i64{*this};
 
     // vertex_array ops
     adapted_function<&gl_api::BindVertexArray, void(vertex_array_name)>
@@ -2345,69 +2345,61 @@ public:
       void(texture_name, texture_parameter, span<const uint_type>)>
       texture_parameter_iuiv{*this};
 
-    query_func<
-      mp_list<texture_target>,
-      mp_list<texture_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetTexParameterfv,
       float_type,
-      OGLPAFP(GetTexParameterfv)>
-      get_tex_parameter_f;
+      mp_list<texture_target>,
+      mp_list<texture_parameter>>
+      get_tex_parameter_f{*this};
 
-    query_func<
-      mp_list<texture_name>,
-      mp_list<texture_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetTextureParameterfv,
       float_type,
-      OGLPAFP(GetTextureParameterfv)>
-      get_texture_parameter_f;
-
-    query_func<
-      mp_list<texture_target>,
-      mp_list<texture_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetTexParameteriv)>
-      get_tex_parameter_i;
-
-    query_func<
       mp_list<texture_name>,
-      mp_list<texture_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetTextureParameteriv)>
-      get_texture_parameter_i;
+      mp_list<texture_parameter>>
+      get_texture_parameter_f{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetTexParameteriv,
+      int_type,
       mp_list<texture_target>,
-      mp_list<texture_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetTexParameterIiv)>
-      get_tex_parameter_ii;
+      mp_list<texture_parameter>>
+      get_tex_parameter_i{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetTextureParameteriv,
+      int_type,
       mp_list<texture_name>,
-      mp_list<texture_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetTextureParameterIiv)>
-      get_texture_parameter_ii;
+      mp_list<texture_parameter>>
+      get_texture_parameter_i{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetTexParameterIiv,
+      int_type,
       mp_list<texture_target>,
-      mp_list<texture_parameter>,
-      mp_list<>,
+      mp_list<texture_parameter>>
+      get_tex_parameter_ii{*this};
+
+    _query_func<
+      &gl_api::GetTextureParameterIiv,
+      int_type,
+      mp_list<texture_name>,
+      mp_list<texture_parameter>>
+      get_texture_parameter_ii{*this};
+
+    _query_func<
+      &gl_api::GetTexParameterIuiv,
       uint_type,
-      OGLPAFP(GetTexParameterIuiv)>
-      get_tex_parameter_iui;
+      mp_list<texture_target>,
+      mp_list<texture_parameter>>
+      get_tex_parameter_iui{*this};
 
-    query_func<
-      mp_list<texture_name>,
-      mp_list<texture_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetTextureParameterIuiv,
       uint_type,
-      OGLPAFP(GetTextureParameterIuiv)>
-      get_texture_parameter_iui;
+      mp_list<texture_name>,
+      mp_list<texture_parameter>>
+      get_texture_parameter_iui{*this};
 
     adapted_function<&gl_api::GenerateMipmap, void(texture_target)>
       generate_mipmap{*this};
@@ -2448,37 +2440,33 @@ public:
       void(sampler_name, sampler_parameter, span<const uint_type>)>
       sampler_parameter_iuiv{*this};
 
-    query_func<
-      mp_list<sampler_name>,
-      mp_list<sampler_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetSamplerParameterfv,
       float_type,
-      OGLPAFP(GetSamplerParameterfv)>
-      get_sampler_parameter_f;
-
-    query_func<
       mp_list<sampler_name>,
-      mp_list<sampler_parameter>,
-      mp_list<>,
+      mp_list<sampler_parameter>>
+      get_sampler_parameter_f{*this};
+
+    _query_func<
+      &gl_api::GetSamplerParameteriv,
       int_type,
-      OGLPAFP(GetSamplerParameteriv)>
-      get_sampler_parameter_i;
-
-    query_func<
       mp_list<sampler_name>,
-      mp_list<sampler_parameter>,
-      mp_list<>,
+      mp_list<sampler_parameter>>
+      get_sampler_parameter_i{*this};
+
+    _query_func<
+      &gl_api::GetSamplerParameterIiv,
       int_type,
-      OGLPAFP(GetSamplerParameterIiv)>
-      get_sampler_parameter_ii;
-
-    query_func<
       mp_list<sampler_name>,
-      mp_list<sampler_parameter>,
-      mp_list<>,
+      mp_list<sampler_parameter>>
+      get_sampler_parameter_ii{*this};
+
+    _query_func<
+      &gl_api::GetSamplerParameterIuiv,
       uint_type,
-      OGLPAFP(GetSamplerParameterIuiv)>
-      get_sampler_parameter_iui;
+      mp_list<sampler_name>,
+      mp_list<sampler_parameter>>
+      get_sampler_parameter_iui{*this};
 
     // renderbuffer ops
     adapted_function<
@@ -2516,21 +2504,19 @@ public:
         sizei_type)>
       named_renderbuffer_storage_multisample{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetRenderbufferParameteriv,
+      int_type,
       mp_list<renderbuffer_target>,
-      mp_list<renderbuffer_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetRenderbufferParameteriv)>
-      get_renderbuffer_parameter_i;
+      mp_list<renderbuffer_parameter>>
+      get_renderbuffer_parameter_i{*this};
 
-    query_func<
-      mp_list<renderbuffer_name>,
-      mp_list<renderbuffer_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetNamedRenderbufferParameteriv,
       int_type,
-      OGLPAFP(GetNamedRenderbufferParameteriv)>
-      get_named_renderbuffer_parameter_i;
+      mp_list<renderbuffer_name>,
+      mp_list<renderbuffer_parameter>>
+      get_named_renderbuffer_parameter_i{*this};
 
     // framebuffer ops
     adapted_function<
@@ -2564,37 +2550,33 @@ public:
       void(framebuffer_name, framebuffer_parameter, int_type)>
       named_framebuffer_parameter_i{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetFramebufferParameteriv,
+      int_type,
       mp_list<framebuffer_target>,
-      mp_list<framebuffer_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetFramebufferParameteriv)>
-      get_framebuffer_parameter_i;
+      mp_list<framebuffer_parameter>>
+      get_framebuffer_parameter_i{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetNamedFramebufferParameteriv,
+      int_type,
       mp_list<framebuffer_name>,
-      mp_list<framebuffer_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetNamedFramebufferParameteriv)>
-      get_named_framebuffer_parameter_i;
+      mp_list<framebuffer_parameter>>
+      get_named_framebuffer_parameter_i{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetFramebufferAttachmentParameteriv,
+      int_type,
       mp_list<framebuffer_target, framebuffer_attachment>,
-      mp_list<framebuffer_attachment_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetFramebufferAttachmentParameteriv)>
-      get_framebuffer_attachment_parameter_i;
+      mp_list<framebuffer_attachment_parameter>>
+      get_framebuffer_attachment_parameter_i{*this};
 
-    query_func<
-      mp_list<framebuffer_name, framebuffer_attachment>,
-      mp_list<framebuffer_attachment_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetNamedFramebufferAttachmentParameteriv,
       int_type,
-      OGLPAFP(GetNamedFramebufferAttachmentParameteriv)>
-      get_named_framebuffer_attachment_parameter_i;
+      mp_list<framebuffer_name, framebuffer_attachment>,
+      mp_list<framebuffer_attachment_parameter>>
+      get_named_framebuffer_attachment_parameter_i{*this};
 
     adapted_function<
       &gl_api::FramebufferRenderbuffer,
@@ -2757,78 +2739,71 @@ public:
         sizeiptr_type)>
       transform_feedback_buffer_range{*this};
 
-    query_func<
-      mp_list<transform_feedback_name>,
-      mp_list<transform_feedback_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetTransformFeedbackiv,
       int_type,
-      OGLPAFP(GetTransformFeedbackiv)>
-      get_transform_feedback_i;
-
-    query_func<
       mp_list<transform_feedback_name>,
-      mp_list<transform_feedback_parameter>,
-      mp_list<uint_type>,
+      mp_list<transform_feedback_parameter>>
+      get_transform_feedback_i{*this};
+
+    _query_func<
+      &gl_api::GetTransformFeedbacki_v,
       int_type,
-      OGLPAFP(GetTransformFeedbacki_v)>
-      get_transform_feedback_ii;
-
-    query_func<
       mp_list<transform_feedback_name>,
       mp_list<transform_feedback_parameter>,
-      mp_list<uint_type>,
+      mp_list<uint_type>>
+      get_transform_feedback_ii{*this};
+
+    _query_func<
+      &gl_api::GetTransformFeedbacki64_v,
       int64_type,
-      OGLPAFP(GetTransformFeedbacki64_v)>
-      get_transform_feedback_i64i;
+      mp_list<transform_feedback_name>,
+      mp_list<transform_feedback_parameter>,
+      mp_list<uint_type>>
+      get_transform_feedback_i64i{*this};
 
     // query ops
-    query_func<
+    _query_func<
+      &gl_api::GetQueryiv,
+      int_type,
       mp_list<query_target>,
-      mp_list<query_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetQueryiv)>
-      get_query_i;
+      mp_list<query_parameter>>
+      get_query_i{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetQueryIndexediv,
+      int_type,
       mp_list<query_target, uint_type>,
-      mp_list<query_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetQueryIndexediv)>
-      get_query_indexed_i;
+      mp_list<query_parameter>>
+      get_query_indexed_i{*this};
 
-    query_func<
-      mp_list<query_name>,
-      mp_list<query_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetQueryObjectiv,
       int_type,
-      OGLPAFP(GetQueryObjectiv)>
-      get_query_object_i;
-
-    query_func<
       mp_list<query_name>,
-      mp_list<query_parameter>,
-      mp_list<>,
+      mp_list<query_parameter>>
+      get_query_object_i{*this};
+
+    _query_func<
+      &gl_api::GetQueryObjectuiv,
       uint_type,
-      OGLPAFP(GetQueryObjectuiv)>
-      get_query_object_ui;
-
-    query_func<
       mp_list<query_name>,
-      mp_list<query_parameter>,
-      mp_list<>,
+      mp_list<query_parameter>>
+      get_query_object_ui{*this};
+
+    _query_func<
+      &gl_api::GetQueryObjecti64v,
       int64_type,
-      OGLPAFP(GetQueryObjecti64v)>
-      get_query_object_i64;
-
-    query_func<
       mp_list<query_name>,
-      mp_list<query_parameter>,
-      mp_list<>,
+      mp_list<query_parameter>>
+      get_query_object_i64{*this};
+
+    _query_func<
+      &gl_api::GetQueryObjectui64v,
       uint64_type,
-      OGLPAFP(GetQueryObjectui64v)>
-      get_query_object_ui64;
+      mp_list<query_name>,
+      mp_list<query_parameter>>
+      get_query_object_ui64{*this};
 
     adapted_function<
       &gl_api::GetQueryBufferObjectiv,
@@ -2890,21 +2865,19 @@ public:
       void(program_pipeline_name, enum_bitfield<program_stage_bit>, program_name)>
       use_program_stages{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetProgramStageiv,
+      int_type,
       mp_list<program_name, shader_type>,
-      mp_list<program_stage_parameter>,
-      mp_list<>,
-      int_type,
-      OGLPAFP(GetProgramStageiv)>
-      get_program_stage_i;
+      mp_list<program_stage_parameter>>
+      get_program_stage_i{*this};
 
-    query_func<
-      mp_list<program_name>,
-      mp_list<program_pipeline_parameter>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetProgramPipelineiv,
       int_type,
-      OGLPAFP(GetProgramPipelineiv)>
-      get_program_pipeline_i;
+      mp_list<program_name>,
+      mp_list<program_pipeline_parameter>>
+      get_program_pipeline_i{*this};
 
     struct : func<OGLPAFP(GetProgramPipelineInfoLog)> {
         using func<OGLPAFP(GetProgramPipelineInfoLog)>::func;
@@ -3167,13 +3140,13 @@ public:
     adapted_function<&gl_api::SampleMaski> sample_mask_i{*this};
     adapted_function<&gl_api::MinSampleShading> min_sample_shading{*this};
 
-    query_func<
+    _query_func<
+      &gl_api::GetMultisamplefv,
+      float_type,
       mp_list<>,
       mp_list<sample_parameter>,
-      mp_list<uint_type>,
-      float_type,
-      OGLPAFP(GetMultisamplefv)>
-      get_multisample_f;
+      mp_list<uint_type>>
+      get_multisample_f{*this};
 
     // drawing
     // arrays
@@ -3319,40 +3292,28 @@ public:
       read_pixels{*this};
 
     // get_integer
-    query_func<
-      mp_list<>,
-      mp_list<integer_query, binding_query>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetIntegerv,
       int_type,
-      OGLPAFP(GetIntegerv)>
-      get_integer;
+      mp_list<>,
+      mp_list<integer_query, binding_query>>
+      get_integer{*this};
 
     // get_integer64
-    query_func<
-      mp_list<>,
-      mp_list<integer_query>,
-      mp_list<>,
+    _query_func<
+      &gl_api::GetInteger64v,
       int64_type,
-      OGLPAFP(GetInteger64v)>
-      get_integer64;
+      mp_list<>,
+      mp_list<integer_query>>
+      get_integer64{*this};
 
     // get_float
-    query_func<
-      mp_list<>,
-      mp_list<float_query>,
-      mp_list<>,
-      float_type,
-      OGLPAFP(GetFloatv)>
-      get_float;
+    _query_func<&gl_api::GetFloatv, float_type, mp_list<>, mp_list<float_query>>
+      get_float{*this};
 
     // get_double
-    query_func<
-      mp_list<>,
-      mp_list<float_query>,
-      mp_list<>,
-      double_type,
-      OGLPAFP(GetDoublev)>
-      get_double;
+    _query_func<&gl_api::GetDoublev, double_type, mp_list<>, mp_list<float_query>>
+      get_double{*this};
 
     adapted_function<&gl_api::GetString, string_view(string_query)> get_string{
       *this};
