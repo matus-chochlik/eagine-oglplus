@@ -235,7 +235,7 @@ public:
       typename PreTypeList,
       typename QueryClassList,
       typename PostTypeList = mp_list<>>
-    struct _query_func;
+    struct query_function;
 
     template <
       auto wrapper,
@@ -243,7 +243,7 @@ public:
       typename... PreParams,
       typename... QueryClasses,
       typename... PostParams>
-    struct _query_func<
+    struct query_function<
       wrapper,
       QueryResult,
       mp_list<PreParams...>,
@@ -572,7 +572,7 @@ public:
       void(shader_name, const glsl_source_ref&)>
       compile_shader_include{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetShaderiv,
       int_type,
       mp_list<shader_name>,
@@ -601,7 +601,7 @@ public:
     adapted_function<&gl_api::LinkProgram, void(program_name)> link_program{
       *this};
 
-    _query_func<
+    query_function<
       &gl_api::GetProgramiv,
       int_type,
       mp_list<program_name>,
@@ -670,7 +670,7 @@ public:
         }
     } get_program_resource_name;
 
-    _query_func<
+    query_function<
       &gl_api::GetProgramInterfaceiv,
       int_type,
       mp_list<program_name, program_interface>,
@@ -1597,28 +1597,28 @@ public:
       void(buffer_name, buffer_name, intptr_type, intptr_type, sizeiptr_type)>
       copy_named_buffer_sub_data{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetBufferParameteriv,
       int_type,
       mp_list<buffer_target>,
       mp_list<buffer_parameter>>
       get_buffer_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetNamedBufferParameteriv,
       int_type,
       mp_list<buffer_name>,
       mp_list<buffer_parameter>>
       get_named_buffer_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetBufferParameteri64v,
       int64_type,
       mp_list<buffer_target>,
       mp_list<buffer_parameter>>
       get_buffer_parameter_i64{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetNamedBufferParameteri64v,
       int64_type,
       mp_list<buffer_name>,
@@ -2345,56 +2345,56 @@ public:
       void(texture_name, texture_parameter, span<const uint_type>)>
       texture_parameter_iuiv{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTexParameterfv,
       float_type,
       mp_list<texture_target>,
       mp_list<texture_parameter>>
       get_tex_parameter_f{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTextureParameterfv,
       float_type,
       mp_list<texture_name>,
       mp_list<texture_parameter>>
       get_texture_parameter_f{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTexParameteriv,
       int_type,
       mp_list<texture_target>,
       mp_list<texture_parameter>>
       get_tex_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTextureParameteriv,
       int_type,
       mp_list<texture_name>,
       mp_list<texture_parameter>>
       get_texture_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTexParameterIiv,
       int_type,
       mp_list<texture_target>,
       mp_list<texture_parameter>>
       get_tex_parameter_ii{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTextureParameterIiv,
       int_type,
       mp_list<texture_name>,
       mp_list<texture_parameter>>
       get_texture_parameter_ii{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTexParameterIuiv,
       uint_type,
       mp_list<texture_target>,
       mp_list<texture_parameter>>
       get_tex_parameter_iui{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTextureParameterIuiv,
       uint_type,
       mp_list<texture_name>,
@@ -2440,28 +2440,28 @@ public:
       void(sampler_name, sampler_parameter, span<const uint_type>)>
       sampler_parameter_iuiv{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetSamplerParameterfv,
       float_type,
       mp_list<sampler_name>,
       mp_list<sampler_parameter>>
       get_sampler_parameter_f{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetSamplerParameteriv,
       int_type,
       mp_list<sampler_name>,
       mp_list<sampler_parameter>>
       get_sampler_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetSamplerParameterIiv,
       int_type,
       mp_list<sampler_name>,
       mp_list<sampler_parameter>>
       get_sampler_parameter_ii{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetSamplerParameterIuiv,
       uint_type,
       mp_list<sampler_name>,
@@ -2504,14 +2504,14 @@ public:
         sizei_type)>
       named_renderbuffer_storage_multisample{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetRenderbufferParameteriv,
       int_type,
       mp_list<renderbuffer_target>,
       mp_list<renderbuffer_parameter>>
       get_renderbuffer_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetNamedRenderbufferParameteriv,
       int_type,
       mp_list<renderbuffer_name>,
@@ -2550,28 +2550,28 @@ public:
       void(framebuffer_name, framebuffer_parameter, int_type)>
       named_framebuffer_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetFramebufferParameteriv,
       int_type,
       mp_list<framebuffer_target>,
       mp_list<framebuffer_parameter>>
       get_framebuffer_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetNamedFramebufferParameteriv,
       int_type,
       mp_list<framebuffer_name>,
       mp_list<framebuffer_parameter>>
       get_named_framebuffer_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetFramebufferAttachmentParameteriv,
       int_type,
       mp_list<framebuffer_target, framebuffer_attachment>,
       mp_list<framebuffer_attachment_parameter>>
       get_framebuffer_attachment_parameter_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetNamedFramebufferAttachmentParameteriv,
       int_type,
       mp_list<framebuffer_name, framebuffer_attachment>,
@@ -2739,14 +2739,14 @@ public:
         sizeiptr_type)>
       transform_feedback_buffer_range{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTransformFeedbackiv,
       int_type,
       mp_list<transform_feedback_name>,
       mp_list<transform_feedback_parameter>>
       get_transform_feedback_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTransformFeedbacki_v,
       int_type,
       mp_list<transform_feedback_name>,
@@ -2754,7 +2754,7 @@ public:
       mp_list<uint_type>>
       get_transform_feedback_ii{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetTransformFeedbacki64_v,
       int64_type,
       mp_list<transform_feedback_name>,
@@ -2763,42 +2763,42 @@ public:
       get_transform_feedback_i64i{*this};
 
     // query ops
-    _query_func<
+    query_function<
       &gl_api::GetQueryiv,
       int_type,
       mp_list<query_target>,
       mp_list<query_parameter>>
       get_query_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetQueryIndexediv,
       int_type,
       mp_list<query_target, uint_type>,
       mp_list<query_parameter>>
       get_query_indexed_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetQueryObjectiv,
       int_type,
       mp_list<query_name>,
       mp_list<query_parameter>>
       get_query_object_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetQueryObjectuiv,
       uint_type,
       mp_list<query_name>,
       mp_list<query_parameter>>
       get_query_object_ui{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetQueryObjecti64v,
       int64_type,
       mp_list<query_name>,
       mp_list<query_parameter>>
       get_query_object_i64{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetQueryObjectui64v,
       uint64_type,
       mp_list<query_name>,
@@ -2865,14 +2865,14 @@ public:
       void(program_pipeline_name, enum_bitfield<program_stage_bit>, program_name)>
       use_program_stages{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetProgramStageiv,
       int_type,
       mp_list<program_name, shader_type>,
       mp_list<program_stage_parameter>>
       get_program_stage_i{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetProgramPipelineiv,
       int_type,
       mp_list<program_name>,
@@ -3140,7 +3140,7 @@ public:
     adapted_function<&gl_api::SampleMaski> sample_mask_i{*this};
     adapted_function<&gl_api::MinSampleShading> min_sample_shading{*this};
 
-    _query_func<
+    query_function<
       &gl_api::GetMultisamplefv,
       float_type,
       mp_list<>,
@@ -3292,7 +3292,7 @@ public:
       read_pixels{*this};
 
     // get_integer
-    _query_func<
+    query_function<
       &gl_api::GetIntegerv,
       int_type,
       mp_list<>,
@@ -3300,7 +3300,7 @@ public:
       get_integer{*this};
 
     // get_integer64
-    _query_func<
+    query_function<
       &gl_api::GetInteger64v,
       int64_type,
       mp_list<>,
@@ -3308,11 +3308,15 @@ public:
       get_integer64{*this};
 
     // get_float
-    _query_func<&gl_api::GetFloatv, float_type, mp_list<>, mp_list<float_query>>
+    query_function<&gl_api::GetFloatv, float_type, mp_list<>, mp_list<float_query>>
       get_float{*this};
 
     // get_double
-    _query_func<&gl_api::GetDoublev, double_type, mp_list<>, mp_list<float_query>>
+    query_function<
+      &gl_api::GetDoublev,
+      double_type,
+      mp_list<>,
+      mp_list<float_query>>
       get_double{*this};
 
     adapted_function<&gl_api::GetString, string_view(string_query)> get_string{
