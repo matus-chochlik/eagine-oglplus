@@ -476,7 +476,7 @@ public:
         void(int_type, int_type, sizei_type, sizei_type)>,
       adapted_function<
         &gl_api::Viewport,
-        void(c_api::substituted<0>, c_api::substituted<0>, sizei_type, sizei_type)>>
+        void(c_api::defaulted, c_api::defaulted, sizei_type, sizei_type)>>
       viewport{*this};
 
     c_api::combined<
@@ -485,7 +485,7 @@ public:
         void(uint_type, chunk_span<const float_type, 4>)>,
       adapted_function<
         &gl_api::ViewportArrayv,
-        void(c_api::substituted<0U>, chunk_span<const float_type, 4>)>>
+        void(c_api::defaulted, chunk_span<const float_type, 4>)>>
       viewport_array{*this};
 
     c_api::combined<
@@ -1319,11 +1319,7 @@ public:
           enum_bitfield<buffer_storage_bit>)>,
       adapted_function<
         &gl_api::BufferStorage,
-        void(
-          buffer_target,
-          sizeiptr_type,
-          c_api::substituted<nullptr>,
-          c_api::substituted<0U>)>>
+        void(buffer_target, sizeiptr_type, c_api::defaulted, c_api::defaulted)>>
       buffer_storage{*this};
 
     c_api::combined<
@@ -1336,11 +1332,7 @@ public:
           enum_bitfield<buffer_storage_bit>)>,
       adapted_function<
         &gl_api::NamedBufferStorage,
-        void(
-          buffer_name,
-          sizeiptr_type,
-          c_api::substituted<nullptr>,
-          c_api::substituted<0U>)>>
+        void(buffer_name, sizeiptr_type, c_api::defaulted, c_api::defaulted)>>
       named_buffer_storage{*this};
 
     adapted_function<
@@ -1740,8 +1732,8 @@ public:
           int_type,
           data_type,
           true_false,
-          c_api::substituted<0>,
-          c_api::substituted<nullptr>)>>
+          c_api::defaulted,
+          c_api::defaulted)>>
       vertex_attrib_pointer{*this};
 
     c_api::combined<
@@ -1759,8 +1751,8 @@ public:
           vertex_attrib_location,
           int_type,
           data_type,
-          c_api::substituted<0>,
-          c_api::substituted<nullptr>)>>
+          c_api::defaulted,
+          c_api::defaulted)>>
       vertex_attrib_ipointer{*this};
 
     c_api::combined<
@@ -1778,8 +1770,8 @@ public:
           vertex_attrib_location,
           int_type,
           data_type,
-          c_api::substituted<0>,
-          c_api::substituted<nullptr>)>>
+          c_api::defaulted,
+          c_api::defaulted)>>
       vertex_attrib_lpointer{*this};
 
     adapted_function<
@@ -3515,8 +3507,8 @@ public:
           debug_output_source,
           debug_output_type,
           debug_output_severity,
-          c_api::substituted<0>,
-          c_api::substituted<nullptr>,
+          c_api::defaulted,
+          c_api::defaulted,
           true_false)>,
       adapted_function<
         &gl_api::DebugMessageControl,
