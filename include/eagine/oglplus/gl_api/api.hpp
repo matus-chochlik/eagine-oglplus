@@ -579,18 +579,15 @@ public:
       mp_list<shader_parameter>>
       get_shader_i{*this};
 
-    struct : func<OGLPAFP(GetShaderInfoLog)> {
-        using func<OGLPAFP(GetShaderInfoLog)>::func;
-
-        constexpr auto operator()(shader_name shdr, span<char_type> dest)
-          const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(shdr), sizei_type(dest.size()), &real_len, dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_shader_info_log;
+    adapted_function<
+      &gl_api::GetShaderInfoLog,
+      void(shader_name, span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 3, 2>,
+        c_api::convert<name_type, c_api::trivial_arg_map<1>>,
+        c_api::get_size_map<2, 2>,
+        c_api::get_data_map<4, 2>>>
+      get_shader_info_log{*this};
 
     adapted_function<&gl_api::AttachShader, void(program_name, shader_name)>
       attach_shader{*this};
@@ -608,18 +605,15 @@ public:
       mp_list<program_parameter>>
       get_program_i{*this};
 
-    struct : func<OGLPAFP(GetProgramInfoLog)> {
-        using func<OGLPAFP(GetProgramInfoLog)>::func;
-
-        constexpr auto operator()(program_name prog, span<char_type> dest)
-          const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog), sizei_type(dest.size()), &real_len, dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_info_log;
+    adapted_function<
+      &gl_api::GetProgramInfoLog,
+      void(program_name, span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 3, 2>,
+        c_api::convert<name_type, c_api::trivial_arg_map<1>>,
+        c_api::get_size_map<2, 2>,
+        c_api::get_data_map<4, 2>>>
+      get_program_info_log{*this};
 
     adapted_function<&gl_api::UseProgram, void(program_name)> use_program{
       *this};
