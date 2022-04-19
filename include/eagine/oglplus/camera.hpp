@@ -76,6 +76,27 @@ public:
         return *this;
     }
 
+    /// @brief Returns the near distance.
+    /// @see far
+    /// @see midpoint
+    auto near() const noexcept -> float {
+        return _near;
+    }
+
+    /// @brief Returns the far distance.
+    /// @see near
+    /// @see midpoint
+    auto far() const noexcept -> float {
+        return _near;
+    }
+
+    /// @brief Returns the midpoint distance between near and far range.
+    /// @see near
+    /// @see far
+    auto midpoint() const noexcept -> float {
+        return (near() + far()) * 0.5F;
+    }
+
     /// @brief Returns the y-axis FOV angle
     auto fov() const noexcept -> radians_t<float> {
         return _fov;
