@@ -231,7 +231,7 @@ void do_convert_image(
 
     if(layer == 0) {
         oglplus::write_and_pad_texture_image_data_header(
-          output, header, span_size(size));
+          output, header, span_size(size * header.depth));
     }
 
     std::vector<::png_byte> buffer(std_size(size));
