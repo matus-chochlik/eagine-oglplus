@@ -47,11 +47,15 @@ public:
         return {pixel_format(_header->format), ifmt};
     }
 
+    auto pixel_element_bytes() const noexcept -> span_size_t {
+        return span_size(sizeof(GLubyte));
+    }
+
     auto pixel_data() const noexcept -> image_pixel_data {
         return {
           pixel_data_type(_header->data_type),
           as_bytes(_header->pixels),
-          sizeof(GLubyte)};
+          pixel_element_bytes()};
     }
 
     auto spec() const noexcept -> image_spec {
