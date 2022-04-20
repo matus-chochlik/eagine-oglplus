@@ -86,13 +86,15 @@ public:
     /// @brief Returns the far distance.
     /// @see near
     /// @see midpoint
+    /// @see skybox_distance
     auto far() const noexcept -> float {
-        return _near;
+        return _far;
     }
 
     /// @brief Returns the midpoint distance between near and far range.
     /// @see near
     /// @see far
+    /// @see skybox_distance
     auto midpoint() const noexcept -> float {
         return (near() + far()) * 0.5F;
     }
@@ -105,8 +107,19 @@ public:
     /// @brief Returns the orbit altitude value.
     /// @see azimuth
     /// @see elevation
+    /// @see near
+    /// @see far
     auto orbit() const noexcept -> float {
         return smooth_lerp(_orbit_min, _orbit_max, _orbit_factor);
+    }
+
+    /// @brief Returns the prefered distance to the farthest part of a skybox.
+    /// @see near
+    /// @see midpoint
+    /// @see far
+    /// @see orbit
+    auto skybox_distance() const noexcept -> float {
+        return far() - orbit();
     }
 
     /// @brief Returns the azimuth angle (longitude).
