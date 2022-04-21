@@ -32,12 +32,16 @@ constexpr const bool has_rgba16 = false;
 struct options {
     std::vector<valid_if_existing_file<string_view>> input_paths;
     valid_if_in_writable_directory<string_view> output_path;
+    bool flip_y{false};
+    bool cube_map{false};
 
     void print_usage(std::ostream& log) {
-        log << "bake_noise_image options\n";
+        log << "bake_png_image options\n";
         log << "  options:\n";
         log << "   -i|--input PATH: Existing PNG file path or '-' for stdin.\n";
         log << "   -o|--output PATH: Output file path or '-' for stdout.\n";
+        log << "   -Y|--flip-y: Flip the order of the rows (y-axis).\n";
+        log << "   -C|--cube-map: Load cube map faces (implies -Y).\n";
     }
 
     auto parse(program_arg& arg, std::ostream& log) -> bool {
@@ -49,8 +53,24 @@ struct options {
             if(!arg.parse_next(input_paths, log)) {
                 return false;
             }
+        } else if(arg.is_tag("-Y", "--flip-y")) {
+            flip_y = true;
+        } else if(arg.is_tag("-C", "--cube-map")) {
+            flip_y = true;
+            cube_map = true;
         }
         return true;
+    }
+
+    auto check_and_adjust(std::ostream& log) -> bool {
+        bool opts_ok = true;
+        if(cube_map) {
+            if(input_paths.size() % 6U != 0) {
+                log << "invalid number of input images for cube map.\n";
+                opts_ok = false;
+            }
+        }
+        return opts_ok;
     }
 
     auto from_stdin() const -> tribool {
@@ -193,6 +213,7 @@ public:
 };
 //------------------------------------------------------------------------------
 void do_convert_image(
+  const options& opts,
   std::istream& input,
   std::ostream& output,
   oglplus::image_data_header& header,
@@ -236,8 +257,14 @@ void do_convert_image(
 
     std::vector<::png_byte> buffer(std_size(size));
 
-    for(png_uint_32 r = 0, h = reader.image_height(); r < h; ++r) {
-        reader.read_row(buffer.data() + (h - 1 - r) * row_size);
+    if(opts.flip_y) {
+        for(png_uint_32 r = 0, h = reader.image_height(); r < h; ++r) {
+            reader.read_row(buffer.data() + r * row_size);
+        }
+    } else {
+        for(png_uint_32 r = 0, h = reader.image_height(); r < h; ++r) {
+            reader.read_row(buffer.data() + (h - 1 - r) * row_size);
+        }
     }
 
     output.write(
@@ -245,10 +272,13 @@ void do_convert_image(
       static_cast<std::streamsize>(buffer.size()));
 }
 //------------------------------------------------------------------------------
-void convert_image(std::istream& input, std::ostream& output) {
+void convert_image(
+  const options& opts,
+  std::istream& input,
+  std::ostream& output) {
     oglplus::image_data_header header{};
     header.depth = 1;
-    do_convert_image(input, output, header, 0);
+    do_convert_image(opts, input, output, header, 0);
 }
 //------------------------------------------------------------------------------
 auto parse_options(const program_args& args, options& opts) -> int;
@@ -265,17 +295,17 @@ auto main(main_ctx& ctx) -> int {
         const auto to_stdout = opts.to_stdout();
 
         if(from_stdin && to_stdout) {
-            convert_image(std::cin, std::cout);
+            convert_image(opts, std::cin, std::cout);
         } else if(from_stdin) {
             std::ofstream output_file(c_str(opts.output_path));
-            convert_image(std::cin, output_file);
+            convert_image(opts, std::cin, output_file);
         } else if(to_stdout) {
             oglplus::image_data_header header{};
             header.depth = limit_cast<int>(opts.input_paths.size());
             int layer = 0;
             for(auto& input_path : opts.input_paths) {
                 std::ifstream input_file(c_str(input_path));
-                do_convert_image(input_file, std::cout, header, layer++);
+                do_convert_image(opts, input_file, std::cout, header, layer++);
             }
         } else {
             oglplus::image_data_header header{};
@@ -284,7 +314,8 @@ auto main(main_ctx& ctx) -> int {
             int layer = 0;
             for(auto& input_path : opts.input_paths) {
                 std::ifstream input_file(c_str(input_path));
-                do_convert_image(input_file, output_file, header, layer++);
+                do_convert_image(
+                  opts, input_file, output_file, header, layer++);
             }
         }
     } catch(const std::exception& err) {
@@ -303,6 +334,10 @@ auto parse_options(const program_args& args, options& opts) -> int {
             opts.print_usage(std::cerr);
             return 2;
         }
+    }
+    if(!opts.check_and_adjust(std::cerr)) {
+        opts.print_usage(std::cerr);
+        return 3;
     }
 
     return 0;
