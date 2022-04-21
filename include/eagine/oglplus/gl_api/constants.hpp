@@ -2090,7 +2090,7 @@ public:
 #else
       enum_type_i,
 #endif
-      enum_bitfield<buffer_map_access_bit>>
+      c_api::enum_bitfield<buffer_map_access_bit>>
       buffer_access_flags;
 
     /// @var buffer_immutable_storage
@@ -2159,7 +2159,7 @@ public:
 #else
       enum_type_i,
 #endif
-      enum_bitfield<buffer_storage_bit>>
+      c_api::enum_bitfield<buffer_storage_bit>>
       buffer_storage_flags;
 
     /// @var buffer_usage
@@ -5185,7 +5185,7 @@ public:
 #else
       enum_type_i,
 #endif
-      enum_bitfield<context_flag_bit>>
+      c_api::enum_bitfield<context_flag_bit>>
       context_flags;
 
     /// @var context_profile_mask
@@ -5197,7 +5197,7 @@ public:
 #else
       enum_type_i,
 #endif
-      enum_bitfield<context_profile_bit>>
+      c_api::enum_bitfield<context_profile_bit>>
       context_profile_mask;
 
     /// @var doublebuffer

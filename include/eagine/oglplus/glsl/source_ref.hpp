@@ -41,9 +41,16 @@ public:
 
     /// @brief Construction from a string_view.
     constexpr glsl_source_ref(string_view source_str) noexcept
-      : glsl_source_ref(
+      : glsl_source_ref{
           memory::accommodate<const char_type>(source_str).data(),
-          eagine::limit_cast<int_type>(source_str.size())) {}
+          eagine::limit_cast<int_type>(source_str.size())} {}
+
+    /// @brief Construction from a string literal.
+    template <std::size_t L>
+    constexpr glsl_source_ref(const char (&source_str)[L]) noexcept
+      : glsl_source_ref{
+          reinterpret_cast<const char_type*>(source_str),
+          eagine::limit_cast<int_type>(L - 1)} {}
 
     /// @brief Construction from C-string array and lengths array.
     glsl_source_ref(
@@ -99,6 +106,30 @@ struct make_args_map<
   mp_list<
     oglplus::gl_types::sizei_type,
     const oglplus::gl_types::char_type* const*,
+    CT...>,
+  mp_list<const oglplus::glsl_source_ref&, CppT...>>
+  : make_args_map<I + 2, I + 1, mp_list<CT...>, mp_list<CppT...>> {
+    using make_args_map<I + 2, I + 1, mp_list<CT...>, mp_list<CppT...>>::
+    operator();
+
+    template <typename... P>
+    constexpr auto operator()(size_constant<I> i, P&&... p) const noexcept {
+        return reorder_arg_map<I, I>{}(i, std::forward<P>(p)...).count();
+    }
+
+    template <typename... P>
+    constexpr auto operator()(size_constant<I + 1> i, P&&... p) const noexcept {
+        return reorder_arg_map<I + 1, I>{}(i, std::forward<P>(p)...).parts();
+    }
+};
+
+template <std::size_t I, typename... CT, typename... CppT>
+struct make_args_map<
+  I,
+  I,
+  mp_list<
+    oglplus::gl_types::sizei_type,
+    const oglplus::gl_types::char_type* const*,
     const oglplus::gl_types::int_type*,
     CT...>,
   mp_list<const oglplus::glsl_source_ref&, CppT...>>
@@ -121,7 +152,7 @@ struct make_args_map<
         return reorder_arg_map<I + 2, I>{}(i, std::forward<P>(p)...).lengths();
     }
 };
-//
+
 } // namespace eagine::c_api
 
 #endif // EAGINE_OGLPLUS_GLSL_SOURCE_REF_HPP

@@ -9,8 +9,7 @@
 #define EAGINE_OGLPLUS_GL_API_ENUM_CLASS_HPP
 
 #include "config.hpp"
-#include <eagine/enum_bitfield.hpp>
-#include <eagine/enum_class.hpp>
+#include <eagine/c_api/enum_class.hpp>
 #include <eagine/identifier.hpp>
 #include <eagine/logging/backend.hpp>
 
@@ -29,7 +28,7 @@ namespace eagine::oglplus {
 /// of texture type constants. Such mismatches result in compilation errors.
 template <typename Self, identifier_t Id>
 using gl_enum_class =
-  enum_class<Self, gl_types::enum_type, EAGINE_ID_V(GL), Id>;
+  c_api::enum_class<Self, gl_types::enum_type, EAGINE_ID_V(GL), Id>;
 
 /// @brief Typed wrapper class for GLbitfield constants/values.
 /// @ingroup gl_api_wrap
@@ -44,7 +43,7 @@ using gl_enum_class =
 /// of memory barrier bit constants. Such mismatches result in compilation errors.
 template <typename Self, identifier_t Id>
 using gl_bitfield_class =
-  enum_class<Self, gl_types::bitfield_type, EAGINE_ID_V(GL), Id>;
+  c_api::enum_class<Self, gl_types::bitfield_type, EAGINE_ID_V(GL), Id>;
 
 /// @brief Typed wrapper class for GLubyte constants/values.
 /// @ingroup gl_api_wrap
@@ -58,7 +57,7 @@ using gl_bitfield_class =
 /// from unrelated groups. Such mismatches result in compilation errors.
 template <typename Self, identifier_t Id>
 using gl_ubyte_class =
-  enum_class<Self, gl_types::ubyte_type, EAGINE_ID_V(GL), Id>;
+  c_api::enum_class<Self, gl_types::ubyte_type, EAGINE_ID_V(GL), Id>;
 
 /// @brief Typed wrapper class for GLboolean constants/values.
 /// @ingroup gl_api_wrap
@@ -68,7 +67,7 @@ using gl_ubyte_class =
 /// @see gl_any_enum_class
 template <typename Self, identifier_t Id>
 using gl_bool_class =
-  enum_class<Self, gl_types::bool_type, EAGINE_ID_V(GL), Id>;
+  c_api::enum_class<Self, gl_types::bool_type, EAGINE_ID_V(GL), Id>;
 
 /// @brief Type erasure alias for GL enum classes.
 /// @ingroup gl_api_wrap
@@ -76,16 +75,16 @@ using gl_bool_class =
 /// @see gl_bitfield_class
 /// @see gl_ubyte_class
 /// @see gl_bool_class
-using gl_any_enum_class = any_enum_class<EAGINE_ID_V(GL)>;
+using gl_any_enum_class = c_api::any_enum_class<EAGINE_ID_V(GL)>;
 
 /// @brief Type erasure alias for GL enum values.
 /// @ingroup gl_api_wrap
-using gl_any_enum_value = any_enum_value<EAGINE_ID_V(GL)>;
+using gl_any_enum_value = c_api::any_enum_value<EAGINE_ID_V(GL)>;
 
 static constexpr auto same_enum_class(
   const gl_any_enum_class a,
   const gl_any_enum_class b) noexcept -> bool {
-    return ::eagine::same_enum_class(a, b);
+    return ::eagine::c_api::same_enum_class(a, b);
 }
 //------------------------------------------------------------------------------
 template <
@@ -94,10 +93,10 @@ template <
   typename ValueType,
   typename Value>
 constexpr static bool is_enum_parameter_value_v =
-  is_enum_class_value_v<ParameterEnumClass, Parameter>&&
+  c_api::is_enum_class_value_v<ParameterEnumClass, Parameter>&&
       std::is_same_v<typename Parameter::tag_type, nothing_t>
     ? std::is_convertible_v<Value, ValueType>
-    : is_enum_class_value_v<typename Parameter::tag_type, Value>;
+    : c_api::is_enum_class_value_v<typename Parameter::tag_type, Value>;
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

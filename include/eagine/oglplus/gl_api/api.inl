@@ -15,12 +15,10 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
   , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , get_shader_storage_block_index{"get_shader_storage_block_index", *this}
   , get_program_resource_name{"get_program_resource_name", *this}
   , get_program_resource_i{"get_program_resource_i", *this}
   , get_program_resource_f{"get_program_resource_f", *this}
   , get_active_attrib_name{"get_active_attrib_name", *this}
-  , transform_feedback_varyings{"transform_feedback_varyings", *this}
   , get_active_uniform_name{"get_active_uniform_name", *this}
   , get_active_subroutine_uniform_name{"get_active_subroutine_uniform_name", *this}
   , get_active_subroutine_name{"get_active_subroutine_name", *this}

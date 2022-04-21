@@ -52,6 +52,14 @@
 #define GL_VERTEX_ARRAY 0x8074
 #endif
 
+#ifndef GL_SEPARATE_ATTRIBS
+#define GL_SEPARATE_ATTRIBS 0x8C8D
+#endif
+
+#ifndef GL_SHADER_STORAGE_BLOCK
+#define GL_SHADER_STORAGE_BLOCK 0x92E6
+#endif
+
 #ifndef GL_UTF8_NV
 #define GL_UTF8_NV 0x909A
 #endif

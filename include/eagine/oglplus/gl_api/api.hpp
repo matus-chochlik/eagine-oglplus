@@ -262,8 +262,9 @@ public:
           PreParams... pre_params,
           Query query,
           PostParams... post_params) const noexcept
-          requires((true || ... || is_enum_class_value_v<QueryClasses, Query>)&&(
-            !std::is_array_v<typename Query::tag_type>)) {
+          requires(
+            (true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>)&&(
+              !std::is_array_v<typename Query::tag_type>)) {
             using RV = typename Query::tag_type;
             QueryResult result{};
             return base::operator()(
@@ -278,7 +279,8 @@ public:
           Query query,
           PostParams... post_params,
           span<QueryResult> dest) const noexcept
-          requires(true || ... || is_enum_class_value_v<QueryClasses, Query>) {
+          requires(
+            true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>) {
             if constexpr(std::is_array_v<typename Query::tag_type>) {
                 EAGINE_ASSERT(
                   dest.size() >= std::extent_v<typename Query::tag_type>);
@@ -292,7 +294,7 @@ public:
 
     adapted_function<
       &gl_api::FenceSync,
-      void(sync_condition, enum_bitfield<sync_flag_bit>)>
+      void(sync_condition, c_api::enum_bitfield<sync_flag_bit>)>
       fence_sync{*this};
 
     template <auto Wrapper, typename ObjTag>
@@ -469,12 +471,12 @@ public:
 
     adapted_function<
       &gl_api::MemoryBarrier,
-      void(enum_bitfield<memory_barrier_bit>)>
+      void(c_api::enum_bitfield<memory_barrier_bit>)>
       memory_barrier{*this};
 
     adapted_function<
       &gl_api::MemoryBarrierByRegion,
-      void(enum_bitfield<memory_barrier_bit>)>
+      void(c_api::enum_bitfield<memory_barrier_bit>)>
       memory_barrier_by_region{*this};
 
     c_api::combined<
@@ -556,7 +558,7 @@ public:
     adapted_function<&gl_api::ClearStencil, void(int_type)> clear_stencil{
       *this};
 
-    adapted_function<&gl_api::Clear, void(enum_bitfield<buffer_clear_bit>)>
+    adapted_function<&gl_api::Clear, void(c_api::enum_bitfield<buffer_clear_bit>)>
       clear{*this};
 
     adapted_function<
@@ -623,20 +625,13 @@ public:
       uint_type(program_name, program_interface, string_view)>
       get_program_resource_index{*this};
 
-    struct : func<OGLPAFP(GetProgramResourceIndex)> {
-        using func<OGLPAFP(GetProgramResourceIndex)>::func;
-        constexpr auto operator()(program_name prog, string_view name)
-          const noexcept {
-#ifdef GL_SHADER_STORAGE_BLOCK
-            return this
-              ->_cnvchkcall(name_type(prog), GL_SHADER_STORAGE_BLOCK, name)
-              .cast_to(type_identity<shader_storage_block_index>{});
-#else
-            return this->_fake().cast_to(
-              type_identity<shader_storage_block_index>{});
-#endif
-        }
-    } get_shader_storage_block_index;
+    adapted_function<
+      &gl_api::GetProgramResourceIndex,
+      shader_storage_block_index(
+        program_name,
+        c_api::substituted<GL_SHADER_STORAGE_BLOCK>,
+        string_view)>
+      get_shader_storage_block_index{*this};
 
     adapted_function<
       &gl_api::GetProgramResourceLocation,
@@ -678,7 +673,7 @@ public:
           program_name prog,
           program_interface intf,
           uint_type index,
-          enum_class_view<program_property> props,
+          c_api::enum_class_view<program_property> props,
           span<int_type> dest) const noexcept {
             sizei_type real_len{0};
             return this
@@ -702,7 +697,7 @@ public:
           program_name prog,
           program_interface intf,
           uint_type index,
-          enum_class_view<program_property> props,
+          c_api::enum_class_view<program_property> props,
           span<float_type> dest) const noexcept {
             sizei_type real_len{0};
             return this
@@ -752,30 +747,17 @@ public:
         }
     } get_active_attrib_name;
 
-    struct : func<OGLPAFP(TransformFeedbackVaryings)> {
-        using func<OGLPAFP(TransformFeedbackVaryings)>::func;
-
-        auto operator()(
-          program_name prog,
-          string_view name,
-          transform_feedback_mode mode) const noexcept {
-            const auto name_c_str{c_str(name)};
-            const char* varyings = name_c_str;
-            return this->_cnvchkcall(prog, 1, &varyings, mode);
-        }
-
-        auto operator()(
-          [[maybe_unused]] program_name prog,
-          [[maybe_unused]] string_view name) const noexcept {
-#ifdef GL_SEPARATE_ATTRIBS
-            const auto name_c_str{c_str(name)};
-            const char* varyings = name_c_str;
-            return this->_cnvchkcall(prog, 1, &varyings, GL_SEPARATE_ATTRIBS);
-#else
-            return this->_fake();
-#endif
-        }
-    } transform_feedback_varyings;
+    c_api::combined<
+      adapted_function<
+        &gl_api::TransformFeedbackVaryings,
+        void(program_name, const glsl_source_ref&, transform_feedback_mode)>,
+      adapted_function<
+        &gl_api::TransformFeedbackVaryings,
+        void(
+          program_name,
+          const glsl_source_ref&,
+          c_api::substituted<GL_SEPARATE_ATTRIBS>)>>
+      transform_feedback_varyings{*this};
 
     adapted_function<
       &gl_api::BindFragDataLocation,
@@ -1314,7 +1296,7 @@ public:
           buffer_target,
           sizeiptr_type,
           const_void_ptr_type,
-          enum_bitfield<buffer_storage_bit>)>,
+          c_api::enum_bitfield<buffer_storage_bit>)>,
       adapted_function<
         &gl_api::BufferStorage,
         void(buffer_target, sizeiptr_type, c_api::defaulted, c_api::defaulted)>>
@@ -1327,7 +1309,7 @@ public:
           buffer_name,
           sizeiptr_type,
           const_void_ptr_type,
-          enum_bitfield<buffer_storage_bit>)>,
+          c_api::enum_bitfield<buffer_storage_bit>)>,
       adapted_function<
         &gl_api::NamedBufferStorage,
         void(buffer_name, sizeiptr_type, c_api::defaulted, c_api::defaulted)>>
@@ -1531,12 +1513,12 @@ public:
 
     adapted_function<
       &gl_api::MapBuffer,
-      void_ptr_type(buffer_target, enum_bitfield<buffer_map_access_bit>)>
+      void_ptr_type(buffer_target, c_api::enum_bitfield<buffer_map_access_bit>)>
       map_buffer{*this};
 
     adapted_function<
       &gl_api::MapNamedBuffer,
-      void_ptr_type(buffer_name, enum_bitfield<buffer_map_access_bit>)>
+      void_ptr_type(buffer_name, c_api::enum_bitfield<buffer_map_access_bit>)>
       map_named_buffer{*this};
 
     adapted_function<
@@ -1545,7 +1527,7 @@ public:
         buffer_target,
         intptr_type,
         sizeiptr_type,
-        enum_bitfield<buffer_map_access_bit>)>
+        c_api::enum_bitfield<buffer_map_access_bit>)>
       map_buffer_range{*this};
 
     adapted_function<
@@ -1554,7 +1536,7 @@ public:
         buffer_name,
         intptr_type,
         sizeiptr_type,
-        enum_bitfield<buffer_map_access_bit>)>
+        c_api::enum_bitfield<buffer_map_access_bit>)>
       map_named_buffer_range{*this};
 
     adapted_function<
@@ -2678,7 +2660,7 @@ public:
         int_type,
         int_type,
         int_type,
-        enum_bitfield<buffer_blit_bit>,
+        c_api::enum_bitfield<buffer_blit_bit>,
         blit_filter)>
       blit_framebuffer{*this};
 
@@ -2695,7 +2677,7 @@ public:
         int_type,
         int_type,
         int_type,
-        enum_bitfield<buffer_blit_bit>,
+        c_api::enum_bitfield<buffer_blit_bit>,
         blit_filter)>
       blit_named_framebuffer{*this};
 
@@ -2856,7 +2838,10 @@ public:
 
     adapted_function<
       &gl_api::UseProgramStages,
-      void(program_pipeline_name, enum_bitfield<program_stage_bit>, program_name)>
+      void(
+        program_pipeline_name,
+        c_api::enum_bitfield<program_stage_bit>,
+        program_name)>
       use_program_stages{*this};
 
     query_function<
