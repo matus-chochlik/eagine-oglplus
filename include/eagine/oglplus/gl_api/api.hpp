@@ -2857,17 +2857,14 @@ public:
       active_shader_program{*this};
 
     // path NV ops
-    struct : func<OGLPAFP(PathColorGenNV)> {
-        using func<OGLPAFP(PathColorGenNV)>::func;
-
-        constexpr auto operator()(
-          path_color_nv clr,
-          path_gen_mode_nv mode,
-          path_color_format_nv fmt,
-          span<const float_type> coords) const noexcept {
-            return this->_cnvchkcall(clr, mode, fmt, coords.data());
-        }
-    } path_color_gen_nv;
+    adapted_function<
+      &gl_api::PathColorGenNV,
+      void(
+        path_color_nv,
+        path_gen_mode_nv,
+        path_color_format_nv,
+        span<const float_type>)>
+      path_color_gen_nv{*this};
 
     struct : func<OGLPAFP(PathGlyphRangeNV)> {
         using func<OGLPAFP(PathGlyphRangeNV)>::func;
@@ -2919,13 +2916,15 @@ public:
         }
     } get_path_spacing_nv;
 
-    func<
-      OGLPAFP(StencilFillPathNV),
+    adapted_function<
+      &gl_api::StencilFillPathNV,
       void(path_nv_name, path_fill_mode_nv, uint_type)>
-      stencil_fill_path_nv;
+      stencil_fill_path_nv{*this};
 
-    func<OGLPAFP(StencilStrokePathNV), void(path_nv_name, int_type, uint_type)>
-      stencil_stroke_path_nv;
+    adapted_function<
+      &gl_api::StencilStrokePathNV,
+      void(path_nv_name, int_type, uint_type)>
+      stencil_stroke_path_nv{*this};
 
     struct : func<OGLPAFP(StencilFillPathInstancedNV)> {
         using func<OGLPAFP(StencilFillPathInstancedNV)>::func;
@@ -2969,13 +2968,15 @@ public:
         }
     } stencil_stroke_path_instanced_nv;
 
-    func<OGLPAFP(CoverFillPathNV), void(path_nv_name, path_fill_cover_mode_nv)>
-      cover_fill_path_nv;
+    adapted_function<
+      &gl_api::CoverFillPathNV,
+      void(path_nv_name, path_fill_cover_mode_nv)>
+      cover_fill_path_nv{*this};
 
-    func<
-      OGLPAFP(CoverStrokePathNV),
+    adapted_function<
+      &gl_api::CoverStrokePathNV,
       void(path_nv_name, path_stroke_cover_mode_nv)>
-      cover_stroke_path_nv;
+      cover_stroke_path_nv{*this};
 
     struct : func<OGLPAFP(CoverFillPathInstancedNV)> {
         using func<OGLPAFP(CoverFillPathInstancedNV)>::func;
