@@ -240,24 +240,14 @@ struct make_arg_map<
   I,
   I,
   oglplus::gl_types::uint_type,
-  oglplus::prog_var_location<TagId>> {
-    template <typename... P>
-    constexpr auto operator()(size_constant<I> i, P&&... p) const noexcept {
-        return trivial_map{}(i, std::forward<P>(p)...).index();
-    }
-};
+  oglplus::prog_var_location<TagId>> : get_index_map<I, I> {};
 
 template <std::size_t CI, std::size_t CppI, identifier_t TagId>
 struct make_arg_map<
   CI,
   CppI,
   oglplus::gl_types::uint_type,
-  oglplus::prog_var_location<TagId>> {
-    template <typename... P>
-    constexpr auto operator()(size_constant<CI> i, P&&... p) const noexcept {
-        return reorder_arg_map<CI, CppI>{}(i, std::forward<P>(p)...).index();
-    }
-};
+  oglplus::prog_var_location<TagId>> : get_index_map<CI, CppI> {};
 
 } // namespace eagine::c_api
 

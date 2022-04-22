@@ -310,9 +310,10 @@ public:
 
         constexpr auto operator()() const noexcept {
             name_type n{};
-            return base::operator()(cover_one(n)).transformed([&n](bool valid) {
-                return gl_owned_object_name<ObjTag>(valid ? n : 0);
-            });
+            return base::operator()(cover_one(n))
+              .transformed([&n](auto, bool valid) {
+                  return gl_owned_object_name<ObjTag>(valid ? n : 0);
+              });
         }
     };
 
@@ -645,7 +646,7 @@ public:
         program_interface,
         uint_type,
         span<char_type>),
-      c_api::combined<
+      c_api::combined_map<
         c_api::head_transform_map<sizei_type, 5, 4>,
         c_api::trivial_arg_map<1, 2, 3>,
         c_api::get_size_map<4, 4>,
@@ -717,28 +718,36 @@ public:
       vertex_attrib_location(program_name, string_view)>
       get_attrib_location{*this};
 
-    struct : func<OGLPAFP(GetActiveAttrib)> {
-        using func<OGLPAFP(GetActiveAttrib)>::func;
+    using _get_active_attrib_name_t = adapted_function<
+      &gl_api::GetActiveAttrib,
+      program_resource_location(
+        program_name,
+        vertex_attrib_location,
+        int_type*,
+        enum_type*,
+        span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 4, 5>,
+        c_api::make_arg_map<1, 1, name_type, program_name>,
+        c_api::get_index_map<2, 2>,
+        c_api::get_size_map<3, 5>,
+        c_api::reorder_arg_map<5, 3>,
+        c_api::reorder_arg_map<6, 4>,
+        c_api::get_data_map<7, 5>>>;
+
+    struct : _get_active_attrib_name_t {
+        using base = _get_active_attrib_name_t;
+        using base::base;
 
         constexpr auto operator()(
           program_name prog,
           vertex_attrib_location loc,
+          int_type& size,
           span<char_type> dest) const noexcept {
-            int_type size{0};
-            enum_type type{0};
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                &size,
-                &type,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
+            enum_type type{};
+            return base::operator()(prog, loc, &size, &type, dest);
         }
-    } get_active_attrib_name;
+    } get_active_attrib_name{*this};
 
     c_api::combined<
       adapted_function<
@@ -782,76 +791,56 @@ public:
       uniform_block_index(program_name, string_view)>
       get_uniform_block_index{*this};
 
-    struct : func<OGLPAFP(GetActiveUniformName)> {
-        using func<OGLPAFP(GetActiveUniformName)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_active_uniform_name;
+    adapted_function<
+      &gl_api::GetActiveUniformName,
+      program_resource_location(program_name, uniform_location, span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 4, 3>,
+        c_api::trivial_arg_map<1>,
+        c_api::get_index_map<2, 2>,
+        c_api::get_size_map<3, 3>,
+        c_api::get_data_map<5, 3>>>
+      get_active_uniform_name{*this};
 
     adapted_function<
       &gl_api::GetSubroutineUniformLocation,
       subroutine_uniform_location(program_name, shader_type, string_view)>
       get_subroutine_uniform_location{*this};
 
-    struct : func<OGLPAFP(GetActiveSubroutineUniformName)> {
-        using func<OGLPAFP(GetActiveSubroutineUniformName)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          shader_type shdr_type,
-          uniform_location loc,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                enum_type(shdr_type),
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_active_subroutine_uniform_name;
+    adapted_function<
+      &gl_api::GetActiveSubroutineUniformName,
+      program_resource_location(
+        program_name,
+        shader_type,
+        uniform_location,
+        span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 5, 4>,
+        c_api::trivial_arg_map<1, 2>,
+        c_api::get_index_map<3, 3>,
+        c_api::get_size_map<4, 4>,
+        c_api::get_data_map<6, 4>>>
+      get_active_subroutine_uniform_name{*this};
 
     adapted_function<
       &gl_api::GetSubroutineIndex,
       subroutine_location(program_name, shader_type, string_view)>
       get_subroutine_index{*this};
 
-    struct : func<OGLPAFP(GetActiveSubroutineName)> {
-        using func<OGLPAFP(GetActiveSubroutineName)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          shader_type shdr_type,
-          subroutine_location loc,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_cnvchkcall(
-                prog,
-                shdr_type,
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_active_subroutine_name;
+    adapted_function<
+      &gl_api::GetActiveSubroutineName,
+      program_resource_location(
+        program_name,
+        shader_type,
+        subroutine_location,
+        span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 5, 4>,
+        c_api::trivial_arg_map<1, 2>,
+        c_api::get_index_map<3, 3>,
+        c_api::get_size_map<4, 4>,
+        c_api::get_data_map<6, 4>>>
+      get_active_subroutine_name{*this};
 
     struct : func<OGLPAFP(UniformSubroutinesuiv)> {
         using func<OGLPAFP(UniformSubroutinesuiv)>::func;
