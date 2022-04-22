@@ -638,26 +638,19 @@ public:
       program_resource_location(program_name, program_interface, string_view)>
       get_program_resource_location{*this};
 
-    struct : func<OGLPAFP(GetProgramResourceName)> {
-        using func<OGLPAFP(GetProgramResourceName)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          program_interface intf,
-          uint_type index,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                enum_type(intf),
-                index,
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_resource_name;
+    adapted_function<
+      &gl_api::GetProgramResourceName,
+      program_resource_location(
+        program_name,
+        program_interface,
+        uint_type,
+        span<char_type>),
+      c_api::combined<
+        c_api::head_transform_map<sizei_type, 5, 4>,
+        c_api::trivial_arg_map<1, 2, 3>,
+        c_api::get_size_map<4, 4>,
+        c_api::get_data_map<6, 4>>>
+      get_program_resource_name{*this};
 
     query_function<
       &gl_api::GetProgramInterfaceiv,
@@ -1895,8 +1888,8 @@ public:
         bool_type)>
       texture_storage2d_multisample{*this};
 
-    func<
-      OGLPAFP(TexImage3D),
+    adapted_function<
+      &gl_api::TexImage3D,
       void(
         texture_target,
         int_type,
@@ -1908,10 +1901,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_image3d;
+      tex_image3d{*this};
 
-    func<
-      OGLPAFP(TexImage2D),
+    adapted_function<
+      &gl_api::TexImage2D,
       void(
         texture_target,
         int_type,
@@ -1922,10 +1915,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_image2d;
+      tex_image2d{*this};
 
-    func<
-      OGLPAFP(TexImage1D),
+    adapted_function<
+      &gl_api::TexImage1D,
       void(
         texture_target,
         int_type,
@@ -1935,7 +1928,7 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_image1d;
+      tex_image1d{*this};
 
     adapted_function<
       &gl_api::TexSubImage3D,
@@ -2698,7 +2691,8 @@ public:
     adapted_function<&gl_api::ResumeTransformFeedback> resume_transform_feedback{
       *this};
 
-    func<OGLPAFP(EndTransformFeedback)> end_transform_feedback;
+    adapted_function<&gl_api::EndTransformFeedback> end_transform_feedback{
+      *this};
 
     adapted_function<
       &gl_api::TransformFeedbackBufferBase,
@@ -2858,22 +2852,20 @@ public:
       mp_list<program_pipeline_parameter>>
       get_program_pipeline_i{*this};
 
-    struct : func<OGLPAFP(GetProgramPipelineInfoLog)> {
-        using func<OGLPAFP(GetProgramPipelineInfoLog)>::func;
+    adapted_function<
+      &gl_api::GetProgramPipelineInfoLog,
+      void(program_pipeline_name, span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 3, 2>,
+        c_api::convert<name_type, c_api::trivial_arg_map<1>>,
+        c_api::get_size_map<2, 2>,
+        c_api::get_data_map<4, 2>>>
+      get_program_pipeline_info_log{*this};
 
-        constexpr auto operator()(
-          program_pipeline_name pipe,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(pipe), sizei_type(dest.size()), &real_len, dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_pipeline_info_log;
-
-    func<OGLPAFP(ActiveShaderProgram), void(program_pipeline_name, program_name)>
-      active_shader_program;
+    adapted_function<
+      &gl_api::ActiveShaderProgram,
+      void(program_pipeline_name, program_name)>
+      active_shader_program{*this};
 
     // path NV ops
     struct : func<OGLPAFP(PathColorGenNV)> {
