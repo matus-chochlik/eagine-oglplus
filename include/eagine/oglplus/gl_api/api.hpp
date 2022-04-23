@@ -40,20 +40,17 @@ template <
   std::size_t CI,
   std::size_t CppI,
   typename CS,
-  typename... CT,
   typename CppV,
   typename CppP,
   typename CppS,
-  CppS chunkSize,
-  typename... CppT>
+  CppS chunkSize>
 struct make_args_map<
   CI,
   CppI,
-  mp_list<CS, oglplus::gl_types::bool_type, CppV*, CT...>,
+  mp_list<CS, oglplus::gl_types::bool_type, CppV*>,
   mp_list<
     oglplus::true_false,
-    memory::basic_chunk_span<CppV, CppP, CppS, chunkSize>,
-    CppT...>>
+    memory::basic_chunk_span<CppV, CppP, CppS, chunkSize>>>
   : convert<CS, get_chunk_size_map<CI, CppI + 1, chunkSize>>
   , convert<oglplus::gl_types::bool_type, reorder_arg_map<CI + 1, CppI>>
   , get_data_map<CI + 2, CppI + 1> {
@@ -61,6 +58,33 @@ struct make_args_map<
     using convert<oglplus::gl_types::bool_type, reorder_arg_map<CI + 1, CppI>>::
     operator();
     using get_data_map<CI + 2, CppI + 1>::operator();
+};
+
+template <std::size_t CI, std::size_t CppI, typename... CT, typename... CppT>
+struct make_args_map<
+  CI,
+  CppI,
+  mp_list<
+    oglplus::gl_types::sizei_type,
+    oglplus::gl_types::enum_type,
+    const void*,
+    CT...>,
+  mp_list<string_view, substituted<GL_UTF8_NV>, CppT...>>
+  : convert<oglplus::gl_types::sizei_type, get_size_map<CI, CppI>>
+  , make_arg_map<CI + 2, CppI, const char*, string_view>
+  , make_args_map<CI + 3, CppI + 1, mp_list<CT...>, mp_list<CppT...>> {
+
+    using convert<oglplus::gl_types::sizei_type, get_size_map<CI, CppI>>::
+    operator();
+    using make_arg_map<CI + 2, CppI, const char*, string_view>::operator();
+    using make_args_map<CI + 3, CppI + 1, mp_list<CT...>, mp_list<CppT...>>::
+    operator();
+
+    template <typename... P>
+    constexpr auto operator()(size_constant<CI + 1>, P&&...) const noexcept
+      -> oglplus::gl_types::enum_type {
+        return GL_UTF8_NV;
+    }
 };
 
 } // namespace eagine::c_api
@@ -588,7 +612,7 @@ public:
       c_api::combined_map<
         c_api::head_transform_map<sizei_type, 3, 2>,
         c_api::convert<name_type, c_api::trivial_arg_map<1>>,
-        c_api::get_size_map<2, 2>,
+        c_api::convert<sizei_type, c_api::get_size_map<2, 2>>,
         c_api::get_data_map<4, 2>>>
       get_shader_info_log{*this};
 
@@ -614,7 +638,7 @@ public:
       c_api::combined_map<
         c_api::head_transform_map<sizei_type, 3, 2>,
         c_api::convert<name_type, c_api::trivial_arg_map<1>>,
-        c_api::get_size_map<2, 2>,
+        c_api::convert<sizei_type, c_api::get_size_map<2, 2>>,
         c_api::get_data_map<4, 2>>>
       get_program_info_log{*this};
 
@@ -649,7 +673,7 @@ public:
       c_api::combined_map<
         c_api::head_transform_map<sizei_type, 5, 4>,
         c_api::trivial_arg_map<1, 2, 3>,
-        c_api::get_size_map<4, 4>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
         c_api::get_data_map<6, 4>>>
       get_program_resource_name{*this};
 
@@ -660,53 +684,41 @@ public:
       mp_list<program_property>>
       get_program_interface_i{*this};
 
-    struct : func<OGLPAFP(GetProgramResourceiv)> {
-        using func<OGLPAFP(GetProgramResourceiv)>::func;
+    adapted_function<
+      &gl_api::GetProgramResourceiv,
+      program_resource_location(
+        program_name,
+        program_interface,
+        uint_type,
+        c_api::enum_class_view<program_property>,
+        span<int_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 7, 5>,
+        c_api::make_arg_map<1, 1, name_type, program_name>,
+        c_api::trivial_arg_map<2, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
+        c_api::get_data_map<7, 4>,
+        c_api::convert<sizei_type, c_api::get_size_map<6, 6>>,
+        c_api::get_data_map<8, 5>>>
+      get_program_resource_i{*this};
 
-        auto operator()(
-          program_name prog,
-          program_interface intf,
-          uint_type index,
-          c_api::enum_class_view<program_property> props,
-          span<int_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_cnvchkcall(
-                prog,
-                intf,
-                index,
-                sizei_type(props.size()),
-                props.raw_enums().data(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_resource_i;
-
-    struct : func<OGLPAFP(GetProgramResourcefvNV)> {
-        using func<OGLPAFP(GetProgramResourcefvNV)>::func;
-
-        auto operator()(
-          program_name prog,
-          program_interface intf,
-          uint_type index,
-          c_api::enum_class_view<program_property> props,
-          span<float_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_cnvchkcall(
-                prog,
-                intf,
-                index,
-                sizei_type(props.size()),
-                props.raw_enums().data(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_resource_f;
+    adapted_function<
+      &gl_api::GetProgramResourcefvNV,
+      program_resource_location(
+        program_name,
+        program_interface,
+        uint_type,
+        c_api::enum_class_view<program_property>,
+        span<float_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 7, 5>,
+        c_api::make_arg_map<1, 1, name_type, program_name>,
+        c_api::trivial_arg_map<2, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
+        c_api::get_data_map<7, 4>,
+        c_api::convert<sizei_type, c_api::get_size_map<6, 6>>,
+        c_api::get_data_map<8, 5>>>
+      get_program_resource_f{*this};
 
     adapted_function<
       &gl_api::BindAttribLocation,
@@ -730,7 +742,7 @@ public:
         c_api::head_transform_map<sizei_type, 4, 5>,
         c_api::make_arg_map<1, 1, name_type, program_name>,
         c_api::get_index_map<2, 2>,
-        c_api::get_size_map<3, 5>,
+        c_api::convert<sizei_type, c_api::get_size_map<3, 5>>,
         c_api::reorder_arg_map<5, 3>,
         c_api::reorder_arg_map<6, 4>,
         c_api::get_data_map<7, 5>>>;
@@ -798,7 +810,7 @@ public:
         c_api::head_transform_map<sizei_type, 4, 3>,
         c_api::trivial_arg_map<1>,
         c_api::get_index_map<2, 2>,
-        c_api::get_size_map<3, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<3, 3>>,
         c_api::get_data_map<5, 3>>>
       get_active_uniform_name{*this};
 
@@ -818,7 +830,7 @@ public:
         c_api::head_transform_map<sizei_type, 5, 4>,
         c_api::trivial_arg_map<1, 2>,
         c_api::get_index_map<3, 3>,
-        c_api::get_size_map<4, 4>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
         c_api::get_data_map<6, 4>>>
       get_active_subroutine_uniform_name{*this};
 
@@ -838,7 +850,7 @@ public:
         c_api::head_transform_map<sizei_type, 5, 4>,
         c_api::trivial_arg_map<1, 2>,
         c_api::get_index_map<3, 3>,
-        c_api::get_size_map<4, 4>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
         c_api::get_data_map<6, 4>>>
       get_active_subroutine_name{*this};
 
@@ -2847,7 +2859,7 @@ public:
       c_api::combined_map<
         c_api::head_transform_map<sizei_type, 3, 2>,
         c_api::convert<name_type, c_api::trivial_arg_map<1>>,
-        c_api::get_size_map<2, 2>,
+        c_api::convert<sizei_type, c_api::get_size_map<2, 2>>,
         c_api::get_data_map<4, 2>>>
       get_program_pipeline_info_log{*this};
 
@@ -2866,55 +2878,39 @@ public:
         span<const float_type>)>
       path_color_gen_nv{*this};
 
-    struct : func<OGLPAFP(PathGlyphRangeNV)> {
-        using func<OGLPAFP(PathGlyphRangeNV)>::func;
+    adapted_function<
+      &gl_api::PathGlyphRangeNV,
+      void(
+        path_nv_name,
+        path_font_target_nv,
+        string_view,
+        path_font_style_nv,
+        uint_type,
+        sizei_type,
+        path_missing_glyph_nv,
+        uint_type,
+        float_type),
+      c_api::combined_map<
+        c_api::make_arg_map<1, 1, name_type, path_nv_name>,
+        c_api::make_arg_map<2, 2, enum_type, path_font_target_nv>,
+        c_api::make_arg_map<3, 3, const char*, string_view>,
+        c_api::make_arg_map<4, 4, bitfield_type, path_font_style_nv>,
+        c_api::make_arg_map<7, 7, enum_type, path_missing_glyph_nv>,
+        c_api::trivial_arg_map<0, 5, 6, 8, 9>>>
+      path_glyph_range_nv{*this};
 
-        constexpr auto operator()(
-          path_nv_name pth,
-          path_font_target_nv tgt,
-          string_view font_name,
-          path_font_style_nv style,
-          uint_type first,
-          sizei_type count,
-          path_missing_glyph_nv missing,
-          uint_type param_tpl,
-          float_type em_scale) const noexcept {
-            return this->_cnvchkcall(
-              pth,
-              tgt,
-              static_cast<const char*>(c_str(font_name)),
-              style,
-              first,
-              count,
-              missing,
-              param_tpl,
-              em_scale);
-        }
-    } path_glyph_range_nv;
-
-    struct : func<OGLPAFP(GetPathSpacingNV)> {
-        using func<OGLPAFP(GetPathSpacingNV)>::func;
-
-        constexpr auto operator()(
-          [[maybe_unused]] path_list_mode_nv mode,
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] float_type advance_scale,
-          [[maybe_unused]] float_type kerning_scale,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              mode,
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              advance_scale,
-              kerning_scale,
-              transf,
-              dst.data());
-        }
-    } get_path_spacing_nv;
+    adapted_function<
+      &gl_api::GetPathSpacingNV,
+      void(
+        path_list_mode_nv,
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        float_type,
+        float_type,
+        path_transform_type_nv,
+        span<float_type>)>
+      get_path_spacing_nv{*this};
 
     adapted_function<
       &gl_api::StencilFillPathNV,
@@ -2926,47 +2922,30 @@ public:
       void(path_nv_name, int_type, uint_type)>
       stencil_stroke_path_nv{*this};
 
-    struct : func<OGLPAFP(StencilFillPathInstancedNV)> {
-        using func<OGLPAFP(StencilFillPathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] path_fill_mode_nv mode,
-          [[maybe_unused]] uint_type mask,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              mode,
-              mask,
-              transf,
-              dst.data());
-        }
-    } stencil_fill_path_instanced_nv;
+    adapted_function<
+      &gl_api::StencilFillPathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_fill_mode_nv,
+        uint_type,
+        path_transform_type_nv,
+        span<const float_type>)>
+      stencil_fill_path_instanced_nv{*this};
 
-    struct : func<OGLPAFP(StencilStrokePathInstancedNV)> {
-        using func<OGLPAFP(StencilStrokePathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] int_type reference,
-          [[maybe_unused]] uint_type mask,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              reference,
-              mask,
-              transf,
-              dst.data());
-        }
-    } stencil_stroke_path_instanced_nv;
+    adapted_function<
+      &gl_api::StencilStrokePathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_fill_mode_nv,
+        int_type,
+        uint_type,
+        path_transform_type_nv,
+        span<const float_type>)>
+      stencil_stroke_path_instanced_nv{*this};
 
     adapted_function<
       &gl_api::CoverFillPathNV,
@@ -2978,43 +2957,27 @@ public:
       void(path_nv_name, path_stroke_cover_mode_nv)>
       cover_stroke_path_nv{*this};
 
-    struct : func<OGLPAFP(CoverFillPathInstancedNV)> {
-        using func<OGLPAFP(CoverFillPathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] path_fill_cover_mode_nv mode,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              mode,
-              transf,
-              dst.data());
-        }
-    } cover_fill_path_instanced_nv;
+    adapted_function<
+      &gl_api::CoverFillPathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_fill_cover_mode_nv,
+        path_transform_type_nv,
+        span<const float_type>)>
+      cover_fill_path_instanced_nv{*this};
 
-    struct : func<OGLPAFP(CoverStrokePathInstancedNV)> {
-        using func<OGLPAFP(CoverStrokePathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] path_stroke_cover_mode_nv mode,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              mode,
-              transf,
-              dst.data());
-        }
-    } cover_stroke_path_instanced_nv;
+    adapted_function<
+      &gl_api::CoverStrokePathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_stroke_cover_mode_nv,
+        path_transform_type_nv,
+        span<const float_type>)>
+      cover_stroke_path_instanced_nv{*this};
 
     // draw parameters
     adapted_function<&gl_api::PrimitiveRestartIndex> primitive_restart_index{
