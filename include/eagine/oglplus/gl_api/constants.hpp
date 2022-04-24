@@ -13,7 +13,7 @@
 #include "c_api.hpp"
 #include "enum_types.hpp"
 #include "object_name.hpp"
-#include <eagine/c_api/function.hpp>
+#include <eagine/c_api/constant.hpp>
 #include <eagine/int_constant.hpp>
 #include <array>
 

@@ -16,7 +16,7 @@
 #include "prog_var_loc.hpp"
 #include "type_utils.hpp"
 #include <eagine/c_api/adapted_function.hpp>
-#include <eagine/c_api_wrap.hpp>
+#include <eagine/c_api/enum_bitfield.hpp>
 #include <eagine/quantities.hpp>
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
@@ -92,8 +92,6 @@ struct make_args_map<
 namespace eagine::oglplus {
 class gl_debug_logger;
 using c_api::adapted_function;
-//------------------------------------------------------------------------------
-#define OGLPAFP(FUNC) decltype(gl_api::FUNC), &gl_api::FUNC
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the functions from the GL API.
 /// @ingroup gl_api_wrap
@@ -196,61 +194,6 @@ public:
     static constexpr auto type_of(vertex_array_name) noexcept {
         return object_type(GL_VERTEX_ARRAY);
     }
-
-    template <typename W, W gl_api::*F, typename Signature = typename W::signature>
-    class func;
-
-    template <typename W, W gl_api::*F, typename RVC, typename... Params>
-    class func<W, F, RVC(Params...)>
-      : public wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F> {
-        using base =
-          wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F>;
-
-    public:
-        using base::base;
-
-        constexpr auto operator()(Params... params) const noexcept {
-            return this->_chkcall(_conv(params)...)
-              .cast_to(type_identity<RVC>{});
-        }
-
-        auto bind(Params... params) const noexcept {
-            return [this, params...] {
-                return (*this)(params...);
-            };
-        }
-
-    protected:
-        template <typename... Args>
-        constexpr auto _chkcall(Args&&... args) const noexcept {
-            return this->_check(this->_call(std::forward<Args>(args)...));
-        }
-
-        using base::_conv;
-
-        template <identifier_t I>
-        static constexpr auto _conv(prog_var_location<I> loc) noexcept {
-            return loc.index();
-        }
-
-        template <typename T>
-        static constexpr auto _conv(degrees_t<T> angle) noexcept {
-            return angle.value();
-        }
-
-        template <typename... Args>
-        constexpr auto _cnvchkcall(Args&&... args) const noexcept {
-            return this->_chkcall(_conv(std::forward<Args>(args))...)
-              .cast_to(type_identity<RVC>{});
-        }
-
-    private:
-        template <typename Res>
-        constexpr auto _check(Res&& res) const noexcept {
-            res.error_code(this->api().GetError());
-            return std::forward<Res>(res);
-        }
-    };
 
     // numeric query function
     template <
@@ -854,28 +797,21 @@ public:
         c_api::get_data_map<6, 4>>>
       get_active_subroutine_name{*this};
 
-    struct : func<OGLPAFP(UniformSubroutinesuiv)> {
-        using func<OGLPAFP(UniformSubroutinesuiv)>::func;
+    using _uniform_subroutines_t = adapted_function<
+      &gl_api::UniformSubroutinesuiv,
+      void(shader_type, span<const uint_type>)>;
+
+    struct : _uniform_subroutines_t {
+        using base = _uniform_subroutines_t;
+        using base::base;
 
         constexpr auto operator()(
           shader_type shdr_type,
           subroutine_location subr) const noexcept {
             const uint_type idx{subr.index()};
-            return this->_cnvchkcall(shdr_type, 1, &idx);
+            return base::operator()(shdr_type, view_one(idx));
         }
-
-        template <std::size_t N>
-        constexpr auto operator()(
-          shader_type shdr_type,
-          const subroutine_bindings<N>& subrs) const noexcept {
-            std::array<uint_type, N> idcs{};
-            for(const auto& [su, s] : subrs._bindings) {
-                idcs[su.index()] = s.index();
-            }
-            return this->_cnvchkcall(
-              shdr_type, limit_cast<sizei_type>(idcs.size()), idcs.data());
-        }
-    } uniform_subroutines;
+    } uniform_subroutines{*this};
 
     // uniform
     // uint
@@ -3457,8 +3393,6 @@ public:
 
     basic_gl_operations(api_traits& traits);
 };
-//------------------------------------------------------------------------------
-#undef OGLPAFP
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

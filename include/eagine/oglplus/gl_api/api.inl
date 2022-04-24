@@ -14,7 +14,6 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
   , ARB_debug_output{"ARB_debug_output", *this}
   , ARB_compatibility{"ARB_compatibility", *this}
   , ARB_robustness{"ARB_robustness", *this}
-  , ARB_shading_language_include{"ARB_shading_language_include", *this}
-  , uniform_subroutines{"uniform_subroutines", *this} {}
+  , ARB_shading_language_include{"ARB_shading_language_include", *this} {}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
