@@ -2242,38 +2242,33 @@ public:
       void(texture_name, texture_parameter, float_type)>
       texture_parameter_f{*this};
 
-    struct : func<OGLPAFP(TexParameteri)> {
-        using func<OGLPAFP(TexParameteri)>::func;
+    using _tex_parameter_i_t = adapted_function<
+      &gl_api::TexParameteri,
+      void(texture_target, enum_parameter_value<texture_parameter, int_type>)>;
 
-        template <typename TexParam, typename Value>
-        constexpr auto operator()(
-          texture_target tgt,
-          TexParam param,
-          Value value) const noexcept
-          requires(is_enum_parameter_value_v<
-                   texture_parameter,
-                   TexParam,
-                   int_type,
-                   Value>) {
-            return this->_chkcall(
-              enum_type(tgt), enum_type(param), enum_type(value));
+    struct : _tex_parameter_i_t {
+        using base = _tex_parameter_i_t;
+        using base::base;
+        template <typename Param, typename Value>
+        constexpr auto operator()(texture_target tgt, Param param, Value value)
+          const noexcept {
+            return base::operator()(tgt, {param, value});
         }
-    } tex_parameter_i;
+    } tex_parameter_i{*this};
 
-    struct : func<OGLPAFP(TextureParameteri)> {
-        using func<OGLPAFP(TextureParameteri)>::func;
+    using _texture_parameter_i_t = adapted_function<
+      &gl_api::TextureParameteri,
+      void(texture_name, enum_parameter_value<texture_parameter, int_type>)>;
 
-        template <typename TexParam, typename Value>
-        constexpr auto operator()(texture_name tex, TexParam param, Value value)
-          const noexcept requires(is_enum_parameter_value_v<
-                                  texture_parameter,
-                                  TexParam,
-                                  int_type,
-                                  Value>) {
-            return this->_chkcall(
-              name_type(tex), enum_type(param), enum_type(value));
+    struct : _texture_parameter_i_t {
+        using base = _texture_parameter_i_t;
+        using base::base;
+        template <typename Param, typename Value>
+        constexpr auto operator()(texture_target tgt, Param param, Value value)
+          const noexcept {
+            return base::operator()(tgt, {param, value});
         }
-    } texture_parameter_i;
+    } texture_parameter_i{*this};
 
     adapted_function<
       &gl_api::TexParameterfv,

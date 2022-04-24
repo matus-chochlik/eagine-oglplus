@@ -87,16 +87,7 @@ static constexpr auto same_enum_class(
     return ::eagine::c_api::same_enum_class(a, b);
 }
 //------------------------------------------------------------------------------
-template <
-  typename ParameterEnumClass,
-  typename Parameter,
-  typename ValueType,
-  typename Value>
-constexpr static bool is_enum_parameter_value_v =
-  c_api::is_enum_class_value_v<ParameterEnumClass, Parameter>&&
-      std::is_same_v<typename Parameter::tag_type, nothing_t>
-    ? std::is_convertible_v<Value, ValueType>
-    : c_api::is_enum_class_value_v<typename Parameter::tag_type, Value>;
+using c_api::enum_parameter_value;
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
