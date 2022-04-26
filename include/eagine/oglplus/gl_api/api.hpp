@@ -16,7 +16,7 @@
 #include "prog_var_loc.hpp"
 #include "type_utils.hpp"
 #include <eagine/c_api/adapted_function.hpp>
-#include <eagine/c_api_wrap.hpp>
+#include <eagine/c_api/enum_bitfield.hpp>
 #include <eagine/quantities.hpp>
 #include <eagine/scope_exit.hpp>
 #include <eagine/string_list.hpp>
@@ -40,20 +40,17 @@ template <
   std::size_t CI,
   std::size_t CppI,
   typename CS,
-  typename... CT,
   typename CppV,
   typename CppP,
   typename CppS,
-  CppS chunkSize,
-  typename... CppT>
+  CppS chunkSize>
 struct make_args_map<
   CI,
   CppI,
-  mp_list<CS, oglplus::gl_types::bool_type, CppV*, CT...>,
+  mp_list<CS, oglplus::gl_types::bool_type, CppV*>,
   mp_list<
     oglplus::true_false,
-    memory::basic_chunk_span<CppV, CppP, CppS, chunkSize>,
-    CppT...>>
+    memory::basic_chunk_span<CppV, CppP, CppS, chunkSize>>>
   : convert<CS, get_chunk_size_map<CI, CppI + 1, chunkSize>>
   , convert<oglplus::gl_types::bool_type, reorder_arg_map<CI + 1, CppI>>
   , get_data_map<CI + 2, CppI + 1> {
@@ -63,13 +60,38 @@ struct make_args_map<
     using get_data_map<CI + 2, CppI + 1>::operator();
 };
 
+template <std::size_t CI, std::size_t CppI, typename... CT, typename... CppT>
+struct make_args_map<
+  CI,
+  CppI,
+  mp_list<
+    oglplus::gl_types::sizei_type,
+    oglplus::gl_types::enum_type,
+    const void*,
+    CT...>,
+  mp_list<string_view, substituted<GL_UTF8_NV>, CppT...>>
+  : convert<oglplus::gl_types::sizei_type, get_size_map<CI, CppI>>
+  , make_arg_map<CI + 2, CppI, const char*, string_view>
+  , make_args_map<CI + 3, CppI + 1, mp_list<CT...>, mp_list<CppT...>> {
+
+    using convert<oglplus::gl_types::sizei_type, get_size_map<CI, CppI>>::
+    operator();
+    using make_arg_map<CI + 2, CppI, const char*, string_view>::operator();
+    using make_args_map<CI + 3, CppI + 1, mp_list<CT...>, mp_list<CppT...>>::
+    operator();
+
+    template <typename... P>
+    constexpr auto operator()(size_constant<CI + 1>, P&&...) const noexcept
+      -> oglplus::gl_types::enum_type {
+        return GL_UTF8_NV;
+    }
+};
+
 } // namespace eagine::c_api
 
 namespace eagine::oglplus {
 class gl_debug_logger;
 using c_api::adapted_function;
-//------------------------------------------------------------------------------
-#define OGLPAFP(FUNC) decltype(gl_api::FUNC), &gl_api::FUNC
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the functions from the GL API.
 /// @ingroup gl_api_wrap
@@ -173,61 +195,6 @@ public:
         return object_type(GL_VERTEX_ARRAY);
     }
 
-    template <typename W, W gl_api::*F, typename Signature = typename W::signature>
-    class func;
-
-    template <typename W, W gl_api::*F, typename RVC, typename... Params>
-    class func<W, F, RVC(Params...)>
-      : public wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F> {
-        using base =
-          wrapped_c_api_function<gl_api, api_traits, nothing_t, W, F>;
-
-    public:
-        using base::base;
-
-        constexpr auto operator()(Params... params) const noexcept {
-            return this->_chkcall(_conv(params)...)
-              .cast_to(type_identity<RVC>{});
-        }
-
-        auto bind(Params... params) const noexcept {
-            return [this, params...] {
-                return (*this)(params...);
-            };
-        }
-
-    protected:
-        template <typename... Args>
-        constexpr auto _chkcall(Args&&... args) const noexcept {
-            return this->_check(this->_call(std::forward<Args>(args)...));
-        }
-
-        using base::_conv;
-
-        template <identifier_t I>
-        static constexpr auto _conv(prog_var_location<I> loc) noexcept {
-            return loc.index();
-        }
-
-        template <typename T>
-        static constexpr auto _conv(degrees_t<T> angle) noexcept {
-            return angle.value();
-        }
-
-        template <typename... Args>
-        constexpr auto _cnvchkcall(Args&&... args) const noexcept {
-            return this->_chkcall(_conv(std::forward<Args>(args))...)
-              .cast_to(type_identity<RVC>{});
-        }
-
-    private:
-        template <typename Res>
-        constexpr auto _check(Res&& res) const noexcept {
-            res.error_code(this->api().GetError());
-            return std::forward<Res>(res);
-        }
-    };
-
     // numeric query function
     template <
       auto wrapper,
@@ -262,8 +229,9 @@ public:
           PreParams... pre_params,
           Query query,
           PostParams... post_params) const noexcept
-          requires((true || ... || is_enum_class_value_v<QueryClasses, Query>)&&(
-            !std::is_array_v<typename Query::tag_type>)) {
+          requires(
+            (true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>)&&(
+              !std::is_array_v<typename Query::tag_type>)) {
             using RV = typename Query::tag_type;
             QueryResult result{};
             return base::operator()(
@@ -278,7 +246,8 @@ public:
           Query query,
           PostParams... post_params,
           span<QueryResult> dest) const noexcept
-          requires(true || ... || is_enum_class_value_v<QueryClasses, Query>) {
+          requires(
+            true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>) {
             if constexpr(std::is_array_v<typename Query::tag_type>) {
                 EAGINE_ASSERT(
                   dest.size() >= std::extent_v<typename Query::tag_type>);
@@ -292,7 +261,7 @@ public:
 
     adapted_function<
       &gl_api::FenceSync,
-      void(sync_condition, enum_bitfield<sync_flag_bit>)>
+      void(sync_condition, c_api::enum_bitfield<sync_flag_bit>)>
       fence_sync{*this};
 
     template <auto Wrapper, typename ObjTag>
@@ -308,9 +277,10 @@ public:
 
         constexpr auto operator()() const noexcept {
             name_type n{};
-            return base::operator()(cover_one(n)).transformed([&n](bool valid) {
-                return gl_owned_object_name<ObjTag>(valid ? n : 0);
-            });
+            return base::operator()(cover_one(n))
+              .transformed([&n](auto, bool valid) {
+                  return gl_owned_object_name<ObjTag>(valid ? n : 0);
+              });
         }
     };
 
@@ -469,12 +439,12 @@ public:
 
     adapted_function<
       &gl_api::MemoryBarrier,
-      void(enum_bitfield<memory_barrier_bit>)>
+      void(c_api::enum_bitfield<memory_barrier_bit>)>
       memory_barrier{*this};
 
     adapted_function<
       &gl_api::MemoryBarrierByRegion,
-      void(enum_bitfield<memory_barrier_bit>)>
+      void(c_api::enum_bitfield<memory_barrier_bit>)>
       memory_barrier_by_region{*this};
 
     c_api::combined<
@@ -556,7 +526,7 @@ public:
     adapted_function<&gl_api::ClearStencil, void(int_type)> clear_stencil{
       *this};
 
-    adapted_function<&gl_api::Clear, void(enum_bitfield<buffer_clear_bit>)>
+    adapted_function<&gl_api::Clear, void(c_api::enum_bitfield<buffer_clear_bit>)>
       clear{*this};
 
     adapted_function<
@@ -585,7 +555,7 @@ public:
       c_api::combined_map<
         c_api::head_transform_map<sizei_type, 3, 2>,
         c_api::convert<name_type, c_api::trivial_arg_map<1>>,
-        c_api::get_size_map<2, 2>,
+        c_api::convert<sizei_type, c_api::get_size_map<2, 2>>,
         c_api::get_data_map<4, 2>>>
       get_shader_info_log{*this};
 
@@ -611,7 +581,7 @@ public:
       c_api::combined_map<
         c_api::head_transform_map<sizei_type, 3, 2>,
         c_api::convert<name_type, c_api::trivial_arg_map<1>>,
-        c_api::get_size_map<2, 2>,
+        c_api::convert<sizei_type, c_api::get_size_map<2, 2>>,
         c_api::get_data_map<4, 2>>>
       get_program_info_log{*this};
 
@@ -623,46 +593,32 @@ public:
       uint_type(program_name, program_interface, string_view)>
       get_program_resource_index{*this};
 
-    struct : func<OGLPAFP(GetProgramResourceIndex)> {
-        using func<OGLPAFP(GetProgramResourceIndex)>::func;
-        constexpr auto operator()(program_name prog, string_view name)
-          const noexcept {
-#ifdef GL_SHADER_STORAGE_BLOCK
-            return this
-              ->_cnvchkcall(name_type(prog), GL_SHADER_STORAGE_BLOCK, name)
-              .cast_to(type_identity<shader_storage_block_index>{});
-#else
-            return this->_fake().cast_to(
-              type_identity<shader_storage_block_index>{});
-#endif
-        }
-    } get_shader_storage_block_index;
+    adapted_function<
+      &gl_api::GetProgramResourceIndex,
+      shader_storage_block_index(
+        program_name,
+        c_api::substituted<GL_SHADER_STORAGE_BLOCK>,
+        string_view)>
+      get_shader_storage_block_index{*this};
 
     adapted_function<
       &gl_api::GetProgramResourceLocation,
       program_resource_location(program_name, program_interface, string_view)>
       get_program_resource_location{*this};
 
-    struct : func<OGLPAFP(GetProgramResourceName)> {
-        using func<OGLPAFP(GetProgramResourceName)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          program_interface intf,
-          uint_type index,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                enum_type(intf),
-                index,
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_resource_name;
+    adapted_function<
+      &gl_api::GetProgramResourceName,
+      program_resource_location(
+        program_name,
+        program_interface,
+        uint_type,
+        span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 5, 4>,
+        c_api::trivial_arg_map<1, 2, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
+        c_api::get_data_map<6, 4>>>
+      get_program_resource_name{*this};
 
     query_function<
       &gl_api::GetProgramInterfaceiv,
@@ -671,53 +627,41 @@ public:
       mp_list<program_property>>
       get_program_interface_i{*this};
 
-    struct : func<OGLPAFP(GetProgramResourceiv)> {
-        using func<OGLPAFP(GetProgramResourceiv)>::func;
+    adapted_function<
+      &gl_api::GetProgramResourceiv,
+      program_resource_location(
+        program_name,
+        program_interface,
+        uint_type,
+        c_api::enum_class_view<program_property>,
+        span<int_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 7, 5>,
+        c_api::make_arg_map<1, 1, name_type, program_name>,
+        c_api::trivial_arg_map<2, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
+        c_api::get_data_map<7, 4>,
+        c_api::convert<sizei_type, c_api::get_size_map<6, 6>>,
+        c_api::get_data_map<8, 5>>>
+      get_program_resource_i{*this};
 
-        auto operator()(
-          program_name prog,
-          program_interface intf,
-          uint_type index,
-          enum_class_view<program_property> props,
-          span<int_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_cnvchkcall(
-                prog,
-                intf,
-                index,
-                sizei_type(props.size()),
-                props.raw_enums().data(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_resource_i;
-
-    struct : func<OGLPAFP(GetProgramResourcefvNV)> {
-        using func<OGLPAFP(GetProgramResourcefvNV)>::func;
-
-        auto operator()(
-          program_name prog,
-          program_interface intf,
-          uint_type index,
-          enum_class_view<program_property> props,
-          span<float_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_cnvchkcall(
-                prog,
-                intf,
-                index,
-                sizei_type(props.size()),
-                props.raw_enums().data(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_resource_f;
+    adapted_function<
+      &gl_api::GetProgramResourcefvNV,
+      program_resource_location(
+        program_name,
+        program_interface,
+        uint_type,
+        c_api::enum_class_view<program_property>,
+        span<float_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 7, 5>,
+        c_api::make_arg_map<1, 1, name_type, program_name>,
+        c_api::trivial_arg_map<2, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
+        c_api::get_data_map<7, 4>,
+        c_api::convert<sizei_type, c_api::get_size_map<6, 6>>,
+        c_api::get_data_map<8, 5>>>
+      get_program_resource_f{*this};
 
     adapted_function<
       &gl_api::BindAttribLocation,
@@ -729,53 +673,48 @@ public:
       vertex_attrib_location(program_name, string_view)>
       get_attrib_location{*this};
 
-    struct : func<OGLPAFP(GetActiveAttrib)> {
-        using func<OGLPAFP(GetActiveAttrib)>::func;
+    using _get_active_attrib_name_t = adapted_function<
+      &gl_api::GetActiveAttrib,
+      program_resource_location(
+        program_name,
+        vertex_attrib_location,
+        int_type*,
+        enum_type*,
+        span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 4, 5>,
+        c_api::make_arg_map<1, 1, name_type, program_name>,
+        c_api::get_index_map<2, 2>,
+        c_api::convert<sizei_type, c_api::get_size_map<3, 5>>,
+        c_api::reorder_arg_map<5, 3>,
+        c_api::reorder_arg_map<6, 4>,
+        c_api::get_data_map<7, 5>>>;
+
+    struct : _get_active_attrib_name_t {
+        using base = _get_active_attrib_name_t;
+        using base::base;
 
         constexpr auto operator()(
           program_name prog,
           vertex_attrib_location loc,
+          int_type& size,
           span<char_type> dest) const noexcept {
-            int_type size{0};
-            enum_type type{0};
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                &size,
-                &type,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
+            enum_type type{};
+            return base::operator()(prog, loc, &size, &type, dest);
         }
-    } get_active_attrib_name;
+    } get_active_attrib_name{*this};
 
-    struct : func<OGLPAFP(TransformFeedbackVaryings)> {
-        using func<OGLPAFP(TransformFeedbackVaryings)>::func;
-
-        auto operator()(
-          program_name prog,
-          string_view name,
-          transform_feedback_mode mode) const noexcept {
-            const auto name_c_str{c_str(name)};
-            const char* varyings = name_c_str;
-            return this->_cnvchkcall(prog, 1, &varyings, mode);
-        }
-
-        auto operator()(
-          [[maybe_unused]] program_name prog,
-          [[maybe_unused]] string_view name) const noexcept {
-#ifdef GL_SEPARATE_ATTRIBS
-            const auto name_c_str{c_str(name)};
-            const char* varyings = name_c_str;
-            return this->_cnvchkcall(prog, 1, &varyings, GL_SEPARATE_ATTRIBS);
-#else
-            return this->_fake();
-#endif
-        }
-    } transform_feedback_varyings;
+    c_api::combined<
+      adapted_function<
+        &gl_api::TransformFeedbackVaryings,
+        void(program_name, const glsl_source_ref&, transform_feedback_mode)>,
+      adapted_function<
+        &gl_api::TransformFeedbackVaryings,
+        void(
+          program_name,
+          const glsl_source_ref&,
+          c_api::substituted<GL_SEPARATE_ATTRIBS>)>>
+      transform_feedback_varyings{*this};
 
     adapted_function<
       &gl_api::BindFragDataLocation,
@@ -807,99 +746,72 @@ public:
       uniform_block_index(program_name, string_view)>
       get_uniform_block_index{*this};
 
-    struct : func<OGLPAFP(GetActiveUniformName)> {
-        using func<OGLPAFP(GetActiveUniformName)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          uniform_location loc,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_active_uniform_name;
+    adapted_function<
+      &gl_api::GetActiveUniformName,
+      program_resource_location(program_name, uniform_location, span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 4, 3>,
+        c_api::trivial_arg_map<1>,
+        c_api::get_index_map<2, 2>,
+        c_api::convert<sizei_type, c_api::get_size_map<3, 3>>,
+        c_api::get_data_map<5, 3>>>
+      get_active_uniform_name{*this};
 
     adapted_function<
       &gl_api::GetSubroutineUniformLocation,
       subroutine_uniform_location(program_name, shader_type, string_view)>
       get_subroutine_uniform_location{*this};
 
-    struct : func<OGLPAFP(GetActiveSubroutineUniformName)> {
-        using func<OGLPAFP(GetActiveSubroutineUniformName)>::func;
-
-        constexpr auto operator()(
-          program_name prog,
-          shader_type shdr_type,
-          uniform_location loc,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(prog),
-                enum_type(shdr_type),
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_active_subroutine_uniform_name;
+    adapted_function<
+      &gl_api::GetActiveSubroutineUniformName,
+      program_resource_location(
+        program_name,
+        shader_type,
+        uniform_location,
+        span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 5, 4>,
+        c_api::trivial_arg_map<1, 2>,
+        c_api::get_index_map<3, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
+        c_api::get_data_map<6, 4>>>
+      get_active_subroutine_uniform_name{*this};
 
     adapted_function<
       &gl_api::GetSubroutineIndex,
       subroutine_location(program_name, shader_type, string_view)>
       get_subroutine_index{*this};
 
-    struct : func<OGLPAFP(GetActiveSubroutineName)> {
-        using func<OGLPAFP(GetActiveSubroutineName)>::func;
+    adapted_function<
+      &gl_api::GetActiveSubroutineName,
+      program_resource_location(
+        program_name,
+        shader_type,
+        subroutine_location,
+        span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 5, 4>,
+        c_api::trivial_arg_map<1, 2>,
+        c_api::get_index_map<3, 3>,
+        c_api::convert<sizei_type, c_api::get_size_map<4, 4>>,
+        c_api::get_data_map<6, 4>>>
+      get_active_subroutine_name{*this};
 
-        constexpr auto operator()(
-          program_name prog,
-          shader_type shdr_type,
-          subroutine_location loc,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_cnvchkcall(
-                prog,
-                shdr_type,
-                loc.index(),
-                sizei_type(dest.size()),
-                &real_len,
-                dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_active_subroutine_name;
+    using _uniform_subroutines_t = adapted_function<
+      &gl_api::UniformSubroutinesuiv,
+      void(shader_type, span<const uint_type>)>;
 
-    struct : func<OGLPAFP(UniformSubroutinesuiv)> {
-        using func<OGLPAFP(UniformSubroutinesuiv)>::func;
+    struct : _uniform_subroutines_t {
+        using base = _uniform_subroutines_t;
+        using base::base;
 
         constexpr auto operator()(
           shader_type shdr_type,
           subroutine_location subr) const noexcept {
             const uint_type idx{subr.index()};
-            return this->_cnvchkcall(shdr_type, 1, &idx);
+            return base::operator()(shdr_type, view_one(idx));
         }
-
-        template <std::size_t N>
-        constexpr auto operator()(
-          shader_type shdr_type,
-          const subroutine_bindings<N>& subrs) const noexcept {
-            std::array<uint_type, N> idcs{};
-            for(const auto& [su, s] : subrs._bindings) {
-                idcs[su.index()] = s.index();
-            }
-            return this->_cnvchkcall(
-              shdr_type, limit_cast<sizei_type>(idcs.size()), idcs.data());
-        }
-    } uniform_subroutines;
+    } uniform_subroutines{*this};
 
     // uniform
     // uint
@@ -1314,7 +1226,7 @@ public:
           buffer_target,
           sizeiptr_type,
           const_void_ptr_type,
-          enum_bitfield<buffer_storage_bit>)>,
+          c_api::enum_bitfield<buffer_storage_bit>)>,
       adapted_function<
         &gl_api::BufferStorage,
         void(buffer_target, sizeiptr_type, c_api::defaulted, c_api::defaulted)>>
@@ -1327,7 +1239,7 @@ public:
           buffer_name,
           sizeiptr_type,
           const_void_ptr_type,
-          enum_bitfield<buffer_storage_bit>)>,
+          c_api::enum_bitfield<buffer_storage_bit>)>,
       adapted_function<
         &gl_api::NamedBufferStorage,
         void(buffer_name, sizeiptr_type, c_api::defaulted, c_api::defaulted)>>
@@ -1531,12 +1443,12 @@ public:
 
     adapted_function<
       &gl_api::MapBuffer,
-      void_ptr_type(buffer_target, enum_bitfield<buffer_map_access_bit>)>
+      void_ptr_type(buffer_target, c_api::enum_bitfield<buffer_map_access_bit>)>
       map_buffer{*this};
 
     adapted_function<
       &gl_api::MapNamedBuffer,
-      void_ptr_type(buffer_name, enum_bitfield<buffer_map_access_bit>)>
+      void_ptr_type(buffer_name, c_api::enum_bitfield<buffer_map_access_bit>)>
       map_named_buffer{*this};
 
     adapted_function<
@@ -1545,7 +1457,7 @@ public:
         buffer_target,
         intptr_type,
         sizeiptr_type,
-        enum_bitfield<buffer_map_access_bit>)>
+        c_api::enum_bitfield<buffer_map_access_bit>)>
       map_buffer_range{*this};
 
     adapted_function<
@@ -1554,7 +1466,7 @@ public:
         buffer_name,
         intptr_type,
         sizeiptr_type,
-        enum_bitfield<buffer_map_access_bit>)>
+        c_api::enum_bitfield<buffer_map_access_bit>)>
       map_named_buffer_range{*this};
 
     adapted_function<
@@ -1913,8 +1825,8 @@ public:
         bool_type)>
       texture_storage2d_multisample{*this};
 
-    func<
-      OGLPAFP(TexImage3D),
+    adapted_function<
+      &gl_api::TexImage3D,
       void(
         texture_target,
         int_type,
@@ -1926,10 +1838,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_image3d;
+      tex_image3d{*this};
 
-    func<
-      OGLPAFP(TexImage2D),
+    adapted_function<
+      &gl_api::TexImage2D,
       void(
         texture_target,
         int_type,
@@ -1940,10 +1852,10 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_image2d;
+      tex_image2d{*this};
 
-    func<
-      OGLPAFP(TexImage1D),
+    adapted_function<
+      &gl_api::TexImage1D,
       void(
         texture_target,
         int_type,
@@ -1953,7 +1865,7 @@ public:
         pixel_format,
         pixel_data_type,
         memory::const_block)>
-      tex_image1d;
+      tex_image1d{*this};
 
     adapted_function<
       &gl_api::TexSubImage3D,
@@ -2266,38 +2178,33 @@ public:
       void(texture_name, texture_parameter, float_type)>
       texture_parameter_f{*this};
 
-    struct : func<OGLPAFP(TexParameteri)> {
-        using func<OGLPAFP(TexParameteri)>::func;
+    using _tex_parameter_i_t = adapted_function<
+      &gl_api::TexParameteri,
+      void(texture_target, enum_parameter_value<texture_parameter, int_type>)>;
 
-        template <typename TexParam, typename Value>
-        constexpr auto operator()(
-          texture_target tgt,
-          TexParam param,
-          Value value) const noexcept
-          requires(is_enum_parameter_value_v<
-                   texture_parameter,
-                   TexParam,
-                   int_type,
-                   Value>) {
-            return this->_chkcall(
-              enum_type(tgt), enum_type(param), enum_type(value));
+    struct : _tex_parameter_i_t {
+        using base = _tex_parameter_i_t;
+        using base::base;
+        template <typename Param, typename Value>
+        constexpr auto operator()(texture_target tgt, Param param, Value value)
+          const noexcept {
+            return base::operator()(tgt, {param, value});
         }
-    } tex_parameter_i;
+    } tex_parameter_i{*this};
 
-    struct : func<OGLPAFP(TextureParameteri)> {
-        using func<OGLPAFP(TextureParameteri)>::func;
+    using _texture_parameter_i_t = adapted_function<
+      &gl_api::TextureParameteri,
+      void(texture_name, enum_parameter_value<texture_parameter, int_type>)>;
 
-        template <typename TexParam, typename Value>
-        constexpr auto operator()(texture_name tex, TexParam param, Value value)
-          const noexcept requires(is_enum_parameter_value_v<
-                                  texture_parameter,
-                                  TexParam,
-                                  int_type,
-                                  Value>) {
-            return this->_chkcall(
-              name_type(tex), enum_type(param), enum_type(value));
+    struct : _texture_parameter_i_t {
+        using base = _texture_parameter_i_t;
+        using base::base;
+        template <typename Param, typename Value>
+        constexpr auto operator()(texture_target tgt, Param param, Value value)
+          const noexcept {
+            return base::operator()(tgt, {param, value});
         }
-    } texture_parameter_i;
+    } texture_parameter_i{*this};
 
     adapted_function<
       &gl_api::TexParameterfv,
@@ -2678,7 +2585,7 @@ public:
         int_type,
         int_type,
         int_type,
-        enum_bitfield<buffer_blit_bit>,
+        c_api::enum_bitfield<buffer_blit_bit>,
         blit_filter)>
       blit_framebuffer{*this};
 
@@ -2695,7 +2602,7 @@ public:
         int_type,
         int_type,
         int_type,
-        enum_bitfield<buffer_blit_bit>,
+        c_api::enum_bitfield<buffer_blit_bit>,
         blit_filter)>
       blit_named_framebuffer{*this};
 
@@ -2716,7 +2623,8 @@ public:
     adapted_function<&gl_api::ResumeTransformFeedback> resume_transform_feedback{
       *this};
 
-    func<OGLPAFP(EndTransformFeedback)> end_transform_feedback;
+    adapted_function<&gl_api::EndTransformFeedback> end_transform_feedback{
+      *this};
 
     adapted_function<
       &gl_api::TransformFeedbackBufferBase,
@@ -2856,7 +2764,10 @@ public:
 
     adapted_function<
       &gl_api::UseProgramStages,
-      void(program_pipeline_name, enum_bitfield<program_stage_bit>, program_name)>
+      void(
+        program_pipeline_name,
+        c_api::enum_bitfield<program_stage_bit>,
+        program_name)>
       use_program_stages{*this};
 
     query_function<
@@ -2873,181 +2784,131 @@ public:
       mp_list<program_pipeline_parameter>>
       get_program_pipeline_i{*this};
 
-    struct : func<OGLPAFP(GetProgramPipelineInfoLog)> {
-        using func<OGLPAFP(GetProgramPipelineInfoLog)>::func;
+    adapted_function<
+      &gl_api::GetProgramPipelineInfoLog,
+      void(program_pipeline_name, span<char_type>),
+      c_api::combined_map<
+        c_api::head_transform_map<sizei_type, 3, 2>,
+        c_api::convert<name_type, c_api::trivial_arg_map<1>>,
+        c_api::convert<sizei_type, c_api::get_size_map<2, 2>>,
+        c_api::get_data_map<4, 2>>>
+      get_program_pipeline_info_log{*this};
 
-        constexpr auto operator()(
-          program_pipeline_name pipe,
-          span<char_type> dest) const noexcept {
-            sizei_type real_len{0};
-            return this
-              ->_chkcall(
-                name_type(pipe), sizei_type(dest.size()), &real_len, dest.data())
-              .replaced_with(head(dest, span_size(real_len)));
-        }
-    } get_program_pipeline_info_log;
-
-    func<OGLPAFP(ActiveShaderProgram), void(program_pipeline_name, program_name)>
-      active_shader_program;
+    adapted_function<
+      &gl_api::ActiveShaderProgram,
+      void(program_pipeline_name, program_name)>
+      active_shader_program{*this};
 
     // path NV ops
-    struct : func<OGLPAFP(PathColorGenNV)> {
-        using func<OGLPAFP(PathColorGenNV)>::func;
+    adapted_function<
+      &gl_api::PathColorGenNV,
+      void(
+        path_color_nv,
+        path_gen_mode_nv,
+        path_color_format_nv,
+        span<const float_type>)>
+      path_color_gen_nv{*this};
 
-        constexpr auto operator()(
-          path_color_nv clr,
-          path_gen_mode_nv mode,
-          path_color_format_nv fmt,
-          span<const float_type> coords) const noexcept {
-            return this->_cnvchkcall(clr, mode, fmt, coords.data());
-        }
-    } path_color_gen_nv;
+    adapted_function<
+      &gl_api::PathGlyphRangeNV,
+      void(
+        path_nv_name,
+        path_font_target_nv,
+        string_view,
+        path_font_style_nv,
+        uint_type,
+        sizei_type,
+        path_missing_glyph_nv,
+        uint_type,
+        float_type),
+      c_api::combined_map<
+        c_api::make_arg_map<1, 1, name_type, path_nv_name>,
+        c_api::make_arg_map<2, 2, enum_type, path_font_target_nv>,
+        c_api::make_arg_map<3, 3, const char*, string_view>,
+        c_api::make_arg_map<4, 4, bitfield_type, path_font_style_nv>,
+        c_api::make_arg_map<7, 7, enum_type, path_missing_glyph_nv>,
+        c_api::trivial_arg_map<0, 5, 6, 8, 9>>>
+      path_glyph_range_nv{*this};
 
-    struct : func<OGLPAFP(PathGlyphRangeNV)> {
-        using func<OGLPAFP(PathGlyphRangeNV)>::func;
+    adapted_function<
+      &gl_api::GetPathSpacingNV,
+      void(
+        path_list_mode_nv,
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        float_type,
+        float_type,
+        path_transform_type_nv,
+        span<float_type>)>
+      get_path_spacing_nv{*this};
 
-        constexpr auto operator()(
-          path_nv_name pth,
-          path_font_target_nv tgt,
-          string_view font_name,
-          path_font_style_nv style,
-          uint_type first,
-          sizei_type count,
-          path_missing_glyph_nv missing,
-          uint_type param_tpl,
-          float_type em_scale) const noexcept {
-            return this->_cnvchkcall(
-              pth,
-              tgt,
-              static_cast<const char*>(c_str(font_name)),
-              style,
-              first,
-              count,
-              missing,
-              param_tpl,
-              em_scale);
-        }
-    } path_glyph_range_nv;
-
-    struct : func<OGLPAFP(GetPathSpacingNV)> {
-        using func<OGLPAFP(GetPathSpacingNV)>::func;
-
-        constexpr auto operator()(
-          [[maybe_unused]] path_list_mode_nv mode,
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] float_type advance_scale,
-          [[maybe_unused]] float_type kerning_scale,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              mode,
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              advance_scale,
-              kerning_scale,
-              transf,
-              dst.data());
-        }
-    } get_path_spacing_nv;
-
-    func<
-      OGLPAFP(StencilFillPathNV),
+    adapted_function<
+      &gl_api::StencilFillPathNV,
       void(path_nv_name, path_fill_mode_nv, uint_type)>
-      stencil_fill_path_nv;
+      stencil_fill_path_nv{*this};
 
-    func<OGLPAFP(StencilStrokePathNV), void(path_nv_name, int_type, uint_type)>
-      stencil_stroke_path_nv;
+    adapted_function<
+      &gl_api::StencilStrokePathNV,
+      void(path_nv_name, int_type, uint_type)>
+      stencil_stroke_path_nv{*this};
 
-    struct : func<OGLPAFP(StencilFillPathInstancedNV)> {
-        using func<OGLPAFP(StencilFillPathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] path_fill_mode_nv mode,
-          [[maybe_unused]] uint_type mask,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              mode,
-              mask,
-              transf,
-              dst.data());
-        }
-    } stencil_fill_path_instanced_nv;
+    adapted_function<
+      &gl_api::StencilFillPathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_fill_mode_nv,
+        uint_type,
+        path_transform_type_nv,
+        span<const float_type>)>
+      stencil_fill_path_instanced_nv{*this};
 
-    struct : func<OGLPAFP(StencilStrokePathInstancedNV)> {
-        using func<OGLPAFP(StencilStrokePathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] int_type reference,
-          [[maybe_unused]] uint_type mask,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              reference,
-              mask,
-              transf,
-              dst.data());
-        }
-    } stencil_stroke_path_instanced_nv;
+    adapted_function<
+      &gl_api::StencilStrokePathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_fill_mode_nv,
+        int_type,
+        uint_type,
+        path_transform_type_nv,
+        span<const float_type>)>
+      stencil_stroke_path_instanced_nv{*this};
 
-    func<OGLPAFP(CoverFillPathNV), void(path_nv_name, path_fill_cover_mode_nv)>
-      cover_fill_path_nv;
+    adapted_function<
+      &gl_api::CoverFillPathNV,
+      void(path_nv_name, path_fill_cover_mode_nv)>
+      cover_fill_path_nv{*this};
 
-    func<
-      OGLPAFP(CoverStrokePathNV),
+    adapted_function<
+      &gl_api::CoverStrokePathNV,
       void(path_nv_name, path_stroke_cover_mode_nv)>
-      cover_stroke_path_nv;
+      cover_stroke_path_nv{*this};
 
-    struct : func<OGLPAFP(CoverFillPathInstancedNV)> {
-        using func<OGLPAFP(CoverFillPathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] path_fill_cover_mode_nv mode,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              mode,
-              transf,
-              dst.data());
-        }
-    } cover_fill_path_instanced_nv;
+    adapted_function<
+      &gl_api::CoverFillPathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_fill_cover_mode_nv,
+        path_transform_type_nv,
+        span<const float_type>)>
+      cover_fill_path_instanced_nv{*this};
 
-    struct : func<OGLPAFP(CoverStrokePathInstancedNV)> {
-        using func<OGLPAFP(CoverStrokePathInstancedNV)>::func;
-        constexpr auto operator()(
-          [[maybe_unused]] string_view glyphs,
-          [[maybe_unused]] path_nv_name pth,
-          [[maybe_unused]] path_stroke_cover_mode_nv mode,
-          [[maybe_unused]] path_transform_type_nv transf,
-          [[maybe_unused]] span<const float_type> dst) const noexcept {
-            return this->_cnvchkcall(
-              sizei_type(glyphs.size()),
-              GL_UTF8_NV,
-              static_cast<const char*>(c_str(glyphs)),
-              pth,
-              mode,
-              transf,
-              dst.data());
-        }
-    } cover_stroke_path_instanced_nv;
+    adapted_function<
+      &gl_api::CoverStrokePathInstancedNV,
+      void(
+        string_view,
+        c_api::substituted<GL_UTF8_NV>,
+        path_nv_name,
+        path_stroke_cover_mode_nv,
+        path_transform_type_nv,
+        span<const float_type>)>
+      cover_stroke_path_instanced_nv{*this};
 
     // draw parameters
     adapted_function<&gl_api::PrimitiveRestartIndex> primitive_restart_index{
@@ -3532,8 +3393,6 @@ public:
 
     basic_gl_operations(api_traits& traits);
 };
-//------------------------------------------------------------------------------
-#undef OGLPAFP
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

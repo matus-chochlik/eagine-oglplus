@@ -98,8 +98,8 @@ public:
       const span_size_t type_size) noexcept
       : _type{pix_type}
       , _pixels{pix_data}
-      , _elem_size{type_size} {
-        EAGINE_ASSERT(_elem_size > 0);
+      , _element_bytes{type_size} {
+        EAGINE_ASSERT(_element_bytes > 0);
     }
 
     auto type() const noexcept -> pixel_data_type {
@@ -110,14 +110,18 @@ public:
         return _pixels;
     }
 
-    auto elem_size() const noexcept -> span_size_t {
-        return _elem_size;
+    auto element_bits() const noexcept -> span_size_t {
+        return _element_bytes * 8;
+    }
+
+    auto element_bytes() const noexcept -> span_size_t {
+        return _element_bytes;
     }
 
 private:
     pixel_data_type _type;
     memory::const_block _pixels;
-    span_size_t _elem_size;
+    span_size_t _element_bytes;
 };
 
 class image_spec
@@ -132,6 +136,16 @@ public:
       : image_dimensions(dims)
       , image_pixel_format(fmt)
       , image_pixel_data(pix_data) {}
+
+    auto pixel_bytes() const noexcept -> span_size_t {
+        return channels() * element_bytes();
+    }
+
+    auto data_slice2d(gl_types::sizei_type i) const noexcept
+      -> memory::const_block {
+        const span_size_t size{width() * height() * pixel_bytes()};
+        return head(skip(data(), size * i), size);
+    }
 };
 
 } // namespace eagine::oglplus

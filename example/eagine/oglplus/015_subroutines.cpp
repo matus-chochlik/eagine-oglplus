@@ -261,8 +261,7 @@ static void run_loop(
                   prog,
                   center_loc,
                   vec3(2.5F * cos(angle), 0.F, 2.5F * sin(angle)));
-                gl.uniform_subroutines(
-                  GL.fragment_shader, pattern_loc / subroutines[s]);
+                gl.uniform_subroutines(GL.fragment_shader, subroutines[s]);
 
                 draw_using_instructions(glapi, view(_ops));
             }
