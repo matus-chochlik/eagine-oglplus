@@ -52,6 +52,16 @@ public:
         return {attrib, index};
     }
 
+    auto supported_attrib_count() const -> span_size_t {
+        return _gen->supported_attrib_count();
+    }
+
+    void for_each_attrib(callable_ref<void(
+                           shapes::vertex_attrib_kinds,
+                           shapes::vertex_attrib_name_and_kind)> func) {
+        _gen->for_each_attrib(func);
+    }
+
     auto draw_variant_count() const -> span_size_t {
         return _gen->draw_variant_count();
     }
