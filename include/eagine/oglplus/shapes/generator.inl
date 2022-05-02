@@ -171,10 +171,10 @@ inline void shape_generator::instructions(
   span<shape_draw_operation> ops) const {
     EAGINE_ASSERT(ops.size() >= operation_count(dv));
 
-    std::vector<shapes::draw_operation> tmp(std_size(operation_count(dv)));
+    std::vector<shapes::draw_operation> tmp(integer(operation_count(dv)));
     _gen->instructions(dv, cover(tmp));
 
-    for(decltype(tmp.size()) i = 0; i < tmp.size(); ++i) {
+    for(const auto i : integer_range(tmp.size())) {
         ops[span_size(i)] = shape_draw_operation(api, tmp[i]);
     }
 }
@@ -196,7 +196,7 @@ inline void shape_generator::instructions(
         const auto count = operation_count(dv);
 
         EAGINE_ASSERT(ops.size() >= total_count + count);
-        tmp.resize(std_size(count));
+        tmp.resize(integer(count));
 
         _gen->instructions(dv, cover(tmp));
 

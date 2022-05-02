@@ -7,57 +7,66 @@
 ///
 #include <GL/glew.h>
 
+#include <eagine/console/console.hpp>
+#include <eagine/main.hpp>
+#include <eagine/main_ctx_object.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 #include <eagine/scope_exit.hpp>
+#include <stdexcept>
 
 #include <GLFW/glfw3.h>
 
-#include <iostream>
-#include <stdexcept>
+namespace eagine {
 
-static void run() {
-    using namespace eagine;
+static void run(main_ctx& ctx) {
     using namespace eagine::oglplus;
 
     const gl_api gl;
+    const main_ctx_object out{EAGINE_ID(OGLplus), ctx};
 
     if(const ok info{gl.get_string(gl.vendor)}) {
-        std::cout << "Vendor: " << extract(info) << std::endl;
+        out.cio_print("Vendor: ${info}").arg(EAGINE_ID(info), extract(info));
     }
 
     if(const ok info{gl.get_string(gl.renderer)}) {
-        std::cout << "Renderer: " << extract(info) << std::endl;
+        out.cio_print("Renderer: ${info}").arg(EAGINE_ID(info), extract(info));
     }
 
     if(const ok info{gl.get_string(gl.version)}) {
-        std::cout << "Version: " << extract(info) << std::endl;
+        out.cio_print("Version: ${info}").arg(EAGINE_ID(info), extract(info));
     }
 
     if(const ok info{gl.get_integer(gl.major_version)}) {
-        std::cout << "Major version: " << extract(info) << std::endl;
+        out.cio_print("Major version: ${info}")
+          .arg(EAGINE_ID(info), extract(info));
     }
 
     if(const ok info{gl.get_integer(gl.minor_version)}) {
-        std::cout << "Minor version: " << extract(info) << std::endl;
+        out.cio_print("Minor version: ${info}")
+          .arg(EAGINE_ID(info), extract(info));
     }
 
     if(const ok info{gl.get_string(gl.shading_language_version)}) {
-        std::cout << "GLSL Version: " << extract(info) << std::endl;
+        out.cio_print("GLSL version: ${info}")
+          .arg(EAGINE_ID(info), extract(info));
     }
 
-    std::cout << "Extensions:" << std::endl;
+    const auto ext_cio{out.cio_print("Extensions:").to_be_continued()};
 
     if(const ok extensions{gl.get_extensions()}) {
         for(auto name : extensions) {
-            std::cout << "  " << name << std::endl;
+            ext_cio.print(name);
         }
     } else {
-        std::cerr << "failed to get GL extension list: "
-                  << (!extensions).message() << std::endl;
+        ext_cio
+          .print(
+            console_entry_kind::error,
+            "failed to get extension list: ${message}")
+          .arg(EAGINE_ID(message), (!extensions).message());
     }
 }
 
-static void init_and_run() {
+static void init_and_run(main_ctx& ctx) {
     if(!glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     } else {
@@ -80,20 +89,26 @@ static void init_and_run() {
             if(init_result != GLEW_OK) {
                 throw std::runtime_error("OpenGL/GLEW initialization error.");
             } else {
-                run();
+                run(ctx);
             }
         }
     }
 }
 
-auto main() -> int {
+auto main(main_ctx& ctx) -> int {
     try {
-        init_and_run();
+        init_and_run(ctx);
         return 0;
     } catch(const std::runtime_error& sre) {
-        std::cerr << "Runtime error: " << sre.what() << std::endl;
+        ctx.cio()
+          .error(EAGINE_ID(OGLplus), "Runtime error: ${message}")
+          .arg(EAGINE_ID(message), sre.what());
     } catch(const std::exception& se) {
-        std::cerr << "Unknown error: " << se.what() << std::endl;
+        ctx.cio()
+          .error(EAGINE_ID(OGLplus), "Unknown error: ${message}")
+          .arg(EAGINE_ID(message), se.what());
     }
     return 1;
 }
+
+} // namespace eagine
