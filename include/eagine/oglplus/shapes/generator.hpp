@@ -13,7 +13,7 @@
 #include "../math/primitives.hpp"
 #include "drawing.hpp"
 #include <eagine/memory/buffer.hpp>
-#include <eagine/shapes/gen_base.hpp>
+#include <eagine/shapes/generator.hpp>
 #include <eagine/shapes/vertex_attrib.hpp>
 #include <eagine/span.hpp>
 #include <memory>
@@ -35,6 +35,10 @@ public:
     template <typename A, typename Gen>
     shape_generator(const basic_gl_api<A>& api, std::shared_ptr<Gen> gen)
       : shape_generator(api, std::shared_ptr<generator>(std::move(gen))) {}
+
+    auto indexed_drawing(const shapes::drawing_variant var) const -> bool {
+        return _gen->indexed_drawing(var);
+    }
 
     auto find_variant(
       const shapes::vertex_attrib_kind attrib,
@@ -58,7 +62,7 @@ public:
 
     void for_each_attrib(callable_ref<void(
                            shapes::vertex_attrib_kinds,
-                           shapes::vertex_attrib_name_and_kind)> func) {
+                           shapes::vertex_attrib_name_and_kind)> func) const {
         _gen->for_each_attrib(func);
     }
 

@@ -36,8 +36,10 @@ set(HEADERS
     eagine/oglplus/math/primitives.hpp
     eagine/oglplus/math/sign.hpp
     eagine/oglplus/math/vector.hpp
+    eagine/oglplus/shapes/bindings.hpp
     eagine/oglplus/shapes/drawing.hpp
     eagine/oglplus/shapes/generator.hpp
+    eagine/oglplus/shapes/geometry.hpp
     eagine/oglplus/utils/image_file_hdr.hpp
     eagine/oglplus/utils/image_file.hpp
     eagine/oglplus/utils/image_file_io.hpp
