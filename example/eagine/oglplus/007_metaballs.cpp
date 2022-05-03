@@ -127,6 +127,11 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
+        gl.bind_attrib_location(
+          prog,
+          bindings.location(shapes::vertex_attrib_kind::position),
+          "Position");
+
         std::vector<math::cubic_bezier_loop<oglplus::vec4, float>> loops;
         std::vector<oglplus::vec4> cp_data;
         std::default_random_engine rnd_eng{std::random_device{}()};
