@@ -17,10 +17,11 @@
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/matrix.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/oglplus/shapes/geometry.hpp>
 #include <eagine/shapes/cube.hpp>
 #include <eagine/shapes/sphere.hpp>
 #include <eagine/shapes/torus.hpp>
+#include <eagine/shapes/twisted_torus.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -85,7 +86,30 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        memory::buffer buf;
+        // geometry
+        memory::buffer temp;
+        vertex_attrib_bindings bindings{
+          shapes::vertex_attrib_kind::position,
+          shapes::vertex_attrib_kind::normal};
+
+        auto [shape, inv_cull] = [&]() -> std::tuple<shape_generator, bool> {
+            const auto attribs = bindings.attrib_kinds();
+            if(ctx.args().find("--twisted-torus")) {
+                return {
+                  {glapi, shapes::unit_twisted_torus(attribs, 6, 48, 4, 0.5F)},
+                  false};
+            }
+            if(ctx.args().find("--torus")) {
+                return {{glapi, shapes::unit_torus(attribs)}, false};
+            }
+            if(ctx.args().find("--sphere")) {
+                return {{glapi, shapes::unit_sphere(attribs)}, false};
+            }
+            return {{glapi, shapes::unit_cube(attribs)}, true};
+        }();
+
+        geometry geom{glapi, shape, bindings, 0, temp};
+        geom.use(glapi);
 
         // vertex shader
         owned_shader_name vs;
@@ -111,67 +135,6 @@ static void run_loop(
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
         gl.use_program(prog);
-
-        // geometry
-        auto [shape, inv_cull] =
-          [&ctx, &glapi]() -> std::tuple<shape_generator, bool> {
-            const auto attribs = shapes::vertex_attrib_kind::position |
-                                 shapes::vertex_attrib_kind::normal |
-                                 shapes::vertex_attrib_kind::face_coord;
-            if(ctx.args().find("--torus")) {
-                return {{glapi, shapes::unit_torus(attribs)}, false};
-            }
-            if(ctx.args().find("--sphere")) {
-                return {{glapi, shapes::unit_sphere(attribs)}, false};
-            }
-            return {{glapi, shapes::unit_cube(attribs)}, true};
-        }();
-
-        std::vector<shape_draw_operation> _ops;
-        _ops.resize(std_size(shape.operation_count()));
-        shape.instructions(glapi, cover(_ops));
-
-        // vao
-        owned_vertex_array_name vao;
-        gl.gen_vertex_arrays() >> vao;
-        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
-        gl.bind_vertex_array(vao);
-
-        // positions
-        vertex_attrib_location position_loc{0};
-        gl.get_attrib_location(prog, "Position") >> position_loc;
-        owned_buffer_name positions;
-        gl.gen_buffers() >> positions;
-        const auto cleanup_positions = gl.delete_buffers.raii(positions);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          positions,
-          position_loc,
-          shapes::vertex_attrib_kind::position,
-          "positions",
-          buf);
-
-        // normals
-        vertex_attrib_location normal_loc{1};
-        gl.get_attrib_location(prog, "Normal") >> normal_loc;
-        owned_buffer_name normals;
-        gl.gen_buffers() >> normals;
-        const auto cleanup_normals = gl.delete_buffers.raii(normals);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          normals,
-          normal_loc,
-          shapes::vertex_attrib_kind::normal,
-          "normals",
-          buf);
-
-        // indices
-        owned_buffer_name indices;
-        gl.gen_buffers() >> indices;
-        const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, "indices", buf);
 
         // color texture
         const auto color_tex_src{embed(EAGINE_ID(ColorTex), "oglplus")};
@@ -223,7 +186,7 @@ static void run_loop(
         orbiting_camera projector;
         projector.set_near(0.1F)
           .set_far(50.F)
-          .set_fov(degrees_(65))
+          .set_fov(degrees_(90))
           .set_orbit_min(2.0F)
           .set_orbit_max(9.0F);
 
@@ -279,7 +242,7 @@ static void run_loop(
             glapi.set_uniform(
               prog, model_loc, matrix_rotation_x(right_angles_(t))());
 
-            draw_using_instructions(glapi, view(_ops));
+            geom.draw(glapi);
 
             glfwSwapBuffers(window);
         }
