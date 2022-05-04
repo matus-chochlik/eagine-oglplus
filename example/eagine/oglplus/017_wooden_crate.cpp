@@ -16,7 +16,7 @@
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/oglplus/shapes/geometry.hpp>
 #include <eagine/shapes/cube.hpp>
 
 #include <GLFW/glfw3.h>
@@ -84,7 +84,18 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        memory::buffer buf;
+        // geometry
+        memory::buffer temp;
+        shape_generator shape(
+          glapi,
+          shapes::unit_cube(
+            shapes::vertex_attrib_kind::position |
+            shapes::vertex_attrib_kind::normal |
+            shapes::vertex_attrib_kind::tangential |
+            shapes::vertex_attrib_kind::face_coord));
+        vertex_attrib_bindings bindings{shape};
+        geometry cube{glapi, shape, bindings, temp};
+        cube.use(glapi);
 
         // vertex shader
         owned_shader_name vs;
@@ -109,85 +120,22 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        // geometry
-        shape_generator shape(
-          glapi,
-          shapes::unit_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal |
-            shapes::vertex_attrib_kind::face_coord));
-
-        std::vector<shape_draw_operation> _ops;
-        _ops.resize(std_size(shape.operation_count()));
-        shape.instructions(glapi, cover(_ops));
-
-        // vao
-        owned_vertex_array_name vao;
-        gl.gen_vertex_arrays() >> vao;
-        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
-        gl.bind_vertex_array(vao);
-
-        // positions
-        vertex_attrib_location position_loc{0};
-        gl.get_attrib_location(prog, "Position") >> position_loc;
-        owned_buffer_name positions;
-        gl.gen_buffers() >> positions;
-        const auto cleanup_positions = gl.delete_buffers.raii(positions);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          positions,
-          position_loc,
-          shapes::vertex_attrib_kind::position,
-          buf);
-
-        // normals
-        vertex_attrib_location normal_loc{1};
-        gl.get_attrib_location(prog, "Normal") >> normal_loc;
-        owned_buffer_name normals;
-        gl.gen_buffers() >> normals;
-        const auto cleanup_normals = gl.delete_buffers.raii(normals);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          normals,
-          normal_loc,
-          shapes::vertex_attrib_kind::normal,
-          buf);
-
-        // tangentials
-        vertex_attrib_location tangential_loc{2};
-        gl.get_attrib_location(prog, "Tangent") >> tangential_loc;
-        owned_buffer_name tangentials;
-        gl.gen_buffers() >> tangentials;
-        const auto cleanup_tangentials = gl.delete_buffers.raii(tangentials);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          tangentials,
-          tangential_loc,
-          shapes::vertex_attrib_kind::tangential,
-          buf);
-
-        // tex coords
-        vertex_attrib_location tex_coord_loc{3};
-        gl.get_attrib_location(prog, "TexCoord") >> tex_coord_loc;
-        owned_buffer_name tex_coords;
-        gl.gen_buffers() >> tex_coords;
-        const auto cleanup_tex_coords = gl.delete_buffers.raii(tex_coords);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          tex_coords,
-          tex_coord_loc,
-          shapes::vertex_attrib_kind::face_coord,
-          buf);
-
-        // indices
-        owned_buffer_name indices;
-        gl.gen_buffers() >> indices;
-        const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, buf);
+        gl.bind_attrib_location(
+          prog,
+          bindings.location(shapes::vertex_attrib_kind::position),
+          "Position");
+        gl.bind_attrib_location(
+          prog,
+          bindings.location(shapes::vertex_attrib_kind::normal),
+          "Normal");
+        gl.bind_attrib_location(
+          prog,
+          bindings.location(shapes::vertex_attrib_kind::tangential),
+          "Tangent");
+        gl.bind_attrib_location(
+          prog,
+          bindings.location(shapes::vertex_attrib_kind::face_coord),
+          "TexCoord");
 
         // color texture
         const auto color_tex_src{
@@ -317,7 +265,8 @@ static void run_loop(
                 sin(degrees_(3.0F * t * 2.718F)),
                 cos(degrees_(3.0F * t * 2.718F)),
                 sin(degrees_(3.0F * t * 1.618F))));
-            draw_using_instructions(glapi, view(_ops));
+
+            cube.draw(glapi);
 
             glfwSwapBuffers(window);
         }
