@@ -29,6 +29,8 @@ struct vertex_attrib_binding_intf : interface<vertex_attrib_binding_intf> {
 
 class default_vertex_attrib_bindings : public vertex_attrib_binding_intf {
 public:
+    default_vertex_attrib_bindings() noexcept = default;
+
     default_vertex_attrib_bindings(const shape_generator& shape) {
         shape.for_each_attrib(
           {construct_from, [this](const auto attribs, const auto info) {
@@ -36,6 +38,15 @@ public:
                    _bindings.emplace_back(info.enumerator, 0);
                }
            }});
+    }
+
+    default_vertex_attrib_bindings(
+      std::initializer_list<shapes::vertex_attrib_variant> vavs)
+      : _bindings{vavs.begin(), vavs.end()} {}
+
+    auto add(shapes::vertex_attrib_variant vav) -> auto& {
+        _bindings.push_back(vav);
+        return *this;
     }
 
     auto attrib_count() -> span_size_t final {
@@ -64,16 +75,24 @@ private:
 
 class vertex_attrib_bindings {
 public:
+    static auto make_default(const shape_generator& shape)
+      -> vertex_attrib_bindings {
+        return {std::make_shared<default_vertex_attrib_bindings>(shape)};
+    }
+
+    static auto make(std::initializer_list<shapes::vertex_attrib_variant> vavs)
+      -> vertex_attrib_bindings {
+        return {std::make_shared<default_vertex_attrib_bindings>(vavs)};
+    }
+
     vertex_attrib_bindings(
       std::shared_ptr<vertex_attrib_binding_intf> pimpl) noexcept
       : _pimpl{std::move(pimpl)} {
         EAGINE_ASSERT(_pimpl);
     }
 
-    static auto make_default(const shape_generator& shape)
-      -> vertex_attrib_bindings {
-        return {std::make_shared<default_vertex_attrib_bindings>(shape)};
-    }
+    vertex_attrib_bindings(const shape_generator& shape)
+      : vertex_attrib_bindings{make_default(shape)} {}
 
     auto attrib_count() const -> span_size_t {
         return _pimpl->attrib_count();

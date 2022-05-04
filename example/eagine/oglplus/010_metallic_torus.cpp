@@ -91,7 +91,7 @@ static void run_loop(
             64,
             8,
             0.6F));
-        auto bindings{vertex_attrib_bindings::make_default(shape)};
+        vertex_attrib_bindings bindings{shape};
 
         geometry torus{glapi, shape, bindings, 0, temp};
         torus.use(glapi);

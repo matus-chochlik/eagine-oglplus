@@ -96,7 +96,7 @@ static void run_loop(
         // geometry
         shape_generator shape(
           glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
-        auto bindings{vertex_attrib_bindings::make_default(shape)};
+        vertex_attrib_bindings bindings{shape};
 
         geometry screen{glapi, shape, bindings, 0, temp};
         screen.use(glapi);

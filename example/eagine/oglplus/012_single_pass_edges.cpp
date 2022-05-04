@@ -145,7 +145,7 @@ static void run_loop(
         shape_generator shape(
           glapi,
           shapes::unit_icosahedron(shapes::vertex_attrib_kind::position));
-        auto bindings{vertex_attrib_bindings::make_default(shape)};
+        vertex_attrib_bindings bindings{shape};
 
         geometry icosahedron{glapi, shape, bindings, 0, temp};
         icosahedron.use(glapi);
