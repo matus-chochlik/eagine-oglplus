@@ -13,8 +13,13 @@
 
 namespace eagine::oglplus {
 
+/// @brief Class wrapping a vertex attribute array and buffers storing shape geometry.
+/// @see generator
+/// @see vertex_attrib_bindings
+/// @ingroup shapes
 class geometry {
 public:
+    /// @brief Construction using shape generator, attrib bindings and drawing variant.
     geometry(
       const gl_api& glapi,
       const shape_generator& shape,
@@ -54,15 +59,28 @@ public:
         }
     }
 
+    /// @brief Construction using shape generator and attrib bindings.
+    geometry(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      const vertex_attrib_bindings& bindings,
+      memory::buffer& temp)
+      : geometry{glapi, shape, bindings, 0, temp} {}
+
+    /// @brief Releases the used OpenGL resources.
     void clean_up(const gl_api& gl) {
         gl.delete_buffers(_buffers.raw_handles());
         gl.delete_vertex_arrays(std::move(_vao));
     }
 
+    /// @brief Prepares and binds the resources to be used (for example by draw).
+    /// @see draw
     auto use(const gl_api& gl) const {
         return gl.bind_vertex_array(_vao);
     }
 
+    /// @brief Emits geometry draw commands using the specified GL API.
+    /// @see use
     auto draw(const gl_api& glapi) const {
         draw_using_instructions(glapi, view(_ops));
     }
