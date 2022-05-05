@@ -234,6 +234,7 @@ static void run_loop(
 
             glfwSwapBuffers(window);
         }
+        torus.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }

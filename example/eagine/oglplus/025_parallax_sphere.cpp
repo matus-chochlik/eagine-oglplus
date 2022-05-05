@@ -300,6 +300,7 @@ static void run_loop(
 
             glfwSwapBuffers(window);
         }
+        sphere.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }

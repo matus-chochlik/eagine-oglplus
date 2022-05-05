@@ -19,6 +19,9 @@ namespace eagine::oglplus {
 /// @ingroup shapes
 class geometry {
 public:
+    /// @brief Default constructor.
+    geometry() noexcept = default;
+
     /// @brief Construction using shape generator, attrib bindings and drawing variant.
     geometry(
       const gl_api& glapi,

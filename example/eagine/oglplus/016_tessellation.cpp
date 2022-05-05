@@ -339,6 +339,7 @@ static void run_loop(
             glfwSwapBuffers(window);
             t += 0.01F;
         }
+        icosahedron.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }

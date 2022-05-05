@@ -270,6 +270,7 @@ static void run_loop(
 
             glfwSwapBuffers(window);
         }
+        cube.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }
