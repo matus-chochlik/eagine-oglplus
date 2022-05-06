@@ -22,13 +22,13 @@ public:
     /// @brief Default constructor.
     geometry() noexcept = default;
 
-    /// @brief Construction using shape generator, attrib bindings and drawing variant.
-    geometry(
+    /// @brief Initializes a previously default initialized geometry instance.
+    auto init(
       const gl_api& glapi,
       const shape_generator& shape,
       const vertex_attrib_bindings& bindings,
       const shapes::drawing_variant var,
-      memory::buffer& temp) {
+      memory::buffer& temp) -> auto& {
 
         const auto& gl = glapi;
         gl.gen_vertex_arrays() >> _vao;
@@ -60,6 +60,26 @@ public:
         if(indexed) {
             shape.index_setup(glapi, _buffers[attrib_count], temp);
         }
+        return *this;
+    }
+
+    /// @brief Initializes a previously default initialized geometry instance.
+    auto init(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      const vertex_attrib_bindings& bindings,
+      memory::buffer& temp) -> auto& {
+        return init(glapi, shape, bindings, shape.draw_variant(0), temp);
+    }
+
+    /// @brief Construction using shape generator, attrib bindings and drawing variant.
+    geometry(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      const vertex_attrib_bindings& bindings,
+      const shapes::drawing_variant var,
+      memory::buffer& temp) {
+        init(glapi, shape, bindings, var, temp);
     }
 
     /// @brief Construction using shape generator and attrib bindings.
@@ -68,7 +88,7 @@ public:
       const shape_generator& shape,
       const vertex_attrib_bindings& bindings,
       memory::buffer& temp)
-      : geometry{glapi, shape, bindings, 0, temp} {}
+      : geometry{glapi, shape, bindings, shape.draw_variant(0), temp} {}
 
     /// @brief Releases the used OpenGL resources.
     void clean_up(const gl_api& gl) {

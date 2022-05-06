@@ -70,7 +70,8 @@ public:
         return _gen->draw_variant_count();
     }
 
-    auto draw_variant(const span_size_t index) -> shapes::drawing_variant {
+    auto draw_variant(const span_size_t index) const
+      -> shapes::drawing_variant {
         return _gen->draw_variant(index);
     }
 

@@ -91,13 +91,17 @@ private:
 /// @see geometry
 class vertex_attrib_bindings {
 public:
-    static auto make(const shape_generator& shape) -> vertex_attrib_bindings {
-        return {std::make_shared<default_vertex_attrib_bindings>(shape)};
+    vertex_attrib_bindings() noexcept = default;
+
+    auto init(const shape_generator& shape) -> auto& {
+        _pimpl = std::make_shared<default_vertex_attrib_bindings>(shape);
+        return *this;
     }
 
-    static auto make(std::initializer_list<shapes::vertex_attrib_variant> vavs)
-      -> vertex_attrib_bindings {
-        return {std::make_shared<default_vertex_attrib_bindings>(vavs)};
+    auto init(std::initializer_list<shapes::vertex_attrib_variant> vavs)
+      -> auto& {
+        _pimpl = std::make_shared<default_vertex_attrib_bindings>(vavs);
+        return *this;
     }
 
     vertex_attrib_bindings(
@@ -107,18 +111,23 @@ public:
     }
 
     /// @brief Constructor matching supported attributes from a shape generator.
-    vertex_attrib_bindings(const shape_generator& shape)
-      : vertex_attrib_bindings{make(shape)} {}
+    vertex_attrib_bindings(const shape_generator& shape) {
+        init(shape);
+    }
 
     /// @brief Constructor matching supported attributes from a shape generator.
     vertex_attrib_bindings(
-      std::initializer_list<shapes::vertex_attrib_variant> vavs)
-      : vertex_attrib_bindings{make(vavs)} {}
+      std::initializer_list<shapes::vertex_attrib_variant> vavs) {
+        init(vavs);
+    }
 
     /// @brief Returns the number of attributes in the binding.
     /// @see attrib_variant
     auto attrib_count() const -> span_size_t {
-        return _pimpl->attrib_count();
+        if(_pimpl) {
+            return _pimpl->attrib_count();
+        }
+        return 0;
     }
 
     /// @brief Returns the attribute variant bound to specified index.
@@ -127,8 +136,11 @@ public:
     /// @pre index < attrib_count()
     auto attrib_variant(span_size_t index) const
       -> shapes::vertex_attrib_variant {
-        EAGINE_ASSERT(index < attrib_count());
-        return _pimpl->attrib_variant(index);
+        if(_pimpl) {
+            EAGINE_ASSERT(index < attrib_count());
+            return _pimpl->attrib_variant(index);
+        }
+        return {};
     }
 
     /// @brief Returns the attribute kind bits for all attributes in this binding.
@@ -143,7 +155,10 @@ public:
     /// @brief Returns the index at which the specified attribute variant is bound.
     /// @see attrib_variant
     auto location(shapes::vertex_attrib_variant vav) -> vertex_attrib_location {
-        return _pimpl->location(vav);
+        if(_pimpl) {
+            return _pimpl->location(vav);
+        }
+        return {};
     }
 
     /// @brief Returns the index at which the position variant is bound.
