@@ -91,7 +91,7 @@ static void run_loop(
           shapes::unit_cube(
             shapes::vertex_attrib_kind::position |
             shapes::vertex_attrib_kind::normal |
-            shapes::vertex_attrib_kind::tangential |
+            shapes::vertex_attrib_kind::tangent |
             shapes::vertex_attrib_kind::face_coord));
         vertex_attrib_bindings bindings{shape};
         geometry cube{glapi, shape, bindings, temp};
@@ -130,7 +130,7 @@ static void run_loop(
           "Normal");
         gl.bind_attrib_location(
           prog,
-          bindings.location(shapes::vertex_attrib_kind::tangential),
+          bindings.location(shapes::vertex_attrib_kind::tangent),
           "Tangent");
         gl.bind_attrib_location(
           prog,

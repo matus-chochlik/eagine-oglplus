@@ -166,7 +166,7 @@ static void run_loop(
           shapes::unit_cube(
             shapes::vertex_attrib_kind::position |
             shapes::vertex_attrib_kind::normal |
-            shapes::vertex_attrib_kind::tangential |
+            shapes::vertex_attrib_kind::tangent |
             shapes::vertex_attrib_kind::face_coord));
 
         std::vector<shape_draw_operation> _ops;
@@ -207,18 +207,18 @@ static void run_loop(
           shapes::vertex_attrib_kind::normal,
           buf);
 
-        // tangentials
-        vertex_attrib_location tangential_loc{2};
-        gl.get_attrib_location(prog, "Tangent") >> tangential_loc;
-        owned_buffer_name tangentials;
-        gl.gen_buffers() >> tangentials;
-        const auto cleanup_tangentials = gl.delete_buffers.raii(tangentials);
+        // tangents
+        vertex_attrib_location tangent_loc{2};
+        gl.get_attrib_location(prog, "Tangent") >> tangent_loc;
+        owned_buffer_name tangents;
+        gl.gen_buffers() >> tangents;
+        const auto cleanup_tangents = gl.delete_buffers.raii(tangents);
         shape.attrib_setup(
           glapi,
           vao,
-          tangentials,
-          tangential_loc,
-          shapes::vertex_attrib_kind::tangential,
+          tangents,
+          tangent_loc,
+          shapes::vertex_attrib_kind::tangent,
           buf);
 
         // tex coords
