@@ -185,6 +185,18 @@ public:
         return location({shapes::vertex_attrib_kind::bitangent, idx});
     }
 
+    /// @brief Returns the index at which the shape pivot variant is bound.
+    /// @see location
+    auto pivot_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::pivot, idx});
+    }
+
+    /// @brief Returns the index at which the vertex pivot variant is bound.
+    /// @see location
+    auto vertex_pivot_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::vertex_pivot, idx});
+    }
+
     /// @brief Returns the index at which the box_coord variant is bound.
     /// @see location
     auto box_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
