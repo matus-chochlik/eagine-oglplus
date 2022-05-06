@@ -105,10 +105,7 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::position),
-          "Position");
+        gl.bind_attrib_location(prog, bindings.position_loc(), "Position");
 
         // uniforms
         auto update_uniforms = [&glapi, &prog]() {

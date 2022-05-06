@@ -146,6 +146,66 @@ public:
         return _pimpl->location(vav);
     }
 
+    /// @brief Returns the index at which the position variant is bound.
+    /// @see location
+    auto position_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::position, idx});
+    }
+
+    /// @brief Returns the index at which the normal variant is bound.
+    /// @see location
+    auto normal_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::normal, idx});
+    }
+
+    /// @brief Returns the index at which the tangent variant is bound.
+    /// @see location
+    auto tangent_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::tangent, idx});
+    }
+
+    /// @brief Returns the index at which the bitangent variant is bound.
+    /// @see location
+    auto bitangent_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::bitangent, idx});
+    }
+
+    /// @brief Returns the index at which the box_coord variant is bound.
+    /// @see location
+    auto box_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::box_coord, idx});
+    }
+
+    /// @brief Returns the index at which the face_coord variant is bound.
+    /// @see location
+    auto face_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::face_coord, idx});
+    }
+
+    /// @brief Returns the index at which the wrap_coord variant is bound.
+    /// @see location
+    auto wrap_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::wrap_coord, idx});
+    }
+
+    /// @brief Returns the index at which the color variant is bound.
+    /// @see location
+    auto color_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::color, idx});
+    }
+
+    /// @brief Returns the index at which the weight variant is bound.
+    /// @see location
+    auto weight_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::weight, idx});
+    }
+
+    /// @brief Returns the index at which the occlusion variant is bound.
+    /// @see location
+    auto occlusion_loc(span_size_t idx = 0) -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::occlusion, idx});
+    }
+
 private:
     std::shared_ptr<vertex_attrib_binding_intf> _pimpl;
 };
