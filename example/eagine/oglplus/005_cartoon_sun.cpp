@@ -78,9 +78,8 @@ static void run_loop(
         // geometry
         shape_generator shape(
           glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
-        vertex_attrib_bindings bindings{shape};
 
-        geometry screen{glapi, shape, bindings, 0, temp};
+        geometry_and_bindings screen{glapi, shape, temp};
 
         // vertex shader
         owned_shader_name vs;
@@ -105,7 +104,7 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(prog, bindings.position_loc(), "Position");
+        gl.bind_attrib_location(prog, screen.position_loc(), "Position");
 
         // uniforms
         auto update_uniforms = [&glapi, &prog]() {

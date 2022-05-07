@@ -145,9 +145,8 @@ static void run_loop(
         shape_generator shape(
           glapi,
           shapes::unit_icosahedron(shapes::vertex_attrib_kind::position));
-        vertex_attrib_bindings bindings{shape};
 
-        geometry icosahedron{glapi, shape, bindings, 0, temp};
+        geometry_and_bindings icosahedron{glapi, shape, temp};
         icosahedron.use(glapi);
 
         // vertex shader
@@ -184,10 +183,7 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::position),
-          "Position");
+        gl.bind_attrib_location(prog, icosahedron.position_loc(), "Position");
 
         // uniform
         uniform_location viewport_dimensions_loc;

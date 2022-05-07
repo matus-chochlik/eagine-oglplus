@@ -165,8 +165,7 @@ static void run_loop(
             shapes::vertex_attrib_kind::position |
             shapes::vertex_attrib_kind::normal |
             shapes::vertex_attrib_kind::wrap_coord)));
-        vertex_attrib_bindings bindings{shape};
-        geometry torus{glapi, shape, bindings, temp};
+        geometry_and_bindings torus{glapi, shape, temp};
         torus.use(glapi);
 
         // vertex shader
@@ -203,18 +202,9 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::position),
-          "Position");
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::normal),
-          "Normal");
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::wrap_coord),
-          "Coord");
+        gl.bind_attrib_location(prog, torus.position_loc(), "Position");
+        gl.bind_attrib_location(prog, torus.normal_loc(), "Normal");
+        gl.bind_attrib_location(prog, torus.wrap_coord_loc(), "Coord");
 
         // uniforms
         uniform_location time_loc;

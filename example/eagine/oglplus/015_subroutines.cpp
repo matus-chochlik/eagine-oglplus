@@ -108,8 +108,7 @@ static void run_loop(
           shapes::unit_round_cube(
             shapes::vertex_attrib_kind::position |
             shapes::vertex_attrib_kind::face_coord));
-        vertex_attrib_bindings bindings{shape};
-        geometry cube{glapi, shape, bindings, temp};
+        geometry_and_bindings cube{glapi, shape, temp};
         cube.use(glapi);
 
         // vertex shader
@@ -137,8 +136,8 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(prog, bindings.position_loc(), "Position");
-        gl.bind_attrib_location(prog, bindings.face_coord_loc(), "Coord");
+        gl.bind_attrib_location(prog, cube.position_loc(), "Position");
+        gl.bind_attrib_location(prog, cube.face_coord_loc(), "Coord");
 
         // subroutines
         subroutine_uniform_location pattern_loc;

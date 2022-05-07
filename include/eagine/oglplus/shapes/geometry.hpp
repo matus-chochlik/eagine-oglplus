@@ -114,6 +114,45 @@ private:
     gl_object_name_vector<buffer_tag> _buffers;
 };
 
+class geometry_and_bindings
+  : public vertex_attrib_bindings
+  , public geometry {
+public:
+    geometry_and_bindings() noexcept = default;
+
+    auto init(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      const shapes::drawing_variant var,
+      memory::buffer& temp) -> auto& {
+        vertex_attrib_bindings::init(shape);
+        geometry::init(glapi, shape, *this, var, temp);
+        return *this;
+    }
+
+    auto init(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      memory::buffer& temp) -> auto& {
+        return init(glapi, shape, shape.draw_variant(0), temp);
+    }
+
+    geometry_and_bindings(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      const shapes::drawing_variant var,
+      memory::buffer& temp) {
+        init(glapi, shape, var, temp);
+    }
+
+    geometry_and_bindings(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      memory::buffer& temp) {
+        init(glapi, shape, temp);
+    }
+};
+
 } // namespace eagine::oglplus
 
 #endif

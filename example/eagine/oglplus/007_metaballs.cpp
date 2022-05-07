@@ -96,9 +96,8 @@ static void run_loop(
         // geometry
         shape_generator shape(
           glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
-        vertex_attrib_bindings bindings{shape};
 
-        geometry screen{glapi, shape, bindings, 0, temp};
+        geometry_and_bindings screen{glapi, shape, temp};
         screen.use(glapi);
 
         // vertex shader
@@ -127,10 +126,7 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::position),
-          "Position");
+        gl.bind_attrib_location(prog, screen.position_loc(), "Position");
 
         std::vector<math::cubic_bezier_loop<oglplus::vec4, float>> loops;
         std::vector<oglplus::vec4> cp_data;

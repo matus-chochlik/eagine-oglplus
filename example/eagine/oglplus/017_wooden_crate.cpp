@@ -93,8 +93,7 @@ static void run_loop(
             shapes::vertex_attrib_kind::normal |
             shapes::vertex_attrib_kind::tangent |
             shapes::vertex_attrib_kind::face_coord));
-        vertex_attrib_bindings bindings{shape};
-        geometry cube{glapi, shape, bindings, temp};
+        geometry_and_bindings cube{glapi, shape, temp};
         cube.use(glapi);
 
         // vertex shader
@@ -120,22 +119,10 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::position),
-          "Position");
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::normal),
-          "Normal");
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::tangent),
-          "Tangent");
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::face_coord),
-          "TexCoord");
+        gl.bind_attrib_location(prog, cube.position_loc(), "Position");
+        gl.bind_attrib_location(prog, cube.normal_loc(), "Normal");
+        gl.bind_attrib_location(prog, cube.tangent_loc(), "Tangent");
+        gl.bind_attrib_location(prog, cube.face_coord_loc(), "TexCoord");
 
         // color texture
         const auto color_tex_src{

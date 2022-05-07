@@ -91,9 +91,8 @@ static void run_loop(
             64,
             8,
             0.6F));
-        vertex_attrib_bindings bindings{shape};
 
-        geometry torus{glapi, shape, bindings, 0, temp};
+        geometry_and_bindings torus{glapi, shape, temp};
         torus.use(glapi);
 
         // vertex shader
@@ -121,14 +120,8 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::position),
-          "Position");
-        gl.bind_attrib_location(
-          prog,
-          bindings.location(shapes::vertex_attrib_kind::normal),
-          "Normal");
+        gl.bind_attrib_location(prog, torus.position_loc(), "Position");
+        gl.bind_attrib_location(prog, torus.normal_loc(), "Normal");
 
         // gradient
         owned_texture_name gradient_tex{};
