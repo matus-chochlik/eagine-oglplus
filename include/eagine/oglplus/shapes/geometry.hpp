@@ -123,18 +123,31 @@ public:
     auto init(
       const gl_api& glapi,
       const shape_generator& shape,
+      const vertex_attrib_bindings& bindings,
       const shapes::drawing_variant var,
       memory::buffer& temp) -> auto& {
-        vertex_attrib_bindings::init(shape);
+        vertex_attrib_bindings::init(bindings);
         geometry::init(glapi, shape, *this, var, temp);
         return *this;
+    }
+
+    geometry_and_bindings(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      const vertex_attrib_bindings& bindings,
+      const shapes::drawing_variant var,
+      memory::buffer& temp) {
+        init(glapi, shape, bindings, var, temp);
     }
 
     auto init(
       const gl_api& glapi,
       const shape_generator& shape,
+      const shapes::drawing_variant var,
       memory::buffer& temp) -> auto& {
-        return init(glapi, shape, shape.draw_variant(0), temp);
+        vertex_attrib_bindings::init(shape);
+        geometry::init(glapi, shape, *this, var, temp);
+        return *this;
     }
 
     geometry_and_bindings(
@@ -143,6 +156,13 @@ public:
       const shapes::drawing_variant var,
       memory::buffer& temp) {
         init(glapi, shape, var, temp);
+    }
+
+    auto init(
+      const gl_api& glapi,
+      const shape_generator& shape,
+      memory::buffer& temp) -> auto& {
+        return init(glapi, shape, shape.draw_variant(0), temp);
     }
 
     geometry_and_bindings(

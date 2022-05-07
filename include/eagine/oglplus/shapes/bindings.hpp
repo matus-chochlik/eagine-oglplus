@@ -104,6 +104,11 @@ public:
         return *this;
     }
 
+    auto init(const vertex_attrib_bindings& that) -> auto& {
+        _pimpl = that._pimpl;
+        return *this;
+    }
+
     vertex_attrib_bindings(
       std::shared_ptr<vertex_attrib_binding_intf> pimpl) noexcept
       : _pimpl{std::move(pimpl)} {
