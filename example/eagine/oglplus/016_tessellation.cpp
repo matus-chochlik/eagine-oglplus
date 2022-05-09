@@ -16,7 +16,7 @@
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/matrix.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/oglplus/shapes/geometry.hpp>
 #include <eagine/shapes/icosahedron.hpp>
 #include <eagine/shapes/to_patches.hpp>
 
@@ -196,7 +196,14 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        memory::buffer buf;
+        // geometry
+        memory::buffer temp;
+        shape_generator shape(
+          glapi,
+          shapes::to_patches(
+            shapes::unit_icosahedron(shapes::vertex_attrib_kind::position)));
+        geometry_and_bindings icosahedron{glapi, shape, temp};
+        icosahedron.use(glapi);
 
         // vertex shader
         owned_shader_name vs;
@@ -250,41 +257,7 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        // geometry
-        shape_generator shape(
-          glapi,
-          shapes::to_patches(
-            shapes::unit_icosahedron(shapes::vertex_attrib_kind::position)));
-
-        std::vector<shape_draw_operation> _ops;
-        _ops.resize(std_size(shape.operation_count()));
-        shape.instructions(glapi, cover(_ops));
-
-        // vao
-        owned_vertex_array_name vao;
-        gl.gen_vertex_arrays() >> vao;
-        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
-        gl.bind_vertex_array(vao);
-
-        // positions
-        vertex_attrib_location position_loc{0};
-        owned_buffer_name positions;
-        gl.gen_buffers() >> positions;
-        const auto cleanup_positions = gl.delete_buffers.raii(positions);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          positions,
-          position_loc,
-          shapes::vertex_attrib_kind::position,
-          buf);
-        gl.bind_attrib_location(prog, position_loc, "Position");
-
-        // indices
-        owned_buffer_name indices;
-        gl.gen_buffers() >> indices;
-        const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, buf);
+        gl.bind_attrib_location(prog, icosahedron.position_loc(), "Position");
 
         // uniforms
         uniform_location view_position_loc;
@@ -357,11 +330,12 @@ static void run_loop(
               model_matrix_loc,
               oglplus::matrix_rotation_x(right_angles_(t))());
 
-            draw_using_instructions(glapi, view(_ops));
+            icosahedron.draw(glapi);
 
             glfwSwapBuffers(window);
             t += 0.01F;
         }
+        icosahedron.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }

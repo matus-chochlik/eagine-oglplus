@@ -15,7 +15,7 @@
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/oglplus/shapes/geometry.hpp>
 #include <eagine/shapes/round_cube.hpp>
 
 #include <GLFW/glfw3.h>
@@ -101,7 +101,15 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        memory::buffer buf;
+        // geometry
+        memory::buffer temp;
+        shape_generator shape(
+          glapi,
+          shapes::unit_round_cube(
+            shapes::vertex_attrib_kind::position |
+            shapes::vertex_attrib_kind::face_coord));
+        geometry_and_bindings cube{glapi, shape, temp};
+        cube.use(glapi);
 
         // vertex shader
         owned_shader_name vs;
@@ -128,58 +136,8 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        // geometry
-        shape_generator shape(
-          glapi,
-          shapes::unit_round_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal));
-
-        std::vector<shape_draw_operation> _ops;
-        _ops.resize(std_size(shape.operation_count()));
-        shape.instructions(glapi, cover(_ops));
-
-        // vao
-        owned_vertex_array_name vao;
-        gl.gen_vertex_arrays() >> vao;
-        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
-        gl.bind_vertex_array(vao);
-
-        // positions
-        vertex_attrib_location position_loc{0};
-        owned_buffer_name positions;
-        gl.gen_buffers() >> positions;
-        const auto cleanup_positions = gl.delete_buffers.raii(positions);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          positions,
-          position_loc,
-          shapes::vertex_attrib_kind::position,
-          "positions",
-          buf);
-        gl.bind_attrib_location(prog, position_loc, "Position");
-
-        // coords
-        vertex_attrib_location coord_loc{1};
-        owned_buffer_name coords;
-        gl.gen_buffers() >> coords;
-        const auto cleanup_coords = gl.delete_buffers.raii(coords);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          coords,
-          coord_loc,
-          shapes::vertex_attrib_kind::face_coord,
-          "face coords",
-          buf);
-        gl.bind_attrib_location(prog, coord_loc, "Coord");
-
-        // indices
-        owned_buffer_name indices;
-        gl.gen_buffers() >> indices;
-        const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, "indices", buf);
+        gl.bind_attrib_location(prog, cube.position_loc(), "Position");
+        gl.bind_attrib_location(prog, cube.face_coord_loc(), "Coord");
 
         // subroutines
         subroutine_uniform_location pattern_loc;
@@ -263,11 +221,12 @@ static void run_loop(
                   vec3(2.5F * cos(angle), 0.F, 2.5F * sin(angle)));
                 gl.uniform_subroutines(GL.fragment_shader, subroutines[s]);
 
-                draw_using_instructions(glapi, view(_ops));
+                cube.draw(glapi);
             }
 
             glfwSwapBuffers(window);
         }
+        cube.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }
