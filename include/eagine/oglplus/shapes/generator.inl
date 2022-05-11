@@ -43,10 +43,22 @@ inline void shape_generator::attrib_data(
             _gen->attrib_values(
               vav, accommodate(data, type_identity<gl_types::ubyte_type>()));
             break;
-        case attrib_data_type::uint_16: // TODO
-        case attrib_data_type::uint_32: // TODO
-        case attrib_data_type::int_16:  // TODO
-        case attrib_data_type::int_32:  // TODO
+        case attrib_data_type::uint_16:
+            _gen->attrib_values(
+              vav, accommodate(data, type_identity<gl_types::ushort_type>()));
+            break;
+        case attrib_data_type::uint_32:
+            _gen->attrib_values(
+              vav, accommodate(data, type_identity<gl_types::uint_type>()));
+            break;
+        case attrib_data_type::int_16:
+            _gen->attrib_values(
+              vav, accommodate(data, type_identity<gl_types::short_type>()));
+            break;
+        case attrib_data_type::int_32:
+            _gen->attrib_values(
+              vav, accommodate(data, type_identity<gl_types::int_type>()));
+            break;
         case attrib_data_type::none:
             break;
     }
@@ -81,7 +93,6 @@ inline void shape_generator::attrib_setup(
   const shapes::vertex_attrib_variant vav,
   const string_view label,
   memory::buffer& temp) const {
-    using shapes::attrib_data_type;
     auto& [gl, GL] = api;
 
     const auto size = attrib_data_block_size(vav);
@@ -94,11 +105,18 @@ inline void shape_generator::attrib_setup(
     }
     gl.buffer_data(GL.array_buffer, data, GL.static_draw);
 
-    gl.vertex_attrib_pointer(
-      loc,
-      gl_types::int_type(values_per_vertex(vav)),
-      attrib_type(api, vav),
-      is_attrib_normalized(api, vav));
+    if(is_attrib_integral(vav)) [[unlikely]] {
+        gl.vertex_attrib_ipointer(
+          loc,
+          gl_types::int_type(values_per_vertex(vav)),
+          attrib_type(api, vav));
+    } else {
+        gl.vertex_attrib_pointer(
+          loc,
+          gl_types::int_type(values_per_vertex(vav)),
+          attrib_type(api, vav),
+          is_attrib_normalized(api, vav));
+    }
 
     if(gl.enable_vertex_array_attrib) {
         gl.enable_vertex_array_attrib(vao, loc);
