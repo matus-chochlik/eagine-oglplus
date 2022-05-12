@@ -104,8 +104,18 @@ public:
 
     /// @brief Emits geometry draw commands using the specified GL API.
     /// @see use
+    /// @see draw_instanced
     auto draw(const gl_api& glapi) const {
         draw_using_instructions(glapi, view(_ops));
+    }
+
+    /// @brief Emits geometry draw commands using the specified GL API.
+    /// @see use
+    /// @see draw
+    auto draw_instanced(
+      const gl_api& glapi,
+      const gl_types::sizei_type inst_count) const {
+        draw_instanced_using_instructions(glapi, view(_ops), inst_count);
     }
 
 private:
