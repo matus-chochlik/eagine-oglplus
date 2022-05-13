@@ -24,6 +24,7 @@ eagine_example_common(016_tessellation)
 eagine_example_common(017_wooden_crate)
 eagine_example_common(020_multi_viewport)
 eagine_example_common(021_octree)
+eagine_example_common(022_metaballs)
 eagine_example_common(023_parallax_cube)
 eagine_example_common(025_parallax_sphere)
 
