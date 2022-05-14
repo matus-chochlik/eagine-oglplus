@@ -24,7 +24,7 @@
 #include <iostream>
 #include <stdexcept>
 
-static const eagine::string_view vs_source{R"(
+static const eagine::oglplus::glsl_source_ref vs_source{R"(
 #version 400
 uniform mat4 perspective, camera, model;
 uniform vec3 lightPos;
@@ -58,7 +58,7 @@ void main() {
 }
 )"};
 
-static const eagine::string_view fs_source{R"(
+static const eagine::oglplus::glsl_source_ref fs_source{R"(
 #version 400
 uniform sampler2D colorTex;
 uniform sampler2D normalTex;
@@ -137,26 +137,12 @@ static void run_loop(
 
         memory::buffer buf;
 
-        // vertex shader
-        owned_shader_name vs;
-        gl.create_shader(GL.vertex_shader) >> vs;
-        const auto cleanup_vs = gl.delete_shader.raii(vs);
-        gl.shader_source(vs, glsl_string_ref(vs_source));
-        gl.compile_shader(vs);
-
-        // fragment shader
-        owned_shader_name fs;
-        gl.create_shader(GL.fragment_shader) >> fs;
-        const auto cleanup_fs = gl.delete_shader.raii(fs);
-        gl.shader_source(fs, glsl_string_ref(fs_source));
-        gl.compile_shader(fs);
-
         // program
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
-        gl.attach_shader(prog, vs);
-        gl.attach_shader(prog, fs);
+        glapi.add_shader(prog, GL.vertex_shader, vs_source);
+        glapi.add_shader(prog, GL.fragment_shader, fs_source);
         gl.link_program(prog);
         gl.use_program(prog);
 
