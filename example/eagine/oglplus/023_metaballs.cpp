@@ -1,4 +1,4 @@
-/// @example oglplus/022_metaballs.cpp
+/// @example oglplus/023_metaballs.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
