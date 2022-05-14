@@ -98,6 +98,17 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
+    auto& args = ctx.args();
+    int divisions = 256;
+
+    if(args.find("--128")) {
+        divisions = 128;
+    } else if(args.find("--512")) {
+        divisions = 512;
+    } else if(args.find("--64")) {
+        divisions = 64;
+    }
+
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
 
@@ -116,8 +127,8 @@ static void run_loop(
           shapes::to_quads(shapes::unit_plane(
             shapes::vertex_attrib_kind::position |
               shapes::vertex_attrib_kind::wrap_coord,
-            128,
-            128)));
+            divisions,
+            divisions)));
 
         geometry_and_bindings plane{glapi, shape, temp};
         plane.use(glapi);
@@ -191,7 +202,7 @@ static void run_loop(
           .set_far(10.F)
           .set_orbit_min(1.41F)
           .set_orbit_max(1.71F)
-          .set_fov(degrees_(45));
+          .set_fov(degrees_(40));
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
@@ -227,8 +238,8 @@ static void run_loop(
             glapi.set_uniform(
               prog,
               camera_loc,
-              camera.set_azimuth(radians_(t * 0.3))
-                .set_elevation(radians_(std::sin(t * 0.618 * 0.5)))
+              camera.set_azimuth(radians_(t * 0.2))
+                .set_elevation(radians_(std::sin(t * 0.618 * 0.3)))
                 .set_orbit_factor(math::sine_wave01(t * 0.1618F))
                 .matrix(aspect));
 
