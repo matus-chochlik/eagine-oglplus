@@ -18,6 +18,7 @@ eagine_example_common(010_metallic_torus)
 eagine_example_common(011_text_rendering)
 eagine_example_common(012_single_pass_edges)
 eagine_example_common(013_texture_projection)
+eagine_example_common(014_worleycraft)
 eagine_example_common(015_cloud_morphing)
 eagine_example_common(016_subroutines)
 eagine_example_common(017_tessellation)
@@ -32,6 +33,12 @@ eagine_embed_target_resources(
 	TARGET oglplus-013_texture_projection
 	INPUT_TARGETS
 	oglplus
+)
+
+eagine_embed_target_resources(
+	TARGET oglplus-014_worleycraft
+	INPUT_TARGETS
+	worley-bump
 )
 
 eagine_embed_target_resources(
