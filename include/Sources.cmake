@@ -26,6 +26,7 @@ set(HEADERS
     eagine/oglplus/gl_fallback.hpp
     eagine/oglplus/gl.hpp
     eagine/oglplus/glsl/container.hpp
+    eagine/oglplus/glsl_program.hpp
     eagine/oglplus/glsl/source_ref.hpp
     eagine/oglplus/glsl/string_ref.hpp
     eagine/oglplus/math/config.hpp
