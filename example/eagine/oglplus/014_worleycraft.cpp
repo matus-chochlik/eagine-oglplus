@@ -1,4 +1,4 @@
-/// @example oglplus/014_cloud_morphing.cpp
+/// @example oglplus/014_worleycraft.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -9,17 +9,16 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
-#include <eagine/animated_value.hpp>
+#include <eagine/embed.hpp>
 #include <eagine/main.hpp>
 #include <eagine/math/functions.hpp>
 #include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/generator.hpp>
-#include <eagine/shapes/surface_points.hpp>
-#include <eagine/shapes/torus.hpp>
-#include <eagine/shapes/twisted_torus.hpp>
+#include <eagine/oglplus/shapes/geometry.hpp>
+#include <eagine/shapes/plane.hpp>
+#include <eagine/shapes/to_quads.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -28,30 +27,66 @@
 
 static const eagine::string_view vs_source{R"(
 #version 140
-in vec3 Position1;
-in vec3 Position2;
-in vec3 Color1;
-in vec3 Color2;
-out vec3 vertColor;
-uniform mat4 Camera;
-uniform float Factor;
+in vec4 Position;
+in vec2 Coord;
+out vec2 vertCoord;
 
 void main() {
-    gl_Position = Camera * vec4(mix(Position1, Position2, Factor), 1.0);
-    vertColor = mix(
-		vec3(1.0, 0.1, 0.0) * Color1.r * 1.4,
-		vec3(0.0, 0.1, 1.0) * Color2.g * 1.4,
-		Factor);
+    gl_Position = Position;
+    vertCoord = Coord;
+}
+)"};
+
+static const eagine::string_view gs_source{R"(
+#version 150
+
+layout(lines_adjacency) in;
+layout(triangle_strip, max_vertices = 20) out;
+
+in vec2 vertCoord[4];
+out vec3 geomColor;
+out float geomExtrude;
+uniform mat4 Camera;
+uniform sampler2D Tex;
+
+void main() {
+	vec2 Coord = (vertCoord[0]+vertCoord[1]+vertCoord[2]+vertCoord[3]) * 0.25;
+	vec4 Texel = texture(Tex, Coord);
+	geomColor = Texel.rgb;
+
+    ivec4 eidx = ivec4(0, 2, 3, 1);
+	vec3 pofs = vec3(0.0, Texel.a * 0.15, 0.0);
+
+	for(int i=0; i<4; ++i) {
+		for(int j=0; j<2; ++j) {
+			vec3 tpos = gl_in[eidx[(i+j)%4]].gl_Position.xyz;
+			geomExtrude = 0.0;
+			gl_Position = Camera * vec4(tpos, 1.0);
+			EmitVertex();
+			geomExtrude = sqrt(Texel.a);
+			gl_Position = Camera * vec4(tpos + pofs, 1.0);
+			EmitVertex();
+		}
+		EndPrimitive();
+	}
+
+	geomExtrude = sqrt(Texel.a);
+	for(int i=0; i<4; ++i) {
+		gl_Position = Camera * vec4(gl_in[i].gl_Position.xyz + pofs, 1.0);
+		EmitVertex();
+	}
+	EndPrimitive();
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
 #version 140
-in vec3 vertColor;
+in vec3 geomColor;
+in float geomExtrude;
 out vec3 fragColor;
 
 void main() {
-    fragColor = vertColor;
+    fragColor = geomColor * geomExtrude * 1.41;
 }
 )"};
 
@@ -63,13 +98,16 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
-    const auto progress_callback = [window] {
-        glfwPollEvents();
-        return glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
-    };
+    auto& args = ctx.args();
+    int divisions = 256;
 
-    set_progress_update_callback(
-      ctx, {construct_from, progress_callback}, std::chrono::milliseconds{100});
+    if(args.find("--128")) {
+        divisions = 128;
+    } else if(args.find("--512")) {
+        divisions = 512;
+    } else if(args.find("--64")) {
+        divisions = 64;
+    }
 
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
@@ -81,7 +119,19 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        memory::buffer buf;
+        memory::buffer temp;
+
+        // geometry
+        shape_generator shape(
+          glapi,
+          shapes::to_quads(shapes::unit_plane(
+            shapes::vertex_attrib_kind::position |
+              shapes::vertex_attrib_kind::wrap_coord,
+            divisions,
+            divisions)));
+
+        geometry_and_bindings plane{glapi, shape, temp};
+        plane.use(glapi);
 
         // vertex shader
         owned_shader_name vs;
@@ -90,6 +140,14 @@ static void run_loop(
         gl.object_label(vs, "vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
+
+        // geometry shader
+        owned_shader_name gs;
+        gl.create_shader(GL.geometry_shader) >> gs;
+        const auto cleanup_gs = gl.delete_shader.raii(gs);
+        gl.object_label(gs, "geometry shader");
+        gl.shader_source(gs, glsl_string_ref(gs_source));
+        gl.compile_shader(gs);
 
         // fragment shader
         owned_shader_name fs;
@@ -105,126 +163,52 @@ static void run_loop(
         const auto cleanup_prog = gl.delete_program.raii(prog);
         gl.object_label(prog, "draw program");
         gl.attach_shader(prog, vs);
+        gl.attach_shader(prog, gs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
         gl.use_program(prog);
+        gl.bind_attrib_location(prog, plane.position_loc(), "Position");
+        gl.bind_attrib_location(prog, plane.wrap_coord_loc(), "Coord");
 
-        // geometry
-        const span_size_t point_count = 512 * 1024;
+        // texture
+        const auto tex_src{embed(EAGINE_ID(WorleyTex), "worley-bump")};
 
-        shape_generator shape1(
-          glapi,
-          shapes::surface_points(
-            shapes::unit_torus(
-              shapes::vertex_attrib_kind::position |
-              shapes::vertex_attrib_kind::normal),
-            point_count,
-            ctx));
-
-        shape_generator shape2(
-          glapi,
-          shapes::surface_points(
-            shapes::unit_twisted_torus(
-              shapes::vertex_attrib_kind::position |
-                shapes::vertex_attrib_kind::normal,
-              6,
-              48,
-              4,
-              0.5F),
-            point_count,
-            ctx));
-
-        std::vector<shape_draw_operation> _ops;
-        _ops.resize(std_size(shape1.operation_count()));
-        shape1.instructions(glapi, cover(_ops));
-
-        // vao
-        owned_vertex_array_name vao;
-        gl.gen_vertex_arrays() >> vao;
-        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
-        gl.bind_vertex_array(vao);
-
-        // positions
-        vertex_attrib_location position1_loc{0};
-        owned_buffer_name positions1;
-        gl.gen_buffers() >> positions1;
-        const auto cleanup_positions1 = gl.delete_buffers.raii(positions1);
-        shape1.attrib_setup(
-          glapi,
-          vao,
-          positions1,
-          position1_loc,
-          shapes::vertex_attrib_kind::position,
-          "positions",
-          buf);
-        gl.bind_attrib_location(prog, position1_loc, "Position1");
-
-        vertex_attrib_location position2_loc{1};
-        owned_buffer_name positions2;
-        gl.gen_buffers() >> positions2;
-        const auto cleanup_positions2 = gl.delete_buffers.raii(positions2);
-        shape2.attrib_setup(
-          glapi,
-          vao,
-          positions2,
-          position2_loc,
-          shapes::vertex_attrib_kind::position,
-          "positions",
-          buf);
-        gl.bind_attrib_location(prog, position2_loc, "Position2");
-
-        // colors
-        vertex_attrib_location color1_loc{2};
-        owned_buffer_name colors1;
-        gl.gen_buffers() >> colors1;
-        const auto cleanup_colors1 = gl.delete_buffers.raii(colors1);
-        shape1.attrib_setup(
-          glapi,
-          vao,
-          colors1,
-          color1_loc,
-          shapes::vertex_attrib_kind::normal,
-          "colors",
-          buf);
-        gl.bind_attrib_location(prog, color1_loc, "Color1");
-
-        vertex_attrib_location color2_loc{3};
-        owned_buffer_name colors2;
-        gl.gen_buffers() >> colors2;
-        const auto cleanup_colors2 = gl.delete_buffers.raii(colors2);
-        shape2.attrib_setup(
-          glapi,
-          vao,
-          colors2,
-          color2_loc,
-          shapes::vertex_attrib_kind::normal,
-          "colors",
-          buf);
-        gl.bind_attrib_location(prog, color2_loc, "Color2");
+        owned_texture_name tex;
+        gl.gen_textures() >> tex;
+        const auto cleanup_tex = gl.delete_textures.raii(tex);
+        gl.active_texture(GL.texture0);
+        gl.bind_texture(GL.texture_2d, tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
+        glapi.spec_tex_image2d(
+          GL.texture_2d,
+          0,
+          0,
+          oglplus::texture_image_block(tex_src.unpack(ctx)));
 
         // uniform
-        uniform_location factor_loc;
-        gl.get_uniform_location(prog, "Factor") >> factor_loc;
+        oglplus::uniform_location tex_loc;
+        gl.get_uniform_location(prog, "Tex") >> tex_loc;
+        glapi.set_uniform(prog, tex_loc, 0);
 
         uniform_location camera_loc;
         gl.get_uniform_location(prog, "Camera") >> camera_loc;
 
+        // camera setup
         orbiting_camera camera;
         camera.set_near(0.1F)
-          .set_far(50.F)
-          .set_fov(right_angle_())
-          .set_orbit_min(0.5F)
-          .set_orbit_max(0.8F);
+          .set_far(10.F)
+          .set_orbit_min(1.41F)
+          .set_orbit_max(1.71F)
+          .set_fov(degrees_(40));
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
-        gl.point_size(3.F);
 
-        float tim = 0.F;
-        animated_value<float, float> fac;
-        const std::array<float, 4> fac_next{{0.F, 0.F, 1.F, 1.F}};
-        std::size_t fac_idx = 0U;
+        float t = 0.F;
 
         while(true) {
             glfwPollEvents();
@@ -249,23 +233,17 @@ static void run_loop(
 
             gl.clear(GL.color_buffer_bit | GL.depth_buffer_bit);
 
-            const auto delta_t = 0.02F;
-            tim += delta_t;
-            fac.update(delta_t);
-            if(fac.is_done()) {
-                fac_idx = (fac_idx + 1) % fac_next.size();
-                fac.set(fac_next[fac_idx], 2.F);
-            }
+            t += 0.02F;
             const auto aspect = float(width) / float(height);
-            glapi.set_uniform(prog, factor_loc, fac.get());
             glapi.set_uniform(
               prog,
               camera_loc,
-              camera.set_azimuth(radians_(tim * 0.7F))
-                .set_elevation(right_angles_(std::sin(tim * 0.3F)))
-                .set_orbit_factor(math::sine_wave01(tim * 0.1F))
+              camera.set_azimuth(radians_(t * 0.2))
+                .set_elevation(radians_(std::sin(t * 0.618 * 0.3)))
+                .set_orbit_factor(math::sine_wave01(t * 0.1618F))
                 .matrix(aspect));
-            draw_using_instructions(glapi, view(_ops));
+
+            plane.draw(glapi);
 
             glfwSwapBuffers(window);
         }

@@ -1,4 +1,4 @@
-/// @example oglplus/016_tessellation.cpp
+/// @example oglplus/017_tessellation.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -25,7 +25,7 @@
 #include <iostream>
 #include <stdexcept>
 
-static const eagine::string_view vs_source{R"(
+static const eagine::oglplus::glsl_string_ref vs_source{R"(
 #version 400
 
 uniform vec3 viewPosition;
@@ -41,7 +41,7 @@ void main() {
 }
 )"};
 
-static const eagine::string_view cs_source{R"(
+static const eagine::oglplus::glsl_source_ref cs_source{R"(
 #version 400
 
 layout(vertices = 3) out;
@@ -71,7 +71,7 @@ void main() {
 }
 )"};
 
-static const eagine::string_view es_source{R"(
+static const eagine::oglplus::glsl_source_ref es_source{R"(
 #version 400
 
 layout(triangles, equal_spacing, ccw) in;
@@ -99,7 +99,7 @@ void main() {
 }
 )"};
 
-static const eagine::string_view gs_source{R"(
+static const eagine::oglplus::glsl_source_ref gs_source{R"(
 #version 400
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
@@ -150,7 +150,7 @@ void main() {
 }
 )"};
 
-static const eagine::string_view fs_source{R"(
+static const eagine::oglplus::glsl_source_ref fs_source{R"(
 #version 400
 
 const float edgeWidth = 2.0;
@@ -205,55 +205,15 @@ static void run_loop(
         geometry_and_bindings icosahedron{glapi, shape, temp};
         icosahedron.use(glapi);
 
-        // vertex shader
-        owned_shader_name vs;
-        gl.create_shader(GL.vertex_shader) >> vs;
-        const auto cleanup_vs = gl.delete_shader.raii(vs);
-        gl.object_label(vs, "vertex shader");
-        gl.shader_source(vs, glsl_string_ref(vs_source));
-        gl.compile_shader(vs);
-
-        // tess control shader
-        owned_shader_name cs;
-        gl.create_shader(GL.tess_control_shader) >> cs;
-        const auto cleanup_cs = gl.delete_shader.raii(cs);
-        gl.object_label(cs, "tessellation control shader");
-        gl.shader_source(cs, glsl_string_ref(cs_source));
-        gl.compile_shader(cs);
-
-        // tess evaluation shader
-        owned_shader_name es;
-        gl.create_shader(GL.tess_evaluation_shader) >> es;
-        const auto cleanup_es = gl.delete_shader.raii(es);
-        gl.object_label(es, "tessellation evaluation shader");
-        gl.shader_source(es, glsl_string_ref(es_source));
-        gl.compile_shader(es);
-
-        // geometry shader
-        owned_shader_name gs;
-        gl.create_shader(GL.geometry_shader) >> gs;
-        const auto cleanup_gs = gl.delete_shader.raii(gs);
-        gl.object_label(gs, "geometry shader");
-        gl.shader_source(gs, glsl_string_ref(gs_source));
-        gl.compile_shader(gs);
-
-        // fragment shader
-        owned_shader_name fs;
-        gl.create_shader(GL.fragment_shader) >> fs;
-        const auto cleanup_fs = gl.delete_shader.raii(fs);
-        gl.object_label(fs, "fragment shader");
-        gl.shader_source(fs, glsl_string_ref(fs_source));
-        gl.compile_shader(fs);
-
         // program
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
-        gl.attach_shader(prog, vs);
-        gl.attach_shader(prog, cs);
-        gl.attach_shader(prog, es);
-        gl.attach_shader(prog, gs);
-        gl.attach_shader(prog, fs);
+        glapi.add_shader(prog, GL.vertex_shader, vs_source);
+        glapi.add_shader(prog, GL.tess_control_shader, cs_source);
+        glapi.add_shader(prog, GL.tess_evaluation_shader, es_source);
+        glapi.add_shader(prog, GL.geometry_shader, gs_source);
+        glapi.add_shader(prog, GL.fragment_shader, fs_source);
         gl.link_program(prog);
         gl.use_program(prog);
 

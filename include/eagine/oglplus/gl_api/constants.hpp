@@ -4427,6 +4427,39 @@ public:
 #endif
       stencil_test;
 
+    /// @var polygon_offset_fill
+    /// @glconstwrap{POLYGON_OFFSET_FILL}
+    c_api::opt_constant<
+      mp_list<capability>,
+#ifdef GL_POLYGON_OFFSET_FILL
+      enum_type_c<GL_POLYGON_OFFSET_FILL>>
+#else
+      enum_type_i>
+#endif
+      polygon_offset_fill;
+
+    /// @var polygon_offset_line
+    /// @glconstwrap{POLYGON_OFFSET_LINE}
+    c_api::opt_constant<
+      mp_list<capability>,
+#ifdef GL_POLYGON_OFFSET_LINE
+      enum_type_c<GL_POLYGON_OFFSET_LINE>>
+#else
+      enum_type_i>
+#endif
+      polygon_offset_line;
+
+    /// @var polygon_offset_point
+    /// @glconstwrap{POLYGON_OFFSET_POINT}
+    c_api::opt_constant<
+      mp_list<capability>,
+#ifdef GL_POLYGON_OFFSET_POINT
+      enum_type_c<GL_POLYGON_OFFSET_POINT>>
+#else
+      enum_type_i>
+#endif
+      polygon_offset_point;
+
     /// @var rasterizer_discard
     /// @glconstwrap{RASTERIZER_DISCARD}
     c_api::opt_constant<

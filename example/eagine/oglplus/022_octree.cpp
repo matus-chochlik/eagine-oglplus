@@ -1,4 +1,4 @@
-/// @example oglplus/021_octree.cpp
+/// @example oglplus/022_octree.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.

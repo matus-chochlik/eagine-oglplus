@@ -73,20 +73,62 @@ public:
         return b ? true_false(this->true_) : true_false(this->false_);
     }
 
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const glsl_source_ref& shdr_src) const -> combined_result<void> {
+        owned_shader_name shdr;
+        this->create_shader(shdr_type) >> shdr;
+        auto cleanup = this->delete_shader.raii(shdr);
+        this->shader_source(shdr, shdr_src);
+        this->compile_shader(shdr);
+        return this->attach_shader(prog, shdr);
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const glsl_source_ref& shdr_src,
+      const string_view label) const -> combined_result<void> {
+        owned_shader_name shdr;
+        this->create_shader(shdr_type) >> shdr;
+        auto cleanup = this->delete_shader.raii(shdr);
+        this->object_label(shdr, label);
+        this->shader_source(shdr, shdr_src);
+        this->compile_shader(shdr);
+        return this->attach_shader(prog, shdr);
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      const shader_source_block& shdr_src_blk) const -> combined_result<void> {
+        return add_shader(prog, shdr_src_blk.type(), shdr_src_blk);
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      const shader_source_block& shdr_src_blk,
+      const string_view label) const -> combined_result<void> {
+        return add_shader(prog, shdr_src_blk.type(), shdr_src_blk, label);
+    }
+
     /// @brief Builds a shader program from the specified sources.
+    /// @see add_shader
     auto build_program(
       const program_name prog,
       const program_source_block& prog_src_blk) const -> combined_result<void> {
         if(prog_src_blk.is_valid()) {
             const span_size_t n = prog_src_blk.shader_source_count();
             for(const auto i : integer_range(n)) {
-                auto shdr_src_blk{prog_src_blk.shader_source(i)};
-                owned_shader_name shdr;
-                this->create_shader(shdr_src_blk.type()) >> shdr;
-                auto cleanup = this->delete_shader.raii(shdr);
-                this->shader_source(shdr, shdr_src_blk);
-                this->compile_shader(shdr);
-                this->attach_shader(prog, shdr);
+                add_shader(prog, prog_src_blk.shader_source(i));
             }
         }
         return this->link_program(prog);

@@ -96,6 +96,11 @@ public:
         return translate(api, _gen->attrib_type(vav));
     }
 
+    auto is_attrib_integral(const shapes::vertex_attrib_variant vav) const
+      -> bool {
+        return _gen->is_attrib_integral(vav);
+    }
+
     template <typename A>
     auto is_attrib_normalized(
       const basic_gl_api<A>& api,

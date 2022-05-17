@@ -25,7 +25,7 @@
 #include <random>
 #include <stdexcept>
 
-static const eagine::string_view vs_source{R"(
+static const eagine::oglplus::glsl_source_ref vs_source{R"(
 #version 140
 in vec2 Position;
 out vec3 vertPosition;
@@ -35,7 +35,7 @@ void main() {
 }
 )"};
 
-static const eagine::string_view fs_source{R"(
+static const eagine::oglplus::glsl_source_ref fs_source{R"(
 #version 140
 uniform sampler1D metaballs;
 in vec3 vertPosition;
@@ -100,29 +100,13 @@ static void run_loop(
         geometry_and_bindings screen{glapi, shape, temp};
         screen.use(glapi);
 
-        // vertex shader
-        owned_shader_name vs;
-        gl.create_shader(GL.vertex_shader) >> vs;
-        const auto cleanup_vs = gl.delete_shader.raii(vs);
-        gl.object_label(vs, "metaballs vertex shader");
-        gl.shader_source(vs, glsl_string_ref(vs_source));
-        gl.compile_shader(vs);
-
-        // fragment shader
-        owned_shader_name fs;
-        gl.create_shader(GL.fragment_shader) >> fs;
-        const auto cleanup_fs = gl.delete_shader.raii(fs);
-        gl.object_label(fs, "metaballs fragment shader");
-        gl.shader_source(fs, glsl_string_ref(fs_source));
-        gl.compile_shader(fs);
-
         // program
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
         gl.object_label(prog, "metaballs program");
-        gl.attach_shader(prog, vs);
-        gl.attach_shader(prog, fs);
+        glapi.add_shader(prog, GL.vertex_shader, vs_source);
+        glapi.add_shader(prog, GL.fragment_shader, fs_source);
         gl.link_program(prog);
         gl.use_program(prog);
 

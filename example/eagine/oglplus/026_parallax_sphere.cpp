@@ -1,4 +1,4 @@
-/// @example oglplus/025_parallax_sphere.cpp
+/// @example oglplus/026_parallax_sphere.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -196,7 +196,7 @@ static void run_loop(
         glapi.set_uniform(prog, normal_tex_loc, 0);
 
         // mask texture
-        const auto mask_tex_src{embed(EAGINE_ID(MAskTex), "round_rect_mask")};
+        const auto mask_tex_src{embed(EAGINE_ID(MaskTex), "round_rect_mask")};
 
         owned_texture_name mask_tex;
         gl.gen_textures() >> mask_tex;
