@@ -30,6 +30,8 @@ public:
       const shapes::drawing_variant var,
       memory::buffer& temp) -> auto& {
 
+        _instance_count = shape.instance_count();
+
         const auto& gl = glapi;
         gl.gen_vertex_arrays() >> _vao;
         const auto attrib_count{bindings.attrib_count()};
@@ -106,19 +108,23 @@ public:
     /// @see use
     /// @see draw_instanced
     auto draw(const gl_api& glapi) const {
-        draw_using_instructions(glapi, view(_ops));
+        draw_instanced_using_instructions(
+          glapi, view(_ops), limit_cast<gl_types::sizei_type>(_instance_count));
     }
 
     /// @brief Emits geometry draw commands using the specified GL API.
     /// @see use
     /// @see draw
-    auto draw_instanced(
-      const gl_api& glapi,
-      const gl_types::sizei_type inst_count) const {
-        draw_instanced_using_instructions(glapi, view(_ops), inst_count);
+    auto draw_instanced(const gl_api& glapi, const span_size_t inst_count)
+      const {
+        draw_instanced_using_instructions(
+          glapi,
+          view(_ops),
+          limit_cast<gl_types::sizei_type>(inst_count * _instance_count));
     }
 
 private:
+    span_size_t _instance_count{0};
     std::vector<shape_draw_operation> _ops;
     owned_vertex_array_name _vao;
     gl_object_name_vector<buffer_tag> _buffers;

@@ -83,6 +83,10 @@ public:
         return _gen->draw_variant(index);
     }
 
+    auto instance_count() const -> span_size_t {
+        return _gen->instance_count();
+    }
+
     auto vertex_count() const -> span_size_t {
         return _gen->vertex_count();
     }
