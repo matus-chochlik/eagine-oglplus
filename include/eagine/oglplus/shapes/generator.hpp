@@ -40,6 +40,14 @@ public:
         return _gen->indexed_drawing(var);
     }
 
+    auto attrib_divisors() const {
+        return _gen->attrib_divisors();
+    }
+
+    auto attrib_divisor(const shapes::vertex_attrib_variant vav) const {
+        return _gen->attrib_divisor(vav);
+    }
+
     auto find_variant(
       const shapes::vertex_attrib_kind attrib,
       const string_view name) const -> shapes::vertex_attrib_variant {

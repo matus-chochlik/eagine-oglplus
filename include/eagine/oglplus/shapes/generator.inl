@@ -16,7 +16,7 @@ inline shape_generator::shape_generator(
   std::shared_ptr<shapes::generator> gen)
   : _gen{std::move(gen)} {
     using shapes::generator_capability;
-    auto& GL = api.constants();
+    auto& [gl, GL] = api;
 
     if(GL.triangle_fan) {
         _gen->enable(generator_capability::element_fans);
@@ -26,6 +26,9 @@ inline shape_generator::shape_generator(
     }
     if(GL.primitive_restart) {
         _gen->enable(generator_capability::primitive_restart);
+    }
+    if(gl.vertex_attrib_divisor) {
+        _gen->enable(generator_capability::attrib_divisors);
     }
 }
 //------------------------------------------------------------------------------
@@ -108,14 +111,20 @@ inline void shape_generator::attrib_setup(
     if(is_attrib_integral(vav)) [[unlikely]] {
         gl.vertex_attrib_ipointer(
           loc,
-          gl_types::int_type(values_per_vertex(vav)),
+          limit_cast<gl_types::int_type>(values_per_vertex(vav)),
           attrib_type(api, vav));
     } else {
         gl.vertex_attrib_pointer(
           loc,
-          gl_types::int_type(values_per_vertex(vav)),
+          limit_cast<gl_types::int_type>(values_per_vertex(vav)),
           attrib_type(api, vav),
           is_attrib_normalized(api, vav));
+    }
+    if(attrib_divisors()) {
+        gl.vertex_attrib_divisor(
+          loc, limit_cast<gl_types::uint_type>(attrib_divisor(vav)));
+    } else {
+        gl.vertex_attrib_divisor(loc, 0U);
     }
 
     if(gl.enable_vertex_array_attrib) {
