@@ -1,4 +1,4 @@
-/// @example oglplus/014_worleycraft.cpp
+/// @example oglplus/014_texture_projection.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -15,10 +15,13 @@
 #include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
+#include <eagine/oglplus/math/matrix.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/geometry.hpp>
-#include <eagine/shapes/plane.hpp>
-#include <eagine/shapes/to_quads.hpp>
+#include <eagine/shapes/cube.hpp>
+#include <eagine/shapes/sphere.hpp>
+#include <eagine/shapes/torus.hpp>
+#include <eagine/shapes/twisted_torus.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -26,67 +29,42 @@
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 140
-in vec4 Position;
-in vec2 Coord;
-out vec2 vertCoord;
-
-void main() {
-    gl_Position = Position;
-    vertCoord = Coord;
-}
-)"};
-
-static const eagine::string_view gs_source{R"(
 #version 150
+in vec3 Position;
+in vec3 Normal;
 
-layout(lines_adjacency) in;
-layout(triangle_strip, max_vertices = 20) out;
+out vec3 vertLightDir;
+out vec3 vertNormal;
+out vec2 vertTexCoord;
 
-in vec2 vertCoord[4];
-out vec3 geomColor;
-out float geomExtrude;
-uniform mat4 Camera;
-uniform sampler2D Tex;
+uniform mat4 model, camera, projector;
+uniform vec3 lightPos;
 
 void main() {
-	vec2 Coord = (vertCoord[0]+vertCoord[1]+vertCoord[2]+vertCoord[3]) * 0.25;
-	vec4 Texel = texture(Tex, Coord);
-	geomColor = Texel.rgb;
-
-    ivec4 eidx = ivec4(0, 2, 3, 1);
-	vec3 pofs = vec3(0.0, Texel.a * 0.15, 0.0);
-
-	for(int i=0; i<4; ++i) {
-		for(int j=0; j<2; ++j) {
-			vec3 tpos = gl_in[eidx[(i+j)%4]].gl_Position.xyz;
-			geomExtrude = 0.0;
-			gl_Position = Camera * vec4(tpos, 1.0);
-			EmitVertex();
-			geomExtrude = sqrt(Texel.a);
-			gl_Position = Camera * vec4(tpos + pofs, 1.0);
-			EmitVertex();
-		}
-		EndPrimitive();
-	}
-
-	geomExtrude = sqrt(Texel.a);
-	for(int i=0; i<4; ++i) {
-		gl_Position = Camera * vec4(gl_in[i].gl_Position.xyz + pofs, 1.0);
-		EmitVertex();
-	}
-	EndPrimitive();
+	gl_Position = model * vec4(Position, 1.0);
+	vertLightDir = lightPos - Position.xyz;
+	vertNormal = mat3(model) * -Normal;
+	vertTexCoord = (projector * gl_Position).xy;
+	gl_Position = camera * gl_Position;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 140
-in vec3 geomColor;
-in float geomExtrude;
+#version 150
+in vec3 vertLightDir;
+in vec3 vertNormal;
+in vec2 vertTexCoord;
 out vec3 fragColor;
 
+uniform vec3 lightDir;
+uniform sampler2D colorTex;
+
 void main() {
-    fragColor = geomColor * geomExtrude * 1.41;
+	float ld = dot(vertNormal, normalize(vertLightDir));
+	fragColor = (abs(ld) * 0.6 + 0.4) * mix(
+		vec3(1.0),
+		texture(colorTex, vertTexCoord).rgb,
+		sqrt(max(ld, 0.0)));
 }
 )"};
 
@@ -98,17 +76,6 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
-    auto& args = ctx.args();
-    int divisions = 256;
-
-    if(args.find("--128")) {
-        divisions = 128;
-    } else if(args.find("--512")) {
-        divisions = 512;
-    } else if(args.find("--64")) {
-        divisions = 64;
-    }
-
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
 
@@ -119,19 +86,30 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        memory::buffer temp;
-
         // geometry
-        shape_generator shape(
-          glapi,
-          shapes::to_quads(shapes::unit_plane(
-            shapes::vertex_attrib_kind::position |
-              shapes::vertex_attrib_kind::wrap_coord,
-            divisions,
-            divisions)));
+        memory::buffer temp;
+        vertex_attrib_bindings bindings{
+          shapes::vertex_attrib_kind::position,
+          shapes::vertex_attrib_kind::normal};
 
-        geometry_and_bindings plane{glapi, shape, temp};
-        plane.use(glapi);
+        auto [shape, inv_cull] = [&]() -> std::tuple<shape_generator, bool> {
+            const auto attribs = bindings.attrib_kinds();
+            if(ctx.args().find("--twisted-torus")) {
+                return {
+                  {glapi, shapes::unit_twisted_torus(attribs, 6, 48, 4, 0.5F)},
+                  false};
+            }
+            if(ctx.args().find("--torus")) {
+                return {{glapi, shapes::unit_torus(attribs)}, false};
+            }
+            if(ctx.args().find("--sphere")) {
+                return {{glapi, shapes::unit_sphere(attribs)}, false};
+            }
+            return {{glapi, shapes::unit_cube(attribs)}, true};
+        }();
+
+        geometry geom{glapi, shape, bindings, 0, temp};
+        geom.use(glapi);
 
         // vertex shader
         owned_shader_name vs;
@@ -140,14 +118,6 @@ static void run_loop(
         gl.object_label(vs, "vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
-
-        // geometry shader
-        owned_shader_name gs;
-        gl.create_shader(GL.geometry_shader) >> gs;
-        const auto cleanup_gs = gl.delete_shader.raii(gs);
-        gl.object_label(gs, "geometry shader");
-        gl.shader_source(gs, glsl_string_ref(gs_source));
-        gl.compile_shader(gs);
 
         // fragment shader
         owned_shader_name fs;
@@ -161,52 +131,74 @@ static void run_loop(
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
-        gl.object_label(prog, "draw program");
         gl.attach_shader(prog, vs);
-        gl.attach_shader(prog, gs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
         gl.use_program(prog);
-        gl.bind_attrib_location(prog, plane.position_loc(), "Position");
-        gl.bind_attrib_location(prog, plane.wrap_coord_loc(), "Coord");
 
-        // texture
-        const auto tex_src{embed(EAGINE_ID(WorleyTex), "worley-bump")};
+        // color texture
+        const auto color_tex_src{embed(EAGINE_ID(ColorTex), "oglplus")};
 
-        owned_texture_name tex;
-        gl.gen_textures() >> tex;
-        const auto cleanup_tex = gl.delete_textures.raii(tex);
-        gl.active_texture(GL.texture0);
-        gl.bind_texture(GL.texture_2d, tex);
+        owned_texture_name color_tex;
+        gl.gen_textures() >> color_tex;
+        const auto cleanup_color_tex = gl.delete_textures.raii(color_tex);
+        gl.active_texture(GL.texture0 + 0);
+        gl.bind_texture(GL.texture_2d, color_tex);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
+        gl.tex_parameter_fv(
+          GL.texture_2d,
+          GL.texture_border_color,
+          element_view(oglplus::vec3{1.F}));
         glapi.spec_tex_image2d(
           GL.texture_2d,
           0,
           0,
-          oglplus::texture_image_block(tex_src.unpack(ctx)));
+          oglplus::texture_image_block(color_tex_src.unpack(ctx)));
+        oglplus::uniform_location color_tex_loc;
+        gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
+        glapi.set_uniform(prog, color_tex_loc, 0);
 
         // uniform
-        oglplus::uniform_location tex_loc;
-        gl.get_uniform_location(prog, "Tex") >> tex_loc;
-        glapi.set_uniform(prog, tex_loc, 0);
+        uniform_location model_loc;
+        gl.get_uniform_location(prog, "model") >> model_loc;
 
         uniform_location camera_loc;
-        gl.get_uniform_location(prog, "Camera") >> camera_loc;
+        gl.get_uniform_location(prog, "camera") >> camera_loc;
 
-        // camera setup
+        uniform_location projector_loc;
+        gl.get_uniform_location(prog, "projector") >> projector_loc;
+
+        uniform_location light_pos_loc;
+        gl.get_uniform_location(prog, "lightPos") >> light_pos_loc;
+
         orbiting_camera camera;
         camera.set_near(0.1F)
-          .set_far(10.F)
-          .set_orbit_min(1.41F)
-          .set_orbit_max(1.71F)
-          .set_fov(degrees_(40));
+          .set_far(50.F)
+          .set_fov(degrees_(75))
+          .set_orbit_min(shape.bounding_sphere().radius() * 1.5F)
+          .set_orbit_max(shape.bounding_sphere().radius() * 2.1F);
+
+        orbiting_camera projector;
+        projector.set_near(0.1F)
+          .set_far(50.F)
+          .set_fov(degrees_(90))
+          .set_orbit_min(2.0F)
+          .set_orbit_max(9.0F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
+        gl.enable(GL.cull_face);
+        if(inv_cull) {
+            gl.cull_face(GL.front);
+        } else {
+            gl.cull_face(GL.back);
+        }
 
         float t = 0.F;
 
@@ -235,18 +227,26 @@ static void run_loop(
 
             t += 0.02F;
             const auto aspect = float(width) / float(height);
-            glapi.set_uniform(
-              prog,
-              camera_loc,
-              camera.set_azimuth(radians_(t * 0.2))
-                .set_elevation(radians_(std::sin(t * 0.618 * 0.3)))
-                .set_orbit_factor(math::sine_wave01(t * 0.1618F))
-                .matrix(aspect));
 
-            plane.draw(glapi);
+            camera.set_azimuth(radians_(t))
+              .set_elevation(radians_(std::sin(t)))
+              .set_orbit_factor(math::sine_wave01(t * 0.1F));
+            glapi.set_uniform(prog, camera_loc, camera.matrix(aspect));
+
+            projector.set_azimuth(radians_(t * -0.1618F))
+              .set_elevation(radians_(std::sin(t * 0.2F) * 0.618F))
+              .set_orbit_factor(math::sine_wave01(t * 0.2F));
+            glapi.set_uniform(prog, projector_loc, projector.matrix(1.F));
+            glapi.set_uniform(prog, light_pos_loc, projector.position());
+
+            glapi.set_uniform(
+              prog, model_loc, matrix_rotation_x(right_angles_(t))());
+
+            geom.draw(glapi);
 
             glfwSwapBuffers(window);
         }
+        geom.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }

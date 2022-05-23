@@ -1,4 +1,4 @@
-/// @example oglplus/026_parallax_sphere.cpp
+/// @example oglplus/025_parallax_cube.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -17,14 +17,14 @@
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/geometry.hpp>
-#include <eagine/shapes/round_cube.hpp>
+#include <eagine/shapes/cube.hpp>
 
 #include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <stdexcept>
 
-static const eagine::string_view vs_source{R"(
+static const eagine::oglplus::glsl_source_ref vs_source{R"(
 #version 400
 uniform mat4 perspective, camera, model;
 uniform vec3 lightPos;
@@ -41,28 +41,29 @@ out vec3 vertViewTangent;
 out mat3 vertNormalMatrix;
 
 void main() {
-    mat4 modelview = camera * model;
-    vec4 eyePos = modelview * Position;
-    vec3 vertEye = eyePos.xyz;
-    vec3 fragTangent = mat3(modelview) * Tangent;
-    vertNormal = mat3(modelview) * Normal;
-    vertLight = lightPos - (model * Position).xyz;
-    vertNormalMatrix = mat3(fragTangent, cross(vertNormal, fragTangent), vertNormal);
-    vertViewTangent = vec3(
-        dot(vertNormalMatrix[0], vertEye),
-        dot(vertNormalMatrix[1], vertEye),
-        dot(vertNormalMatrix[2], vertEye)
-    );
-    vertTexCoord = TexCoord;
-    gl_Position = perspective * eyePos;
+	mat4 modelview = camera * model;
+	vec4 eyePos = modelview * Position;
+	vec3 vertEye = eyePos.xyz;
+	vec3 fragTangent = mat3(modelview) * Tangent;
+	vertNormal = mat3(modelview) * Normal;
+	vertLight = lightPos - (model * Position).xyz;
+	vertNormalMatrix = mat3(fragTangent, cross(vertNormal, fragTangent), vertNormal);
+	vertViewTangent = vec3(
+		dot(vertNormalMatrix[0], vertEye),
+		dot(vertNormalMatrix[1], vertEye),
+		dot(vertNormalMatrix[2], vertEye)
+	);
+	vertTexCoord = TexCoord;
+	gl_Position = perspective * eyePos;
 }
 )"};
 
-static const eagine::string_view fs_source{R"(
+static const eagine::oglplus::glsl_source_ref fs_source{R"(
 #version 400
+uniform sampler2D colorTex;
 uniform sampler2D normalTex;
-uniform sampler2D maskTex;
-const float depthMult = 0.15;
+uniform sampler2D depthTex;
+const float depthMult = 0.12;
 
 in vec3 vertLight;
 in vec3 vertNormal;
@@ -72,47 +73,47 @@ in mat3 vertNormalMatrix;
 
 out vec3 fragColor;
 
+vec3 colorAt(vec2 c) {
+	return texture(colorTex, c).xyz;
+}
+
 vec3 normalAt(vec2 c) {
-    vec3 n = 2.0*texture(normalTex, c).xyz-vec3(1.0);
-    return vertNormalMatrix * vec3(-n.xy, n.z);
+	vec3 n = 2.0*texture(normalTex, c).xyz-vec3(1.0);
+	return vertNormalMatrix * vec3(-n.xy, n.z);
 }
 
 float depthAt(vec2 c) {
-    return texture(normalTex, c).a * texture(maskTex, c).r;
+	return sqrt(1.0 - texture(depthTex, c).r);
 }
 
 void main() {
-    vec3 viewTangent = normalize(vertViewTangent);
-    float sampleInterval = 1.0 / length(textureSize(normalTex, 0));
-    vec3 sampleStep = viewTangent*sampleInterval;
-    float depth = depthAt(vertTexCoord);
-    float maxOffs = min((depth * depthMult)/(-viewTangent.z), 1.0);
-    vec3 viewOffs = vec3(0.0, 0.0, 0.0);
-    vec2 offsTexC = vertTexCoord + viewOffs.xy;
-    while(true) {
-        if(offsTexC.x <= 0.0 || offsTexC.x >= 1.0) {
-            discard;
-        }
-        if(offsTexC.y <= 0.0 || offsTexC.y >= 1.0) {
-            discard;
-        }
-        if(depth*depthMult <= -viewOffs.z) {
-            break;
-        }
-        viewOffs += sampleStep;
-        if(length(viewOffs) >= maxOffs) {
-            break;
-        }
-        offsTexC = vertTexCoord + viewOffs.xy;
-        depth = depthAt(offsTexC);
-    }
-    float emission = max(pow(fract(exp(1.1+depth*3.0)), 4.0), depth*1.2);
-    vec3 normal = normalAt(offsTexC);
-    float diffuse = max(dot(normalize(vertLight), normalize(normal)), 0.0);
-    fragColor = max(
-        0.6 * vec3(0.10 + 0.20*diffuse + 0.25*pow(diffuse, 2.0)),
-        emission * vec3(1.2, 1.0, 0.6)
-    );
+	vec3 viewTangent = normalize(vertViewTangent);
+	float sampleInterval = 1.0 / length(textureSize(depthTex, 0));
+	vec3 sampleStep = viewTangent*sampleInterval;
+	float depth = depthAt(vertTexCoord);
+	float maxOffs = min((depth * depthMult)/(-viewTangent.z), 1.0);
+	vec3 viewOffs = vec3(0.0, 0.0, 0.0);
+	vec2 offsTexC = vertTexCoord + viewOffs.xy;
+	while(length(viewOffs) < maxOffs)
+	{
+		if(offsTexC.x <= 0.0 || offsTexC.x >= 1.0) {
+			discard;
+		}
+		if(offsTexC.y <= 0.0 || offsTexC.y >= 1.0) {
+			discard;
+		}
+		if(depth*depthMult <= -viewOffs.z) {
+			break;
+		}
+		viewOffs += sampleStep;
+		offsTexC = vertTexCoord + viewOffs.xy;
+		depth = depthAt(offsTexC);
+	}
+	vec3 color = colorAt(offsTexC);
+	vec3 normal = normalAt(offsTexC);
+	float diffuse = dot(normalize(vertLight), normalize(normal));
+	float light = 0.45 + 1.6*max(diffuse, 0.0);
+	fragColor = color*light;
 }
 )"};
 
@@ -134,53 +135,64 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        // geometry
-        memory::buffer temp;
-        shape_generator shape(
-          glapi,
-          shapes::unit_round_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal |
-            shapes::vertex_attrib_kind::tangent |
-            shapes::vertex_attrib_kind::face_coord));
-        geometry_and_bindings sphere{glapi, shape, temp};
-        sphere.use(glapi);
-
-        // vertex shader
-        owned_shader_name vs;
-        gl.create_shader(GL.vertex_shader) >> vs;
-        const auto cleanup_vs = gl.delete_shader.raii(vs);
-        gl.shader_source(vs, glsl_string_ref(vs_source));
-        gl.compile_shader(vs);
-
-        // fragment shader
-        owned_shader_name fs;
-        gl.create_shader(GL.fragment_shader) >> fs;
-        const auto cleanup_fs = gl.delete_shader.raii(fs);
-        gl.shader_source(fs, glsl_string_ref(fs_source));
-        gl.compile_shader(fs);
+        memory::buffer buf;
 
         // program
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
-        gl.attach_shader(prog, vs);
-        gl.attach_shader(prog, fs);
+        glapi.add_shader(prog, GL.vertex_shader, vs_source);
+        glapi.add_shader(prog, GL.fragment_shader, fs_source);
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(prog, sphere.position_loc(), "Position");
-        gl.bind_attrib_location(prog, sphere.normal_loc(), "Normal");
-        gl.bind_attrib_location(prog, sphere.tangent_loc(), "Tangent");
-        gl.bind_attrib_location(prog, sphere.wrap_coord_loc(), "TexCoord");
+        // geometry
+        memory::buffer temp;
+        shape_generator shape(
+          glapi,
+          shapes::unit_cube(
+            shapes::vertex_attrib_kind::position |
+            shapes::vertex_attrib_kind::normal |
+            shapes::vertex_attrib_kind::tangent |
+            shapes::vertex_attrib_kind::face_coord));
+        geometry_and_bindings cube{glapi, shape, temp};
+        cube.use(glapi);
 
-        // normal/height texture
-        const auto normal_tex_src{embed(EAGINE_ID(NormalTex), "worley-bump")};
+        gl.bind_attrib_location(prog, cube.position_loc(), "Position");
+        gl.bind_attrib_location(prog, cube.normal_loc(), "Normal");
+        gl.bind_attrib_location(prog, cube.tangent_loc(), "Tangent");
+        gl.bind_attrib_location(prog, cube.wrap_coord_loc(), "TexCoord");
+
+        // color texture
+        const auto color_tex_src{
+          embed(EAGINE_ID(ColorTex), "wooden_crate-diff")};
+
+        owned_texture_name color_tex;
+        gl.gen_textures() >> color_tex;
+        const auto cleanup_color_tex = gl.delete_textures.raii(color_tex);
+        gl.active_texture(GL.texture0 + 0);
+        gl.bind_texture(GL.texture_2d, color_tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
+        glapi.spec_tex_image2d(
+          GL.texture_2d,
+          0,
+          0,
+          oglplus::texture_image_block(color_tex_src.unpack(ctx)));
+        oglplus::uniform_location color_tex_loc;
+        gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
+        glapi.set_uniform(prog, color_tex_loc, 0);
+
+        // normal texture
+        const auto normal_tex_src{
+          embed(EAGINE_ID(NormalTex), "wooden_crate-nmap")};
 
         owned_texture_name normal_tex;
         gl.gen_textures() >> normal_tex;
         const auto cleanup_normal_tex = gl.delete_textures.raii(normal_tex);
-        gl.active_texture(GL.texture0);
+        gl.active_texture(GL.texture0 + 1);
         gl.bind_texture(GL.texture_2d, normal_tex);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
@@ -193,28 +205,35 @@ static void run_loop(
           oglplus::texture_image_block(normal_tex_src.unpack(ctx)));
         oglplus::uniform_location normal_tex_loc;
         gl.get_uniform_location(prog, "normalTex") >> normal_tex_loc;
-        glapi.set_uniform(prog, normal_tex_loc, 0);
+        glapi.set_uniform(prog, normal_tex_loc, 1);
 
-        // mask texture
-        const auto mask_tex_src{embed(EAGINE_ID(MaskTex), "round_rect_mask")};
+        // depth texture
+        const auto depth_tex_src{
+          embed(EAGINE_ID(LightTex), "wooden_crate-hmap")};
 
-        owned_texture_name mask_tex;
-        gl.gen_textures() >> mask_tex;
-        const auto cleanup_mask_tex = gl.delete_textures.raii(mask_tex);
-        gl.active_texture(GL.texture0 + 1);
-        gl.bind_texture(GL.texture_2d, mask_tex);
+        owned_texture_name depth_tex;
+        gl.gen_textures() >> depth_tex;
+        const auto cleanup_depth_tex = gl.delete_textures.raii(depth_tex);
+        gl.active_texture(GL.texture0 + 2);
+        gl.bind_texture(GL.texture_2d, depth_tex);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
+        gl.tex_parameter_fv(
+          GL.texture_2d,
+          GL.texture_border_color,
+          element_view(oglplus::vec3{0.F}));
         glapi.spec_tex_image2d(
           GL.texture_2d,
           0,
           0,
-          oglplus::texture_image_block(mask_tex_src.unpack(ctx)));
-        oglplus::uniform_location mask_tex_loc;
-        gl.get_uniform_location(prog, "maskTex") >> mask_tex_loc;
-        glapi.set_uniform(prog, mask_tex_loc, 1);
+          oglplus::texture_image_block(depth_tex_src.unpack(ctx)));
+        oglplus::uniform_location depth_tex_loc;
+        gl.get_uniform_location(prog, "depthTex") >> depth_tex_loc;
+        glapi.set_uniform(prog, depth_tex_loc, 2);
 
         // uniforms
         uniform_location perspective_loc;
@@ -236,7 +255,7 @@ static void run_loop(
           .set_orbit_min(1.8F)
           .set_orbit_max(2.0F);
 
-        gl.clear_color(0.05F, 0.05F, 0.05F, 1.0F);
+        gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
 
@@ -265,7 +284,7 @@ static void run_loop(
 
             gl.clear(GL.color_buffer_bit | GL.depth_buffer_bit);
 
-            t += 0.01F;
+            t += 0.02F;
             const auto aspect = float(width) / float(height);
             camera.set_azimuth(radians_(t * 0.4F))
               .set_elevation(radians_(std::sin(t * 0.5F)))
@@ -274,7 +293,7 @@ static void run_loop(
               prog, perspective_loc, camera.perspective_matrix(aspect));
             glapi.set_uniform(prog, camera_loc, camera.transform_matrix());
             glapi.set_uniform(
-              prog, model_loc, matrix_translation(-0.45F, 0.F, 0.F)());
+              prog, model_loc, matrix_rotation_x(right_angles_(t * 0.05))());
             glapi.set_uniform(
               prog,
               light_pos_loc,
@@ -282,12 +301,11 @@ static void run_loop(
                 10.0F * cos(degrees_(5.0F * t * 2.718F)),
                 10.0F * sin(degrees_(5.0F * t * 2.718F)),
                 10.0F * sin(degrees_(5.0F * t * 1.618F))));
-
-            sphere.draw(glapi);
+            cube.draw(glapi);
 
             glfwSwapBuffers(window);
         }
-        sphere.clean_up(glapi);
+        cube.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }

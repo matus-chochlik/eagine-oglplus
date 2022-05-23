@@ -1,4 +1,4 @@
-/// @example oglplus/020_multi_viewport.cpp
+/// @example oglplus/022_multi_viewport.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.

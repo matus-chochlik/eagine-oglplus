@@ -1,4 +1,4 @@
-/// @example oglplus/016_subroutines.cpp
+/// @example oglplus/016_cloud_morphing.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -9,14 +9,17 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
+#include <eagine/animated_value.hpp>
 #include <eagine/main.hpp>
 #include <eagine/math/functions.hpp>
 #include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/geometry.hpp>
-#include <eagine/shapes/round_cube.hpp>
+#include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/shapes/surface_points.hpp>
+#include <eagine/shapes/torus.hpp>
+#include <eagine/shapes/twisted_torus.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -24,62 +27,31 @@
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 400
-in vec3 Position;
-in vec2 Coord;
-out vec2 vertCoord;
-uniform vec3 center;
-uniform mat4 camera;
+#version 140
+in vec3 Position1;
+in vec3 Position2;
+in vec3 Color1;
+in vec3 Color2;
+out vec3 vertColor;
+uniform mat4 Camera;
+uniform float Factor;
 
 void main() {
-    gl_Position = camera * vec4(center + Position, 1.0);
-    vertCoord = Coord;
+    gl_Position = Camera * vec4(mix(Position1, Position2, Factor), 1.0);
+    vertColor = mix(
+		vec3(1.0, 0.1, 0.0) * Color1.r * 1.4,
+		vec3(0.0, 0.1, 1.0) * Color2.g * 1.4,
+		Factor);
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 400
-in vec2 vertCoord;
+#version 140
+in vec3 vertColor;
 out vec3 fragColor;
 
-subroutine float patternType(vec2 c);
-
-subroutine(patternType) float horzStrip(vec2 c) {
-	return float(int(c.x * 8.0) % 2);
-}
-
-subroutine(patternType) float vertStrip(vec2 c) {
-	return float(int(c.y * 8.0) % 2);
-}
-
-subroutine(patternType) float diagStrip(vec2 c) {
-	c = c * 8.0;
-	return float(int(c.x + c.y) % 2);
-}
-
-subroutine(patternType) float checker(vec2 c) {
-	c = c * 8.0;
-	return float((int(c.x) % 2 + int(c.y) % 2) % 2);
-}
-
-subroutine(patternType) float spiral(vec2 c) {
-	vec2 center = (c - vec2(0.5)) * 16.0;
-	float l = length(center);
-	float t = atan(center.y, center.x) / (2.0 * asin(1.0));
-	return float(int(l + t) % 2);
-}
-
-subroutine(patternType) float dots(vec2 c) {
-	c = c * 4.0;
-	vec2 center = floor(c) + vec2(0.5);
-	float l = length(c - center);
-	return l > 0.25 ? 1.0 : 0.0;
-}
-
-subroutine uniform patternType pattern;
-
 void main() {
-    fragColor = vec3(pattern(vertCoord));
+    fragColor = vertColor;
 }
 )"};
 
@@ -91,6 +63,14 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
+    const auto progress_callback = [window] {
+        glfwPollEvents();
+        return glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
+    };
+
+    set_progress_update_callback(
+      ctx, {construct_from, progress_callback}, std::chrono::milliseconds{100});
+
     const gl_api glapi;
     const auto& [gl, GL] = glapi;
 
@@ -101,15 +81,7 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        // geometry
-        memory::buffer temp;
-        shape_generator shape(
-          glapi,
-          shapes::unit_round_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::face_coord));
-        geometry_and_bindings cube{glapi, shape, temp};
-        cube.use(glapi);
+        memory::buffer buf;
 
         // vertex shader
         owned_shader_name vs;
@@ -131,53 +103,128 @@ static void run_loop(
         owned_program_name prog;
         gl.create_program() >> prog;
         const auto cleanup_prog = gl.delete_program.raii(prog);
+        gl.object_label(prog, "draw program");
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(prog, cube.position_loc(), "Position");
-        gl.bind_attrib_location(prog, cube.face_coord_loc(), "Coord");
+        // geometry
+        const span_size_t point_count = 512 * 1024;
 
-        // subroutines
-        subroutine_uniform_location pattern_loc;
-        gl.get_subroutine_uniform_location(
-          prog, GL.fragment_shader, "pattern") >>
-          pattern_loc;
+        shape_generator shape1(
+          glapi,
+          shapes::surface_points(
+            shapes::unit_torus(
+              shapes::vertex_attrib_kind::position |
+              shapes::vertex_attrib_kind::normal),
+            point_count,
+            ctx));
 
-        std::array<subroutine_location, 6> subroutines;
-        gl.get_subroutine_index(prog, GL.fragment_shader, "horzStrip") >>
-          subroutines[0];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "vertStrip") >>
-          subroutines[1];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "diagStrip") >>
-          subroutines[2];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "checker") >>
-          subroutines[3];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "spiral") >>
-          subroutines[4];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "dots") >>
-          subroutines[5];
+        shape_generator shape2(
+          glapi,
+          shapes::surface_points(
+            shapes::unit_twisted_torus(
+              shapes::vertex_attrib_kind::position |
+                shapes::vertex_attrib_kind::normal,
+              6,
+              48,
+              4,
+              0.5F),
+            point_count,
+            ctx));
 
-        // uniforms
-        uniform_location center_loc;
-        gl.get_uniform_location(prog, "center") >> center_loc;
+        std::vector<shape_draw_operation> _ops;
+        _ops.resize(std_size(shape1.operation_count()));
+        shape1.instructions(glapi, cover(_ops));
+
+        // vao
+        owned_vertex_array_name vao;
+        gl.gen_vertex_arrays() >> vao;
+        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
+        gl.bind_vertex_array(vao);
+
+        // positions
+        vertex_attrib_location position1_loc{0};
+        owned_buffer_name positions1;
+        gl.gen_buffers() >> positions1;
+        const auto cleanup_positions1 = gl.delete_buffers.raii(positions1);
+        shape1.attrib_setup(
+          glapi,
+          vao,
+          positions1,
+          position1_loc,
+          shapes::vertex_attrib_kind::position,
+          "positions",
+          buf);
+        gl.bind_attrib_location(prog, position1_loc, "Position1");
+
+        vertex_attrib_location position2_loc{1};
+        owned_buffer_name positions2;
+        gl.gen_buffers() >> positions2;
+        const auto cleanup_positions2 = gl.delete_buffers.raii(positions2);
+        shape2.attrib_setup(
+          glapi,
+          vao,
+          positions2,
+          position2_loc,
+          shapes::vertex_attrib_kind::position,
+          "positions",
+          buf);
+        gl.bind_attrib_location(prog, position2_loc, "Position2");
+
+        // colors
+        vertex_attrib_location color1_loc{2};
+        owned_buffer_name colors1;
+        gl.gen_buffers() >> colors1;
+        const auto cleanup_colors1 = gl.delete_buffers.raii(colors1);
+        shape1.attrib_setup(
+          glapi,
+          vao,
+          colors1,
+          color1_loc,
+          shapes::vertex_attrib_kind::normal,
+          "colors",
+          buf);
+        gl.bind_attrib_location(prog, color1_loc, "Color1");
+
+        vertex_attrib_location color2_loc{3};
+        owned_buffer_name colors2;
+        gl.gen_buffers() >> colors2;
+        const auto cleanup_colors2 = gl.delete_buffers.raii(colors2);
+        shape2.attrib_setup(
+          glapi,
+          vao,
+          colors2,
+          color2_loc,
+          shapes::vertex_attrib_kind::normal,
+          "colors",
+          buf);
+        gl.bind_attrib_location(prog, color2_loc, "Color2");
+
+        // uniform
+        uniform_location factor_loc;
+        gl.get_uniform_location(prog, "Factor") >> factor_loc;
 
         uniform_location camera_loc;
-        gl.get_uniform_location(prog, "camera") >> camera_loc;
+        gl.get_uniform_location(prog, "Camera") >> camera_loc;
 
         orbiting_camera camera;
         camera.set_near(0.1F)
           .set_far(50.F)
           .set_fov(right_angle_())
-          .set_orbit_min(4.F)
-          .set_orbit_max(5.F);
+          .set_orbit_min(0.5F)
+          .set_orbit_max(0.8F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
+        gl.point_size(3.F);
 
-        float t = 0.F;
+        float tim = 0.F;
+        animated_value<float, float> fac;
+        const std::array<float, 4> fac_next{{0.F, 0.F, 1.F, 1.F}};
+        std::size_t fac_idx = 0U;
 
         while(true) {
             glfwPollEvents();
@@ -202,31 +249,26 @@ static void run_loop(
 
             gl.clear(GL.color_buffer_bit | GL.depth_buffer_bit);
 
-            t += 0.02F;
+            const auto delta_t = 0.02F;
+            tim += delta_t;
+            fac.update(delta_t);
+            if(fac.is_done()) {
+                fac_idx = (fac_idx + 1) % fac_next.size();
+                fac.set(fac_next[fac_idx], 2.F);
+            }
             const auto aspect = float(width) / float(height);
+            glapi.set_uniform(prog, factor_loc, fac.get());
             glapi.set_uniform(
               prog,
               camera_loc,
-              camera.set_azimuth(radians_(t))
-                .set_elevation(radians_(std::sin(t)))
-                .set_orbit_factor(math::sine_wave01(t * 0.1F))
+              camera.set_azimuth(radians_(tim * 0.7F))
+                .set_elevation(right_angles_(std::sin(tim * 0.3F)))
+                .set_orbit_factor(math::sine_wave01(tim * 0.1F))
                 .matrix(aspect));
-
-            for(const auto s : integer_range(subroutines.size())) {
-                const auto angle = turns_(float(s) / float(subroutines.size()));
-
-                glapi.set_uniform(
-                  prog,
-                  center_loc,
-                  vec3(2.5F * cos(angle), 0.F, 2.5F * sin(angle)));
-                gl.uniform_subroutines(GL.fragment_shader, subroutines[s]);
-
-                cube.draw(glapi);
-            }
+            draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);
         }
-        cube.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }
