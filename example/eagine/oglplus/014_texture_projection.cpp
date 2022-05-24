@@ -1,4 +1,4 @@
-/// @example oglplus/016_subroutines.cpp
+/// @example oglplus/014_texture_projection.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -9,14 +9,19 @@
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
+#include <eagine/embed.hpp>
 #include <eagine/main.hpp>
 #include <eagine/math/functions.hpp>
 #include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
+#include <eagine/oglplus/math/matrix.hpp>
 #include <eagine/oglplus/math/vector.hpp>
 #include <eagine/oglplus/shapes/geometry.hpp>
-#include <eagine/shapes/round_cube.hpp>
+#include <eagine/shapes/cube.hpp>
+#include <eagine/shapes/sphere.hpp>
+#include <eagine/shapes/torus.hpp>
+#include <eagine/shapes/twisted_torus.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -24,62 +29,42 @@
 #include <stdexcept>
 
 static const eagine::string_view vs_source{R"(
-#version 400
+#version 150
 in vec3 Position;
-in vec2 Coord;
-out vec2 vertCoord;
-uniform vec3 center;
-uniform mat4 camera;
+in vec3 Normal;
+
+out vec3 vertLightDir;
+out vec3 vertNormal;
+out vec2 vertTexCoord;
+
+uniform mat4 model, camera, projector;
+uniform vec3 lightPos;
 
 void main() {
-    gl_Position = camera * vec4(center + Position, 1.0);
-    vertCoord = Coord;
+	gl_Position = model * vec4(Position, 1.0);
+	vertLightDir = lightPos - Position.xyz;
+	vertNormal = mat3(model) * -Normal;
+	vertTexCoord = (projector * gl_Position).xy;
+	gl_Position = camera * gl_Position;
 }
 )"};
 
 static const eagine::string_view fs_source{R"(
-#version 400
-in vec2 vertCoord;
+#version 150
+in vec3 vertLightDir;
+in vec3 vertNormal;
+in vec2 vertTexCoord;
 out vec3 fragColor;
 
-subroutine float patternType(vec2 c);
-
-subroutine(patternType) float horzStrip(vec2 c) {
-	return float(int(c.x * 8.0) % 2);
-}
-
-subroutine(patternType) float vertStrip(vec2 c) {
-	return float(int(c.y * 8.0) % 2);
-}
-
-subroutine(patternType) float diagStrip(vec2 c) {
-	c = c * 8.0;
-	return float(int(c.x + c.y) % 2);
-}
-
-subroutine(patternType) float checker(vec2 c) {
-	c = c * 8.0;
-	return float((int(c.x) % 2 + int(c.y) % 2) % 2);
-}
-
-subroutine(patternType) float spiral(vec2 c) {
-	vec2 center = (c - vec2(0.5)) * 16.0;
-	float l = length(center);
-	float t = atan(center.y, center.x) / (2.0 * asin(1.0));
-	return float(int(l + t) % 2);
-}
-
-subroutine(patternType) float dots(vec2 c) {
-	c = c * 4.0;
-	vec2 center = floor(c) + vec2(0.5);
-	float l = length(c - center);
-	return l > 0.25 ? 1.0 : 0.0;
-}
-
-subroutine uniform patternType pattern;
+uniform vec3 lightDir;
+uniform sampler2D colorTex;
 
 void main() {
-    fragColor = vec3(pattern(vertCoord));
+	float ld = dot(vertNormal, normalize(vertLightDir));
+	fragColor = (abs(ld) * 0.6 + 0.4) * mix(
+		vec3(1.0),
+		texture(colorTex, vertTexCoord).rgb,
+		sqrt(max(ld, 0.0)));
 }
 )"};
 
@@ -103,13 +88,28 @@ static void run_loop(
 
         // geometry
         memory::buffer temp;
-        shape_generator shape(
-          glapi,
-          shapes::unit_round_cube(
-            shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::face_coord));
-        geometry_and_bindings cube{glapi, shape, temp};
-        cube.use(glapi);
+        vertex_attrib_bindings bindings{
+          shapes::vertex_attrib_kind::position,
+          shapes::vertex_attrib_kind::normal};
+
+        auto [shape, inv_cull] = [&]() -> std::tuple<shape_generator, bool> {
+            const auto attribs = bindings.attrib_kinds();
+            if(ctx.args().find("--twisted-torus")) {
+                return {
+                  {glapi, shapes::unit_twisted_torus(attribs, 6, 48, 4, 0.5F)},
+                  false};
+            }
+            if(ctx.args().find("--torus")) {
+                return {{glapi, shapes::unit_torus(attribs)}, false};
+            }
+            if(ctx.args().find("--sphere")) {
+                return {{glapi, shapes::unit_sphere(attribs)}, false};
+            }
+            return {{glapi, shapes::unit_cube(attribs)}, true};
+        }();
+
+        geometry geom{glapi, shape, bindings, 0, temp};
+        geom.use(glapi);
 
         // vertex shader
         owned_shader_name vs;
@@ -136,46 +136,69 @@ static void run_loop(
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(prog, cube.position_loc(), "Position");
-        gl.bind_attrib_location(prog, cube.face_coord_loc(), "Coord");
+        // color texture
+        const auto color_tex_src{embed(EAGINE_ID(ColorTex), "oglplus")};
 
-        // subroutines
-        subroutine_uniform_location pattern_loc;
-        gl.get_subroutine_uniform_location(
-          prog, GL.fragment_shader, "pattern") >>
-          pattern_loc;
+        owned_texture_name color_tex;
+        gl.gen_textures() >> color_tex;
+        const auto cleanup_color_tex = gl.delete_textures.raii(color_tex);
+        gl.active_texture(GL.texture0 + 0);
+        gl.bind_texture(GL.texture_2d, color_tex);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
+        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
+        gl.tex_parameter_i(
+          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
+        gl.tex_parameter_fv(
+          GL.texture_2d,
+          GL.texture_border_color,
+          element_view(oglplus::vec3{1.F}));
+        glapi.spec_tex_image2d(
+          GL.texture_2d,
+          0,
+          0,
+          oglplus::texture_image_block(color_tex_src.unpack(ctx)));
+        oglplus::uniform_location color_tex_loc;
+        gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
+        glapi.set_uniform(prog, color_tex_loc, 0);
 
-        std::array<subroutine_location, 6> subroutines;
-        gl.get_subroutine_index(prog, GL.fragment_shader, "horzStrip") >>
-          subroutines[0];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "vertStrip") >>
-          subroutines[1];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "diagStrip") >>
-          subroutines[2];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "checker") >>
-          subroutines[3];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "spiral") >>
-          subroutines[4];
-        gl.get_subroutine_index(prog, GL.fragment_shader, "dots") >>
-          subroutines[5];
-
-        // uniforms
-        uniform_location center_loc;
-        gl.get_uniform_location(prog, "center") >> center_loc;
+        // uniform
+        uniform_location model_loc;
+        gl.get_uniform_location(prog, "model") >> model_loc;
 
         uniform_location camera_loc;
         gl.get_uniform_location(prog, "camera") >> camera_loc;
 
+        uniform_location projector_loc;
+        gl.get_uniform_location(prog, "projector") >> projector_loc;
+
+        uniform_location light_pos_loc;
+        gl.get_uniform_location(prog, "lightPos") >> light_pos_loc;
+
         orbiting_camera camera;
         camera.set_near(0.1F)
           .set_far(50.F)
-          .set_fov(right_angle_())
-          .set_orbit_min(4.F)
-          .set_orbit_max(5.F);
+          .set_fov(degrees_(75))
+          .set_orbit_min(shape.bounding_sphere().radius() * 1.5F)
+          .set_orbit_max(shape.bounding_sphere().radius() * 2.1F);
+
+        orbiting_camera projector;
+        projector.set_near(0.1F)
+          .set_far(50.F)
+          .set_fov(degrees_(90))
+          .set_orbit_min(2.0F)
+          .set_orbit_max(9.0F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
         gl.enable(GL.depth_test);
+        gl.enable(GL.cull_face);
+        if(inv_cull) {
+            gl.cull_face(GL.front);
+        } else {
+            gl.cull_face(GL.back);
+        }
 
         float t = 0.F;
 
@@ -204,29 +227,26 @@ static void run_loop(
 
             t += 0.02F;
             const auto aspect = float(width) / float(height);
+
+            camera.set_azimuth(radians_(t))
+              .set_elevation(radians_(std::sin(t)))
+              .set_orbit_factor(math::sine_wave01(t * 0.1F));
+            glapi.set_uniform(prog, camera_loc, camera.matrix(aspect));
+
+            projector.set_azimuth(radians_(t * -0.1618F))
+              .set_elevation(radians_(std::sin(t * 0.2F) * 0.618F))
+              .set_orbit_factor(math::sine_wave01(t * 0.2F));
+            glapi.set_uniform(prog, projector_loc, projector.matrix(1.F));
+            glapi.set_uniform(prog, light_pos_loc, projector.position());
+
             glapi.set_uniform(
-              prog,
-              camera_loc,
-              camera.set_azimuth(radians_(t))
-                .set_elevation(radians_(std::sin(t)))
-                .set_orbit_factor(math::sine_wave01(t * 0.1F))
-                .matrix(aspect));
+              prog, model_loc, matrix_rotation_x(right_angles_(t))());
 
-            for(const auto s : integer_range(subroutines.size())) {
-                const auto angle = turns_(float(s) / float(subroutines.size()));
-
-                glapi.set_uniform(
-                  prog,
-                  center_loc,
-                  vec3(2.5F * cos(angle), 0.F, 2.5F * sin(angle)));
-                gl.uniform_subroutines(GL.fragment_shader, subroutines[s]);
-
-                cube.draw(glapi);
-            }
+            geom.draw(glapi);
 
             glfwSwapBuffers(window);
         }
-        cube.clean_up(glapi);
+        geom.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }

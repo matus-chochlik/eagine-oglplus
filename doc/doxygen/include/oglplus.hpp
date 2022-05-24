@@ -10,7 +10,7 @@ namespace eagine {
 
 /// @brief OpenGL API wrapper code is placed in this namespace.
 namespace oglplus {
-/// @defgroup oglplus OpenGL API wrappers
+/// @defgroup gl_api_wrap OpenGL API wrappers
 }
 
 } // namespace eagine

@@ -1,4 +1,4 @@
-/// @example oglplus/024_parallax_cube.cpp
+/// @example oglplus/025_parallax_cube.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -16,7 +16,7 @@
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/generator.hpp>
+#include <eagine/oglplus/shapes/geometry.hpp>
 #include <eagine/shapes/cube.hpp>
 
 #include <GLFW/glfw3.h>
@@ -147,6 +147,7 @@ static void run_loop(
         gl.use_program(prog);
 
         // geometry
+        memory::buffer temp;
         shape_generator shape(
           glapi,
           shapes::unit_cube(
@@ -154,78 +155,13 @@ static void run_loop(
             shapes::vertex_attrib_kind::normal |
             shapes::vertex_attrib_kind::tangent |
             shapes::vertex_attrib_kind::face_coord));
+        geometry_and_bindings cube{glapi, shape, temp};
+        cube.use(glapi);
 
-        std::vector<shape_draw_operation> _ops;
-        _ops.resize(std_size(shape.operation_count()));
-        shape.instructions(glapi, cover(_ops));
-
-        // vao
-        owned_vertex_array_name vao;
-        gl.gen_vertex_arrays() >> vao;
-        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
-        gl.bind_vertex_array(vao);
-
-        // positions
-        vertex_attrib_location position_loc{0};
-        gl.get_attrib_location(prog, "Position") >> position_loc;
-        owned_buffer_name positions;
-        gl.gen_buffers() >> positions;
-        const auto cleanup_positions = gl.delete_buffers.raii(positions);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          positions,
-          position_loc,
-          shapes::vertex_attrib_kind::position,
-          buf);
-
-        // normals
-        vertex_attrib_location normal_loc{1};
-        gl.get_attrib_location(prog, "Normal") >> normal_loc;
-        owned_buffer_name normals;
-        gl.gen_buffers() >> normals;
-        const auto cleanup_normals = gl.delete_buffers.raii(normals);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          normals,
-          normal_loc,
-          shapes::vertex_attrib_kind::normal,
-          buf);
-
-        // tangents
-        vertex_attrib_location tangent_loc{2};
-        gl.get_attrib_location(prog, "Tangent") >> tangent_loc;
-        owned_buffer_name tangents;
-        gl.gen_buffers() >> tangents;
-        const auto cleanup_tangents = gl.delete_buffers.raii(tangents);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          tangents,
-          tangent_loc,
-          shapes::vertex_attrib_kind::tangent,
-          buf);
-
-        // tex coords
-        vertex_attrib_location tex_coord_loc{3};
-        gl.get_attrib_location(prog, "TexCoord") >> tex_coord_loc;
-        owned_buffer_name tex_coords;
-        gl.gen_buffers() >> tex_coords;
-        const auto cleanup_tex_coords = gl.delete_buffers.raii(tex_coords);
-        shape.attrib_setup(
-          glapi,
-          vao,
-          tex_coords,
-          tex_coord_loc,
-          shapes::vertex_attrib_kind::face_coord,
-          buf);
-
-        // indices
-        owned_buffer_name indices;
-        gl.gen_buffers() >> indices;
-        const auto cleanup_indices = gl.delete_buffers.raii(indices);
-        shape.index_setup(glapi, indices, buf);
+        gl.bind_attrib_location(prog, cube.position_loc(), "Position");
+        gl.bind_attrib_location(prog, cube.normal_loc(), "Normal");
+        gl.bind_attrib_location(prog, cube.tangent_loc(), "Tangent");
+        gl.bind_attrib_location(prog, cube.wrap_coord_loc(), "TexCoord");
 
         // color texture
         const auto color_tex_src{
@@ -365,10 +301,11 @@ static void run_loop(
                 10.0F * cos(degrees_(5.0F * t * 2.718F)),
                 10.0F * sin(degrees_(5.0F * t * 2.718F)),
                 10.0F * sin(degrees_(5.0F * t * 1.618F))));
-            draw_using_instructions(glapi, view(_ops));
+            cube.draw(glapi);
 
             glfwSwapBuffers(window);
         }
+        cube.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }
