@@ -108,7 +108,9 @@ inline void shape_generator::attrib_setup(
     }
     gl.buffer_data(GL.array_buffer, data, GL.static_draw);
 
-    if(is_attrib_integral(vav)) [[unlikely]] {
+    const auto is_integral{is_attrib_integral(vav)};
+    const auto is_normalized{is_attrib_normalized(api, vav)};
+    if(is_integral && !is_normalized) [[unlikely]] {
         gl.vertex_attrib_ipointer(
           loc,
           limit_cast<gl_types::int_type>(values_per_vertex(vav)),
@@ -118,7 +120,7 @@ inline void shape_generator::attrib_setup(
           loc,
           limit_cast<gl_types::int_type>(values_per_vertex(vav)),
           attrib_type(api, vav),
-          is_attrib_normalized(api, vav));
+          is_normalized);
     }
     if(attrib_divisors()) {
         gl.vertex_attrib_divisor(
