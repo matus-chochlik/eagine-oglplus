@@ -274,7 +274,7 @@ public:
         using base::operator();
 
         constexpr auto operator()(
-          gl_object_name_span<gl_object_name<ObjTag>> names) const noexcept {
+          gl_object_name_span<ObjTag> names) const noexcept {
             return (*this)(names.raw_handles());
         }
 

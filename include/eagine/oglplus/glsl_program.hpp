@@ -79,12 +79,11 @@ public:
         return *this;
     }
 
-    auto get_uniform_location(const gl_api& glapi, string_view name) -> auto {
+    auto get_uniform_location(const gl_api& glapi, string_view name) -> auto{
         return glapi.get_uniform_location(*this, name);
     }
 
-    auto get_uniform_block_index(const gl_api& glapi, string_view name)
-      -> auto {
+    auto get_uniform_block_index(const gl_api& glapi, string_view name) -> auto{
         return glapi.get_uniform_block_index(*this, name);
     }
 
@@ -122,7 +121,7 @@ public:
     }
 
     auto clean_up(const gl_api& glapi) -> glsl_program& {
-        glapi.delete_program(static_cast<base&&>(*this));
+        glapi.clean_up(static_cast<base&&>(*this));
         return *this;
     }
 };
