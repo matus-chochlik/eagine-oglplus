@@ -35,8 +35,8 @@ public:
         template <typename X>
         auto operator()(X&& x) const noexcept -> T
           requires(std::is_convertible_v<X, T>) {
-            return T(std::forward<X>(x));
-        }
+              return T(std::forward<X>(x));
+          }
 
         /// @var array
         /// @brief Helper that can be used to create arrays of the constant type.
@@ -44,9 +44,11 @@ public:
             /// @brief Creates an array of the constant type with the specified values.
             template <typename... X>
             auto operator()(X&&... x) const noexcept
-              -> std::array<T, sizeof...(X)> requires(
-                (sizeof...(X) > 0) && ... &&
-                std::is_convertible_v<std::decay_t<X>, T>) {
+              -> std::array<T, sizeof...(X)>
+                requires(
+                  (sizeof...(X) > 0) && ... &&
+                  std::is_convertible_v<std::decay_t<X>, T>)
+            {
                 return {{T(std::forward<X>(x))...}};
             }
 
@@ -63,8 +65,9 @@ public:
         using Wrap::Wrap;
 
         template <typename... X>
-        auto operator()(X&&... x) const noexcept -> tvec<T, N> requires(
-          (sizeof...(X) == N) && ... && std::is_convertible_v<X, T>) {
+        auto operator()(X&&... x) const noexcept -> tvec<T, N>
+            requires((sizeof...(X) == N) && ... && std::is_convertible_v<X, T>)
+        {
             return tvec<T, N>(T(std::forward<X>(x))...);
         }
     };
@@ -74,8 +77,10 @@ public:
         using Wrap::Wrap;
 
         template <typename... X>
-        auto operator()(X&&... x) const noexcept -> tmat<T, C, R> requires(
-          (sizeof...(X) == C * R) && ... && std::is_convertible_v<X, T>) {
+        auto operator()(X&&... x) const noexcept -> tmat<T, C, R>
+            requires(
+              (sizeof...(X) == C * R) && ... && std::is_convertible_v<X, T>)
+        {
             return tmat<T, C, R>(T(std::forward<X>(x))...);
         }
     };
@@ -1896,7 +1901,7 @@ public:
     /// @var stencil
     /// @glconstwrap{STENCIL}
     c_api::opt_constant<
-      mp_list<framebuffer_buffer, framebuffer_attachment>,
+      mp_list<framebuffer_buffer, framebuffer_attachment, pixel_format>,
 #ifdef GL_STENCIL
       enum_type_c<GL_STENCIL>>
 #else
@@ -9040,6 +9045,39 @@ public:
       enum_type_i>
 #endif
       depth_stencil;
+
+    /// @var depth_component16
+    /// @glconstwrap{DEPTH_COMPONENT16}
+    c_api::opt_constant<
+      mp_list<pixel_internal_format>,
+#ifdef GL_DEPTH_COMPONENT16
+      enum_type_c<GL_DEPTH_COMPONENT16>>
+#else
+      enum_type_i>
+#endif
+      depth_component16;
+
+    /// @var depth_component24
+    /// @glconstwrap{DEPTH_COMPONENT24}
+    c_api::opt_constant<
+      mp_list<pixel_internal_format>,
+#ifdef GL_DEPTH_COMPONENT24
+      enum_type_c<GL_DEPTH_COMPONENT24>>
+#else
+      enum_type_i>
+#endif
+      depth_component24;
+
+    /// @var depth_component32f
+    /// @glconstwrap{DEPTH_COMPONENT32F}
+    c_api::opt_constant<
+      mp_list<pixel_internal_format>,
+#ifdef GL_DEPTH_COMPONENT32F
+      enum_type_c<GL_DEPTH_COMPONENT32F>>
+#else
+      enum_type_i>
+#endif
+      depth_component32f;
 
     /// @var stencil_index8
     /// @glconstwrap{STENCIL_INDEX8}
