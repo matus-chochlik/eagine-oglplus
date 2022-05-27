@@ -229,9 +229,11 @@ public:
           PreParams... pre_params,
           Query query,
           PostParams... post_params) const noexcept
-          requires(
-            (true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>)&&(
-              !std::is_array_v<typename Query::tag_type>)) {
+            requires(
+              (true || ... ||
+               c_api::is_enum_class_value_v<QueryClasses, Query>) &&
+              (!std::is_array_v<typename Query::tag_type>))
+        {
             using RV = typename Query::tag_type;
             QueryResult result{};
             return base::operator()(
@@ -246,8 +248,9 @@ public:
           Query query,
           PostParams... post_params,
           span<QueryResult> dest) const noexcept
-          requires(
-            true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>) {
+            requires(
+              true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>)
+        {
             if constexpr(std::is_array_v<typename Query::tag_type>) {
                 EAGINE_ASSERT(
                   dest.size() >= std::extent_v<typename Query::tag_type>);
@@ -344,6 +347,10 @@ public:
     // delete objects
     adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{*this};
 
+    auto clean_up(sync_type obj) const noexcept {
+        return delete_sync(obj);
+    }
+
     template <auto Wrapper, typename ObjTag>
     using del_object_func = c_api::combined<
       adapted_function<Wrapper, void(span<name_type>)>,
@@ -352,36 +359,122 @@ public:
     adapted_function<&gl_api::DeleteShader, void(owned_shader_name)>
       delete_shader{*this};
 
+    auto clean_up(owned_shader_name obj) const noexcept {
+        return delete_shader(std::move(obj));
+    }
+
     adapted_function<&gl_api::DeleteProgram, void(owned_program_name)>
       delete_program{*this};
 
+    auto clean_up(owned_program_name obj) const noexcept {
+        return delete_program(std::move(obj));
+    }
+
     del_object_func<&gl_api::DeleteBuffers, buffer_tag> delete_buffers{*this};
+
+    auto clean_up(owned_buffer_name obj) const noexcept {
+        return delete_buffers(std::move(obj));
+    }
+
+    auto clean_up(gl_object_name_span<buffer_tag> objs) const noexcept {
+        return delete_buffers(objs.raw_handles());
+    }
 
     del_object_func<&gl_api::DeleteFramebuffers, framebuffer_tag>
       delete_framebuffers{*this};
 
+    auto clean_up(owned_framebuffer_name obj) const noexcept {
+        return delete_framebuffers(std::move(obj));
+    }
+
+    auto clean_up(gl_object_name_span<framebuffer_tag> objs) const noexcept {
+        return delete_framebuffers(objs.raw_handles());
+    }
+
     del_object_func<&gl_api::DeleteProgramPipelines, program_pipeline_tag>
       delete_program_pipelines{*this};
 
+    auto clean_up(owned_program_pipeline_name obj) const noexcept {
+        return delete_program_pipelines(std::move(obj));
+    }
+
+    auto clean_up(
+      gl_object_name_span<program_pipeline_tag> objs) const noexcept {
+        return delete_program_pipelines(objs.raw_handles());
+    }
+
     del_object_func<&gl_api::DeleteQueries, query_tag> delete_queries{*this};
+
+    auto clean_up(owned_query_name obj) const noexcept {
+        return delete_queries(std::move(obj));
+    }
+
+    auto clean_up(gl_object_name_span<query_tag> objs) const noexcept {
+        return delete_queries(objs.raw_handles());
+    }
 
     del_object_func<&gl_api::DeleteRenderbuffers, renderbuffer_tag>
       delete_renderbuffers{*this};
 
+    auto clean_up(owned_renderbuffer_name obj) const noexcept {
+        return delete_renderbuffers(std::move(obj));
+    }
+
+    auto clean_up(gl_object_name_span<renderbuffer_tag> objs) const noexcept {
+        return delete_renderbuffers(objs.raw_handles());
+    }
+
     del_object_func<&gl_api::DeleteSamplers, sampler_tag> delete_samplers{
       *this};
+
+    auto clean_up(owned_sampler_name obj) const noexcept {
+        return delete_samplers(std::move(obj));
+    }
+
+    auto clean_up(gl_object_name_span<sampler_tag> objs) const noexcept {
+        return delete_samplers(objs.raw_handles());
+    }
 
     del_object_func<&gl_api::DeleteTextures, texture_tag> delete_textures{
       *this};
 
+    auto clean_up(owned_texture_name obj) const noexcept {
+        return delete_textures(std::move(obj));
+    }
+
+    auto clean_up(gl_object_name_span<texture_tag> objs) const noexcept {
+        return delete_textures(objs.raw_handles());
+    }
+
     del_object_func<&gl_api::DeleteTransformFeedbacks, transform_feedback_tag>
       delete_transform_feedbacks{*this};
+
+    auto clean_up(owned_transform_feedback_name obj) const noexcept {
+        return delete_transform_feedbacks(std::move(obj));
+    }
+
+    auto clean_up(
+      gl_object_name_span<transform_feedback_tag> objs) const noexcept {
+        return delete_transform_feedbacks(objs.raw_handles());
+    }
 
     del_object_func<&gl_api::DeleteVertexArrays, vertex_array_tag>
       delete_vertex_arrays{*this};
 
+    auto clean_up(owned_vertex_array_name obj) const noexcept {
+        return delete_vertex_arrays(std::move(obj));
+    }
+
+    auto clean_up(gl_object_name_span<vertex_array_tag> objs) const noexcept {
+        return delete_vertex_arrays(objs.raw_handles());
+    }
+
     adapted_function<&gl_api::DeletePathsNV, void(owned_path_nv_name, sizei_type)>
       delete_paths_nv{*this};
+
+    auto clean_up(owned_path_nv_name obj, sizei_type count) const noexcept {
+        return delete_paths_nv(std::move(obj), count);
+    }
 
     adapted_function<&gl_api::IsSync, true_false(sync_type)> is_sync{*this};
 
@@ -3360,8 +3453,8 @@ public:
         using base::operator();
 
         template <typename Log>
-        requires(std::is_same_v<Log, gl_debug_logger>) constexpr auto operator()(
-          const Log& log) const noexcept {
+            requires(std::is_same_v<Log, gl_debug_logger>)
+        constexpr auto operator()(const Log& log) const noexcept {
             return base::operator()(log.callback(), log.data());
         }
     } debug_message_callback{*this};

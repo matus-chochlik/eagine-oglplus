@@ -94,8 +94,8 @@ public:
 
     /// @brief Releases the used OpenGL resources.
     void clean_up(const gl_api& gl) {
-        gl.delete_buffers(_buffers.raw_handles());
-        gl.delete_vertex_arrays(std::move(_vao));
+        gl.clean_up(_buffers);
+        gl.clean_up(std::move(_vao));
     }
 
     /// @brief Prepares and binds the resources to be used (for example by draw).
