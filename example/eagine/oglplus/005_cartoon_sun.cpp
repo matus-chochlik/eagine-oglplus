@@ -82,23 +82,17 @@ static void run_loop(
         geometry_and_bindings screen{glapi, shape, temp};
 
         // vertex shader
-        owned_shader_name vs;
-        gl.create_shader(GL.vertex_shader) >> vs;
-        const auto cleanup_vs = gl.delete_shader.raii(vs);
+        const auto vs{gl.create_shader.object(GL.vertex_shader)};
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
         // fragment shader
-        owned_shader_name fs;
-        gl.create_shader(GL.fragment_shader) >> fs;
-        const auto cleanup_fs = gl.delete_shader.raii(fs);
+        const auto fs{gl.create_shader.object(GL.fragment_shader)};
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
         // program
-        owned_program_name prog;
-        gl.create_program() >> prog;
-        const auto cleanup_prog = gl.delete_program.raii(prog);
+        const auto prog{gl.create_program.object()};
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);

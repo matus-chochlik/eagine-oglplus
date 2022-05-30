@@ -12,7 +12,7 @@
 #include "c_api.hpp"
 #include "enum_types.hpp"
 #include "extensions.hpp"
-#include "object_name.hpp"
+#include "objects.hpp"
 #include "prog_var_loc.hpp"
 #include "type_utils.hpp"
 #include <eagine/c_api/adapted_function.hpp>
@@ -285,13 +285,48 @@ public:
                   return gl_owned_object_name<ObjTag>(valid ? n : 0);
               });
         }
+
+        constexpr auto object() const noexcept
+          -> gl_object<basic_gl_operations, ObjTag> {
+            gl_owned_object_name<ObjTag> name;
+            (*this)() >> name;
+            return {
+              static_cast<const basic_gl_operations&>(base::api()),
+              std::move(name)};
+        }
     };
 
-    adapted_function<&gl_api::CreateShader, owned_shader_name(shader_type)>
-      create_shader{*this};
+    using _create_shader_t =
+      adapted_function<&gl_api::CreateShader, owned_shader_name(shader_type)>;
+    struct : _create_shader_t {
+        using base = _create_shader_t;
+        using base::base;
 
-    adapted_function<&gl_api::CreateProgram, owned_program_name()>
-      create_program{*this};
+        constexpr auto object(shader_type shdr_type) const noexcept
+          -> gl_object<basic_gl_operations, shader_tag> {
+            owned_shader_name shdr;
+            (*this)(shdr_type) >> shdr;
+            return {
+              static_cast<const basic_gl_operations&>(base::api()),
+              std::move(shdr)};
+        }
+    } create_shader{*this};
+
+    using _create_program_t =
+      adapted_function<&gl_api::CreateProgram, owned_program_name()>;
+    struct : _create_program_t {
+        using base = _create_program_t;
+        using base::base;
+
+        constexpr auto object() const noexcept
+          -> gl_object<basic_gl_operations, program_tag> {
+            owned_program_name prog;
+            (*this)() >> prog;
+            return {
+              static_cast<const basic_gl_operations&>(base::api()),
+              std::move(prog)};
+        }
+    } create_program{*this};
 
     make_object_func<&gl_api::GenBuffers, buffer_tag> gen_buffers{*this};
 
