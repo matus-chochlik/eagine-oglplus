@@ -17,7 +17,7 @@ set(HEADERS
     eagine/oglplus/gl_api/extensions.hpp
     eagine/oglplus/gl_api_fwd.hpp
     eagine/oglplus/gl_api.hpp
-    eagine/oglplus/gl_api/object_name.hpp
+    eagine/oglplus/gl_api/objects.hpp
     eagine/oglplus/gl_api/prog_var_loc.hpp
     eagine/oglplus/gl_api/result.hpp
     eagine/oglplus/gl_api/type_utils.hpp

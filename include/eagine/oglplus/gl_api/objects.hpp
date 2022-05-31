@@ -5,11 +5,11 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
-#ifndef EAGINE_OGLPLUS_GL_API_OBJECT_NAME_HPP
-#define EAGINE_OGLPLUS_GL_API_OBJECT_NAME_HPP
+#ifndef EAGINE_OGLPLUS_GL_API_OBJECTS_HPP
+#define EAGINE_OGLPLUS_GL_API_OBJECTS_HPP
 
 #include "config.hpp"
-#include <eagine/c_api/handle.hpp>
+#include <eagine/c_api/object.hpp>
 #include <eagine/message_id.hpp>
 
 namespace eagine::oglplus {
@@ -29,6 +29,14 @@ using gl_object_name = c_api::basic_handle<Tag, gl_types::name_type>;
 template <typename Tag>
 using gl_owned_object_name =
   c_api::basic_owned_handle<Tag, gl_types::name_type>;
+
+/// @brief Alias for GL object template.
+/// @ingroup gl_api_wrap
+/// @see gl_object_name
+/// @see gl_owned_object_name
+template <typename Api, typename Tag, typename... P>
+using gl_object =
+  c_api::basic_object_from_handle_t<Api, gl_object_name<Tag>, P...>;
 
 /// @brief Alias for template wrapping a mutable span of GL object handles.
 /// @ingroup gl_api_wrap
@@ -344,4 +352,4 @@ using vertex_array_name_array = gl_object_name_array<vertex_array_tag, N>;
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
-#endif // EAGINE_OGLPLUS_GL_API_OBJECT_NAME_HPP
+#endif
