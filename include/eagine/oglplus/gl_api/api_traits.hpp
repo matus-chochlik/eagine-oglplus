@@ -47,4 +47,6 @@ private:
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
+#include <eagine/oglplus/gl_api/api_traits.inl>
+
 #endif // EAGINE_OGLPLUS_GL_API_API_TRAITS_HPP

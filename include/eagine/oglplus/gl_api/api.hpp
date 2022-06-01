@@ -3524,4 +3524,6 @@ public:
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
+#include <eagine/oglplus/gl_api/api.inl>
+
 #endif // EAGINE_OGLPLUS_GL_API_API_HPP

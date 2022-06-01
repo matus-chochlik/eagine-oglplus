@@ -12906,4 +12906,6 @@ public:
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
+#include <eagine/oglplus/gl_api/constants.inl>
+
 #endif // EAGINE_OGLPLUS_GL_API_CONSTANTS_HPP
