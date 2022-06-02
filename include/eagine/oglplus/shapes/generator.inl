@@ -40,27 +40,32 @@ inline void shape_generator::attrib_data(
     switch(_gen->attrib_type(vav)) {
         case attrib_data_type::float_:
             _gen->attrib_values(
-              vav, accommodate(data, type_identity<gl_types::float_type>()));
+              vav,
+              accommodate(data, std::type_identity<gl_types::float_type>()));
             break;
         case attrib_data_type::ubyte:
             _gen->attrib_values(
-              vav, accommodate(data, type_identity<gl_types::ubyte_type>()));
+              vav,
+              accommodate(data, std::type_identity<gl_types::ubyte_type>()));
             break;
         case attrib_data_type::uint_16:
             _gen->attrib_values(
-              vav, accommodate(data, type_identity<gl_types::ushort_type>()));
+              vav,
+              accommodate(data, std::type_identity<gl_types::ushort_type>()));
             break;
         case attrib_data_type::uint_32:
             _gen->attrib_values(
-              vav, accommodate(data, type_identity<gl_types::uint_type>()));
+              vav,
+              accommodate(data, std::type_identity<gl_types::uint_type>()));
             break;
         case attrib_data_type::int_16:
             _gen->attrib_values(
-              vav, accommodate(data, type_identity<gl_types::short_type>()));
+              vav,
+              accommodate(data, std::type_identity<gl_types::short_type>()));
             break;
         case attrib_data_type::int_32:
             _gen->attrib_values(
-              vav, accommodate(data, type_identity<gl_types::int_type>()));
+              vav, accommodate(data, std::type_identity<gl_types::int_type>()));
             break;
         case attrib_data_type::none:
             break;
@@ -74,13 +79,14 @@ inline void shape_generator::index_data(
 
     switch(_gen->index_type()) {
         case index_data_type::unsigned_32:
-            _gen->indices(dv, accommodate(data, type_identity<GLuint>()));
+            _gen->indices(dv, accommodate(data, std::type_identity<GLuint>()));
             break;
         case index_data_type::unsigned_16:
-            _gen->indices(dv, accommodate(data, type_identity<GLushort>()));
+            _gen->indices(
+              dv, accommodate(data, std::type_identity<GLushort>()));
             break;
         case index_data_type::unsigned_8:
-            _gen->indices(dv, accommodate(data, type_identity<GLubyte>()));
+            _gen->indices(dv, accommodate(data, std::type_identity<GLubyte>()));
             break;
         case index_data_type::none:
             break;

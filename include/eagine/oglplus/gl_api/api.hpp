@@ -239,7 +239,7 @@ public:
             return base::operator()(
                      pre_params..., enum_type(query), post_params..., &result)
               .replaced_with(result)
-              .cast_to(type_identity<RV>{});
+              .cast_to(std::type_identity<RV>{});
         }
 
         template <typename Query>
@@ -1426,13 +1426,13 @@ public:
         constexpr auto operator()(
           buffer_target tgt,
           pixel_internal_format ifmt,
-          type_identity<T>) const noexcept {
+          std::type_identity<T>) const noexcept {
             return (*this)(
               tgt, ifmt, pixel_format_of<T>(), pixel_data_type_of<T>(), nullptr);
         }
 
         template <typename T>
-        constexpr auto operator()(buffer_target tgt, type_identity<T> tid)
+        constexpr auto operator()(buffer_target tgt, std::type_identity<T> tid)
           const noexcept {
             return (*this)(tgt, internal_format_of<T>(), tid);
         }
@@ -1472,12 +1472,12 @@ public:
           buffer_name buf,
           pixel_internal_format ifmt,
           pixel_format fmt,
-          type_identity<T>) const noexcept {
+          std::type_identity<T>) const noexcept {
             return (*this)(buf, ifmt, fmt, pixel_data_type_of<T>(), nullptr);
         }
 
         template <typename T>
-        constexpr auto operator()(buffer_name buf, type_identity<T> tid)
+        constexpr auto operator()(buffer_name buf, std::type_identity<T> tid)
           const noexcept {
             return (*this)(buf, internal_format_of<T>(), tid);
         }

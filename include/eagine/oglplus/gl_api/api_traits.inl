@@ -19,7 +19,7 @@ inline auto gl_api_traits::link_function(
   Api&,
   Tag,
   string_view name,
-  type_identity<Signature>) -> std::add_pointer_t<Signature> {
+  std::type_identity<Signature>) -> std::add_pointer_t<Signature> {
     _full_name.clear();
     _full_name.reserve(2 + name.size() + 1);
     _full_name.append("gl");
