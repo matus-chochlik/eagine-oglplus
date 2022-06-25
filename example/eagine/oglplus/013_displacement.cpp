@@ -10,7 +10,7 @@
 #include <eagine/oglplus/gl_api.hpp>
 
 #include <eagine/embed.hpp>
-#include <eagine/main.hpp>
+#include <eagine/main_ctx.hpp>
 #include <eagine/math/functions.hpp>
 #include <eagine/oglplus/camera.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
@@ -260,3 +260,8 @@ auto main(main_ctx& ctx) -> int {
 }
 
 } // namespace eagine
+
+auto main(int argc, const char** argv) -> int {
+    return eagine::default_main(argc, argv, eagine::main);
+}
+
