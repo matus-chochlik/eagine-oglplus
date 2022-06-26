@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 
 #include <eagine/console/console.hpp>
-#include <eagine/main.hpp>
+#include <eagine/main_ctx.hpp>
 #include <eagine/main_ctx_object.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 #include <eagine/scope_exit.hpp>
@@ -112,3 +112,8 @@ auto main(main_ctx& ctx) -> int {
 }
 
 } // namespace eagine
+
+auto main(int argc, const char** argv) -> int {
+    return eagine::default_main(argc, argv, eagine::main);
+}
+

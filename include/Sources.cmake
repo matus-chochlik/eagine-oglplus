@@ -54,7 +54,6 @@ set(PUB_INLS
     eagine/oglplus/gl_api/api_traits.inl
     eagine/oglplus/gl_api/c_api.inl
     eagine/oglplus/gl_api/constants.inl
-    eagine/oglplus/gl_api.inl
     eagine/oglplus/shapes/drawing.inl
     eagine/oglplus/shapes/generator.inl
 )

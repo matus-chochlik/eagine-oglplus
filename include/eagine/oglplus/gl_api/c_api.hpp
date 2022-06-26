@@ -5688,10 +5688,8 @@ public:
     }
 };
 //------------------------------------------------------------------------------
-/// @brief Alias for the default GL operations wrapper instantiation.
-/// @ingroup gl_api_wrap
-using gl_c_api = basic_gl_c_api<gl_api_traits>;
-//------------------------------------------------------------------------------
 } // namespace eagine::oglplus
+
+#include <eagine/oglplus/gl_api/c_api.inl>
 
 #endif // EAGINE_OGLPLUS_GL_API_C_API_HPP

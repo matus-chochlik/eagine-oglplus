@@ -84,7 +84,7 @@ void read_shader_source_texts(
   const std::vector<valid_if_existing_file<string_view>>& paths) {
 
     for(const auto& path : paths) {
-        source_texts.emplace_back(file_contents(extract(path)));
+        source_texts.emplace_back(extract(path));
         shader_types.push_back(shader_type);
     }
 }

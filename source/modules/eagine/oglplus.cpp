@@ -5,10 +5,4 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
-#ifndef EAGINE_OGLPLUS_GL_API_HPP
-#define EAGINE_OGLPLUS_GL_API_HPP
-
-#include "basic_gl_api.hpp"
-#include "gl_api_fwd.hpp"
-
-#endif
+export module eagine.ecs;
