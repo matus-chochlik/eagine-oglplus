@@ -22,33 +22,30 @@ static void run(main_ctx& ctx) {
     using namespace eagine::oglplus;
 
     const gl_api gl;
-    const main_ctx_object out{EAGINE_ID(OGLplus), ctx};
+    const main_ctx_object out{"OGLplus", ctx};
 
     if(const ok info{gl.get_string(gl.vendor)}) {
-        out.cio_print("Vendor: ${info}").arg(EAGINE_ID(info), extract(info));
+        out.cio_print("Vendor: ${info}").arg("info", extract(info));
     }
 
     if(const ok info{gl.get_string(gl.renderer)}) {
-        out.cio_print("Renderer: ${info}").arg(EAGINE_ID(info), extract(info));
+        out.cio_print("Renderer: ${info}").arg("info", extract(info));
     }
 
     if(const ok info{gl.get_string(gl.version)}) {
-        out.cio_print("Version: ${info}").arg(EAGINE_ID(info), extract(info));
+        out.cio_print("Version: ${info}").arg("info", extract(info));
     }
 
     if(const ok info{gl.get_integer(gl.major_version)}) {
-        out.cio_print("Major version: ${info}")
-          .arg(EAGINE_ID(info), extract(info));
+        out.cio_print("Major version: ${info}").arg("info", extract(info));
     }
 
     if(const ok info{gl.get_integer(gl.minor_version)}) {
-        out.cio_print("Minor version: ${info}")
-          .arg(EAGINE_ID(info), extract(info));
+        out.cio_print("Minor version: ${info}").arg("info", extract(info));
     }
 
     if(const ok info{gl.get_string(gl.shading_language_version)}) {
-        out.cio_print("GLSL version: ${info}")
-          .arg(EAGINE_ID(info), extract(info));
+        out.cio_print("GLSL version: ${info}").arg("info", extract(info));
     }
 
     const auto ext_cio{out.cio_print("Extensions:").to_be_continued()};
@@ -62,7 +59,7 @@ static void run(main_ctx& ctx) {
           .print(
             console_entry_kind::error,
             "failed to get extension list: ${message}")
-          .arg(EAGINE_ID(message), (!extensions).message());
+          .arg("message", (!extensions).message());
     }
 }
 
@@ -101,12 +98,12 @@ auto main(main_ctx& ctx) -> int {
         return 0;
     } catch(const std::runtime_error& sre) {
         ctx.cio()
-          .error(EAGINE_ID(OGLplus), "Runtime error: ${message}")
-          .arg(EAGINE_ID(message), sre.what());
+          .error("OGLplus", "Runtime error: ${message}")
+          .arg("message", sre.what());
     } catch(const std::exception& se) {
         ctx.cio()
-          .error(EAGINE_ID(OGLplus), "Unknown error: ${message}")
-          .arg(EAGINE_ID(message), se.what());
+          .error("OGLplus", "Unknown error: ${message}")
+          .arg("message", se.what());
     }
     return 1;
 }

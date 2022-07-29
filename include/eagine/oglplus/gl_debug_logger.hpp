@@ -16,7 +16,7 @@ namespace eagine::oglplus {
 class gl_debug_logger : public main_ctx_object {
 public:
     gl_debug_logger(main_ctx_parent parent)
-      : main_ctx_object{EAGINE_ID(GLDbgLoger), parent} {}
+      : main_ctx_object{"GLDbgLoger", parent} {}
 
     auto callback() const noexcept -> decltype(auto) {
         return &_callback;
@@ -51,10 +51,10 @@ private:
         const auto msg = length >= 0 ? string_view(message, span_size(length))
                                      : string_view(message);
         this->log_debug(msg)
-          .arg(EAGINE_ID(severity), EAGINE_ID(DbgOutSvrt), severity)
-          .arg(EAGINE_ID(source), EAGINE_ID(DbgOutSrce), source)
-          .arg(EAGINE_ID(type), EAGINE_ID(DbgOutType), type)
-          .arg(EAGINE_ID(id), id);
+          .arg("severity", "DbgOutSvrt", severity)
+          .arg("source", "DbgOutSrce", source)
+          .arg("type", "DbgOutType", type)
+          .arg("id", id);
     }
 
     static void _callback(

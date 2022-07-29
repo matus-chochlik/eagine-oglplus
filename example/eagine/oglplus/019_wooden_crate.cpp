@@ -125,8 +125,7 @@ static void run_loop(
         gl.bind_attrib_location(prog, cube.face_coord_loc(), "TexCoord");
 
         // color texture
-        const auto color_tex_src{
-          embed(EAGINE_ID(ColorTex), "wooden_crate-diff")};
+        const auto color_tex_src{embed("ColorTex", "wooden_crate-diff")};
 
         owned_texture_name color_tex;
         gl.gen_textures() >> color_tex;
@@ -148,8 +147,7 @@ static void run_loop(
         glapi.set_uniform(prog, color_tex_loc, 0);
 
         // normal texture
-        const auto normal_tex_src{
-          embed(EAGINE_ID(NormalTex), "wooden_crate-nmap")};
+        const auto normal_tex_src{embed("NormalTex", "wooden_crate-nmap")};
 
         owned_texture_name normal_tex;
         gl.gen_textures() >> normal_tex;
@@ -171,8 +169,7 @@ static void run_loop(
         glapi.set_uniform(prog, normal_tex_loc, 1);
 
         // light texture
-        const auto light_tex_src{
-          embed(EAGINE_ID(LightTex), "wooden_crate-lmap")};
+        const auto light_tex_src{embed("LightTex", "wooden_crate-lmap")};
 
         owned_texture_name light_tex;
         gl.gen_textures() >> light_tex;

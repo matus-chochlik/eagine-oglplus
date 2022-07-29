@@ -137,7 +137,7 @@ static void run_loop(
         gl.use_program(prog);
 
         // color texture
-        const auto color_tex_src{embed(EAGINE_ID(ColorTex), "oglplus")};
+        const auto color_tex_src{embed("ColorTex", "oglplus")};
 
         owned_texture_name color_tex;
         gl.gen_textures() >> color_tex;
