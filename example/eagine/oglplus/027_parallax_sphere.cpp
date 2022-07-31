@@ -175,7 +175,7 @@ static void run_loop(
         gl.bind_attrib_location(prog, sphere.wrap_coord_loc(), "TexCoord");
 
         // normal/height texture
-        const auto normal_tex_src{embed("NormalTex", "worley-bump")};
+        const auto normal_tex_src{embed<"NormalTex">("worley-bump")};
 
         owned_texture_name normal_tex;
         gl.gen_textures() >> normal_tex;
@@ -196,7 +196,7 @@ static void run_loop(
         glapi.set_uniform(prog, normal_tex_loc, 0);
 
         // mask texture
-        const auto mask_tex_src{embed("MaskTex", "round_rect_mask")};
+        const auto mask_tex_src{embed<"MaskTex">("round_rect_mask")};
 
         owned_texture_name mask_tex;
         gl.gen_textures() >> mask_tex;

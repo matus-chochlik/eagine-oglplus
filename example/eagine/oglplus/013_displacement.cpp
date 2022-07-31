@@ -127,7 +127,7 @@ static void run_loop(
         gl.bind_attrib_location(prog, plane.vertex_coord_loc(), "Coord");
 
         // texture
-        const auto tex_src{embed("WorleyTex", "worley-bump")};
+        const auto tex_src{embed<"WorleyTex">("worley-bump")};
 
         owned_texture_name tex;
         gl.gen_textures() >> tex;
