@@ -10,4 +10,5 @@ export module eagine.oglplus;
 export import :config;
 export import :math;
 export import :enum_types;
+export import :image_spec;
 export import :objects;

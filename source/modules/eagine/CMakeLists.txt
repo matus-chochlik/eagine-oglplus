@@ -25,6 +25,17 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION image_spec
+	IMPORTS
+		config enum_types
+		eagine.core.types
+		eagine.core.memory
+		eagine.core.valid_if
+		eagine.core.utility
+		eagine.core.runtime
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION objects
 	IMPORTS
 		config
@@ -41,7 +52,9 @@ eagine_add_module(
 		config
 		math
 		enum_types
+		image_spec
 		objects
 	SOURCES
+		image_spec_impl
 )
 
