@@ -17,12 +17,22 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION objects
+	IMPORTS
+		config
+		eagine.core.types
+		eagine.core.identifier
+		eagine.core.c_api
+)
+
+eagine_add_module(
 	eagine.oglplus
 	PP_NAME OGLPLUS
 	INTERFACES oglplus
 	PARTITIONS
 		config
 		enum_types
+		objects
 	SOURCES
 )
 

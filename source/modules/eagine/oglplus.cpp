@@ -9,3 +9,4 @@ export module eagine.oglplus;
 
 export import :config;
 export import :enum_types;
+export import :objects;
