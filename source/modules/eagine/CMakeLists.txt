@@ -25,6 +25,15 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION type_utils
+	IMPORTS
+		config enum_types math
+		eagine.core.types
+		eagine.core.memory
+		eagine.core.c_api
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION glsl_source
 	IMPORTS
 		config
@@ -73,6 +82,7 @@ eagine_add_module(
 		config
 		math
 		enum_types
+		type_utils
 		glsl_source
 		program_source
 		image_spec
