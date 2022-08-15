@@ -8,6 +8,14 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION math
+	IMPORTS
+		config
+		eagine.core.types
+		eagine.core.math
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION enum_types
 	IMPORTS
 		config
@@ -31,6 +39,7 @@ eagine_add_module(
 	INTERFACES oglplus
 	PARTITIONS
 		config
+		math
 		enum_types
 		objects
 	SOURCES
