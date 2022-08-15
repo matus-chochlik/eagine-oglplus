@@ -16,6 +16,13 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION extensions
+	IMPORTS
+		eagine.core.types
+		eagine.core.math
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION enum_types
 	IMPORTS
 		config
@@ -94,12 +101,22 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION c_api
+	IMPORTS
+		config result
+		eagine.core.types
+		eagine.core.memory
+		eagine.core.c_api
+)
+
+eagine_add_module(
 	eagine.oglplus
 	PP_NAME OGLPLUS
 	INTERFACES oglplus
 	PARTITIONS
 		config
 		math
+		extensions
 		enum_types
 		type_utils
 		glsl_source
@@ -108,6 +125,7 @@ eagine_add_module(
 		result
 		objects
 		prog_var_loc
+		c_api
 	SOURCES
 		image_spec_impl
 )
