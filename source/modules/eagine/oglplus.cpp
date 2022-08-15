@@ -14,4 +14,6 @@ export import :type_utils;
 export import :glsl_source;
 export import :program_source;
 export import :image_spec;
+export import :result;
 export import :objects;
+export import :prog_var_loc;
