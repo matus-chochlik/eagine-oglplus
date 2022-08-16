@@ -24,4 +24,5 @@ export import :api_traits;
 export import :constants;
 export import :api;
 export import :gl_debug_logger;
+export import :glsl_program;
 export import :framebuffer;

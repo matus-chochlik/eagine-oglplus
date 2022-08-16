@@ -165,6 +165,16 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION glsl_program
+	IMPORTS
+		config enum_types
+		glsl_source program_source
+		prog_var_loc object api
+		eagine.core.types
+		eagine.core.memory
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION framebuffer
 	IMPORTS
 		config enum_types
@@ -195,6 +205,7 @@ eagine_add_module(
 		constants
 		api
 		gl_debug_logger
+		glsl_program
 		framebuffer
 	SOURCES
 		camera_impl
