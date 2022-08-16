@@ -165,6 +165,15 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION framebuffer
+	IMPORTS
+		config enum_types
+		object constants api
+		eagine.core.types
+		eagine.core.memory
+)
+
+eagine_add_module(
 	eagine.oglplus
 	PP_NAME OGLPLUS
 	INTERFACES oglplus
@@ -186,8 +195,10 @@ eagine_add_module(
 		constants
 		api
 		gl_debug_logger
+		framebuffer
 	SOURCES
 		camera_impl
 		image_spec_impl
+		framebuffer_impl
 )
 
