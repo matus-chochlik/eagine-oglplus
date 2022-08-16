@@ -156,6 +156,15 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION gl_debug_logger
+	IMPORTS
+		config
+		eagine.core.types
+		eagine.core.memory
+		eagine.core.main_ctx
+)
+
+eagine_add_module(
 	eagine.oglplus
 	PP_NAME OGLPLUS
 	INTERFACES oglplus
@@ -176,6 +185,7 @@ eagine_add_module(
 		api_traits
 		constants
 		api
+		gl_debug_logger
 	SOURCES
 		camera_impl
 		image_spec_impl
