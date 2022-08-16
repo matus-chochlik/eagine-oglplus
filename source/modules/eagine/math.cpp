@@ -34,6 +34,18 @@ export using unit_spherical_coordinate =
 export using math::to_cartesian;
 export using math::to_unit_spherical;
 //------------------------------------------------------------------------------
+/// @brief Alias for math::line instantiation.
+/// @ingroup gl_utils
+export using line = math::line<gl_types::float_type, math_use_simd>;
+
+/// @brief Alias for math::sphere instantiation.
+/// @ingroup gl_utils
+export using sphere = math::sphere<gl_types::float_type, math_use_simd>;
+
+/// @brief Alias for math::triangle instantiation.
+/// @ingroup gl_utils
+export using triangle = math::triangle<gl_types::float_type, math_use_simd>;
+//------------------------------------------------------------------------------
 /// @brief Alias for math::vector.
 /// @ingroup gl_utils
 export using math::vector;

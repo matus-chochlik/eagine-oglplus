@@ -9,6 +9,7 @@ export module eagine.oglplus;
 
 export import :config;
 export import :math;
+export import :camera;
 export import :extensions;
 export import :enum_types;
 export import :type_utils;

@@ -16,6 +16,16 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION camera
+	IMPORTS
+		config math
+		eagine.core.types
+		eagine.core.math
+		eagine.core.valid_if
+		eagine.core.utility
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION extensions
 	IMPORTS
 		eagine.core.types
@@ -116,6 +126,7 @@ eagine_add_module(
 	PARTITIONS
 		config
 		math
+		camera
 		extensions
 		enum_types
 		type_utils
@@ -127,6 +138,7 @@ eagine_add_module(
 		prog_var_loc
 		c_api
 	SOURCES
+		camera_impl
 		image_spec_impl
 )
 
