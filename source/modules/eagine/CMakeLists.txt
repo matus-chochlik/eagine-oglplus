@@ -142,11 +142,14 @@ eagine_add_module(
 	eagine.oglplus PARTITION api
 	IMPORTS
 		config enum_types
-		objects extensions
-		glsl_source prog_var_loc
-		type_utils math c_api
+		objects constants extensions
+		glsl_source program_source
+		image_spec math
+		prog_var_loc type_utils
+		c_api api_traits
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.math
 		eagine.core.units
 		eagine.core.utility
 		eagine.core.c_api
