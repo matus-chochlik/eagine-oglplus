@@ -129,6 +129,16 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION constants
+	IMPORTS
+		config enum_types
+		objects math c_api
+		eagine.core.types
+		eagine.core.memory
+		eagine.core.c_api
+)
+
+eagine_add_module(
 	eagine.oglplus
 	PP_NAME OGLPLUS
 	INTERFACES oglplus
@@ -147,6 +157,7 @@ eagine_add_module(
 		prog_var_loc
 		c_api
 		api_traits
+		constants
 	SOURCES
 		camera_impl
 		image_spec_impl

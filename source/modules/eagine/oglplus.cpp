@@ -21,3 +21,4 @@ export import :objects;
 export import :prog_var_loc;
 export import :c_api;
 export import :api_traits;
+export import :constants;
