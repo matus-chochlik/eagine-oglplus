@@ -127,7 +127,7 @@ static void run_loop(
         gl.bind_attrib_location(prog, plane.vertex_coord_loc(), "Coord");
 
         // texture
-        const auto tex_src{embed(EAGINE_ID(WorleyTex), "worley-bump")};
+        const auto tex_src{embed<"WorleyTex">("worley-bump")};
 
         owned_texture_name tex;
         gl.gen_textures() >> tex;
@@ -136,8 +136,6 @@ static void run_loop(
         gl.bind_texture(GL.texture_2d, tex);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.nearest);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.nearest);
-        // gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
-        // gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
         glapi.spec_tex_image2d(
           GL.texture_2d,
           0,

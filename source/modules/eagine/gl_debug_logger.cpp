@@ -5,11 +5,15 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
-#ifndef EAGINE_OGLPLUS_GL_DEBUG_LOGGER_HPP
-#define EAGINE_OGLPLUS_GL_DEBUG_LOGGER_HPP
+module;
 
-#include "basic_gl_api.hpp"
-#include <eagine/main_ctx_object.hpp>
+#include <cassert>
+
+export module eagine.oglplus:gl_debug_logger;
+import eagine.core.types;
+import eagine.core.memory;
+import eagine.core.main_ctx;
+import :config;
 
 namespace eagine::oglplus {
 
@@ -25,20 +29,6 @@ public:
     auto data() const noexcept -> const void* {
         return static_cast<const void*>(this);
     }
-
-    /*
-    operator std::tuple<
-      void (*)(
-        gl_types::enum_type,
-        gl_types::enum_type,
-        gl_types::uint_type,
-        gl_types::enum_type,
-        gl_types::sizei_type,
-        const gl_types::char_type*,
-        const void*),
-      gl_types::const_void_ptr_type>() const noexcept {
-        return {callback(), data()};
-    }*/
 
 private:
     void _do_log(
@@ -65,11 +55,10 @@ private:
       gl_types::sizei_type length,
       const gl_types::char_type* message,
       const void* raw_this) {
-        EAGINE_ASSERT(raw_this);
+        assert(raw_this);
         static_cast<const gl_debug_logger*>(raw_this)->_do_log(
           source, type, id, severity, length, message);
     }
 };
 } // namespace eagine::oglplus
 
-#endif

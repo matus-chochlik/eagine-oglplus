@@ -165,7 +165,7 @@ auto parse_options(const program_args& args, options& opts) -> int {
 
 auto main(int argc, const char** argv) -> int {
     eagine::main_ctx_options options;
-    options.app_id = EAGINE_ID(BakeChkrI);
+    options.app_id = "BakeChkrI";
     options.logger_opts.default_no_log = true;
     return eagine::main_impl(argc, argv, options);
 }
