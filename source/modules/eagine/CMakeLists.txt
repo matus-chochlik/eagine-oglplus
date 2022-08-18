@@ -179,9 +179,22 @@ eagine_add_module(
 	eagine.oglplus PARTITION framebuffer
 	IMPORTS
 		config enum_types
-		object constants api
+		object constants
+		prog_var_loc math api
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.utility
+		eagine.core.valid_if
+)
+
+eagine_add_module(
+	eagine.oglplus PARTITION shapes
+	IMPORTS
+		config enum_types
+		objects constants api
+		eagine.core.types
+		eagine.core.memory
+		eagine.shapes
 )
 
 eagine_add_module(
@@ -208,6 +221,7 @@ eagine_add_module(
 		gl_debug_logger
 		glsl_program
 		framebuffer
+		shapes
 	SOURCES
 		api_impl
 		camera_impl
