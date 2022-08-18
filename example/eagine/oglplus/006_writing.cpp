@@ -6,6 +6,13 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.shapes;
+import eagine.oglplus;
+import <iostream>;
+import <stdexcept>;
+#else
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
@@ -17,11 +24,10 @@
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/oglplus/glsl/string_ref.hpp>
 #include <eagine/oglplus/math/vector.hpp>
-
-#include <GLFW/glfw3.h>
-
 #include <iostream>
 #include <stdexcept>
+#endif
+#include <GLFW/glfw3.h>
 
 static const eagine::string_view vs_source{R"(
 #version 330

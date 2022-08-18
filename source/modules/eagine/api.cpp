@@ -3900,12 +3900,11 @@ public:
     }
 
     template <typename T>
+        requires(is_known_vector_type_v<T>)
     auto set_uniform(
       const program_name prog,
       const uniform_location loc,
-      const T& value) const -> combined_result<void>
-        requires(is_known_vector_type_v<T>)
-    {
+      const T& value) const -> combined_result<void> {
         return set_uniform(
           prog, loc, element_view(value), canonical_compound_type<T>());
     }
