@@ -100,6 +100,19 @@ struct make_args_map<
 } // namespace eagine::c_api
 
 namespace eagine::oglplus {
+//------------------------------------------------------------------------------
+export struct api_initializer {
+    ~api_initializer() noexcept = default;
+    api_initializer(const api_initializer&) = delete;
+    api_initializer(api_initializer&&) = delete;
+    auto operator=(const api_initializer&) = delete;
+    auto operator=(api_initializer&&) = delete;
+
+    explicit api_initializer(
+      const int /*gl_ver_major*/ = 3,
+      const int /*gl_ver_minor*/ = 3);
+};
+//------------------------------------------------------------------------------
 class gl_debug_logger;
 using c_api::adapted_function;
 using c_api::enum_parameter_value;
@@ -4176,7 +4189,7 @@ public:
     }
 };
 
-template <std::size_t I, typename ApiTraits>
+export template <std::size_t I, typename ApiTraits>
 auto get(const basic_gl_api<ApiTraits>& x) noexcept -> const
   typename std::tuple_element<I, basic_gl_api<ApiTraits>>::type& {
     return x;

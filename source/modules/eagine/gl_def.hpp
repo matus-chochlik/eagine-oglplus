@@ -9,8 +9,10 @@
 #if __has_include(<GL/glew.h>)
 #include <GL/glew.h>
 #define EAGINE_HAS_GL 1
+#define EAGINE_USE_GLEW 1
 #else
 #define EAGINE_HAS_GL 0
+#define EAGINE_USE_GLEW 0
 #endif
 
 #ifndef GL_BUFFER

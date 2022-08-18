@@ -17,7 +17,7 @@ import :config;
 
 namespace eagine::oglplus {
 
-class gl_debug_logger : public main_ctx_object {
+export class gl_debug_logger : public main_ctx_object {
 public:
     gl_debug_logger(main_ctx_parent parent)
       : main_ctx_object{"GLDbgLoger", parent} {}

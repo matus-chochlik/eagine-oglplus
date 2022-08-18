@@ -209,6 +209,7 @@ eagine_add_module(
 		glsl_program
 		framebuffer
 	SOURCES
+		api_impl
 		camera_impl
 		image_spec_impl
 		framebuffer_impl
