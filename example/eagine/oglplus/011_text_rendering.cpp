@@ -6,18 +6,25 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.shapes;
+import eagine.oglplus;
+import <chrono>;
+import <iostream>;
+import <stdexcept>;
+#else
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
 #include <eagine/main_ctx.hpp>
 #include <eagine/oglplus/gl_debug_logger.hpp>
 #include <eagine/str_format.hpp>
-
-#include <GLFW/glfw3.h>
-
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
+#endif
+#include <GLFW/glfw3.h>
 
 static void run_loop(
   eagine::main_ctx& ctx,

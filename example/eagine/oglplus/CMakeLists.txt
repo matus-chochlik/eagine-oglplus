@@ -24,28 +24,6 @@ function(eagine_example_common EXAMPLE_NAME)
 		"${EXAMPLE_NAME}.cpp"
 		${ARGN}
 	)
-	eagine_add_exe_analysis(oglplus-${EXAMPLE_NAME})
-	add_dependencies(eagine-oglplus-examples oglplus-${EXAMPLE_NAME})
-	target_link_libraries(
-		oglplus-${EXAMPLE_NAME}
-		PUBLIC EAGine::OGLplus
-		PRIVATE ${ARGN}
-	)
-
-	set_target_properties(
-		oglplus-${EXAMPLE_NAME}
-		PROPERTIES FOLDER "Example/OGLplus"
-	)
-	eagine_install_example(oglplus-${EXAMPLE_NAME})
-endfunction()
-
-function(eagine_example_module EXAMPLE_NAME)
-	add_executable(
-		oglplus-${EXAMPLE_NAME}
-		EXCLUDE_FROM_ALL
-		"${EXAMPLE_NAME}.cpp"
-		${ARGN}
-	)
 	if(${WITH_MODULES})
 		eagine_target_modules(
 			oglplus-${EXAMPLE_NAME}
@@ -74,13 +52,13 @@ function(eagine_example_module EXAMPLE_NAME)
 	eagine_install_example(oglplus-${EXAMPLE_NAME})
 endfunction()
 
-eagine_example_module(001_info)
-eagine_example_module(002_clear)
-eagine_example_module(003_spectrum)
-eagine_example_module(004_mandelbrot)
-eagine_example_module(005_cartoon_sun)
-eagine_example_module(006_writing)
-eagine_example_module(007_metaballs)
+eagine_example_common(001_info)
+eagine_example_common(002_clear)
+eagine_example_common(003_spectrum)
+eagine_example_common(004_mandelbrot)
+eagine_example_common(005_cartoon_sun)
+eagine_example_common(006_writing)
+eagine_example_common(007_metaballs)
 eagine_example_common(008_worley_waves)
 eagine_example_common(008_round_cube)
 eagine_example_common(009_occlusion)
