@@ -12,6 +12,7 @@ module;
 export module eagine.oglplus:api;
 import eagine.core.types;
 import eagine.core.memory;
+import eagine.core.string;
 import eagine.core.math;
 import eagine.core.units;
 import eagine.core.utility;
@@ -4192,7 +4193,7 @@ auto translate(const basic_gl_api<A>& api, const bool value) noexcept
 //------------------------------------------------------------------------------
 /// @brief Alias for the default instantation of basic_gl_api.
 /// @ingroup gl_api_wrap
-using gl_api = basic_gl_api<gl_api_traits>;
+export using gl_api = basic_gl_api<gl_api_traits>;
 } // namespace eagine::oglplus
 
 // NOLINTNEXTLINE(cert-dcl58-cpp)

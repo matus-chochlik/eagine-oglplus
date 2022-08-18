@@ -149,6 +149,7 @@ eagine_add_module(
 		c_api api_traits
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.string
 		eagine.core.math
 		eagine.core.units
 		eagine.core.utility
@@ -212,4 +213,8 @@ eagine_add_module(
 		image_spec_impl
 		framebuffer_impl
 )
-
+target_link_libraries(
+	eagine.oglplus
+	PUBLIC
+	EAGine::Deps::GLEW
+)
