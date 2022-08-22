@@ -6,6 +6,12 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.oglplus;
+import <fstream>;
+import <iostream>;
+#else
 #include <eagine/data_baking.hpp>
 #include <eagine/file_contents.hpp>
 #include <eagine/main_ctx.hpp>
@@ -18,6 +24,26 @@
 #include <eagine/valid_if/not_empty.hpp>
 #include <fstream>
 #include <iostream>
+#endif
+
+#ifndef GL_VERTEX_SHADER
+#define GL_VERTEX_SHADER 0x8B31
+#endif
+#ifndef GL_GEOMETRY_SHADER
+#define GL_GEOMETRY_SHADER 0x8DD9
+#endif
+#ifndef GL_TESS_EVALUATION_SHADER
+#define GL_TESS_EVALUATION_SHADER 0x8E87
+#endif
+#ifndef GL_TESS_CONTROL_SHADER
+#define GL_TESS_CONTROL_SHADER 0x8E88
+#endif
+#ifndef GL_FRAGMENT_SHADER
+#define GL_FRAGMENT_SHADER 0x8B30
+#endif
+#ifndef GL_COMPUTE_SHADER
+#define GL_COMPUTE_SHADER 0x91B9
+#endif
 
 namespace eagine {
 //------------------------------------------------------------------------------
@@ -79,8 +105,8 @@ struct options {
 //------------------------------------------------------------------------------
 void read_shader_source_texts(
   std::vector<file_contents>& source_texts,
-  std::vector<GLenum>& shader_types,
-  GLenum shader_type,
+  std::vector<oglplus::gl_types::enum_type>& shader_types,
+  oglplus::gl_types::enum_type shader_type,
   const std::vector<valid_if_existing_file<string_view>>& paths) {
 
     for(const auto& path : paths) {
@@ -91,34 +117,28 @@ void read_shader_source_texts(
 //------------------------------------------------------------------------------
 void write_output(std::ostream& output, const options& opts) {
     std::vector<file_contents> source_texts;
-    std::vector<GLenum> shader_types;
+    std::vector<oglplus::gl_types::enum_type> shader_types;
 
     read_shader_source_texts(
       source_texts, shader_types, GL_VERTEX_SHADER, opts.vertex_shader_paths);
 
-#ifdef GL_GEOMETRY_SHADER
     read_shader_source_texts(
       source_texts,
       shader_types,
       GL_GEOMETRY_SHADER,
       opts.geometry_shader_paths);
-#endif
 
-#ifdef GL_TESS_CONTROL_SHADER
     read_shader_source_texts(
       source_texts,
       shader_types,
       GL_TESS_CONTROL_SHADER,
       opts.tess_control_shader_paths);
-#endif
 
-#ifdef GL_TESS_EVALUATION_SHADER
     read_shader_source_texts(
       source_texts,
       shader_types,
       GL_TESS_EVALUATION_SHADER,
       opts.tess_evaluation_shader_paths);
-#endif
 
     read_shader_source_texts(
       source_texts,
@@ -126,10 +146,8 @@ void write_output(std::ostream& output, const options& opts) {
       GL_FRAGMENT_SHADER,
       opts.fragment_shader_paths);
 
-#ifdef GL_COMPUTE_SHADER
     read_shader_source_texts(
       source_texts, shader_types, GL_COMPUTE_SHADER, opts.compute_shader_paths);
-#endif
 
     std::vector<span_size_t> slens;
     slens.reserve(source_texts.size());
@@ -163,7 +181,8 @@ void write_output(std::ostream& output, const options& opts) {
 
         shdr_src_hdr.shader_type = shader_types[i];
         shdr_src_hdr.source_text = bakery.copy_array(
-          memory::accommodate<const GLchar>(source_texts[i].block()));
+          memory::accommodate<const oglplus::gl_types::char_type>(
+            source_texts[i].block()));
 
         ssh_ptrs[i] = &shdr_src_hdr;
     }
@@ -220,5 +239,5 @@ auto main(int argc, const char** argv) -> int {
     eagine::main_ctx_options options;
     options.app_id = "BakeSLProg";
     options.logger_opts.default_no_log = true;
-    return eagine::main_impl(argc, argv, options);
+    return eagine::main_impl(argc, argv, options, eagine::main);
 }

@@ -6,6 +6,13 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.oglplus;
+import <fstream>;
+import <iomanip>;
+import <iostream>;
+#else
 #include <eagine/integer_range.hpp>
 #include <eagine/main_ctx.hpp>
 #include <eagine/main_fwd.hpp>
@@ -18,7 +25,18 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <random>
+#endif
+#include <cassert>
+
+#ifndef GL_RED_INTEGER
+#define GL_RED_INTEGER 0x8D94
+#endif
+#ifndef GL_R8UI
+#define GL_R8UI 0x8232
+#endif
+#ifndef GL_UNSIGNED_BYTE
+#define GL_UNSIGNED_BYTE 0x1401
+#endif
 
 namespace eagine {
 //------------------------------------------------------------------------------
@@ -67,7 +85,7 @@ struct options {
 //------------------------------------------------------------------------------
 auto translate(char c, const options& opts) -> int {
     // TODO: other ranks
-    EAGINE_ASSERT(opts.rank.value() == 4);
+    assert(opts.rank.value() == 4);
 
     if(opts.rank.value() == 4) {
         if(c >= '0' && c <= '9') {
@@ -163,5 +181,5 @@ auto main(int argc, const char** argv) -> int {
     eagine::main_ctx_options options;
     options.app_id = "BakeTlngI";
     options.logger_opts.default_no_log = true;
-    return eagine::main_impl(argc, argv, options);
+    return eagine::main_impl(argc, argv, options, eagine::main);
 }
