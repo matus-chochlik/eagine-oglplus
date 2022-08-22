@@ -6,6 +6,14 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.oglplus;
+import <fstream>;
+import <iostream>;
+import <stdexcept>;
+import <vector>;
+#else
 #include <eagine/main_ctx.hpp>
 #include <eagine/main_fwd.hpp>
 #include <eagine/oglplus/gl.hpp>
@@ -13,20 +21,62 @@
 #include <eagine/program_args.hpp>
 #include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/not_empty.hpp>
-#include <cassert>
 #include <fstream>
 #include <iostream>
-#include <png.h>
 #include <stdexcept>
 #include <vector>
+#endif
+#include <cassert>
+#include <png.h>
+
+#ifndef GL_NONE
+#define GL_NONE 0
+#endif
+#ifndef GL_RED
+#define GL_RED 0x1903
+#endif
+#ifndef GL_R8
+#define GL_R8 0x8229
+#endif
+#ifndef GL_R16
+#define GL_R16 0x822A
+#endif
+#ifndef GL_RG
+#define GL_RG 0x8227
+#endif
+#ifndef GL_RG8
+#define GL_RG8 0x822B
+#endif
+#ifndef GL_RG16
+#define GL_RG16 0x822C
+#endif
+#ifndef GL_RGB
+#define GL_RGB 0x1907
+#endif
+#ifndef GL_RGB8
+#define GL_RGB8 0x8051
+#endif
+#ifndef GL_RGB16
+#define GL_RGB16 0x8054
+#endif
+#ifndef GL_RGBA
+#define GL_RGBA 0x1908
+#endif
+#ifndef GL_RGBA8
+#define GL_RGBA8 0x8058
+#endif
+#ifndef GL_RGBA16
+#define GL_RGBA16 0x805B
+#endif
+
+#ifndef GL_UNSIGNED_BYTE
+#define GL_UNSIGNED_BYTE 0x1401
+#endif
+#ifndef GL_UNSIGNED_SHORT
+#define GL_UNSIGNED_SHORT 0x1403
+#endif
 
 namespace eagine {
-//------------------------------------------------------------------------------
-#ifdef GL_RGBA16
-constexpr const bool has_rgba16 = true;
-#else
-constexpr const bool has_rgba16 = false;
-#endif
 //------------------------------------------------------------------------------
 // program options
 struct options {
@@ -207,9 +257,9 @@ public:
         return row_bytes() * image_height();
     }
 
-    auto gl_data_type() -> GLenum;
-    auto gl_format() -> GLenum;
-    auto gl_iformat() -> GLenum;
+    auto gl_data_type() -> oglplus::gl_types::enum_type;
+    auto gl_format() -> oglplus::gl_types::enum_type;
+    auto gl_iformat() -> oglplus::gl_types::enum_type;
 };
 //------------------------------------------------------------------------------
 void do_convert_image(
@@ -514,7 +564,7 @@ png_reader::png_reader(std::istream& input)
   , _validator(_input)
   , _driver(*this) {}
 //------------------------------------------------------------------------------
-auto png_reader::gl_data_type() -> GLenum {
+auto png_reader::gl_data_type() -> oglplus::gl_types::enum_type {
     switch(_driver._png.bit_depth()) {
         case 1:
         case 2:
@@ -522,10 +572,7 @@ auto png_reader::gl_data_type() -> GLenum {
         case 8:
             return GL_UNSIGNED_BYTE;
         case 16: {
-            if(has_rgba16) {
-                return GL_UNSIGNED_SHORT;
-            }
-            throw std::runtime_error("Unsupported 16-bit color depth");
+            return GL_UNSIGNED_SHORT;
         }
         default: {
             throw std::runtime_error("Unsupported PNG image color depth");
@@ -535,7 +582,7 @@ auto png_reader::gl_data_type() -> GLenum {
     return GL_NONE;
 }
 //------------------------------------------------------------------------------
-auto png_reader::gl_format() -> GLenum {
+auto png_reader::gl_format() -> oglplus::gl_types::enum_type {
     switch(_driver._png.color_type()) {
         case PNG_COLOR_TYPE_GRAY:
             return GL_RED;
@@ -552,22 +599,18 @@ auto png_reader::gl_format() -> GLenum {
     }
 }
 //------------------------------------------------------------------------------
-auto png_reader::gl_iformat() -> GLenum {
+auto png_reader::gl_iformat() -> oglplus::gl_types::enum_type {
     if(_driver._png.bit_depth() == 16) {
-        if(has_rgba16) {
-#if defined(GL_RGBA16)
-            switch(gl_format()) {
-                case GL_RED:
-                    return GL_R16;
-                case GL_RG:
-                    return GL_RG16;
-                case GL_RGB:
-                    return GL_RGB16;
-                case GL_RGBA:
-                    return GL_RGBA16;
-                default:;
-            }
-#endif
+        switch(gl_format()) {
+            case GL_RED:
+                return GL_R16;
+            case GL_RG:
+                return GL_RG16;
+            case GL_RGB:
+                return GL_RGB16;
+            case GL_RGBA:
+                return GL_RGBA16;
+            default:;
         }
     } else {
         switch(gl_format()) {
@@ -599,5 +642,5 @@ auto main(int argc, const char** argv) -> int {
     eagine::main_ctx_options options;
     options.app_id = "BakePNGI";
     options.logger_opts.default_no_log = true;
-    return eagine::main_impl(argc, argv, options);
+    return eagine::main_impl(argc, argv, options, eagine::main);
 }

@@ -5,7 +5,15 @@
 
 add_executable(oglplus-bake_noise_image main.cpp)
 eagine_add_exe_analysis(oglplus-bake_noise_image)
-target_link_libraries(
-	oglplus-bake_noise_image
-	PUBLIC EAGine::OGLplus
-)
+if(${WITH_MODULES})
+	eagine_target_modules(
+		oglplus-bake_noise_image
+		eagine.core
+		eagine.oglplus
+	)
+else()
+	target_link_libraries(
+		oglplus-bake_noise_image
+		PUBLIC EAGine::OGLplus
+	)
+endif()
