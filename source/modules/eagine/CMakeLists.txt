@@ -183,6 +183,7 @@ eagine_add_module(
 		prog_var_loc math api
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.c_api
 		eagine.core.utility
 		eagine.core.valid_if
 )
