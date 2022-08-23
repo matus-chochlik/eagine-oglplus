@@ -17,6 +17,7 @@ import <iostream>;
 #include <eagine/main_ctx.hpp>
 #include <eagine/main_fwd.hpp>
 #include <eagine/oglplus/gl.hpp>
+#include <eagine/oglplus/gl_api/config.hpp>
 #include <eagine/oglplus/utils/program_file_hdr.hpp>
 #include <eagine/program_args.hpp>
 #include <eagine/valid_if/filesystem.hpp>
