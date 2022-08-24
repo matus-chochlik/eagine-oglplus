@@ -71,6 +71,8 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
+    ctx.workers().populate();
+
     const auto progress_callback = [window] {
         glfwPollEvents();
         return glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
