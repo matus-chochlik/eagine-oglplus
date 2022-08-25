@@ -18,9 +18,9 @@ import <vector>;
 
 namespace eagine::oglplus {
 
-class offscreen_framebuffer;
+export class offscreen_framebuffer;
 
-class framebuffer_configuration {
+export class framebuffer_configuration {
     struct attch_info {
         pixel_format format{};
         pixel_internal_format iformat{};
@@ -137,7 +137,7 @@ private:
       gl_object_name_vector<renderbuffer_tag>& rbos) const noexcept;
 };
 
-class offscreen_framebuffer : public owned_framebuffer_name {
+export class offscreen_framebuffer : public owned_framebuffer_name {
     using base = owned_framebuffer_name;
 
 public:

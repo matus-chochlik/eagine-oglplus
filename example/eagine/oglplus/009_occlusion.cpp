@@ -6,6 +6,14 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.shapes;
+import eagine.oglplus;
+import <cmath>;
+import <iostream>;
+import <stdexcept>;
+#else
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
@@ -20,13 +28,10 @@
 #include <eagine/oglplus/shapes/geometry.hpp>
 #include <eagine/shapes/occluded.hpp>
 #include <eagine/shapes/twisted_torus.hpp>
-
-#include <GLFW/glfw3.h>
-
-#include <array>
 #include <iostream>
 #include <stdexcept>
-#include <vector>
+#endif
+#include <GLFW/glfw3.h>
 
 static const eagine::string_view vs_source{R"(
 #version 140
@@ -65,6 +70,8 @@ static void run_loop(
   int height) {
     using namespace eagine;
     using namespace eagine::oglplus;
+
+    ctx.workers().populate();
 
     const auto progress_callback = [window] {
         glfwPollEvents();

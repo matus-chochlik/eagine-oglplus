@@ -4,40 +4,43 @@
 #  http://www.boost.org/LICENSE_1_0.txt
 if(${WITH_MODULES})
 	add_subdirectory(modules)
+else()
+	add_subdirectory(lib)
 endif()
-add_subdirectory(lib)
 add_subdirectory(tools)
 
-add_library(EAGine::OGLplus INTERFACE IMPORTED GLOBAL)
-target_link_libraries(EAGine::OGLplus INTERFACE eagine-oglplus-headers)
+if(TARGET eagine-oglplus)
+	add_library(EAGine::OGLplus INTERFACE IMPORTED GLOBAL)
+	target_link_libraries(EAGine::OGLplus INTERFACE eagine-oglplus-headers)
 
-target_link_libraries(
-	EAGine::OGLplus
-	INTERFACE
-		eagine-oglplus
-)
+	target_link_libraries(
+		EAGine::OGLplus
+		INTERFACE
+			eagine-oglplus
+	)
 
-install(
-	TARGETS
-		eagine-oglplus-generated-headers
-		eagine-oglplus-headers
-		oglplus-bake_noise_image
-		oglplus-bake_checker_image
-		oglplus-bake_tiling_image
-		oglplus-bake_png_image
-		oglplus-bake_shader_source
-		oglplus-bake_program_source
+	install(
+		TARGETS
+			eagine-oglplus-generated-headers
+			eagine-oglplus-headers
+			oglplus-bake_noise_image
+			oglplus-bake_checker_image
+			oglplus-bake_tiling_image
+			oglplus-bake_png_image
+			oglplus-bake_shader_source
+			oglplus-bake_program_source
+			EXPORT OGLplus
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib
+		RUNTIME DESTINATION bin
+		INCLUDES DESTINATION include
+		PUBLIC_HEADER DESTINATION include
+	)
+
+	install(
 		EXPORT OGLplus
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
-	RUNTIME DESTINATION bin
-	INCLUDES DESTINATION include
-	PUBLIC_HEADER DESTINATION include
-)
-
-install(
-	EXPORT OGLplus
-	NAMESPACE EAGine::
-	FILE OGLplus.cmake
-	DESTINATION lib/cmake/EAGine
-)
+		NAMESPACE EAGine::
+		FILE OGLplus.cmake
+		DESTINATION lib/cmake/EAGine
+	)
+endif()

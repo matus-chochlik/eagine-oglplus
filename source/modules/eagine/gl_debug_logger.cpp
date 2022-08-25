@@ -17,7 +17,7 @@ import :config;
 
 namespace eagine::oglplus {
 
-class gl_debug_logger : public main_ctx_object {
+export class gl_debug_logger : public main_ctx_object {
 public:
     gl_debug_logger(main_ctx_parent parent)
       : main_ctx_object{"GLDbgLoger", parent} {}
@@ -31,16 +31,29 @@ public:
     }
 
 private:
-    void _do_log(
+    auto _do_log(
+      [[maybe_unused]] const gl_types::enum_type severity,
+      const string_view msg) const noexcept {
+        switch(severity) {
+            case 0x9146:
+                return this->log_error(msg);
+            case 0x9147:
+                return this->log_warning(msg);
+            default:
+                return this->log_debug(msg);
+        }
+    }
+
+    void _log(
       [[maybe_unused]] const gl_types::enum_type source,
       [[maybe_unused]] const gl_types::enum_type type,
       [[maybe_unused]] const gl_types::uint_type id,
       [[maybe_unused]] const gl_types::enum_type severity,
       [[maybe_unused]] const gl_types::sizei_type length,
-      [[maybe_unused]] const gl_types::char_type* message) const {
+      [[maybe_unused]] const gl_types::char_type* message) const noexcept {
         const auto msg = length >= 0 ? string_view(message, span_size(length))
                                      : string_view(message);
-        this->log_debug(msg)
+        _do_log(severity, msg)
           .arg("severity", "DbgOutSvrt", severity)
           .arg("source", "DbgOutSrce", source)
           .arg("type", "DbgOutType", type)
@@ -56,7 +69,7 @@ private:
       const gl_types::char_type* message,
       const void* raw_this) {
         assert(raw_this);
-        static_cast<const gl_debug_logger*>(raw_this)->_do_log(
+        static_cast<const gl_debug_logger*>(raw_this)->_log(
           source, type, id, severity, length, message);
     }
 };

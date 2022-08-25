@@ -6,6 +6,15 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.shapes;
+import eagine.oglplus;
+import <array>;
+import <cmath>;
+import <iostream>;
+import <stdexcept>;
+#else
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
 
@@ -21,13 +30,11 @@
 #include <eagine/oglplus/shapes/geometry.hpp>
 #include <eagine/shapes/to_quads.hpp>
 #include <eagine/shapes/torus.hpp>
-
-#include <GLFW/glfw3.h>
-
 #include <array>
 #include <iostream>
 #include <stdexcept>
-#include <vector>
+#endif
+#include <GLFW/glfw3.h>
 
 static const eagine::string_view vs_source{R"(
 #version 150

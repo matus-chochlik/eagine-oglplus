@@ -6,24 +6,51 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.oglplus;
+import <fstream>;
+import <iostream>;
+#else
 #include <eagine/data_baking.hpp>
 #include <eagine/input_data.hpp>
 #include <eagine/main_ctx.hpp>
 #include <eagine/main_fwd.hpp>
 #include <eagine/oglplus/gl.hpp>
+#include <eagine/oglplus/gl_api/config.hpp>
 #include <eagine/oglplus/utils/program_file_hdr.hpp>
 #include <eagine/program_args.hpp>
 #include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/not_empty.hpp>
 #include <fstream>
 #include <iostream>
+#endif
+
+#ifndef GL_VERTEX_SHADER
+#define GL_VERTEX_SHADER 0x8B31
+#endif
+#ifndef GL_GEOMETRY_SHADER
+#define GL_GEOMETRY_SHADER 0x8DD9
+#endif
+#ifndef GL_TESS_EVALUATION_SHADER
+#define GL_TESS_EVALUATION_SHADER 0x8E87
+#endif
+#ifndef GL_TESS_CONTROL_SHADER
+#define GL_TESS_CONTROL_SHADER 0x8E88
+#endif
+#ifndef GL_FRAGMENT_SHADER
+#define GL_FRAGMENT_SHADER 0x8B30
+#endif
+#ifndef GL_COMPUTE_SHADER
+#define GL_COMPUTE_SHADER 0x91B9
+#endif
 
 namespace eagine {
 //------------------------------------------------------------------------------
 struct options {
     valid_if_existing_file<string_view> input_path;
     valid_if_in_writable_directory<string_view> output_path{"a.oglpshdr"};
-    GLenum shader_type{0};
+    oglplus::gl_types::enum_type shader_type{0};
 
     void print_usage(std::ostream& log) {
         log << "bake_shader_source options" << std::endl;
@@ -55,22 +82,14 @@ struct options {
         } else if(a.is_tag("-t", "--shader-type")) {
             if(a.next() == "vertex") {
                 shader_type = GL_VERTEX_SHADER;
-#ifdef GL_GEOMETRY_SHADER
             } else if(a.next() == "geometry") {
                 shader_type = GL_GEOMETRY_SHADER;
-#endif
-#ifdef GL_TESS_CONTROL_SHADER
             } else if(a.next() == "tess_control") {
                 shader_type = GL_TESS_CONTROL_SHADER;
-#endif
-#ifdef GL_TESS_EVALUATION_SHADER
             } else if(a.next() == "tess_evaluation") {
                 shader_type = GL_TESS_EVALUATION_SHADER;
-#endif
-#ifdef GL_COMPUTE_SHADER
             } else if(a.next() == "compute") {
                 shader_type = GL_COMPUTE_SHADER;
-#endif
             } else if(a.next() == "fragment") {
                 shader_type = GL_FRAGMENT_SHADER;
             }
@@ -98,8 +117,9 @@ void write_output(
     auto& shdr_src_hdr = bakery.make<oglplus::shader_source_header>();
 
     shdr_src_hdr.shader_type = opts.shader_type;
-    shdr_src_hdr.source_text = bakery.copy_array(
-      memory::accommodate<const GLchar>(memory::const_block(source_text)));
+    shdr_src_hdr.source_text =
+      bakery.copy_array(memory::accommodate<const oglplus::gl_types::char_type>(
+        memory::const_block(source_text)));
 
     write_to_stream(output, bakery.baked_data());
 }
@@ -163,5 +183,5 @@ auto main(int argc, const char** argv) -> int {
     eagine::main_ctx_options options;
     options.app_id = "BakeSLShdr";
     options.logger_opts.default_no_log = true;
-    return eagine::main_impl(argc, argv, options);
+    return eagine::main_impl(argc, argv, options, eagine::main);
 }

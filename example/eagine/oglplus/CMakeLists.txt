@@ -4,6 +4,54 @@
 #  http://www.boost.org/LICENSE_1_0.txt
 #
 
+add_custom_target(eagine-oglplus-examples ALL)
+set_target_properties(
+	eagine-oglplus-examples
+	PROPERTIES FOLDER "Example/OGLplus"
+)
+
+function(eagine_install_example TARGET_NAME)
+	install(
+		TARGETS ${TARGET_NAME}
+		DESTINATION share/eagine/example/oglplus
+	)
+endfunction()
+
+function(eagine_example_common EXAMPLE_NAME)
+	add_executable(
+		oglplus-${EXAMPLE_NAME}
+		EXCLUDE_FROM_ALL
+		"${EXAMPLE_NAME}.cpp"
+		${ARGN}
+	)
+	if(${WITH_MODULES})
+		eagine_target_modules(
+			oglplus-${EXAMPLE_NAME}
+			eagine.core
+			eagine.shapes
+			eagine.oglplus
+		)
+		target_link_libraries(
+			oglplus-${EXAMPLE_NAME}
+			PRIVATE EAGine::Deps::GLFW3
+		)
+	else()
+		eagine_add_exe_analysis(oglplus-${EXAMPLE_NAME})
+		target_link_libraries(
+			oglplus-${EXAMPLE_NAME}
+			PUBLIC EAGine::OGLplus
+			PRIVATE ${ARGN}
+		)
+	endif()
+	add_dependencies(eagine-oglplus-examples oglplus-${EXAMPLE_NAME})
+
+	set_target_properties(
+		oglplus-${EXAMPLE_NAME}
+		PROPERTIES FOLDER "Example/OGLplus"
+	)
+	eagine_install_example(oglplus-${EXAMPLE_NAME})
+endfunction()
+
 eagine_example_common(001_info)
 eagine_example_common(002_clear)
 eagine_example_common(003_spectrum)

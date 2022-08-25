@@ -6,6 +6,12 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.oglplus;
+import <fstream>;
+import <iostream>;
+#else
 #include <eagine/main_ctx.hpp>
 #include <eagine/main_fwd.hpp>
 #include <eagine/oglplus/gl.hpp>
@@ -14,14 +20,19 @@
 #include <eagine/valid_if/filesystem.hpp>
 #include <eagine/valid_if/positive.hpp>
 #include <fstream>
+#endif
+
+#ifndef GL_RGB
+#define GL_RGB 0x1907
+#endif
+#ifndef GL_R3_G3_B2
+#define GL_R3_G3_B2 0x2A10
+#endif
+#ifndef GL_UNSIGNED_BYTE_3_3_2
+#define GL_UNSIGNED_BYTE_3_3_2 0x8032
+#endif
 
 namespace eagine {
-//------------------------------------------------------------------------------
-#if defined(GL_R3_G3_B2) && defined(GL_UNSIGNED_BYTE_3_3_2)
-constexpr const bool has_r3g3b2 = true;
-#else
-constexpr const bool has_r3g3b2 = false;
-#endif
 //------------------------------------------------------------------------------
 struct options {
     valid_if_in_writable_directory<string_view> output_path{"a.oglptex"};
@@ -86,16 +97,9 @@ void write_output(std::ostream& output, const options& opts) {
     oglplus::image_data_header hdr(opts.width, opts.height, opts.depth, 3);
     hdr.format = GL_RGB;
 
-    if(has_r3g3b2) {
-#if defined(GL_R3_G3_B2) && defined(GL_UNSIGNED_BYTE_3_3_2)
-        hdr.internal_format = GL_R3_G3_B2;
-        hdr.data_type = GL_UNSIGNED_BYTE_3_3_2;
-#endif
-    } else {
-        hdr.internal_format = GL_RGB;
-        hdr.data_type = GL_UNSIGNED_BYTE;
-    }
-    const GLsizei channels = has_r3g3b2 ? 1 : 3;
+    hdr.internal_format = GL_R3_G3_B2;
+    hdr.data_type = GL_UNSIGNED_BYTE_3_3_2;
+    const oglplus::gl_types::sizei_type channels = 1;
 
     const auto size = span_size(
       extract(opts.width) * extract(opts.height) * extract(opts.depth) *
@@ -103,20 +107,23 @@ void write_output(std::ostream& output, const options& opts) {
 
     oglplus::write_and_pad_texture_image_data_header(output, hdr, size);
 
-    const GLsizei fd = extract(opts.depth) / extract(opts.rep_z);
-    const GLsizei fh = extract(opts.height) / extract(opts.rep_y);
-    const GLsizei fw = extract(opts.width) / extract(opts.rep_x);
+    const oglplus::gl_types::sizei_type fd =
+      extract(opts.depth) / extract(opts.rep_z);
+    const oglplus::gl_types::sizei_type fh =
+      extract(opts.height) / extract(opts.rep_y);
+    const oglplus::gl_types::sizei_type fw =
+      extract(opts.width) / extract(opts.rep_x);
 
-    for(GLsizei z = 0; z < hdr.depth; ++z) {
-        const GLsizei fz = (fd == 0 ? 0 : z / fd);
-        for(GLsizei y = 0; y < hdr.height; ++y) {
-            const GLsizei fy = (fh == 0 ? 0 : y / fh);
-            for(GLsizei x = 0; x < hdr.width; ++x) {
-                const GLsizei fx = (fw == 0 ? 0 : x / fw);
+    for(oglplus::gl_types::sizei_type z = 0; z < hdr.depth; ++z) {
+        const oglplus::gl_types::sizei_type fz = (fd == 0 ? 0 : z / fd);
+        for(oglplus::gl_types::sizei_type y = 0; y < hdr.height; ++y) {
+            const oglplus::gl_types::sizei_type fy = (fh == 0 ? 0 : y / fh);
+            for(oglplus::gl_types::sizei_type x = 0; x < hdr.width; ++x) {
+                const oglplus::gl_types::sizei_type fx = (fw == 0 ? 0 : x / fw);
                 const bool black = ((fx % 2) + (fy % 2) + (fz % 2)) % 2 == 0;
                 const char outb = char(black ? 0x00 : 0xFF);
 
-                for(GLsizei c = 0; c < channels; ++c) {
+                for(oglplus::gl_types::sizei_type c = 0; c < channels; ++c) {
                     output.put(outb);
                 }
             }
@@ -167,5 +174,5 @@ auto main(int argc, const char** argv) -> int {
     eagine::main_ctx_options options;
     options.app_id = "BakeChkrI";
     options.logger_opts.default_no_log = true;
-    return eagine::main_impl(argc, argv, options);
+    return eagine::main_impl(argc, argv, options, eagine::main);
 }

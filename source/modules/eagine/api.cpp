@@ -12,6 +12,7 @@ module;
 export module eagine.oglplus:api;
 import eagine.core.types;
 import eagine.core.memory;
+import eagine.core.string;
 import eagine.core.math;
 import eagine.core.units;
 import eagine.core.utility;
@@ -99,6 +100,19 @@ struct make_args_map<
 } // namespace eagine::c_api
 
 namespace eagine::oglplus {
+//------------------------------------------------------------------------------
+export struct api_initializer {
+    ~api_initializer() noexcept = default;
+    api_initializer(const api_initializer&) = delete;
+    api_initializer(api_initializer&&) = delete;
+    auto operator=(const api_initializer&) = delete;
+    auto operator=(api_initializer&&) = delete;
+
+    explicit api_initializer(
+      const int /*gl_ver_major*/ = 3,
+      const int /*gl_ver_minor*/ = 3);
+};
+//------------------------------------------------------------------------------
 class gl_debug_logger;
 using c_api::adapted_function;
 using c_api::enum_parameter_value;
@@ -3886,12 +3900,11 @@ public:
     }
 
     template <typename T>
+        requires(is_known_vector_type_v<T>)
     auto set_uniform(
       const program_name prog,
       const uniform_location loc,
-      const T& value) const -> combined_result<void>
-        requires(is_known_vector_type_v<T>)
-    {
+      const T& value) const -> combined_result<void> {
         return set_uniform(
           prog, loc, element_view(value), canonical_compound_type<T>());
     }
@@ -4175,7 +4188,7 @@ public:
     }
 };
 
-template <std::size_t I, typename ApiTraits>
+export template <std::size_t I, typename ApiTraits>
 auto get(const basic_gl_api<ApiTraits>& x) noexcept -> const
   typename std::tuple_element<I, basic_gl_api<ApiTraits>>::type& {
     return x;
@@ -4192,7 +4205,7 @@ auto translate(const basic_gl_api<A>& api, const bool value) noexcept
 //------------------------------------------------------------------------------
 /// @brief Alias for the default instantation of basic_gl_api.
 /// @ingroup gl_api_wrap
-using gl_api = basic_gl_api<gl_api_traits>;
+export using gl_api = basic_gl_api<gl_api_traits>;
 } // namespace eagine::oglplus
 
 // NOLINTNEXTLINE(cert-dcl58-cpp)

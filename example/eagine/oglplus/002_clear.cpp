@@ -5,16 +5,19 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
-
+#if EAGINE_OGLPLUS_MODULE
+import eagine.core;
+import eagine.oglplus;
+import <iostream>;
+import <stdexcept>;
+#else
 #include <eagine/oglplus/gl.hpp>
 #include <eagine/oglplus/gl_api.hpp>
-
 #include <eagine/scope_exit.hpp>
-
-#include <GLFW/glfw3.h>
-
 #include <iostream>
 #include <stdexcept>
+#endif
+#include <GLFW/glfw3.h>
 
 static void run_loop(GLFWwindow* window, int width, int height) {
     using namespace eagine::oglplus;
