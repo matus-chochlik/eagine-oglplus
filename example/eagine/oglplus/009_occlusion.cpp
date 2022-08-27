@@ -71,7 +71,9 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
+#if EAGINE_OGLPLUS_MODULE
     ctx.workers().populate();
+#endif
 
     const auto progress_callback = [window] {
         glfwPollEvents();
