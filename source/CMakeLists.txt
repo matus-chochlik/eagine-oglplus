@@ -9,32 +9,27 @@ else()
 endif()
 add_subdirectory(tools)
 
+set(
+	EAGINE_OGLPLUS_EXPORT_TARGETS
+	oglplus-bake_noise_image
+	oglplus-bake_checker_image
+	oglplus-bake_tiling_image
+	oglplus-bake_png_image
+	oglplus-bake_shader_source
+	oglplus-bake_program_source
+)
+
 if(TARGET eagine-oglplus)
 	add_library(EAGine::OGLplus INTERFACE IMPORTED GLOBAL)
-	target_link_libraries(EAGine::OGLplus INTERFACE eagine-oglplus-headers)
-
 	target_link_libraries(
 		EAGine::OGLplus
 		INTERFACE
+			eagine-oglplus-headers
 			eagine-oglplus
 	)
-
-	install(
-		TARGETS
-			eagine-oglplus-generated-headers
+	list(
+		APPEND EAGINE_OGLPLUS_EXPORT_TARGETS
 			eagine-oglplus-headers
-			oglplus-bake_noise_image
-			oglplus-bake_checker_image
-			oglplus-bake_tiling_image
-			oglplus-bake_png_image
-			oglplus-bake_shader_source
-			oglplus-bake_program_source
-			EXPORT OGLplus
-		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
-		RUNTIME DESTINATION bin
-		INCLUDES DESTINATION include
-		PUBLIC_HEADER DESTINATION include
 	)
 
 	install(
@@ -44,3 +39,14 @@ if(TARGET eagine-oglplus)
 		DESTINATION lib/cmake/EAGine
 	)
 endif()
+
+install(
+	TARGETS ${EAGINE_OGLPLUS_EXPORT_TARGETS}
+	EXPORT OGLplus
+	LIBRARY DESTINATION lib
+	ARCHIVE DESTINATION lib
+	RUNTIME DESTINATION bin
+	INCLUDES DESTINATION include
+	PUBLIC_HEADER DESTINATION include
+)
+
