@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="256"
+   height="256"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg_tile_1F0">
+  <path
+     style="fill:black;fill-opacity:1;stroke:none"
+     d="M 0 0 H 256 V 256 H 0 Z"
+     id="tile_bg" />
+  <path
+     style="fill:white;fill-opacity:1;stroke:none"
+     d="M 0 0 H 64 Q 64 64 0 64 Z"
+     id="tile_fg_lt" />
+  <path
+     style="fill:white;fill-opacity:1;stroke:none"
+     d="M 256 0 V 64 Q 192 64 192 0 Z"
+     id="tile_fg_rt" />
+  <path
+     style="fill:white;fill-opacity:1;stroke:none"
+     d="M 0 256 H 64 Q 64 192 0 192 Z"
+     id="tile_fg_lb" />
+  <path
+     style="fill:white;fill-opacity:1;stroke:none"
+     d="M 256 256 H 192 Q 192 192 256 192 Z"
+     id="tile_fg_rb" />
+</svg>
