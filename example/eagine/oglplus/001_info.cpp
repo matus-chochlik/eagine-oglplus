@@ -6,18 +6,11 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 #include <GL/glew.h>
-#if EAGINE_OGLPLUS_MODULE
+
 import eagine.core;
 import eagine.oglplus;
 import <stdexcept>;
-#else
-#include <eagine/console/console.hpp>
-#include <eagine/main_ctx.hpp>
-#include <eagine/main_ctx_object.hpp>
-#include <eagine/oglplus/gl_api.hpp>
-#include <eagine/scope_exit.hpp>
-#include <stdexcept>
-#endif
+
 #include <GLFW/glfw3.h>
 
 namespace eagine {

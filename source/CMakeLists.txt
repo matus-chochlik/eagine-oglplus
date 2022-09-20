@@ -2,11 +2,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
-if(${WITH_MODULES})
-	add_subdirectory(modules)
-else()
-	add_subdirectory(lib)
-endif()
+add_subdirectory(modules)
 add_subdirectory(tools)
 
 set(
@@ -18,27 +14,6 @@ set(
 	oglplus-bake_shader_source
 	oglplus-bake_program_source
 )
-
-if(TARGET eagine-oglplus)
-	add_library(EAGine::OGLplus INTERFACE IMPORTED GLOBAL)
-	target_link_libraries(
-		EAGine::OGLplus
-		INTERFACE
-			eagine-oglplus-headers
-			eagine-oglplus
-	)
-	list(
-		APPEND EAGINE_OGLPLUS_EXPORT_TARGETS
-			eagine-oglplus-headers
-	)
-
-	install(
-		EXPORT OGLplus
-		NAMESPACE EAGine::
-		FILE OGLplus.cmake
-		DESTINATION lib/cmake/EAGine
-	)
-endif()
 
 install(
 	TARGETS ${EAGINE_OGLPLUS_EXPORT_TARGETS}

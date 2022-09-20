@@ -5,15 +5,8 @@
 
 add_executable(oglplus-bake_program_source main.cpp)
 eagine_add_exe_analysis(oglplus-bake_program_source)
-if(${WITH_MODULES})
-	eagine_target_modules(
-		oglplus-bake_program_source
-		eagine.core
-		eagine.oglplus
-	)
-else()
-target_link_libraries(
+eagine_target_modules(
 	oglplus-bake_program_source
-	PUBLIC EAGine::OGLplus
+	eagine.core
+	eagine.oglplus
 )
-endif()

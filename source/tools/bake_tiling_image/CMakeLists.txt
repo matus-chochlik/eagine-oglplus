@@ -5,15 +5,8 @@
 
 add_executable(oglplus-bake_tiling_image main.cpp)
 eagine_add_exe_analysis(oglplus-bake_tiling_image)
-if(${WITH_MODULES})
-	eagine_target_modules(
-		oglplus-bake_tiling_image
-		eagine.core
-		eagine.oglplus
-	)
-else()
-	target_link_libraries(
-		oglplus-bake_tiling_image
-		PUBLIC EAGine::OGLplus
-	)
-endif()
+eagine_target_modules(
+	oglplus-bake_tiling_image
+	eagine.core
+	eagine.oglplus
+)

@@ -5,15 +5,8 @@
 
 add_executable(oglplus-bake_shader_source main.cpp)
 eagine_add_exe_analysis(oglplus-bake_shader_source)
-if(${WITH_MODULES})
-	eagine_target_modules(
-		oglplus-bake_shader_source
-		eagine.core
-		eagine.oglplus
-	)
-else()
-	target_link_libraries(
-		oglplus-bake_shader_source
-		PUBLIC EAGine::OGLplus
-	)
-endif()
+eagine_target_modules(
+	oglplus-bake_shader_source
+	eagine.core
+	eagine.oglplus
+)
