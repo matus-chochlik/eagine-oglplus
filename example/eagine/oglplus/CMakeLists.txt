@@ -24,25 +24,17 @@ function(eagine_example_common EXAMPLE_NAME)
 		"${EXAMPLE_NAME}.cpp"
 		${ARGN}
 	)
-	if(${WITH_MODULES})
-		eagine_target_modules(
-			oglplus-${EXAMPLE_NAME}
-			eagine.core
-			eagine.shapes
-			eagine.oglplus
-		)
-		target_link_libraries(
-			oglplus-${EXAMPLE_NAME}
-			PRIVATE EAGine::Deps::GLFW3
-		)
-	else()
-		eagine_add_exe_analysis(oglplus-${EXAMPLE_NAME})
-		target_link_libraries(
-			oglplus-${EXAMPLE_NAME}
-			PUBLIC EAGine::OGLplus
-			PRIVATE ${ARGN}
-		)
-	endif()
+	eagine_add_exe_analysis(oglplus-${EXAMPLE_NAME})
+	eagine_target_modules(
+		oglplus-${EXAMPLE_NAME}
+		eagine.core
+		eagine.shapes
+		eagine.oglplus
+	)
+	target_link_libraries(
+		oglplus-${EXAMPLE_NAME}
+		PRIVATE EAGine::Deps::GLFW3
+	)
 	add_dependencies(eagine-oglplus-examples oglplus-${EXAMPLE_NAME})
 
 	set_target_properties(
