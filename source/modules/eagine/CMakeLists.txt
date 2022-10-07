@@ -226,6 +226,7 @@ eagine_add_module(
 	SOURCES
 		api_impl
 		camera_impl
+		shapes_impl
 		image_spec_impl
 		framebuffer_impl
 )

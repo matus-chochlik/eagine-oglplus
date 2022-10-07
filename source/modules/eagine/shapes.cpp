@@ -940,52 +940,12 @@ export struct vertex_attrib_binding_intf
       -> vertex_attrib_location = 0;
 };
 
-export class default_vertex_attrib_bindings
-  : public vertex_attrib_binding_intf {
-public:
-    default_vertex_attrib_bindings() noexcept = default;
+export auto make_default_vertex_attrib_bindings(const shape_generator& shape)
+  -> std::shared_ptr<vertex_attrib_binding_intf>;
 
-    default_vertex_attrib_bindings(const shape_generator& shape) {
-        shape.for_each_attrib(
-          {construct_from, [this](const auto attribs, const auto info) {
-               if(attribs.has(info.enumerator)) {
-                   _bindings.emplace_back(info.enumerator, 0);
-               }
-           }});
-    }
-
-    default_vertex_attrib_bindings(
-      std::initializer_list<shapes::vertex_attrib_variant> vavs)
-      : _bindings{vavs.begin(), vavs.end()} {}
-
-    auto add(shapes::vertex_attrib_variant vav) -> auto& {
-        _bindings.push_back(vav);
-        return *this;
-    }
-
-    auto attrib_count() -> span_size_t final {
-        return span_size(_bindings.size());
-    }
-
-    auto attrib_variant(span_size_t index)
-      -> shapes::vertex_attrib_variant final {
-        return _bindings[integer(index)];
-    }
-
-    auto location(shapes::vertex_attrib_variant vav)
-      -> vertex_attrib_location final {
-        for(const integer i : integer_range(_bindings.size())) {
-            const auto& entry = _bindings[i];
-            if(entry == vav) {
-                return vertex_attrib_location{i};
-            }
-        }
-        return vertex_attrib_location{0};
-    }
-
-private:
-    std::vector<shapes::vertex_attrib_variant> _bindings;
-};
+export auto make_default_vertex_attrib_bindings(
+  std::initializer_list<shapes::vertex_attrib_variant> vavs)
+  -> std::shared_ptr<vertex_attrib_binding_intf>;
 
 /// @brief Class that specifies bindings between attribute variant and array index.
 /// @ingroup shapes
@@ -996,13 +956,13 @@ public:
     vertex_attrib_bindings() noexcept = default;
 
     auto init(const shape_generator& shape) -> auto& {
-        _pimpl = std::make_shared<default_vertex_attrib_bindings>(shape);
+        _pimpl = make_default_vertex_attrib_bindings(shape);
         return *this;
     }
 
     auto init(std::initializer_list<shapes::vertex_attrib_variant> vavs)
       -> auto& {
-        _pimpl = std::make_shared<default_vertex_attrib_bindings>(vavs);
+        _pimpl = make_default_vertex_attrib_bindings(vavs);
         return *this;
     }
 
@@ -1158,6 +1118,11 @@ export class geometry {
 public:
     /// @brief Default constructor.
     geometry() noexcept = default;
+    geometry(geometry&&) noexcept = default;
+    geometry(const geometry&) = delete;
+    auto operator=(geometry&&) noexcept -> geometry& = default;
+    auto operator=(const geometry&) -> geometry& = delete;
+    ~geometry() noexcept = default;
 
     /// @brief Initializes a previously default initialized geometry instance.
     auto init(
