@@ -694,71 +694,6 @@ shape_generator::shape_generator(
     }
 }
 //------------------------------------------------------------------------------
-void shape_generator::attrib_data(
-  const shapes::vertex_attrib_variant vav,
-  memory::block data) const {
-    using shapes::attrib_data_type;
-
-    switch(_gen->attrib_type(vav)) {
-        case attrib_data_type::float_:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::float_type>()));
-            break;
-        case attrib_data_type::ubyte:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::ubyte_type>()));
-            break;
-        case attrib_data_type::uint_16:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::ushort_type>()));
-            break;
-        case attrib_data_type::uint_32:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::uint_type>()));
-            break;
-        case attrib_data_type::int_16:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::short_type>()));
-            break;
-        case attrib_data_type::int_32:
-            _gen->attrib_values(
-              vav, accommodate(data, std::type_identity<gl_types::int_type>()));
-            break;
-        case attrib_data_type::none:
-            break;
-    }
-}
-//------------------------------------------------------------------------------
-void shape_generator::index_data(
-  const shapes::drawing_variant dv,
-  memory::block data) const {
-    using shapes::index_data_type;
-
-    switch(_gen->index_type()) {
-        case index_data_type::unsigned_32:
-            _gen->indices(
-              dv, accommodate(data, std::type_identity<gl_types::uint_type>()));
-            break;
-        case index_data_type::unsigned_16:
-            _gen->indices(
-              dv,
-              accommodate(data, std::type_identity<gl_types::ushort_type>()));
-            break;
-        case index_data_type::unsigned_8:
-            _gen->indices(
-              dv,
-              accommodate(data, std::type_identity<gl_types::ubyte_type>()));
-            break;
-        case index_data_type::none:
-            break;
-    }
-}
-//------------------------------------------------------------------------------
 template <typename A>
 void shape_generator::attrib_setup(
   const basic_gl_api<A>& api,
@@ -1130,42 +1065,7 @@ public:
       const shape_generator& shape,
       const vertex_attrib_bindings& bindings,
       const shapes::drawing_variant var,
-      memory::buffer& temp) -> auto& {
-
-        _instance_count = shape.instance_count();
-
-        const auto& gl = glapi;
-        gl.gen_vertex_arrays() >> _vao;
-        const auto attrib_count{bindings.attrib_count()};
-        auto buffer_count{attrib_count};
-
-        _ops.resize(integer(shape.operation_count(var)));
-        shape.instructions(glapi, var, cover(_ops));
-
-        const auto indexed{shape.indexed_drawing(var)};
-
-        if(indexed) {
-            ++buffer_count;
-        }
-        _buffers.resize(buffer_count);
-        gl.gen_buffers(_buffers.raw_handles());
-
-        gl.bind_vertex_array(_vao);
-
-        for(const integer i : integer_range(attrib_count)) {
-            shape.attrib_setup(
-              glapi,
-              _vao,
-              _buffers[i],
-              vertex_attrib_location{i},
-              bindings.attrib_variant(i),
-              temp);
-        }
-        if(indexed) {
-            shape.index_setup(glapi, _buffers[attrib_count], temp);
-        }
-        return *this;
-    }
+      memory::buffer& temp) -> geometry&;
 
     /// @brief Initializes a previously default initialized geometry instance.
     auto init(
@@ -1237,6 +1137,12 @@ export class geometry_and_bindings
   , public geometry {
 public:
     geometry_and_bindings() noexcept = default;
+    geometry_and_bindings(geometry_and_bindings&&) noexcept = default;
+    geometry_and_bindings(const geometry_and_bindings&&) = delete;
+    auto operator=(geometry_and_bindings&&) noexcept
+      -> geometry_and_bindings& = default;
+    auto operator=(const geometry_and_bindings&&) = delete;
+    ~geometry_and_bindings() noexcept = default;
 
     auto init(
       const gl_api& glapi,
