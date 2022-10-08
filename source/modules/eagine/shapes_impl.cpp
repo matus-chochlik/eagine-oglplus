@@ -5,6 +5,9 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
+module;
+
+#include <cassert>
 
 module eagine.oglplus;
 import eagine.core.types;
@@ -142,16 +145,25 @@ auto make_default_vertex_attrib_bindings(
 //------------------------------------------------------------------------------
 // geometry
 //------------------------------------------------------------------------------
-auto geometry::init(
+auto geometry::operator=(geometry&& that) noexcept -> geometry& {
+    assert(_ops.empty());
+    assert(!_vao);
+    _instance_count = that._instance_count;
+    _ops = std::move(that._ops);
+    _vao = std::move(that._vao);
+    _buffers = std::move(that._buffers);
+    return *this;
+}
+//------------------------------------------------------------------------------
+geometry::geometry(
   const gl_api& glapi,
   const shape_generator& shape,
   const vertex_attrib_bindings& bindings,
   const shapes::drawing_variant var,
-  memory::buffer& temp) -> geometry& {
+  memory::buffer& temp)
+  : _instance_count{shape.instance_count()} {
 
-    _instance_count = shape.instance_count();
-
-    const auto& gl = glapi;
+    const auto& gl = glapi.operations();
     gl.gen_vertex_arrays() >> _vao;
     const auto attrib_count{bindings.attrib_count()};
     auto buffer_count{attrib_count};
@@ -181,7 +193,6 @@ auto geometry::init(
     if(indexed) {
         shape.index_setup(glapi, _buffers[attrib_count], temp);
     }
-    return *this;
 }
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus

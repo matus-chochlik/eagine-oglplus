@@ -889,22 +889,13 @@ export auto make_default_vertex_attrib_bindings(
 export class vertex_attrib_bindings {
 public:
     vertex_attrib_bindings() noexcept = default;
-
-    auto init(const shape_generator& shape) -> auto& {
-        _pimpl = make_default_vertex_attrib_bindings(shape);
-        return *this;
-    }
-
-    auto init(std::initializer_list<shapes::vertex_attrib_variant> vavs)
-      -> auto& {
-        _pimpl = make_default_vertex_attrib_bindings(vavs);
-        return *this;
-    }
-
-    auto init(const vertex_attrib_bindings& that) -> auto& {
-        _pimpl = that._pimpl;
-        return *this;
-    }
+    vertex_attrib_bindings(vertex_attrib_bindings&&) noexcept = default;
+    vertex_attrib_bindings(const vertex_attrib_bindings&) = default;
+    auto operator=(vertex_attrib_bindings&&) noexcept
+      -> vertex_attrib_bindings& = default;
+    auto operator=(const vertex_attrib_bindings&)
+      -> vertex_attrib_bindings& = default;
+    ~vertex_attrib_bindings() noexcept = default;
 
     vertex_attrib_bindings(
       std::shared_ptr<vertex_attrib_binding_intf> pimpl) noexcept
@@ -913,15 +904,13 @@ public:
     }
 
     /// @brief Constructor matching supported attributes from a shape generator.
-    vertex_attrib_bindings(const shape_generator& shape) {
-        init(shape);
-    }
+    vertex_attrib_bindings(const shape_generator& shape)
+      : vertex_attrib_bindings{make_default_vertex_attrib_bindings(shape)} {}
 
     /// @brief Constructor matching supported attributes from a shape generator.
     vertex_attrib_bindings(
-      std::initializer_list<shapes::vertex_attrib_variant> vavs) {
-        init(vavs);
-    }
+      std::initializer_list<shapes::vertex_attrib_variant> vavs)
+      : vertex_attrib_bindings{make_default_vertex_attrib_bindings(vavs)} {}
 
     /// @brief Returns the number of attributes in the binding.
     /// @see attrib_variant
@@ -1055,26 +1044,9 @@ public:
     geometry() noexcept = default;
     geometry(geometry&&) noexcept = default;
     geometry(const geometry&) = delete;
-    auto operator=(geometry&&) noexcept -> geometry& = default;
+    auto operator=(geometry&&) noexcept -> geometry&;
     auto operator=(const geometry&) -> geometry& = delete;
     ~geometry() noexcept = default;
-
-    /// @brief Initializes a previously default initialized geometry instance.
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      const vertex_attrib_bindings& bindings,
-      const shapes::drawing_variant var,
-      memory::buffer& temp) -> geometry&;
-
-    /// @brief Initializes a previously default initialized geometry instance.
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      const vertex_attrib_bindings& bindings,
-      memory::buffer& temp) -> auto& {
-        return init(glapi, shape, bindings, shape.draw_variant(0), temp);
-    }
 
     /// @brief Construction using shape generator, attrib bindings and drawing variant.
     geometry(
@@ -1082,9 +1054,7 @@ public:
       const shape_generator& shape,
       const vertex_attrib_bindings& bindings,
       const shapes::drawing_variant var,
-      memory::buffer& temp) {
-        init(glapi, shape, bindings, var, temp);
-    }
+      memory::buffer& temp);
 
     /// @brief Construction using shape generator and attrib bindings.
     geometry(
@@ -1144,57 +1114,36 @@ public:
     auto operator=(const geometry_and_bindings&&) = delete;
     ~geometry_and_bindings() noexcept = default;
 
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      const vertex_attrib_bindings& bindings,
-      const shapes::drawing_variant var,
-      memory::buffer& temp) -> auto& {
-        vertex_attrib_bindings::init(bindings);
-        geometry::init(glapi, shape, *this, var, temp);
-        return *this;
-    }
-
     geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
       const vertex_attrib_bindings& bindings,
       const shapes::drawing_variant var,
-      memory::buffer& temp) {
-        init(glapi, shape, bindings, var, temp);
-    }
+      memory::buffer& temp)
+      : vertex_attrib_bindings{bindings}
+      , geometry{glapi, shape, bindings, var, temp} {}
 
-    auto init(
+    geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
-      const shapes::drawing_variant var,
-      memory::buffer& temp) -> auto& {
-        vertex_attrib_bindings::init(shape);
-        geometry::init(glapi, shape, *this, var, temp);
-        return *this;
-    }
+      const vertex_attrib_bindings& bindings,
+      memory::buffer& temp)
+      : vertex_attrib_bindings{bindings}
+      , geometry{glapi, shape, bindings, shape.draw_variant(0), temp} {}
 
     geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
       const shapes::drawing_variant var,
-      memory::buffer& temp) {
-        init(glapi, shape, var, temp);
-    }
-
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      memory::buffer& temp) -> auto& {
-        return init(glapi, shape, shape.draw_variant(0), temp);
-    }
+      memory::buffer& temp)
+      : vertex_attrib_bindings{shape}
+      , geometry{glapi, shape, *this, var, temp} {}
 
     geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
-      memory::buffer& temp) {
-        init(glapi, shape, temp);
-    }
+      memory::buffer& temp)
+      : geometry_and_bindings{glapi, shape, shape.draw_variant(0), temp} {}
 };
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
