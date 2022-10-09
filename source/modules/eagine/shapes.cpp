@@ -912,6 +912,17 @@ public:
       std::initializer_list<shapes::vertex_attrib_variant> vavs)
       : vertex_attrib_bindings{make_default_vertex_attrib_bindings(vavs)} {}
 
+    /// @brief Indicates if this bindings wrapper is initialized.
+    auto is_initialized() const noexcept -> bool {
+        return bool(_pimpl);
+    }
+
+    /// @brief Indicates if this bindings wrapper is initialized.
+    /// @see is_initialized
+    explicit operator bool() const noexcept {
+        return is_initialized();
+    }
+
     /// @brief Returns the number of attributes in the binding.
     /// @see attrib_variant
     auto attrib_count() const -> span_size_t {
@@ -1064,6 +1075,17 @@ public:
       memory::buffer& temp)
       : geometry{glapi, shape, bindings, shape.draw_variant(0), temp} {}
 
+    /// @brief Indicates if this geometry wrapper is initialized.
+    auto is_initialized() const noexcept -> bool {
+        return bool(_vao);
+    }
+
+    /// @brief Indicates if this geometry wrapper is initialized.
+    /// @see is_initialized
+    explicit operator bool() const noexcept {
+        return is_initialized();
+    }
+
     /// @brief Releases the used OpenGL resources.
     void clean_up(const gl_api& gl) {
         gl.clean_up(_buffers);
@@ -1144,6 +1166,18 @@ public:
       const shape_generator& shape,
       memory::buffer& temp)
       : geometry_and_bindings{glapi, shape, shape.draw_variant(0), temp} {}
+
+    /// @brief Indicates if this instance of geometry and bindings is initialized.
+    auto is_initialized() const noexcept -> bool {
+        return vertex_attrib_bindings::is_initialized() &&
+               geometry::is_initialized();
+    }
+
+    /// @brief Indicates if this instance of geometry and bindings is initialized.
+    /// @see is_initialized
+    explicit operator bool() const noexcept {
+        return is_initialized();
+    }
 };
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
