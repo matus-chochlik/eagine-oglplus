@@ -8,16 +8,51 @@
 export module eagine.oglplus:gpu_program;
 import eagine.core.types;
 import eagine.core.memory;
+import eagine.shapes;
 import :config;
 import :enum_types;
 import :objects;
 import :glsl_source;
 import :program_source;
 import :prog_var_loc;
+import :shapes;
 import :api;
+import <map>;
+import <string>;
 
 namespace eagine::oglplus {
+//------------------------------------------------------------------------------
+/// @brief Class managing the mapping of program input variable to attrib location.
+/// @ingroup gl_api_wrap
+/// @see vertex_attrib_bindings
+export class program_input_bindings {
+public:
+    /// @brief Adds mapping from input variable name to vertex attribute variant
+    auto add(std::string name, shapes::vertex_attrib_variant vav)
+      -> program_input_bindings& {
+        _mapping.emplace(std::move(name), vav);
+        return *this;
+    }
 
+    /// @brief Applies this mapping and vertex attribute bindings to a program.
+    auto apply(
+      const gl_api& glapi,
+      program_name prog,
+      const vertex_attrib_bindings& bindings) noexcept -> bool {
+        std::size_t done{0};
+        for(auto& [name, vav] : _mapping) {
+            if(auto loc{bindings.location(vav)}) {
+                glapi.bind_attrib_location(prog, loc, name);
+                ++done;
+            }
+        }
+        return _mapping.size() == done;
+    }
+
+private:
+    std::map<std::string, shapes::vertex_attrib_variant> _mapping;
+};
+//------------------------------------------------------------------------------
 export class gpu_program : public owned_program_name {
     using base = owned_program_name;
 
@@ -131,6 +166,6 @@ public:
         return *this;
     }
 };
-
+//------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

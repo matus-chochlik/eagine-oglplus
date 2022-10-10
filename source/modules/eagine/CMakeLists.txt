@@ -166,13 +166,24 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION gpu_program
+	eagine.oglplus PARTITION shapes
 	IMPORTS
 		config enum_types
+		objects constants api
+		eagine.core.types
+		eagine.core.memory
+		eagine.shapes
+)
+
+eagine_add_module(
+	eagine.oglplus PARTITION gpu_program
+	IMPORTS
+		config enum_types shapes
 		glsl_source program_source
 		prog_var_loc object api
 		eagine.core.types
 		eagine.core.memory
+		eagine.shapes
 )
 
 eagine_add_module(
@@ -186,16 +197,6 @@ eagine_add_module(
 		eagine.core.c_api
 		eagine.core.utility
 		eagine.core.valid_if
-)
-
-eagine_add_module(
-	eagine.oglplus PARTITION shapes
-	IMPORTS
-		config enum_types
-		objects constants api
-		eagine.core.types
-		eagine.core.memory
-		eagine.shapes
 )
 
 eagine_add_module(
