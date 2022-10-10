@@ -166,7 +166,7 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION glsl_program
+	eagine.oglplus PARTITION gpu_program
 	IMPORTS
 		config enum_types
 		glsl_source program_source
@@ -220,7 +220,7 @@ eagine_add_module(
 		constants
 		api
 		gl_debug_logger
-		glsl_program
+		gpu_program
 		framebuffer
 		shapes
 	SOURCES
