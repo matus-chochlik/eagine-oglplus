@@ -27,6 +27,22 @@ namespace eagine::oglplus {
 /// @see vertex_attrib_bindings
 export class program_input_bindings {
 public:
+    /// @brief Indicates is this instance of bindings is initialized.
+    auto is_initialized() const noexcept -> bool {
+        return !_mapping.empty();
+    }
+
+    /// @brief Indicates is this instance of bindings is initialized.
+    /// @see is_initialized
+    explicit operator bool() const noexcept {
+        return is_initialized();
+    }
+
+    /// @brief Returns the count of input attributes.
+    auto count() const noexcept -> span_size_t {
+        return span_size(_mapping.size());
+    }
+
     /// @brief Adds mapping from input variable name to vertex attribute variant
     auto add(std::string name, shapes::vertex_attrib_variant vav)
       -> program_input_bindings& {
@@ -47,6 +63,12 @@ public:
             }
         }
         return _mapping.size() == done;
+    }
+
+    /// @brief Clear the bindings.
+    auto clear() noexcept -> program_input_bindings& {
+        _mapping.clear();
+        return *this;
     }
 
 private:
