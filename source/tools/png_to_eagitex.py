@@ -22,6 +22,13 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
+            "--gzip", "-z",
+            dest='gzip_data',
+            action="store_true",
+            default=False
+        )
+
+        self.add_argument(
             "--input", "-i",
             metavar='INPUT-FILE',
             dest='input_paths',
@@ -157,12 +164,14 @@ class PngImage(object):
                     yield e[c]
 
     # -------------------------------------------------------------------------
-    def data_filter(self):
-        try:
-            import zlib
-            return "zlib"
-        except:
-            return "none"
+    def data_filter(self, options):
+        if options.gzip_data:
+            try:
+                import zlib
+                return "zlib"
+            except:
+                pass
+        return "none"
 
     # -------------------------------------------------------------------------
     def chunks(self):
@@ -207,10 +216,11 @@ def convert(options):
                 options.write("%d" % e)
         options.write(']')
     else:
-        options.write(',"data_filter":"%s"' % image0.data_filter())
+        options.write(',"data_filter":"%s"' % image0.data_filter(options))
     options.write('}')
     if not options.write_elements:
         try:
+            assert options.gzip_data
             import zlib
             zobj = zlib.compressobj(9)
             for img in _images(image0, options):
