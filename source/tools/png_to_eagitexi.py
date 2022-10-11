@@ -12,6 +12,13 @@ import argparse
 class ArgumentParser(argparse.ArgumentParser):
     # -------------------------------------------------------------------------
     def __init__(self, **kw):
+        def _natural_int(x):
+            try:
+                assert(int(x) > 0)
+                return int(x)
+            except:
+                self.error("`%s' is not a positive integer value" % str(x))
+
         argparse.ArgumentParser.__init__(self, **kw)
 
         self.add_argument(
@@ -47,6 +54,14 @@ class ArgumentParser(argparse.ArgumentParser):
             default=None
         )
 
+        self.add_argument(
+            "--level", "-l",
+            metavar='INTEGER',
+            dest='image_level',
+            nargs='?',
+            type=_natural_int,
+            default=0
+        )
 
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
@@ -189,7 +204,8 @@ class PngImage(object):
 # ------------------------------------------------------------------------------
 def convert(options):
     image0 = PngImage(options.input_paths[0])
-    options.write('{"width":%d\n' % image0.width())
+    options.write('{"level":%d\n' % options.image_level)
+    options.write(',"width":%d\n' % image0.width())
     options.write(',"height":%d\n' % image0.height())
     options.write(',"depth":%d\n' % len(options.input_paths))
     options.write(',"channels":%d\n' % image0.channels())
