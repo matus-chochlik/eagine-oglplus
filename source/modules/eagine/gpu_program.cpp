@@ -54,7 +54,7 @@ public:
     auto apply(
       const gl_api& glapi,
       program_name prog,
-      const vertex_attrib_bindings& bindings) noexcept -> bool {
+      const vertex_attrib_bindings& bindings) const noexcept -> bool {
         std::size_t done{0};
         for(auto& [name, vav] : _mapping) {
             if(auto loc{bindings.location(vav)}) {
