@@ -17,7 +17,7 @@ import :program_source;
 import :prog_var_loc;
 import :shapes;
 import :api;
-import <map>;
+export import <map>;
 import <string>;
 
 namespace eagine::oglplus {
