@@ -134,6 +134,8 @@ class PngImage(object):
         if self._pil_image:
             if self._pil_image.mode == "RGBA":
                 return 4 if self.has_alpha() else 3
+            if self._pil_image.mode == "RGB":
+                return 3
             if self._pil_image.mode == "1":
                 return 1
             if self._pil_image.mode == "L":
@@ -149,6 +151,8 @@ class PngImage(object):
         if self._pil_image:
             if self._pil_image.mode == "RGBA":
                 return "rgba" if self.has_alpha() else "rgb"
+            if self._pil_image.mode == "RGB":
+                return "rgb"
             if self._pil_image.mode == "1":
                 return "red"
             if self._pil_image.mode == "L":
@@ -159,6 +163,8 @@ class PngImage(object):
         if self._pil_image:
             if self._pil_image.mode == "RGBA":
                 return "rgba8" if self.has_alpha() else "rgb8"
+            if self._pil_image.mode == "RGB":
+                return "rgb8"
             if self._pil_image.mode == "1":
                 return "r8"
             if self._pil_image.mode == "L":
@@ -207,7 +213,8 @@ def convert(options):
     options.write('{"level":%d\n' % options.image_level)
     options.write(',"width":%d\n' % image0.width())
     options.write(',"height":%d\n' % image0.height())
-    options.write(',"depth":%d\n' % len(options.input_paths))
+    if(len(options.input_paths) > 1):
+        options.write(',"depth":%d\n' % len(options.input_paths))
     options.write(',"channels":%d\n' % image0.channels())
     options.write(',"data_type":"%s"\n' % image0.data_type())
     options.write(',"format":"%s"\n' % image0.format())
