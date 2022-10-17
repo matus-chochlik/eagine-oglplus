@@ -201,7 +201,7 @@ class PngImage(object):
             temp = bytearray()
             for e in self._pil_image.getdata():
                 for c in range(nc):
-                    temp += e[c].to_bytes(1, "little")
+                    temp += bytes([e[c]])
                 if len(temp) >= 4096:
                     yield temp
                     temp = bytearray()
@@ -254,7 +254,7 @@ def convert(options):
             compressed = zobj.flush()
             if compressed:
                 options.write(compressed)
-        except ImportError:
+        except:
             for img in _images(image0, options):
                 for chunk in img.chunks():
                     options.write(chunk)
