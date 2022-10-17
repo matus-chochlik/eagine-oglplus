@@ -251,10 +251,10 @@ def convert(options):
                     compressed = zobj.compress(chunk)
                     if compressed:
                         options.write(compressed)
-                compressed = zobj.compress(chunk)
-                if compressed:
-                    options.write(compressed)
-        except:
+            compressed = zobj.flush()
+            if compressed:
+                options.write(compressed)
+        except ImportError:
             for img in _images(image0, options):
                 for chunk in img.chunks():
                     options.write(chunk)
