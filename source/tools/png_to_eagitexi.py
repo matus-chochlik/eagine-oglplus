@@ -106,7 +106,7 @@ class PngImage(object):
         self._pil_image = None
         try:
             import PIL.Image
-            self._pil_image = PIL.Image.open(input_path)
+            self._pil_image = PIL.Image.open(input_path).transpose(PIL.Image.FLIP_TOP_BOTTOM)
         except: pass
 
         assert self._png_image or self._pil_image
