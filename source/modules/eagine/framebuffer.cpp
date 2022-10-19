@@ -114,7 +114,7 @@ private:
       gl_types::sizei_type width,
       gl_types::sizei_type height,
       const gl_object_name_vector<texture_tag>& texs,
-      const span<const gl_types::sizei_type> units,
+      const span<const gl_types::enum_type> units,
       span_size_t i,
       const attch_info& entry) const noexcept;
 
@@ -122,7 +122,7 @@ private:
       gl_types::sizei_type width,
       gl_types::sizei_type height,
       gl_object_name_vector<texture_tag>& texs,
-      const span<const gl_types::sizei_type> units) const noexcept;
+      const span<const gl_types::enum_type> units) const noexcept;
 
     void _init_rbo(
       gl_types::sizei_type width,
@@ -146,7 +146,7 @@ public:
       gl_types::sizei_type width,
       gl_types::sizei_type height,
       const framebuffer_configuration& config,
-      const span<const gl_types::sizei_type> tex_units)
+      const span<const gl_types::enum_type> tex_units)
       -> offscreen_framebuffer&;
 
     auto label(const gl_api& glapi, string_view lbl) -> offscreen_framebuffer& {
@@ -179,7 +179,7 @@ public:
       gl_types::sizei_type width,
       gl_types::sizei_type height,
       const framebuffer_configuration& config,
-      const span<const gl_types::sizei_type> tex_units)
+      const span<const gl_types::enum_type> tex_units)
       -> offscreen_framebuffer&;
 
     auto clean_up(const gl_api& glapi) -> offscreen_framebuffer& {
