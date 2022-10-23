@@ -157,16 +157,22 @@ class PngImage(object):
             return False
 
     # -------------------------------------------------------------------------
+    def _pil_channels(self, mode):
+        if mode == "RGBA":
+            return 4 if self.has_alpha() else 3
+        if mode == "RGB":
+            return 3
+        if mode == "1":
+            return 1
+        if mode == "L":
+            return 1
+        if mode == "P":
+            return self._pil_channels(self._pil_image.palette.mode)
+
+    # -------------------------------------------------------------------------
     def channels(self):
         if self._pil_image:
-            if self._pil_image.mode == "RGBA":
-                return 4 if self.has_alpha() else 3
-            if self._pil_image.mode == "RGB":
-                return 3
-            if self._pil_image.mode == "1":
-                return 1
-            if self._pil_image.mode == "L":
-                return 1
+            return self._pil_channels(self._pil_image.mode)
 
     # -------------------------------------------------------------------------
     def data_type(self):
@@ -174,28 +180,40 @@ class PngImage(object):
             return "unsigned_byte"
 
     # -------------------------------------------------------------------------
+    def _pil_format(self, mode):
+        if mode == "RGBA":
+            return "rgba" if self.has_alpha() else "rgb"
+        if mode == "RGB":
+            return "rgb"
+        if mode == "1":
+            return "red"
+        if mode == "L":
+            return "red"
+        if mode == "P":
+            return self._pil_format(self._pil_image.palette.mode)
+
+    # -------------------------------------------------------------------------
     def format(self):
         if self._pil_image:
-            if self._pil_image.mode == "RGBA":
-                return "rgba" if self.has_alpha() else "rgb"
-            if self._pil_image.mode == "RGB":
-                return "rgb"
-            if self._pil_image.mode == "1":
-                return "red"
-            if self._pil_image.mode == "L":
-                return "red"
+            return self._pil_format(self._pil_image.mode)
+
+    # -------------------------------------------------------------------------
+    def _pil_iformat(self, mode):
+        if mode == "RGBA":
+            return "rgba8" if self.has_alpha() else "rgb8"
+        if mode == "RGB":
+            return "rgb8"
+        if mode == "1":
+            return "r8"
+        if mode == "L":
+            return "r8"
+        if mode == "P":
+            return self._pil_iformat(self._pil_image.palette.mode)
 
     # -------------------------------------------------------------------------
     def iformat(self):
         if self._pil_image:
-            if self._pil_image.mode == "RGBA":
-                return "rgba8" if self.has_alpha() else "rgb8"
-            if self._pil_image.mode == "RGB":
-                return "rgb8"
-            if self._pil_image.mode == "1":
-                return "r8"
-            if self._pil_image.mode == "L":
-                return "r8"
+            return self._pil_iformat(self._pil_image.mode)
 
     # -------------------------------------------------------------------------
     def same_format_as(self, that):
@@ -204,12 +222,22 @@ class PngImage(object):
             (self.iformat() == that.iformat())
 
     # -------------------------------------------------------------------------
-    def elements(self):
-        if self._pil_image:
-            nc = self.channels()
+    def _pil_elements(self, mode):
+        nc = self.channels()
+        if mode == "P":
+            for i in self._pil_image.getdata():
+                e = self._pil_image.palette[i]
+                for c in range(nc):
+                    yield e[c]
+        else:
             for e in self._pil_image.getdata():
                 for c in range(nc):
                     yield e[c]
+
+    # -------------------------------------------------------------------------
+    def elements(self):
+        if self._pil_image:
+            self._pil_elements(self._pil_image.mode)
 
     # -------------------------------------------------------------------------
     def data_filter(self, options):
@@ -222,10 +250,20 @@ class PngImage(object):
         return "none"
 
     # -------------------------------------------------------------------------
-    def chunks(self):
-        if self._pil_image:
-            nc = self.channels()
-            temp = bytearray()
+    def _pil_chunks(self, mode):
+        nc = self.channels()
+        temp = bytearray()
+        if mode == "P":
+            p = {i:c for c,i in self._pil_image.palette.colors.items()}
+            for i in self._pil_image.getdata():
+                e = p[i]
+                for c in range(nc):
+                    temp += bytes([e[c]])
+                if len(temp) >= 64 * 1024:
+                    yield temp
+                    temp = bytearray()
+            yield temp
+        else:
             for e in self._pil_image.getdata():
                 for c in range(nc):
                     temp += bytes([e[c]])
@@ -233,6 +271,11 @@ class PngImage(object):
                     yield temp
                     temp = bytearray()
             yield temp
+
+    # -------------------------------------------------------------------------
+    def chunks(self):
+        if self._pil_image:
+            return self._pil_chunks(self._pil_image.mode)
 
 # ------------------------------------------------------------------------------
 def convert(options):
