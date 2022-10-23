@@ -12,7 +12,7 @@ import argparse
 class ArgumentParser(argparse.ArgumentParser):
     # -------------------------------------------------------------------------
     def __init__(self, **kw):
-        def _natural_int(x):
+        def _positive_int(x):
             try:
                 assert(int(x) > 0)
                 return int(x)
@@ -59,7 +59,34 @@ class ArgumentParser(argparse.ArgumentParser):
             metavar='INTEGER',
             dest='image_level',
             nargs='?',
-            type=_natural_int,
+            type=_positive_int,
+            default=0
+        )
+
+        self.add_argument(
+            "--x-offs", "-X",
+            metavar='INTEGER',
+            dest='x_offs',
+            nargs='?',
+            type=_positive_int,
+            default=0
+        )
+
+        self.add_argument(
+            "--y-offs", "-Y",
+            metavar='INTEGER',
+            dest='y_offs',
+            nargs='?',
+            type=_positive_int,
+            default=0
+        )
+
+        self.add_argument(
+            "--z-offs", "-Z",
+            metavar='INTEGER',
+            dest='z_offs',
+            nargs='?',
+            type=_positive_int,
             default=0
         )
 
@@ -202,7 +229,7 @@ class PngImage(object):
             for e in self._pil_image.getdata():
                 for c in range(nc):
                     temp += bytes([e[c]])
-                if len(temp) >= 4096:
+                if len(temp) >= 64 * 1024:
                     yield temp
                     temp = bytearray()
             yield temp
@@ -211,6 +238,12 @@ class PngImage(object):
 def convert(options):
     image0 = PngImage(options.input_paths[0])
     options.write('{"level":%d\n' % options.image_level)
+    if options.x_offs > 0:
+        options.write(',"x_offs":%d\n' % options.x_offs)
+    if options.y_offs > 0:
+        options.write(',"y_offs":%d\n' % options.y_offs)
+    if options.z_offs > 0:
+        options.write(',"z_offs":%d\n' % options.z_offs)
     options.write(',"width":%d\n' % image0.width())
     options.write(',"height":%d\n' % image0.height())
     if(len(options.input_paths) > 1):
