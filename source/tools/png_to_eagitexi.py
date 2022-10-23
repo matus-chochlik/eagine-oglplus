@@ -252,6 +252,7 @@ class PngImage(object):
     # -------------------------------------------------------------------------
     def _pil_chunks(self, mode):
         nc = self.channels()
+        chunk_size = 64 * 1024
         temp = bytearray()
         if mode == "P":
             p = {i:c for c,i in self._pil_image.palette.colors.items()}
@@ -259,15 +260,21 @@ class PngImage(object):
                 e = p[i]
                 for c in range(nc):
                     temp += bytes([e[c]])
-                if len(temp) >= 64 * 1024:
+                if len(temp) >= chunk_size:
                     yield temp
                     temp = bytearray()
             yield temp
+        elif mode == "L":
+            for e in self._pil_image.getdata():
+                temp += bytes([e])
+                if len(temp) >= chunk_size:
+                    yield temp
+                    temp = bytearray()
         else:
             for e in self._pil_image.getdata():
                 for c in range(nc):
                     temp += bytes([e[c]])
-                if len(temp) >= 64 * 1024:
+                if len(temp) >= chunk_size:
                     yield temp
                     temp = bytearray()
             yield temp
