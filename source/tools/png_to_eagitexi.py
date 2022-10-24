@@ -122,98 +122,180 @@ def getArgumentParser():
     return ArgumentParser(
         prog=os.path.basename(__file__),
         description="""
-            Converts a PNG image into eagitex texture image file.
+            Converts a PNG image into eagitexi texture image file.
         """
     )
+# ------------------------------------------------------------------------------
+# PILPngImageAdapter
+# ------------------------------------------------------------------------------
+class PILPngImageAdapter(object):
+    # -------------------------------------------------------------------------
+    def __init__(self, img):
+        self._img = img
+        self._has_palette = False
+        self._data_type = "unsigned_byte"
+
+        has_transparency = "transparency" in self._img.info
+        has_alpha = False
+        try:
+            for e in self._img.getdata(band=3):
+                if e != 255:
+                    has_alpha = True
+                    break
+        except:
+            pass
+
+        mode = self._img.mode
+
+        if mode == "RGBA":
+            self._channels = 4 if has_alpha else 3
+            self._format = "rgba" if has_alpha else "rgb"
+            self._iformat = "rgba8" if has_alpha else "rgb8"
+        if mode == "RGB":
+            self._channels = 3
+            self._format = "rgb"
+            self._iformat = "rgb8"
+        if mode == "1":
+            self._channels = 1
+            self._format = "red"
+            self._iformat = "r8"
+        if mode == "L":
+            self._channels = 1
+            self._format = "red"
+            self._iformat = "r8"
+        if mode == "P":
+            self._has_palette = True
+            pmode = self._img.palette.mode
+            if pmode in["RGBA", "RGB"]:
+                self._channels = 4 if has_transparency else 3
+                self._format = "rgba" if has_transparency else "rgb"
+                self._iformat = "rgba8" if has_transparency else "rgb8"
+            if pmode == "1":
+                self._channels = 1
+                self._format = "red"
+                self._iformat = "r8"
+            if pmode == "L":
+                self._channels = 1
+                self._format = "red"
+                self._iformat = "r8"
+
+    # -------------------------------------------------------------------------
+    def width(self):
+        return self._img.width
+
+    # -------------------------------------------------------------------------
+    def height(self):
+        return self._img.height
+
+    # -------------------------------------------------------------------------
+    def channels(self):
+        return self._channels
+
+    # -------------------------------------------------------------------------
+    def data_type(self):
+        return self._data_type
+
+    # -------------------------------------------------------------------------
+    def format(self):
+        return self._format
+
+    # -------------------------------------------------------------------------
+    def iformat(self):
+        return self._iformat
+
+    # -------------------------------------------------------------------------
+    def chunks(self):
+        nc = self.channels()
+        if mode == "P":
+            for i in self._img.getdata():
+                e = self._img.palette[i]
+                for c in range(nc):
+                    yield e[c]
+        else:
+            for e in self._img.getdata():
+                for c in range(nc):
+                    yield e[c]
+
+    # -------------------------------------------------------------------------
+    def chunks(self):
+        nc = self.channels()
+        chunk_size = 64 * 1024
+        mode = self._img.mode
+        temp = bytearray()
+        if mode == "P":
+            p = {i:c for c,i in self._img.palette.colors.items()}
+            prev = p[0]
+            for i in range(256):
+                try:
+                    prev = p[i]
+                except KeyError:
+                    p[i] = prev
+
+            transparency = self._img.info.get("transparency")
+            if transparency:
+                for i, a in zip(range(len(transparency)), transparency):
+                    r,g,b = p[i]
+                    p[i] = (r,g,b,a)
+
+            for i in self._img.getdata():
+                e = p[i]
+                for c in range(nc):
+                    temp += bytes([e[c]])
+                if len(temp) >= chunk_size:
+                    yield temp
+                    temp = bytearray()
+            yield temp
+        elif mode == "L":
+            for e in self._img.getdata():
+                temp += bytes([e])
+                if len(temp) >= chunk_size:
+                    yield temp
+                    temp = bytearray()
+        else:
+            for e in self._img.getdata():
+                for c in range(nc):
+                    temp += bytes([e[c]])
+                if len(temp) >= chunk_size:
+                    yield temp
+                    temp = bytearray()
+            yield temp
+
 # ------------------------------------------------------------------------------
 class PngImage(object):
     # -------------------------------------------------------------------------
     def __init__(self, input_path):
-        self._png_image = None
-        self._pil_image = None
+        self._delegate = None
         try:
             import PIL.Image
-            self._pil_image = PIL.Image.open(input_path).transpose(PIL.Image.FLIP_TOP_BOTTOM)
-        except: pass
+            self._delegate = PILPngImageAdapter(
+                PIL.Image.open(input_path).transpose(PIL.Image.FLIP_TOP_BOTTOM))
+        except: raise
 
-        assert self._png_image or self._pil_image
+        assert self._delegate is not None
 
     # -------------------------------------------------------------------------
     def width(self):
-        if self._pil_image:
-            return self._pil_image.width
+        return self._delegate.width()
 
     # -------------------------------------------------------------------------
     def height(self):
-        if self._pil_image:
-            return self._pil_image.height
-
-    # -------------------------------------------------------------------------
-    def has_alpha(self):
-        if self._pil_image:
-            for e in self._pil_image.getdata(band=3):
-                if e != 255:
-                    return True
-            return False
-
-    # -------------------------------------------------------------------------
-    def _pil_channels(self, mode):
-        if mode == "RGBA":
-            return 4 if self.has_alpha() else 3
-        if mode == "RGB":
-            return 3
-        if mode == "1":
-            return 1
-        if mode == "L":
-            return 1
-        if mode == "P":
-            return self._pil_channels(self._pil_image.palette.mode)
+        return self._delegate.height()
 
     # -------------------------------------------------------------------------
     def channels(self):
-        if self._pil_image:
-            return self._pil_channels(self._pil_image.mode)
+        return self._delegate.channels()
 
     # -------------------------------------------------------------------------
     def data_type(self):
-        if self._pil_image:
-            return "unsigned_byte"
-
-    # -------------------------------------------------------------------------
-    def _pil_format(self, mode):
-        if mode == "RGBA":
-            return "rgba" if self.has_alpha() else "rgb"
-        if mode == "RGB":
-            return "rgb"
-        if mode == "1":
-            return "red"
-        if mode == "L":
-            return "red"
-        if mode == "P":
-            return self._pil_format(self._pil_image.palette.mode)
+        return self._delegate.data_type()
 
     # -------------------------------------------------------------------------
     def format(self):
-        if self._pil_image:
-            return self._pil_format(self._pil_image.mode)
-
-    # -------------------------------------------------------------------------
-    def _pil_iformat(self, mode):
-        if mode == "RGBA":
-            return "rgba8" if self.has_alpha() else "rgb8"
-        if mode == "RGB":
-            return "rgb8"
-        if mode == "1":
-            return "r8"
-        if mode == "L":
-            return "r8"
-        if mode == "P":
-            return self._pil_iformat(self._pil_image.palette.mode)
+        return self._delegate.format()
 
     # -------------------------------------------------------------------------
     def iformat(self):
-        if self._pil_image:
-            return self._pil_iformat(self._pil_image.mode)
+        return self._delegate.iformat()
 
     # -------------------------------------------------------------------------
     def same_format_as(self, that):
@@ -222,22 +304,12 @@ class PngImage(object):
             (self.iformat() == that.iformat())
 
     # -------------------------------------------------------------------------
-    def _pil_elements(self, mode):
-        nc = self.channels()
-        if mode == "P":
-            for i in self._pil_image.getdata():
-                e = self._pil_image.palette[i]
-                for c in range(nc):
-                    yield e[c]
-        else:
-            for e in self._pil_image.getdata():
-                for c in range(nc):
-                    yield e[c]
+    def elements(self):
+        return self._delegate.elements()
 
     # -------------------------------------------------------------------------
-    def elements(self):
-        if self._pil_image:
-            self._pil_elements(self._pil_image.mode)
+    def chunks(self):
+        return self._delegate.chunks()
 
     # -------------------------------------------------------------------------
     def data_filter(self, options):
@@ -248,48 +320,6 @@ class PngImage(object):
             except:
                 pass
         return "none"
-
-    # -------------------------------------------------------------------------
-    def _pil_chunks(self, mode):
-        nc = self.channels()
-        chunk_size = 64 * 1024
-        temp = bytearray()
-        if mode == "P":
-            p = {i:c for c,i in self._pil_image.palette.colors.items()}
-            prev = p[0]
-            for i in range(256):
-                try:
-                    prev = p[i]
-                except KeyError:
-                    p[i] = prev
-
-            for i in self._pil_image.getdata():
-                e = p[i]
-                for c in range(nc):
-                    temp += bytes([e[c]])
-                if len(temp) >= chunk_size:
-                    yield temp
-                    temp = bytearray()
-            yield temp
-        elif mode == "L":
-            for e in self._pil_image.getdata():
-                temp += bytes([e])
-                if len(temp) >= chunk_size:
-                    yield temp
-                    temp = bytearray()
-        else:
-            for e in self._pil_image.getdata():
-                for c in range(nc):
-                    temp += bytes([e[c]])
-                if len(temp) >= chunk_size:
-                    yield temp
-                    temp = bytearray()
-            yield temp
-
-    # -------------------------------------------------------------------------
-    def chunks(self):
-        if self._pil_image:
-            return self._pil_chunks(self._pil_image.mode)
 
 # ------------------------------------------------------------------------------
 def convert(options):
@@ -359,6 +389,7 @@ def main():
         print(type(error), error)
         try: os.remove(options.output_path)
         except: pass
+        raise
         return 1
 
 # ------------------------------------------------------------------------------
