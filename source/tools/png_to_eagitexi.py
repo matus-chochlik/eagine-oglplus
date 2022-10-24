@@ -256,6 +256,13 @@ class PngImage(object):
         temp = bytearray()
         if mode == "P":
             p = {i:c for c,i in self._pil_image.palette.colors.items()}
+            prev = p[0]
+            for i in range(256):
+                try:
+                    prev = p[i]
+                except KeyError:
+                    p[i] = prev
+
             for i in self._pil_image.getdata():
                 e = p[i]
                 for c in range(nc):
@@ -349,7 +356,7 @@ def main():
         convert(options)
         return 0
     except Exception as error:
-        print(error)
+        print(type(error), error)
         try: os.remove(options.output_path)
         except: pass
         return 1
