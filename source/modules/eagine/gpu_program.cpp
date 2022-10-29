@@ -13,7 +13,6 @@ import :config;
 import :enum_types;
 import :objects;
 import :glsl_source;
-import :program_source;
 import :prog_var_loc;
 import :shapes;
 import :api;
@@ -106,34 +105,9 @@ public:
         return *this;
     }
 
-    auto add_shader(const gl_api& glapi, const shader_source_block& shdr_src_blk)
-      -> gpu_program& {
-        glapi.add_shader(*this, shdr_src_blk);
-        return *this;
-    }
-
-    auto add_shader(
-      const gl_api& glapi,
-      const shader_source_block& shdr_src_blk,
-      const string_view label) -> gpu_program& {
-        glapi.add_shader(*this, shdr_src_blk, label);
-        return *this;
-    }
-
     auto link(const gl_api& glapi) -> gpu_program& {
         glapi.link_program(*this);
         return *this;
-    }
-
-    auto build(const gl_api& glapi, const program_source_block& prog_src_blk)
-      -> gpu_program& {
-        glapi.build_program(*this, prog_src_blk);
-        return *this;
-    }
-
-    auto init(const gl_api& glapi, const program_source_block& prog_src_blk)
-      -> gpu_program& {
-        return create(glapi).build(glapi, prog_src_blk);
     }
 
     auto use(const gl_api& glapi) -> gpu_program& {
