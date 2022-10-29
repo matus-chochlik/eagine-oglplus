@@ -11,8 +11,6 @@ set(
 	oglplus-bake_checker_image
 	oglplus-bake_tiling_image
 	oglplus-bake_png_image
-	oglplus-bake_shader_source
-	oglplus-bake_program_source
 )
 
 install(
