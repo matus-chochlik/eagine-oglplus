@@ -365,7 +365,7 @@ def convert(options):
         try:
             assert options.gzip_data
             import zlib
-            zobj = zlib.compressobj(9)
+            zobj = zlib.compressobj(zlib.Z_BEST_COMPRESSION)
             for img in _images(image0, options):
                 for chunk in img.chunks():
                     compressed = zobj.compress(chunk)
