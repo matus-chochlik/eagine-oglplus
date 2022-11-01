@@ -7,7 +7,6 @@ add_subdirectory(tools)
 
 set(
 	EAGINE_OGLPLUS_EXPORT_TARGETS
-	oglplus-bake_noise_image
 	oglplus-bake_tiling_image
 	oglplus-bake_png_image
 )
