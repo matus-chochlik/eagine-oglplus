@@ -155,11 +155,7 @@ class PILPngImageAdapter(object):
             self._channels = 3
             self._format = "rgb"
             self._iformat = "rgb8"
-        if mode == "1":
-            self._channels = 1
-            self._format = "red"
-            self._iformat = "r8"
-        if mode == "L":
+        if mode in ["L", "1"]:
             self._channels = 1
             self._format = "red"
             self._iformat = "r8"
@@ -170,11 +166,7 @@ class PILPngImageAdapter(object):
                 self._channels = 4 if has_transparency else 3
                 self._format = "rgba" if has_transparency else "rgb"
                 self._iformat = "rgba8" if has_transparency else "rgb8"
-            if pmode == "1":
-                self._channels = 1
-                self._format = "red"
-                self._iformat = "r8"
-            if pmode == "L":
+            if pmode in ["L", "1"]:
                 self._channels = 1
                 self._format = "red"
                 self._iformat = "r8"
@@ -245,12 +237,13 @@ class PILPngImageAdapter(object):
                     yield temp
                     temp = bytearray()
             yield temp
-        elif mode == "L":
+        elif mode in ["L", "1"]:
             for e in self._img.getdata():
                 temp += bytes([e])
                 if len(temp) >= chunk_size:
                     yield temp
                     temp = bytearray()
+            yield temp
         else:
             for e in self._img.getdata():
                 for c in range(nc):
