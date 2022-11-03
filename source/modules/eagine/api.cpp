@@ -2361,6 +2361,32 @@ public:
       compressed_texture_sub_image1d{*this};
 
     simple_adapted_function<
+      &gl_api::ClearTexSubImage,
+      void(
+        texture_name,
+        int_type,
+        int_type,
+        int_type,
+        int_type,
+        sizei_type,
+        sizei_type,
+        sizei_type,
+        pixel_format,
+        pixel_data_type,
+        memory::const_block)>
+      clear_tex_sub_image{*this};
+
+    simple_adapted_function<
+      &gl_api::ClearTexImage,
+      void(
+        texture_name,
+        int_type,
+        pixel_format,
+        pixel_data_type,
+        memory::const_block)>
+      clear_tex_image{*this};
+
+    simple_adapted_function<
       &gl_api::TexBuffer,
       void(texture_target, pixel_internal_format, buffer_name)>
       tex_buffer{*this};
