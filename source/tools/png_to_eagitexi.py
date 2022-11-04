@@ -90,8 +90,26 @@ class ArgumentParser(argparse.ArgumentParser):
             default=0
         )
 
+        self.add_argument(
+            "--flip-y",
+            dest='flip_y',
+            action='store_true',
+            default=False
+        )
+
+        self.add_argument(
+            "--cube-map",
+            dest='cube_map',
+            action='store_true',
+            default=True
+        )
+
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
+        if options.cube_map:
+            options.flip_y = True
+            if len(options.input_paths) % 6 != 0:
+                raise argparse.ArgumentTypeError("invalid number of cube-map images")
 
         if options.output_path is None:
             options.output = sys.stdout
@@ -256,12 +274,14 @@ class PILPngImageAdapter(object):
 # ------------------------------------------------------------------------------
 class PngImage(object):
     # -------------------------------------------------------------------------
-    def __init__(self, input_path):
+    def __init__(self, options, input_path):
         self._delegate = None
         try:
             import PIL.Image
-            self._delegate = PILPngImageAdapter(
-                PIL.Image.open(input_path).transpose(PIL.Image.FLIP_TOP_BOTTOM))
+            png = PIL.Image.open(input_path)
+            if not options.flip_y: # Yes, not
+                png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+            self._delegate = PILPngImageAdapter(png)
         except: raise
 
         assert self._delegate is not None
@@ -316,7 +336,7 @@ class PngImage(object):
 
 # ------------------------------------------------------------------------------
 def convert(options):
-    image0 = PngImage(options.input_paths[0])
+    image0 = PngImage(options, options.input_paths[0])
     options.write('{"level":%d\n' % options.image_level)
     if options.x_offs > 0:
         options.write(',"x_offs":%d\n' % options.x_offs)
@@ -336,7 +356,7 @@ def convert(options):
     def _images(image0, options):
         yield image0
         for input_path in options.input_paths[1:]:
-            image = PngImage(input_path)
+            image = PngImage(options, input_path)
             assert image.same_format_as(image0)
             yield image
 
