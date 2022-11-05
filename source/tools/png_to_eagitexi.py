@@ -101,7 +101,7 @@ class ArgumentParser(argparse.ArgumentParser):
             "--cube-map",
             dest='cube_map',
             action='store_true',
-            default=True
+            default=False
         )
 
     # -------------------------------------------------------------------------

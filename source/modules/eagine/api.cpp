@@ -2448,9 +2448,9 @@ public:
         using base = _texture_parameter_i_t;
         using base::base;
         template <typename Param, typename Value>
-        constexpr auto operator()(texture_target tgt, Param param, Value value)
+        constexpr auto operator()(texture_name tex, Param param, Value value)
           const noexcept {
-            return base::operator()(tgt, {param, value});
+            return base::operator()(tex, {param, value});
         }
     } texture_parameter_i{*this};
 
