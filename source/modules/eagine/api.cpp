@@ -25,7 +25,6 @@ import :constants;
 import :prog_var_loc;
 import :type_utils;
 import :glsl_source;
-import :program_source;
 import :image_spec;
 import :math;
 import :c_api;
@@ -2362,6 +2361,32 @@ public:
       compressed_texture_sub_image1d{*this};
 
     simple_adapted_function<
+      &gl_api::ClearTexSubImage,
+      void(
+        texture_name,
+        int_type,
+        int_type,
+        int_type,
+        int_type,
+        sizei_type,
+        sizei_type,
+        sizei_type,
+        pixel_format,
+        pixel_data_type,
+        memory::const_block)>
+      clear_tex_sub_image{*this};
+
+    simple_adapted_function<
+      &gl_api::ClearTexImage,
+      void(
+        texture_name,
+        int_type,
+        pixel_format,
+        pixel_data_type,
+        memory::const_block)>
+      clear_tex_image{*this};
+
+    simple_adapted_function<
       &gl_api::TexBuffer,
       void(texture_target, pixel_internal_format, buffer_name)>
       tex_buffer{*this};
@@ -2423,9 +2448,9 @@ public:
         using base = _texture_parameter_i_t;
         using base::base;
         template <typename Param, typename Value>
-        constexpr auto operator()(texture_target tgt, Param param, Value value)
+        constexpr auto operator()(texture_name tex, Param param, Value value)
           const noexcept {
-            return base::operator()(tgt, {param, value});
+            return base::operator()(tex, {param, value});
         }
     } texture_parameter_i{*this};
 
@@ -3730,46 +3755,8 @@ public:
         return this->attach_shader(prog, shdr);
     }
 
-    /// @brief Compiles and attaches a shader to the specified program.
-    /// @see build_program
-    auto add_shader(
-      const program_name prog,
-      const shader_source_block& shdr_src_blk) const -> combined_result<void> {
-        return add_shader(prog, shdr_src_blk.type(), shdr_src_blk);
-    }
-
-    /// @brief Compiles and attaches a shader to the specified program.
-    /// @see build_program
-    auto add_shader(
-      const program_name prog,
-      const shader_source_block& shdr_src_blk,
-      const string_view label) const -> combined_result<void> {
-        return add_shader(prog, shdr_src_blk.type(), shdr_src_blk, label);
-    }
-
-    /// @brief Builds a shader program from the specified sources.
-    /// @see add_shader
-    auto build_program(
-      const program_name prog,
-      const program_source_block& prog_src_blk) const -> combined_result<void> {
-        if(prog_src_blk.is_valid()) {
-            const span_size_t n = prog_src_blk.shader_source_count();
-            for(const auto i : integer_range(n)) {
-                add_shader(prog, prog_src_blk.shader_source(i));
-            }
-        }
-        return this->link_program(prog);
-    }
-
-    /// @brief Builds a shader program from the sources in a baked memory block.
-    auto build_program(
-      const program_name prog,
-      const memory::const_block prog_src_blk) const -> combined_result<void> {
-        return build_program(prog, program_source_block(prog_src_blk));
-    }
-
-    // set_uniform
 private:
+    // set_uniform
     template <typename ProgramUniformFunc, typename UniformFunc, typename T>
     auto _set_uniform(
       ProgramUniformFunc& program_uniform_func,

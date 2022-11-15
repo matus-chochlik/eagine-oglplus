@@ -104,7 +104,7 @@ void framebuffer_configuration::_init_tex(
   gl_types::sizei_type width,
   gl_types::sizei_type height,
   const gl_object_name_vector<texture_tag>& texs,
-  const span<const gl_types::sizei_type> units,
+  const span<const gl_types::enum_type> units,
   span_size_t i,
   const attch_info& entry) const noexcept {
     const auto& [gl, GL] = _glapi;
@@ -135,7 +135,7 @@ void framebuffer_configuration::_init(
   gl_types::sizei_type width,
   gl_types::sizei_type height,
   gl_object_name_vector<texture_tag>& texs,
-  const span<const gl_types::sizei_type> units) const noexcept {
+  const span<const gl_types::enum_type> units) const noexcept {
     texs.resize(integer(texture_count()));
     if(!texs.empty()) {
         const auto& [gl, GL] = _glapi;
@@ -239,7 +239,7 @@ auto offscreen_framebuffer::init(
   gl_types::sizei_type width,
   gl_types::sizei_type height,
   const framebuffer_configuration& config,
-  const span<const gl_types::sizei_type> tex_units) -> offscreen_framebuffer& {
+  const span<const gl_types::enum_type> tex_units) -> offscreen_framebuffer& {
     _width = width;
     _height = height;
     const auto& [gl, GL] = glapi;
@@ -259,7 +259,7 @@ auto offscreen_framebuffer::resize(
   gl_types::sizei_type width,
   gl_types::sizei_type height,
   const framebuffer_configuration& config,
-  const span<const gl_types::sizei_type> tex_units) -> offscreen_framebuffer& {
+  const span<const gl_types::enum_type> tex_units) -> offscreen_framebuffer& {
     if(_width != width || _height != height) {
         _width = width;
         _height = height;

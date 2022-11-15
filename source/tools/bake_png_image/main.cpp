@@ -6,26 +6,13 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
-#if EAGINE_OGLPLUS_MODULE
 import eagine.core;
 import eagine.oglplus;
 import <fstream>;
 import <iostream>;
 import <stdexcept>;
 import <vector>;
-#else
-#include <eagine/main_ctx.hpp>
-#include <eagine/main_fwd.hpp>
-#include <eagine/oglplus/gl.hpp>
-#include <eagine/oglplus/utils/image_file_io.hpp>
-#include <eagine/program_args.hpp>
-#include <eagine/valid_if/filesystem.hpp>
-#include <eagine/valid_if/not_empty.hpp>
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
-#include <vector>
-#endif
+
 #include <cassert>
 #include <png.h>
 

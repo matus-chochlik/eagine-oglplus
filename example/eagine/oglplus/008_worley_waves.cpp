@@ -6,27 +6,12 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
-#if EAGINE_OGLPLUS_MODULE
 import eagine.core;
 import eagine.shapes;
 import eagine.oglplus;
 import <iostream>;
 import <stdexcept>;
-#else
-#include <eagine/oglplus/gl.hpp>
-#include <eagine/oglplus/gl_api.hpp>
 
-#include <eagine/integer_range.hpp>
-#include <eagine/main_ctx.hpp>
-#include <eagine/oglplus/gl_debug_logger.hpp>
-#include <eagine/oglplus/glsl/string_ref.hpp>
-#include <eagine/oglplus/math/vector.hpp>
-#include <eagine/oglplus/shapes/generator.hpp>
-#include <eagine/random_bytes.hpp>
-#include <eagine/shapes/screen.hpp>
-#include <iostream>
-#include <stdexcept>
-#endif
 #include <GLFW/glfw3.h>
 
 static const eagine::oglplus::glsl_source_ref vs_source{R"(

@@ -694,71 +694,6 @@ shape_generator::shape_generator(
     }
 }
 //------------------------------------------------------------------------------
-void shape_generator::attrib_data(
-  const shapes::vertex_attrib_variant vav,
-  memory::block data) const {
-    using shapes::attrib_data_type;
-
-    switch(_gen->attrib_type(vav)) {
-        case attrib_data_type::float_:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::float_type>()));
-            break;
-        case attrib_data_type::ubyte:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::ubyte_type>()));
-            break;
-        case attrib_data_type::uint_16:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::ushort_type>()));
-            break;
-        case attrib_data_type::uint_32:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::uint_type>()));
-            break;
-        case attrib_data_type::int_16:
-            _gen->attrib_values(
-              vav,
-              accommodate(data, std::type_identity<gl_types::short_type>()));
-            break;
-        case attrib_data_type::int_32:
-            _gen->attrib_values(
-              vav, accommodate(data, std::type_identity<gl_types::int_type>()));
-            break;
-        case attrib_data_type::none:
-            break;
-    }
-}
-//------------------------------------------------------------------------------
-void shape_generator::index_data(
-  const shapes::drawing_variant dv,
-  memory::block data) const {
-    using shapes::index_data_type;
-
-    switch(_gen->index_type()) {
-        case index_data_type::unsigned_32:
-            _gen->indices(
-              dv, accommodate(data, std::type_identity<gl_types::uint_type>()));
-            break;
-        case index_data_type::unsigned_16:
-            _gen->indices(
-              dv,
-              accommodate(data, std::type_identity<gl_types::ushort_type>()));
-            break;
-        case index_data_type::unsigned_8:
-            _gen->indices(
-              dv,
-              accommodate(data, std::type_identity<gl_types::ubyte_type>()));
-            break;
-        case index_data_type::none:
-            break;
-    }
-}
-//------------------------------------------------------------------------------
 template <typename A>
 void shape_generator::attrib_setup(
   const basic_gl_api<A>& api,
@@ -925,67 +860,27 @@ export struct vertex_attrib_binding_intf
 
     /// @brief Returns the number of attributes in the binding.
     /// @see attrib_variant
-    virtual auto attrib_count() -> span_size_t = 0;
+    virtual auto attrib_count() noexcept -> span_size_t = 0;
 
     /// @brief Returns the attribute variant bound to specified index.
     /// @see attrib_count
     /// @see location
     /// @pre index < attrib_count()
-    virtual auto attrib_variant(span_size_t index)
+    virtual auto attrib_variant(span_size_t index) noexcept
       -> shapes::vertex_attrib_variant = 0;
 
     /// @brief Returns the index at which the specified attribute variant is bound.
     /// @see attrib_variant
-    virtual auto location(shapes::vertex_attrib_variant vav)
+    virtual auto location(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_location = 0;
 };
 
-export class default_vertex_attrib_bindings
-  : public vertex_attrib_binding_intf {
-public:
-    default_vertex_attrib_bindings() noexcept = default;
+export auto make_default_vertex_attrib_bindings(const shape_generator& shape)
+  -> std::shared_ptr<vertex_attrib_binding_intf>;
 
-    default_vertex_attrib_bindings(const shape_generator& shape) {
-        shape.for_each_attrib(
-          {construct_from, [this](const auto attribs, const auto info) {
-               if(attribs.has(info.enumerator)) {
-                   _bindings.emplace_back(info.enumerator, 0);
-               }
-           }});
-    }
-
-    default_vertex_attrib_bindings(
-      std::initializer_list<shapes::vertex_attrib_variant> vavs)
-      : _bindings{vavs.begin(), vavs.end()} {}
-
-    auto add(shapes::vertex_attrib_variant vav) -> auto& {
-        _bindings.push_back(vav);
-        return *this;
-    }
-
-    auto attrib_count() -> span_size_t final {
-        return span_size(_bindings.size());
-    }
-
-    auto attrib_variant(span_size_t index)
-      -> shapes::vertex_attrib_variant final {
-        return _bindings[integer(index)];
-    }
-
-    auto location(shapes::vertex_attrib_variant vav)
-      -> vertex_attrib_location final {
-        for(const integer i : integer_range(_bindings.size())) {
-            const auto& entry = _bindings[i];
-            if(entry == vav) {
-                return vertex_attrib_location{i};
-            }
-        }
-        return vertex_attrib_location{0};
-    }
-
-private:
-    std::vector<shapes::vertex_attrib_variant> _bindings;
-};
+export auto make_default_vertex_attrib_bindings(
+  std::initializer_list<shapes::vertex_attrib_variant> vavs)
+  -> std::shared_ptr<vertex_attrib_binding_intf>;
 
 /// @brief Class that specifies bindings between attribute variant and array index.
 /// @ingroup shapes
@@ -994,22 +889,13 @@ private:
 export class vertex_attrib_bindings {
 public:
     vertex_attrib_bindings() noexcept = default;
-
-    auto init(const shape_generator& shape) -> auto& {
-        _pimpl = std::make_shared<default_vertex_attrib_bindings>(shape);
-        return *this;
-    }
-
-    auto init(std::initializer_list<shapes::vertex_attrib_variant> vavs)
-      -> auto& {
-        _pimpl = std::make_shared<default_vertex_attrib_bindings>(vavs);
-        return *this;
-    }
-
-    auto init(const vertex_attrib_bindings& that) -> auto& {
-        _pimpl = that._pimpl;
-        return *this;
-    }
+    vertex_attrib_bindings(vertex_attrib_bindings&&) noexcept = default;
+    vertex_attrib_bindings(const vertex_attrib_bindings&) = default;
+    auto operator=(vertex_attrib_bindings&&) noexcept
+      -> vertex_attrib_bindings& = default;
+    auto operator=(const vertex_attrib_bindings&)
+      -> vertex_attrib_bindings& = default;
+    ~vertex_attrib_bindings() noexcept = default;
 
     vertex_attrib_bindings(
       std::shared_ptr<vertex_attrib_binding_intf> pimpl) noexcept
@@ -1018,19 +904,28 @@ public:
     }
 
     /// @brief Constructor matching supported attributes from a shape generator.
-    vertex_attrib_bindings(const shape_generator& shape) {
-        init(shape);
-    }
+    vertex_attrib_bindings(const shape_generator& shape)
+      : vertex_attrib_bindings{make_default_vertex_attrib_bindings(shape)} {}
 
     /// @brief Constructor matching supported attributes from a shape generator.
     vertex_attrib_bindings(
-      std::initializer_list<shapes::vertex_attrib_variant> vavs) {
-        init(vavs);
+      std::initializer_list<shapes::vertex_attrib_variant> vavs)
+      : vertex_attrib_bindings{make_default_vertex_attrib_bindings(vavs)} {}
+
+    /// @brief Indicates if this bindings wrapper is initialized.
+    auto is_initialized() const noexcept -> bool {
+        return bool(_pimpl);
+    }
+
+    /// @brief Indicates if this bindings wrapper is initialized.
+    /// @see is_initialized
+    explicit operator bool() const noexcept {
+        return is_initialized();
     }
 
     /// @brief Returns the number of attributes in the binding.
     /// @see attrib_variant
-    auto attrib_count() const -> span_size_t {
+    auto attrib_count() const noexcept -> span_size_t {
         if(_pimpl) {
             return _pimpl->attrib_count();
         }
@@ -1041,7 +936,7 @@ public:
     /// @see attrib_count
     /// @see location
     /// @pre index < attrib_count()
-    auto attrib_variant(span_size_t index) const
+    auto attrib_variant(span_size_t index) const noexcept
       -> shapes::vertex_attrib_variant {
         if(_pimpl) {
             assert(index < attrib_count());
@@ -1051,7 +946,7 @@ public:
     }
 
     /// @brief Returns the attribute kind bits for all attributes in this binding.
-    auto attrib_kinds() const -> shapes::vertex_attrib_kinds {
+    auto attrib_kinds() const noexcept -> shapes::vertex_attrib_kinds {
         shapes::vertex_attrib_kinds result;
         for(const auto i : integer_range(attrib_count())) {
             result.set(attrib_variant(i).attribute());
@@ -1061,7 +956,8 @@ public:
 
     /// @brief Returns the index at which the specified attribute variant is bound.
     /// @see attrib_variant
-    auto location(shapes::vertex_attrib_variant vav) -> vertex_attrib_location {
+    auto location(shapes::vertex_attrib_variant vav) const noexcept
+      -> vertex_attrib_location {
         if(_pimpl) {
             return _pimpl->location(vav);
         }
@@ -1070,79 +966,92 @@ public:
 
     /// @brief Returns the index at which the position variant is bound.
     /// @see location
-    auto position_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto position_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::position, idx});
     }
 
     /// @brief Returns the index at which the normal variant is bound.
     /// @see location
-    auto normal_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto normal_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::normal, idx});
     }
 
     /// @brief Returns the index at which the tangent variant is bound.
     /// @see location
-    auto tangent_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto tangent_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::tangent, idx});
     }
 
     /// @brief Returns the index at which the bitangent variant is bound.
     /// @see location
-    auto bitangent_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto bitangent_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::bitangent, idx});
     }
 
     /// @brief Returns the index at which the shape pivot variant is bound.
     /// @see location
-    auto pivot_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto pivot_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::pivot, idx});
     }
 
     /// @brief Returns the index at which the vertex pivot variant is bound.
     /// @see location
-    auto vertex_pivot_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto vertex_pivot_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::vertex_pivot, idx});
     }
 
     /// @brief Returns the index at which the box_coord variant is bound.
     /// @see location
-    auto box_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto box_coord_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::box_coord, idx});
     }
 
     /// @brief Returns the index at which the vertex_coord variant is bound.
     /// @see location
-    auto vertex_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto vertex_coord_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::vertex_coord, idx});
     }
 
     /// @brief Returns the index at which the face_coord variant is bound.
     /// @see location
-    auto face_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto face_coord_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::face_coord, idx});
     }
 
     /// @brief Returns the index at which the wrap_coord variant is bound.
     /// @see location
-    auto wrap_coord_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto wrap_coord_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::wrap_coord, idx});
     }
 
     /// @brief Returns the index at which the color variant is bound.
     /// @see location
-    auto color_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto color_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::color, idx});
     }
 
     /// @brief Returns the index at which the weight variant is bound.
     /// @see location
-    auto weight_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto weight_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::weight, idx});
     }
 
     /// @brief Returns the index at which the occlusion variant is bound.
     /// @see location
-    auto occlusion_loc(span_size_t idx = 0) -> vertex_attrib_location {
+    auto occlusion_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::occlusion, idx});
     }
 
@@ -1158,58 +1067,11 @@ export class geometry {
 public:
     /// @brief Default constructor.
     geometry() noexcept = default;
-
-    /// @brief Initializes a previously default initialized geometry instance.
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      const vertex_attrib_bindings& bindings,
-      const shapes::drawing_variant var,
-      memory::buffer& temp) -> auto& {
-
-        _instance_count = shape.instance_count();
-
-        const auto& gl = glapi;
-        gl.gen_vertex_arrays() >> _vao;
-        const auto attrib_count{bindings.attrib_count()};
-        auto buffer_count{attrib_count};
-
-        _ops.resize(integer(shape.operation_count(var)));
-        shape.instructions(glapi, var, cover(_ops));
-
-        const auto indexed{shape.indexed_drawing(var)};
-
-        if(indexed) {
-            ++buffer_count;
-        }
-        _buffers.resize(buffer_count);
-        gl.gen_buffers(_buffers.raw_handles());
-
-        gl.bind_vertex_array(_vao);
-
-        for(const integer i : integer_range(attrib_count)) {
-            shape.attrib_setup(
-              glapi,
-              _vao,
-              _buffers[i],
-              vertex_attrib_location{i},
-              bindings.attrib_variant(i),
-              temp);
-        }
-        if(indexed) {
-            shape.index_setup(glapi, _buffers[attrib_count], temp);
-        }
-        return *this;
-    }
-
-    /// @brief Initializes a previously default initialized geometry instance.
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      const vertex_attrib_bindings& bindings,
-      memory::buffer& temp) -> auto& {
-        return init(glapi, shape, bindings, shape.draw_variant(0), temp);
-    }
+    geometry(geometry&&) noexcept = default;
+    geometry(const geometry&) = delete;
+    auto operator=(geometry&&) noexcept -> geometry&;
+    auto operator=(const geometry&) -> geometry& = delete;
+    ~geometry() noexcept = default;
 
     /// @brief Construction using shape generator, attrib bindings and drawing variant.
     geometry(
@@ -1217,9 +1079,7 @@ public:
       const shape_generator& shape,
       const vertex_attrib_bindings& bindings,
       const shapes::drawing_variant var,
-      memory::buffer& temp) {
-        init(glapi, shape, bindings, var, temp);
-    }
+      memory::buffer& temp);
 
     /// @brief Construction using shape generator and attrib bindings.
     geometry(
@@ -1228,6 +1088,17 @@ public:
       const vertex_attrib_bindings& bindings,
       memory::buffer& temp)
       : geometry{glapi, shape, bindings, shape.draw_variant(0), temp} {}
+
+    /// @brief Indicates if this geometry wrapper is initialized.
+    auto is_initialized() const noexcept -> bool {
+        return bool(_vao);
+    }
+
+    /// @brief Indicates if this geometry wrapper is initialized.
+    /// @see is_initialized
+    explicit operator bool() const noexcept {
+        return is_initialized();
+    }
 
     /// @brief Releases the used OpenGL resources.
     void clean_up(const gl_api& gl) {
@@ -1272,57 +1143,54 @@ export class geometry_and_bindings
   , public geometry {
 public:
     geometry_and_bindings() noexcept = default;
-
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      const vertex_attrib_bindings& bindings,
-      const shapes::drawing_variant var,
-      memory::buffer& temp) -> auto& {
-        vertex_attrib_bindings::init(bindings);
-        geometry::init(glapi, shape, *this, var, temp);
-        return *this;
-    }
+    geometry_and_bindings(geometry_and_bindings&&) noexcept = default;
+    geometry_and_bindings(const geometry_and_bindings&&) = delete;
+    auto operator=(geometry_and_bindings&&) noexcept
+      -> geometry_and_bindings& = default;
+    auto operator=(const geometry_and_bindings&&) = delete;
+    ~geometry_and_bindings() noexcept = default;
 
     geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
       const vertex_attrib_bindings& bindings,
       const shapes::drawing_variant var,
-      memory::buffer& temp) {
-        init(glapi, shape, bindings, var, temp);
-    }
+      memory::buffer& temp)
+      : vertex_attrib_bindings{bindings}
+      , geometry{glapi, shape, bindings, var, temp} {}
 
-    auto init(
+    geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
-      const shapes::drawing_variant var,
-      memory::buffer& temp) -> auto& {
-        vertex_attrib_bindings::init(shape);
-        geometry::init(glapi, shape, *this, var, temp);
-        return *this;
-    }
+      const vertex_attrib_bindings& bindings,
+      memory::buffer& temp)
+      : vertex_attrib_bindings{bindings}
+      , geometry{glapi, shape, bindings, shape.draw_variant(0), temp} {}
 
     geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
       const shapes::drawing_variant var,
-      memory::buffer& temp) {
-        init(glapi, shape, var, temp);
-    }
-
-    auto init(
-      const gl_api& glapi,
-      const shape_generator& shape,
-      memory::buffer& temp) -> auto& {
-        return init(glapi, shape, shape.draw_variant(0), temp);
-    }
+      memory::buffer& temp)
+      : vertex_attrib_bindings{shape}
+      , geometry{glapi, shape, *this, var, temp} {}
 
     geometry_and_bindings(
       const gl_api& glapi,
       const shape_generator& shape,
-      memory::buffer& temp) {
-        init(glapi, shape, temp);
+      memory::buffer& temp)
+      : geometry_and_bindings{glapi, shape, shape.draw_variant(0), temp} {}
+
+    /// @brief Indicates if this instance of geometry and bindings is initialized.
+    auto is_initialized() const noexcept -> bool {
+        return vertex_attrib_bindings::is_initialized() &&
+               geometry::is_initialized();
+    }
+
+    /// @brief Indicates if this instance of geometry and bindings is initialized.
+    /// @see is_initialized
+    explicit operator bool() const noexcept {
+        return is_initialized();
     }
 };
 //------------------------------------------------------------------------------
