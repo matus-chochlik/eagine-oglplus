@@ -13,6 +13,7 @@ export import :camera;
 export import :extensions;
 export import :enum_types;
 export import :type_utils;
+export import :from_string;
 export import :glsl_source;
 export import :image_spec;
 export import :result;

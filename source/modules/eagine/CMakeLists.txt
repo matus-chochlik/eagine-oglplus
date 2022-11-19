@@ -51,6 +51,15 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION from_string
+	IMPORTS
+		enum_types
+		eagine.core.types
+		eagine.core.memory
+		eagine.core.string
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION glsl_source
 	IMPORTS
 		config
@@ -199,6 +208,7 @@ eagine_add_module(
 		enum_types
 		type_utils
 		glsl_source
+		from_string
 		image_spec
 		result
 		objects
