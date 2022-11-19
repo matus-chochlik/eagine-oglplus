@@ -27,3 +27,4 @@ export import :gl_debug_logger;
 export import :gpu_program;
 export import :framebuffer;
 export import :shapes;
+export import :resources;

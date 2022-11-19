@@ -184,6 +184,14 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION resources
+	IMPORTS
+		objects enum_types
+		eagine.core.types
+		eagine.core.value_tree
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION framebuffer
 	IMPORTS
 		config enum_types
@@ -221,12 +229,20 @@ eagine_add_module(
 		gpu_program
 		framebuffer
 		shapes
+		resources
 	SOURCES
 		api_impl
 		camera_impl
 		shapes_impl
 		image_spec_impl
 		framebuffer_impl
+		resources_impl
+	IMPORTS
+		eagine.core.memory
+		eagine.core.string
+		eagine.core.utility
+		eagine.core.runtime
+		eagine.core.reflection
 )
 target_link_libraries(
 	eagine.oglplus
