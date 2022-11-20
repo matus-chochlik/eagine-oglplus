@@ -17,12 +17,11 @@ import eagine.core.value_tree;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
-class gl_texture_builder
-  : public valtree::object_builder_impl<gl_texture_builder> {
-    using base = valtree::object_builder_impl<gl_texture_builder>;
+class texture_builder : public valtree::object_builder_impl<texture_builder> {
+    using base = valtree::object_builder_impl<texture_builder>;
 
 public:
-    gl_texture_builder(
+    texture_builder(
       memory::buffer_pool& buffers,
       texture_name tex,
       texture_target target) noexcept
@@ -44,7 +43,7 @@ public:
           extract_or(_info.depth, 1) * extract_or(_info.channels, 1));
         _decompression = stream_decompression{
           data_compressor{method, _buffers},
-          make_callable_ref<&gl_texture_builder::append_image_data>(this),
+          make_callable_ref<&texture_builder::append_image_data>(this),
           method};
     }
 
@@ -71,7 +70,7 @@ public:
     void finish() noexcept final {
         if(_success) {
             _decompression.finish();
-            // extract(parent).handle_gl_texture_image(
+            // extract(parent).handle_texture_image(
             //_target, _params, _temp);
         } else {
             // extract(parent).mark_finished();
@@ -94,11 +93,11 @@ private:
     bool _success{false};
 };
 //------------------------------------------------------------------------------
-auto make_gl_texture_builder(
+auto make_texture_builder(
   memory::buffer_pool& buffers,
   texture_name tex,
   texture_target target) noexcept -> std::unique_ptr<valtree::object_builder> {
-    return std::make_unique<gl_texture_builder>(buffers, tex, target);
+    return std::make_unique<texture_builder>(buffers, tex, target);
 }
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
