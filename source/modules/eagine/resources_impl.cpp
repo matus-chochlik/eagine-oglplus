@@ -40,55 +40,18 @@ public:
 
     void init_decompression(data_compression_method method) noexcept {
         _temp = _buffers.get(
-          extract_or(_width, 1) * extract_or(_height, 1) *
-          extract_or(_depth, 1) * extract_or(_channels, 1));
+          extract_or(_info.width, 1) * extract_or(_info.height, 1) *
+          extract_or(_info.depth, 1) * extract_or(_info.channels, 1));
         _decompression = stream_decompression{
           data_compressor{method, _buffers},
           make_callable_ref<&gl_texture_builder::append_image_data>(this),
           method};
     }
 
-    template <std::integral T>
-    void do_add(const basic_string_path& path, span<const T> data) noexcept {
-        if(path.size() == 1) {
-            if(path.is("levels")) {
-                _success &= assign_if_fits(data, _levels);
-            } else if(path.is("width")) {
-                _success &= assign_if_fits(data, _width);
-            } else if(path.is("height")) {
-                _success &= assign_if_fits(data, _height);
-            } else if(path.is("depth")) {
-                _success &= assign_if_fits(data, _depth);
-            } else if(path.is("channels")) {
-                _success &= assign_if_fits(data, _channels);
-                if(_channels > 16) {
-                    _channels = 16;
-                }
-            }
-        }
-    }
-
-    void do_add(
-      const basic_string_path& path,
-      span<const string_view> data) noexcept {
-        if(path.size() == 1) {
-            if(path.is("data_type")) {
-                _success &= assign_if_fits(data, _data_type);
-            } else if(path.is("format")) {
-                _success &= assign_if_fits(data, _format);
-            } else if(path.is("iformat")) {
-                _success &= assign_if_fits(data, _iformat);
-            } else if(path.is("data_filter")) {
-                auto method{data_compression_method::none};
-                if(assign_if_fits(data, method)) {
-                    init_decompression(method);
-                }
-            }
-        }
-    }
-
     template <typename T>
-    void do_add(const basic_string_path&, span<const T>) noexcept {}
+    void do_add(const basic_string_path& path, span<const T> data) noexcept {
+        _forwarder.forward_data(path, data, _info);
+    }
 
     void unparsed_data(span<const memory::const_block> data) noexcept final {
         if(!_decompression.is_initialized()) {
@@ -124,16 +87,10 @@ private:
     memory::buffer_pool& _buffers;
     memory::buffer _temp;
     stream_decompression _decompression;
+    valtree::object_builder_data_forwarder _forwarder;
     texture_name _tex;
     texture_target _target;
-    std::optional<gl_types::int_type> _levels;
-    std::optional<gl_types::int_type> _channels;
-    std::optional<gl_types::sizei_type> _width;
-    std::optional<gl_types::sizei_type> _height;
-    std::optional<gl_types::sizei_type> _depth;
-    std::optional<pixel_data_type> _data_type;
-    std::optional<pixel_format> _format;
-    std::optional<pixel_internal_format> _iformat;
+    texture_build_info _info;
     bool _success{false};
 };
 //------------------------------------------------------------------------------
