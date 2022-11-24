@@ -187,6 +187,7 @@ eagine_add_module(
 	eagine.oglplus PARTITION resources
 	IMPORTS
 		config objects enum_types
+		api
 		eagine.core.types
 		eagine.core.reflection
 		eagine.core.value_tree

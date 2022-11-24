@@ -22,69 +22,48 @@ class texture_builder : public valtree::object_builder_impl<texture_builder> {
 
 public:
     texture_builder(
+      const gl_api& glapi,
       memory::buffer_pool& buffers,
       texture_name tex,
       texture_target target) noexcept
-      : _buffers{buffers}
+      : _glapi{glapi}
+      , _buffers{buffers}
       , _tex{tex}
       , _target{target} {}
 
-    auto append_image_data(const memory::const_block blk) noexcept -> bool {
-        memory::append_to(blk, _temp);
-        //  TODO: progressive image specification once we have enough
-        //  data for width * some constant so that the temp buffer
-        //  doesn't get too big
-        return true;
-    }
+    auto append_image_data(const memory::const_block blk) noexcept -> bool;
 
-    void init_decompression(data_compression_method method) noexcept {
-        _temp = _buffers.get(
-          extract_or(_info.width, 1) * extract_or(_info.height, 1) *
-          extract_or(_info.depth, 1) * extract_or(_info.channels, 1));
-        _decompression = stream_decompression{
-          data_compressor{method, _buffers},
-          make_callable_ref<&texture_builder::append_image_data>(this),
-          method};
-    }
+    void init_decompression(data_compression_method method) noexcept;
 
     template <typename T>
     void do_add(const basic_string_path& path, span<const T> data) noexcept {
         _forwarder.forward_data(path, data, _info);
     }
 
-    void unparsed_data(span<const memory::const_block> data) noexcept final {
-        if(!_decompression.is_initialized()) {
-            init_decompression(data_compression_method::none);
-        }
-        if(_success) {
-            for(const auto& blk : data) {
-                _decompression.next(blk);
-            }
-        }
-    }
+    void unparsed_data(span<const memory::const_block> data) noexcept final;
 
     void begin() noexcept final {
         _success = true;
     }
 
-    void finish() noexcept final {
-        if(_success) {
-            _decompression.finish();
-            // extract(parent).handle_texture_image(
-            //_target, _params, _temp);
-        } else {
-            // extract(parent).mark_finished();
-        }
-        _buffers.eat(std::move(_temp));
+    auto handle_texture_storage() noexcept -> bool {
+        return _info.texture_storage(_tex, _target, _glapi);
+    }
+    auto handle_texture_image() noexcept -> bool {
+        return _info.texture_image(_tex, _target, 0, view(_pixel_data), _glapi);
     }
 
+    void finish() noexcept final;
+
     void failed() noexcept final {
+        _buffers.eat(std::move(_pixel_data));
         _success = false;
     }
 
 private:
+    const gl_api& _glapi;
     memory::buffer_pool& _buffers;
-    memory::buffer _temp;
+    memory::buffer _pixel_data;
     stream_decompression _decompression;
     valtree::object_builder_data_forwarder _forwarder;
     texture_name _tex;
@@ -93,11 +72,58 @@ private:
     bool _success{false};
 };
 //------------------------------------------------------------------------------
+void texture_builder::unparsed_data(
+  span<const memory::const_block> data) noexcept {
+    if(!_decompression.is_initialized()) {
+        init_decompression(data_compression_method::none);
+    }
+    if(_success) {
+        for(const auto& blk : data) {
+            _decompression.next(blk);
+        }
+    }
+}
+//------------------------------------------------------------------------------
+void texture_builder::init_decompression(
+  data_compression_method method) noexcept {
+    _pixel_data =
+      _buffers.get(_info.dimensions() * extract_or(_info.channels, 1));
+    _decompression = stream_decompression{
+      data_compressor{method, _buffers},
+      make_callable_ref<&texture_builder::append_image_data>(this),
+      method};
+}
+//------------------------------------------------------------------------------
+auto texture_builder::append_image_data(const memory::const_block blk) noexcept
+  -> bool {
+    memory::append_to(blk, _pixel_data);
+    //  TODO: progressive image specification once we have enough
+    //  data for width * some constant so that the temp buffer
+    //  doesn't get too big
+    return true;
+}
+//------------------------------------------------------------------------------
+void texture_builder::finish() noexcept {
+    if(_success) {
+        _decompression.finish();
+        if(_info.is_complete()) {
+            _success &= handle_texture_storage();
+            if(_success && !_pixel_data.empty()) {
+                _success &= handle_texture_image();
+            }
+        } else {
+            _success = false;
+        }
+    }
+    _buffers.eat(std::move(_pixel_data));
+}
+//------------------------------------------------------------------------------
 auto make_texture_builder(
+  const gl_api& glapi,
   memory::buffer_pool& buffers,
   texture_name tex,
   texture_target target) noexcept -> std::unique_ptr<valtree::object_builder> {
-    return std::make_unique<texture_builder>(buffers, tex, target);
+    return std::make_unique<texture_builder>(glapi, buffers, tex, target);
 }
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
