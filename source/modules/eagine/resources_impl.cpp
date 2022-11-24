@@ -53,7 +53,7 @@ public:
         return _info.texture_image(_tex, _target, 0, view(_pixel_data), _glapi);
     }
 
-    void finish() noexcept final;
+    auto finish() noexcept -> bool final;
 
     void failed() noexcept final {
         _buffers.eat(std::move(_pixel_data));
@@ -103,7 +103,7 @@ auto texture_builder::append_image_data(const memory::const_block blk) noexcept
     return true;
 }
 //------------------------------------------------------------------------------
-void texture_builder::finish() noexcept {
+auto texture_builder::finish() noexcept -> bool {
     if(_success) {
         _decompression.finish();
         if(_info.is_complete()) {
@@ -116,6 +116,7 @@ void texture_builder::finish() noexcept {
         }
     }
     _buffers.eat(std::move(_pixel_data));
+    return _success;
 }
 //------------------------------------------------------------------------------
 auto make_texture_builder(
