@@ -274,16 +274,16 @@ auto texture_build_info::texture_image1d(
   const memory::const_block data,
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_sub_image1d) {
-        glapi.texture_sub_image1d(
+        return bool(glapi.texture_sub_image1d(
           tex,
           level,
           0,
           extract(width),
           extract(format),
           extract(data_type),
-          data);
+          data));
     } else if(glapi.tex_image1d) {
-        glapi.tex_image1d(
+        return bool(glapi.tex_image1d(
           target,
           level,
           extract(iformat),
@@ -291,7 +291,7 @@ auto texture_build_info::texture_image1d(
           0, // border
           extract(format),
           extract(data_type),
-          data);
+          data));
     }
     return false;
 }
@@ -304,7 +304,7 @@ auto texture_build_info::texture_image2d(
   const memory::const_block data,
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_sub_image2d) {
-        glapi.texture_sub_image2d(
+        return bool(glapi.texture_sub_image2d(
           tex,
           level,
           0,
@@ -313,9 +313,9 @@ auto texture_build_info::texture_image2d(
           extract(height),
           extract(format),
           extract(data_type),
-          data);
+          data));
     } else if(glapi.tex_image2d) {
-        glapi.tex_image2d(
+        return bool(glapi.tex_image2d(
           target,
           level,
           extract(iformat),
@@ -324,7 +324,7 @@ auto texture_build_info::texture_image2d(
           0, // border
           extract(format),
           extract(data_type),
-          data);
+          data));
     }
     return false;
 }
@@ -337,7 +337,7 @@ auto texture_build_info::texture_image3d(
   const memory::const_block data,
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_sub_image3d) {
-        glapi.texture_sub_image3d(
+        return bool(glapi.texture_sub_image3d(
           tex,
           level,
           0,
@@ -348,9 +348,9 @@ auto texture_build_info::texture_image3d(
           extract(depth),
           extract(format),
           extract(data_type),
-          data);
+          data));
     } else if(glapi.tex_image3d) {
-        glapi.tex_image3d(
+        return bool(glapi.tex_image3d(
           target,
           level,
           extract(iformat),
@@ -360,7 +360,7 @@ auto texture_build_info::texture_image3d(
           0, // border
           extract(format),
           extract(data_type),
-          data);
+          data));
     }
     return false;
 }

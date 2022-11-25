@@ -40,6 +40,23 @@ public:
         _forwarder.forward_data(path, data, _info);
     }
 
+    void do_add(
+      const basic_string_path& path,
+      span<const string_view> data) noexcept {
+        if(path.is("data_filter")) {
+            auto method{data_compression_method::none};
+            if(assign_if_fits(data, method)) {
+                init_decompression(method);
+            }
+        } else {
+            _forwarder.forward_data(path, data, _info);
+        }
+    }
+
+    auto max_token_size() noexcept -> span_size_t final {
+        return 64;
+    }
+
     void unparsed_data(span<const memory::const_block> data) noexcept final;
 
     void begin() noexcept final {
