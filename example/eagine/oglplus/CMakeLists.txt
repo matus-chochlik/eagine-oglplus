@@ -72,8 +72,9 @@ eagine_example_common(027_parallax_sphere)
 
 eagine_embed_target_resources(
 	TARGET oglplus-013_displacement
-	INPUT_TARGETS
-	worley-bump
+	RESOURCES
+		WorleyTex "worley-bump.eagitex"
+	ENABLE_SEARCH
 )
 
 eagine_embed_target_resources(
