@@ -105,6 +105,7 @@ void texture_builder::init_decompression(
   data_compression_method method) noexcept {
     _pixel_data =
       _buffers.get(_info.dimensions() * extract_or(_info.channels, 1));
+    _pixel_data.clear();
     _decompression = stream_decompression{
       data_compressor{method, _buffers},
       make_callable_ref<&texture_builder::append_image_data>(this),
