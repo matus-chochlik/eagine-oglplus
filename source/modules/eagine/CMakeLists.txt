@@ -233,6 +233,7 @@ eagine_add_module(
 		shapes
 		resources
 	SOURCES
+		from_string_impl
 		api_impl
 		camera_impl
 		shapes_impl
