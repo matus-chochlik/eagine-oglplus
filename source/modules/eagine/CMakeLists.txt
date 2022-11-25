@@ -191,6 +191,8 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.reflection
 		eagine.core.value_tree
+		eagine.core.resource
+		eagine.core.main_ctx
 )
 
 eagine_add_module(

@@ -106,6 +106,44 @@ auto from_string(
 //------------------------------------------------------------------------------
 auto from_string(
   const string_view src,
+  const std::type_identity<oglplus::texture_min_filter>,
+  const default_selector_t) noexcept
+  -> std::optional<oglplus::texture_min_filter> {
+    using R = oglplus::texture_min_filter;
+    if(src == "linear") {
+        return R{0x2601};
+    } else if(src == "nearest") {
+        return R{0x2600};
+    } else if(src == "nearest_mipmap_nearest") {
+        return R{0x2700};
+    } else if(src == "linear_mipmap_nearest") {
+        return R{0x2701};
+    } else if(src == "nearest_mipmap_linear") {
+        return R{0x2702};
+    } else if(src == "linear_mipmap_linear") {
+        return R{0x2703};
+    }
+    // TODO
+    return {};
+}
+//------------------------------------------------------------------------------
+auto from_string(
+  const string_view src,
+  const std::type_identity<oglplus::texture_mag_filter>,
+  const default_selector_t) noexcept
+  -> std::optional<oglplus::texture_mag_filter> {
+    using R = oglplus::texture_mag_filter;
+    if(src == "linear") {
+        return R{0x2601};
+    } else if(src == "nearest") {
+        return R{0x2600};
+    }
+    // TODO
+    return {};
+}
+//------------------------------------------------------------------------------
+auto from_string(
+  const string_view src,
   const std::type_identity<oglplus::texture_swizzle_mode>,
   const default_selector_t) noexcept
   -> std::optional<oglplus::texture_swizzle_mode> {

@@ -37,6 +37,18 @@ export auto from_string(
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
+  const std::type_identity<oglplus::texture_min_filter>,
+  const default_selector_t) noexcept
+  -> std::optional<oglplus::texture_min_filter>;
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
+  const std::type_identity<oglplus::texture_mag_filter>,
+  const default_selector_t) noexcept
+  -> std::optional<oglplus::texture_mag_filter>;
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
   const std::type_identity<oglplus::texture_swizzle_mode>,
   const default_selector_t) noexcept
   -> std::optional<oglplus::texture_swizzle_mode>;

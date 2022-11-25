@@ -10,12 +10,15 @@ import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.reflection;
 import eagine.core.value_tree;
+import eagine.core.resource;
+import eagine.core.main_ctx;
 import :config;
 import :objects;
 import :enum_types;
 import :api;
 import <memory>;
 import <optional>;
+import <vector>;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
@@ -30,6 +33,9 @@ export struct texture_build_info {
     std::optional<pixel_data_type> data_type;
     std::optional<pixel_format> format;
     std::optional<pixel_internal_format> iformat;
+    //
+    std::optional<texture_min_filter> min_filter;
+    std::optional<texture_mag_filter> mag_filter;
 
     auto dimensions() const noexcept -> span_size_t {
         return span_size(bool(width)) + span_size(bool(height)) +
@@ -117,6 +123,30 @@ export struct texture_build_info {
                 return false;
         }
     }
+
+    template <typename T>
+    auto texture_parameters(
+      texture_name tex,
+      texture_target target,
+      const basic_gl_api<T>& glapi) const noexcept -> bool;
+
+private:
+    template <typename T, typename P, typename V>
+    auto _set_parameter(
+      texture_name tex,
+      texture_target target,
+      const P& parameter,
+      const std::optional<V>& value,
+      const basic_gl_api<T>& glapi) const noexcept -> bool;
+
+    template <typename T, typename P, typename V>
+    void _add_parameter(
+      texture_name tex,
+      texture_target target,
+      const P& parameter,
+      const std::optional<V>& value,
+      const basic_gl_api<T>& glapi,
+      bool&) const noexcept;
 };
 //------------------------------------------------------------------------------
 export template <typename Selector>
@@ -133,7 +163,9 @@ constexpr auto data_member_mapping(
       std::optional<gl_types::sizei_type>,
       std::optional<pixel_data_type>,
       std::optional<pixel_format>,
-      std::optional<pixel_internal_format>>(
+      std::optional<pixel_internal_format>,
+      std::optional<texture_min_filter>,
+      std::optional<texture_mag_filter>>(
       {"levels", &S::levels},
       {"channels", &S::channels},
       {"width", &S::width},
@@ -141,7 +173,9 @@ constexpr auto data_member_mapping(
       {"depth", &S::depth},
       {"data_type", &S::data_type},
       {"format", &S::format},
-      {"iformat", &S::iformat});
+      {"iformat", &S::iformat},
+      {"min_filter", &S::min_filter},
+      {"mag_filter", &S::mag_filter});
 }
 //------------------------------------------------------------------------------
 template <typename T>
@@ -159,15 +193,16 @@ auto texture_build_info::texture_storage1d(
         bool result{true};
         auto level_width = extract(width);
         for(auto level : integer_range(extract_or(levels, 1))) {
-            result &= bool(glapi.tex_image1d(
-              target,
-              level,
-              extract(iformat),
-              level_width,
-              0, // border
-              extract(format),
-              extract(data_type),
-              {}));
+            result = glapi.tex_image1d(
+                       target,
+                       level,
+                       extract(iformat),
+                       level_width,
+                       0, // border
+                       extract(format),
+                       extract(data_type),
+                       {}) &&
+                     result;
             level_width = std::max(level_width / 2, 1);
         }
         return result;
@@ -199,16 +234,17 @@ auto texture_build_info::texture_storage2d(
         auto level_width = extract(width);
         auto level_height = extract(height);
         for(auto level : integer_range(extract_or(levels, 1))) {
-            result &= bool(glapi.tex_image2d(
-              target,
-              level,
-              extract(iformat),
-              level_width,
-              level_height,
-              0, // border
-              extract(format),
-              extract(data_type),
-              {}));
+            result = glapi.tex_image2d(
+                       target,
+                       level,
+                       extract(iformat),
+                       level_width,
+                       level_height,
+                       0, // border
+                       extract(format),
+                       extract(data_type),
+                       {}) &&
+                     result;
             level_width = std::max(level_width / 2, 1);
             level_height = std::max(level_height / 2, 1);
         }
@@ -244,17 +280,18 @@ auto texture_build_info::texture_storage3d(
         auto level_height = extract(height);
         auto level_depth = extract(depth);
         for(auto level : integer_range(extract_or(levels, 1))) {
-            result &= bool(glapi.tex_image3d(
-              target,
-              level,
-              extract(iformat),
-              level_width,
-              level_height,
-              level_depth,
-              0, // border
-              extract(format),
-              extract(data_type),
-              {}));
+            result = glapi.tex_image3d(
+                       target,
+                       level,
+                       extract(iformat),
+                       level_width,
+                       level_height,
+                       level_depth,
+                       0, // border
+                       extract(format),
+                       extract(data_type),
+                       {}) &&
+                     result;
             level_width = std::max(level_width / 2, 1);
             level_height = std::max(level_height / 2, 1);
             if(target == glapi.texture_3d) {
@@ -365,6 +402,50 @@ auto texture_build_info::texture_image3d(
     return false;
 }
 //------------------------------------------------------------------------------
+template <typename T, typename P, typename V>
+auto texture_build_info::_set_parameter(
+  texture_name tex,
+  texture_target target,
+  const P& parameter,
+  const std::optional<V>& value,
+  const basic_gl_api<T>& glapi) const noexcept -> bool {
+    if(value) {
+        if(glapi.texture_parameter_i) {
+            return glapi.texture_parameter_i(tex, parameter, extract(value));
+        } else if(glapi.tex_parameter_i) {
+            return glapi.tex_parameter_i(target, parameter, extract(value));
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+//------------------------------------------------------------------------------
+template <typename T, typename P, typename V>
+void texture_build_info::_add_parameter(
+  texture_name tex,
+  texture_target target,
+  const P& parameter,
+  const std::optional<V>& value,
+  const basic_gl_api<T>& glapi,
+  bool& result) const noexcept {
+    result = _set_parameter(tex, target, parameter, value, glapi) && result;
+}
+//------------------------------------------------------------------------------
+template <typename T>
+auto texture_build_info::texture_parameters(
+  texture_name tex,
+  texture_target target,
+  const basic_gl_api<T>& glapi) const noexcept -> bool {
+    bool result{true};
+    const auto& GL = glapi.constants();
+    _add_parameter(
+      tex, target, GL.texture_min_filter, min_filter, glapi, result);
+    _add_parameter(
+      tex, target, GL.texture_mag_filter, mag_filter, glapi, result);
+    return result;
+}
+//------------------------------------------------------------------------------
 // texture image build info
 //------------------------------------------------------------------------------
 export struct texture_image_build_info {
@@ -417,6 +498,17 @@ export auto make_texture_builder(
   memory::buffer_pool&,
   texture_name tex,
   texture_target target) noexcept -> std::unique_ptr<valtree::object_builder>;
+//------------------------------------------------------------------------------
+export template <typename T>
+auto build_from_resource(
+  main_ctx& ctx,
+  const basic_gl_api<T>& glapi,
+  const embedded_resource& res,
+  texture_name tex,
+  texture_target target) noexcept -> bool {
+    return res.build(
+      ctx, make_texture_builder(glapi, ctx.buffers(), tex, target));
+}
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

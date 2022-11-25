@@ -3,7 +3,6 @@
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
 
-oglplus_add_texture(oglplus)
 oglplus_add_texture(worley-bump)
 oglplus_add_texture(round_rect_mask)
 oglplus_add_texture(wooden_crate-diff)

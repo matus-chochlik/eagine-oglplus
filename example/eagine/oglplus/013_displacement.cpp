@@ -123,10 +123,8 @@ static void run_loop(
         const auto cleanup_tex = gl.delete_textures.raii(tex);
         gl.active_texture(GL.texture0);
         gl.bind_texture(GL.texture_2d, tex);
-        search_resource("WorleyTex")
-          .build(
-            ctx,
-            make_texture_builder(glapi, ctx.buffers(), tex, GL.texture_2d));
+        build_from_resource(
+          ctx, glapi, search_resource("WorleyTex"), tex, GL.texture_2d);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.nearest);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.nearest);
 

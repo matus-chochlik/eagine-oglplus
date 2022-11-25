@@ -79,8 +79,9 @@ eagine_embed_target_resources(
 
 eagine_embed_target_resources(
 	TARGET oglplus-014_texture_projection
-	INPUT_TARGETS
-	oglplus
+	RESOURCES
+		ColorTex "oglplus.eagitex"
+	ENABLE_SEARCH
 )
 
 eagine_embed_target_resources(
