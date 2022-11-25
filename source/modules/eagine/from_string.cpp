@@ -49,6 +49,12 @@ export auto from_string(
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
+  const std::type_identity<oglplus::texture_wrap_mode>,
+  const default_selector_t) noexcept
+  -> std::optional<oglplus::texture_wrap_mode>;
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
   const std::type_identity<oglplus::texture_swizzle_mode>,
   const default_selector_t) noexcept
   -> std::optional<oglplus::texture_swizzle_mode>;

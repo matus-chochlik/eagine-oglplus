@@ -144,6 +144,27 @@ auto from_string(
 //------------------------------------------------------------------------------
 auto from_string(
   const string_view src,
+  const std::type_identity<oglplus::texture_wrap_mode>,
+  const default_selector_t) noexcept
+  -> std::optional<oglplus::texture_wrap_mode> {
+    using R = oglplus::texture_wrap_mode;
+    if(src == "clamp_to_edge") {
+        return R{0x812F};
+    } else if(src == "clamp_to_border") {
+        return R{0x812D};
+    } else if(src == "repeat") {
+        return R{0x2901};
+    } else if(src == "mirrored_repeat") {
+        return R{0x8370};
+    } else if(src == "mirror_clamp_to_edge") {
+        return R{0x8743};
+    }
+    // TODO
+    return {};
+}
+//------------------------------------------------------------------------------
+auto from_string(
+  const string_view src,
   const std::type_identity<oglplus::texture_swizzle_mode>,
   const default_selector_t) noexcept
   -> std::optional<oglplus::texture_swizzle_mode> {

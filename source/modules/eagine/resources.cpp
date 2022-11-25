@@ -34,6 +34,13 @@ export struct texture_build_info {
     std::optional<pixel_format> format;
     std::optional<pixel_internal_format> iformat;
     //
+    std::optional<texture_wrap_mode> wrap_s;
+    std::optional<texture_wrap_mode> wrap_t;
+    std::optional<texture_wrap_mode> wrap_r;
+    std::optional<texture_swizzle_mode> swizzle_r;
+    std::optional<texture_swizzle_mode> swizzle_g;
+    std::optional<texture_swizzle_mode> swizzle_b;
+    std::optional<texture_swizzle_mode> swizzle_a;
     std::optional<texture_min_filter> min_filter;
     std::optional<texture_mag_filter> mag_filter;
 
@@ -164,6 +171,13 @@ constexpr auto data_member_mapping(
       std::optional<pixel_data_type>,
       std::optional<pixel_format>,
       std::optional<pixel_internal_format>,
+      std::optional<texture_wrap_mode>,
+      std::optional<texture_wrap_mode>,
+      std::optional<texture_wrap_mode>,
+      std::optional<texture_swizzle_mode>,
+      std::optional<texture_swizzle_mode>,
+      std::optional<texture_swizzle_mode>,
+      std::optional<texture_swizzle_mode>,
       std::optional<texture_min_filter>,
       std::optional<texture_mag_filter>>(
       {"levels", &S::levels},
@@ -174,6 +188,13 @@ constexpr auto data_member_mapping(
       {"data_type", &S::data_type},
       {"format", &S::format},
       {"iformat", &S::iformat},
+      {"wrap_s", &S::wrap_s},
+      {"wrap_t", &S::wrap_t},
+      {"wrap_r", &S::wrap_r},
+      {"swizzle_r", &S::swizzle_r},
+      {"swizzle_g", &S::swizzle_g},
+      {"swizzle_b", &S::swizzle_b},
+      {"swizzle_a", &S::swizzle_a},
       {"min_filter", &S::min_filter},
       {"mag_filter", &S::mag_filter});
 }
@@ -439,6 +460,13 @@ auto texture_build_info::texture_parameters(
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     bool result{true};
     const auto& GL = glapi.constants();
+    _add_parameter(tex, target, GL.texture_wrap_s, wrap_s, glapi, result);
+    _add_parameter(tex, target, GL.texture_wrap_t, wrap_t, glapi, result);
+    _add_parameter(tex, target, GL.texture_wrap_r, wrap_r, glapi, result);
+    _add_parameter(tex, target, GL.texture_swizzle_r, swizzle_r, glapi, result);
+    _add_parameter(tex, target, GL.texture_swizzle_g, swizzle_g, glapi, result);
+    _add_parameter(tex, target, GL.texture_swizzle_b, swizzle_b, glapi, result);
+    _add_parameter(tex, target, GL.texture_swizzle_a, swizzle_a, glapi, result);
     _add_parameter(
       tex, target, GL.texture_min_filter, min_filter, glapi, result);
     _add_parameter(
