@@ -10,58 +10,84 @@ import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.string;
 import :enum_types;
+import :constants;
 import <optional>;
 
 namespace eagine {
 //------------------------------------------------------------------------------
-export auto from_string(
+template <typename EnumClass>
+auto gl_enum_from_string(
   const string_view src,
-  const std::type_identity<oglplus::pixel_data_type>,
-  const default_selector_t) noexcept -> std::optional<oglplus::pixel_data_type>;
+  std::type_identity<EnumClass>) noexcept -> std::optional<EnumClass> {
+    if(const auto found{oglplus::gl_enum_by_name(src)}) {
+        if(const auto conv{convert_if_fits<EnumClass>(extract(found))}) {
+            return {extract(conv)};
+        }
+    }
+    return {};
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::pixel_internal_format>,
-  const default_selector_t) noexcept
-  -> std::optional<oglplus::pixel_internal_format>;
+  const std::type_identity<oglplus::pixel_data_type> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::pixel_format>,
-  const default_selector_t) noexcept -> std::optional<oglplus::pixel_format>;
+  const std::type_identity<oglplus::pixel_internal_format> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::texture_target>,
-  const default_selector_t) noexcept -> std::optional<oglplus::texture_target>;
+  const std::type_identity<oglplus::pixel_format> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::texture_min_filter>,
-  const default_selector_t) noexcept
-  -> std::optional<oglplus::texture_min_filter>;
+  const std::type_identity<oglplus::texture_target> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::texture_mag_filter>,
-  const default_selector_t) noexcept
-  -> std::optional<oglplus::texture_mag_filter>;
+  const std::type_identity<oglplus::texture_min_filter> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::texture_wrap_mode>,
-  const default_selector_t) noexcept
-  -> std::optional<oglplus::texture_wrap_mode>;
+  const std::type_identity<oglplus::texture_mag_filter> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::texture_swizzle_mode>,
-  const default_selector_t) noexcept
-  -> std::optional<oglplus::texture_swizzle_mode>;
+  const std::type_identity<oglplus::texture_wrap_mode> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
-  const std::type_identity<oglplus::shader_type>,
-  const default_selector_t) noexcept -> std::optional<oglplus::shader_type>;
+  const std::type_identity<oglplus::texture_swizzle_mode> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
+  const std::type_identity<oglplus::shader_type> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
 //------------------------------------------------------------------------------
 } // namespace eagine

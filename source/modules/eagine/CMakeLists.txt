@@ -51,15 +51,6 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION from_string
-	IMPORTS
-		enum_types
-		eagine.core.types
-		eagine.core.memory
-		eagine.core.string
-)
-
-eagine_add_module(
 	eagine.oglplus PARTITION glsl_source
 	IMPORTS
 		config
@@ -154,6 +145,15 @@ eagine_add_module(
 )
 
 eagine_add_module(
+	eagine.oglplus PARTITION from_string
+	IMPORTS
+		enum_types constants
+		eagine.core.types
+		eagine.core.memory
+		eagine.core.string
+)
+
+eagine_add_module(
 	eagine.oglplus PARTITION gl_debug_logger
 	IMPORTS
 		config
@@ -220,7 +220,6 @@ eagine_add_module(
 		enum_types
 		type_utils
 		glsl_source
-		from_string
 		image_spec
 		result
 		objects
@@ -229,13 +228,14 @@ eagine_add_module(
 		api_traits
 		constants
 		api
+		from_string
 		gl_debug_logger
 		gpu_program
 		framebuffer
 		shapes
 		resources
 	SOURCES
-		from_string_impl
+		constants_impl
 		api_impl
 		camera_impl
 		shapes_impl
