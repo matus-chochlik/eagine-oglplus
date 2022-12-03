@@ -40,6 +40,11 @@ struct within_limits<oglplus::shader_type, oglplus::gl_types::enum_type> {
 };
 //------------------------------------------------------------------------------
 export template <>
+struct within_limits<oglplus::texture_target, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
 struct within_limits<oglplus::texture_min_filter, oglplus::gl_types::enum_type> {
     auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
 };

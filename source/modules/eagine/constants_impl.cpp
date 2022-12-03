@@ -70,6 +70,26 @@ auto within_limits<oglplus::shader_type, oglplus::gl_types::enum_type>::check(
     }
 }
 //------------------------------------------------------------------------------
+auto within_limits<oglplus::texture_target, oglplus::gl_types::enum_type>::check(
+  oglplus::gl_types::enum_type x) const noexcept -> bool {
+    switch(x) {
+        case GL_TEXTURE_1D:
+        case GL_TEXTURE_1D_ARRAY:
+        case GL_TEXTURE_2D:
+        case GL_TEXTURE_2D_ARRAY:
+        case GL_TEXTURE_2D_MULTISAMPLE:
+        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
+        case GL_TEXTURE_3D:
+        case GL_TEXTURE_CUBE_MAP:
+        case GL_TEXTURE_CUBE_MAP_ARRAY:
+        case GL_TEXTURE_RECTANGLE:
+        case GL_TEXTURE_BUFFER:
+            return true;
+        default:
+            return false;
+    }
+}
+//------------------------------------------------------------------------------
 auto within_limits<oglplus::texture_min_filter, oglplus::gl_types::enum_type>::
   check(oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
@@ -160,14 +180,19 @@ auto map_gl_enump_by_name() noexcept {
       .add("texture_1d_array", GL_TEXTURE_1D_ARRAY)
       .add("texture_2d", GL_TEXTURE_2D)
       .add("texture_2d_array", GL_TEXTURE_2D_ARRAY)
+      .add("texture_2d_multisample", GL_TEXTURE_2D_MULTISAMPLE)
+      .add("texture_2d_multisample_array", GL_TEXTURE_2D_MULTISAMPLE_ARRAY)
       .add("texture_3d", GL_TEXTURE_3D)
+      .add("texture_buffer", GL_TEXTURE_BUFFER)
       .add("texture_cube_map", GL_TEXTURE_CUBE_MAP)
+      .add("texture_cube_map_array", GL_TEXTURE_CUBE_MAP_ARRAY)
       .add("texture_cube_negative_x", GL_TEXTURE_CUBE_MAP_NEGATIVE_X)
       .add("texture_cube_positive_x", GL_TEXTURE_CUBE_MAP_POSITIVE_X)
       .add("texture_cube_negative_y", GL_TEXTURE_CUBE_MAP_NEGATIVE_Y)
       .add("texture_cube_positive_y", GL_TEXTURE_CUBE_MAP_POSITIVE_Y)
       .add("texture_cube_negative_z", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
       .add("texture_cube_positive_z", GL_TEXTURE_CUBE_MAP_POSITIVE_Z)
+      .add("texture_rectangle", GL_TEXTURE_RECTANGLE)
       .add("unsigned_byte", GL_UNSIGNED_BYTE)
       .add("unsigned_int", GL_UNSIGNED_INT)
       .add("unsigned_short", GL_UNSIGNED_SHORT)
