@@ -18,6 +18,11 @@ import :c_api;
 namespace eagine {
 //------------------------------------------------------------------------------
 export template <>
+struct within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
 struct within_limits<oglplus::pixel_data_type, oglplus::gl_types::enum_type> {
     auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
 };
