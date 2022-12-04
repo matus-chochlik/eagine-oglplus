@@ -39,6 +39,43 @@ auto within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type>::check(
     }
 }
 //------------------------------------------------------------------------------
+auto within_limits<oglplus::capability, oglplus::gl_types::enum_type>::check(
+  oglplus::gl_types::enum_type x) const noexcept -> bool {
+    switch(x) {
+        case GL_BLEND:
+        case GL_CLIP_DISTANCE0:
+        case GL_COLOR_LOGIC_OP:
+        case GL_CULL_FACE:
+        case GL_DEBUG_OUTPUT:
+        case GL_DEBUG_OUTPUT_SYNCHRONOUS:
+        case GL_DEPTH_CLAMP:
+        case GL_DEPTH_TEST:
+        case GL_DITHER:
+        case GL_FRAMEBUFFER_SRGB:
+        case GL_LINE_SMOOTH:
+        case GL_MULTISAMPLE:
+        case GL_POLYGON_OFFSET_FILL:
+        case GL_POLYGON_OFFSET_LINE:
+        case GL_POLYGON_OFFSET_POINT:
+        case GL_POLYGON_SMOOTH:
+        case GL_PRIMITIVE_RESTART:
+        case GL_PRIMITIVE_RESTART_FIXED_INDEX:
+        case GL_PROGRAM_POINT_SIZE:
+        case GL_RASTERIZER_DISCARD:
+        case GL_SAMPLE_ALPHA_TO_COVERAGE:
+        case GL_SAMPLE_ALPHA_TO_ONE:
+        case GL_SAMPLE_COVERAGE:
+        case GL_SAMPLE_SHADING:
+        case GL_SAMPLE_MASK:
+        case GL_SCISSOR_TEST:
+        case GL_STENCIL_TEST:
+        case GL_TEXTURE_CUBE_MAP_SEAMLESS:
+            return true;
+        default:
+            return false;
+    }
+}
+//------------------------------------------------------------------------------
 auto within_limits<oglplus::object_type, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
@@ -201,40 +238,66 @@ namespace oglplus {
 //------------------------------------------------------------------------------
 auto map_gl_enump_by_name() noexcept {
     return basic_lc_identifier_trie<gl_types::enum_type>()
+      /*
+              case GL_SCISSOR_TEST:
+              case GL_STENCIL_TEST:
+              case GL_TEXTURE_CUBE_MAP_SEAMLESS:
+              */
       .add("add", GL_ADD)
       .add("alpha", GL_ALPHA)
       .add("array_buffer", GL_ARRAY_BUFFER)
       .add("atomic_counter_buffer", GL_ATOMIC_COUNTER_BUFFER)
+      .add("blend", GL_BLEND)
       .add("blue", GL_BLUE)
       .add("buffer", GL_BUFFER)
       .add("clamp_to_border", GL_CLAMP_TO_BORDER)
       .add("clamp_to_edge", GL_CLAMP_TO_EDGE)
+      .add("clip_distance", GL_CLIP_DISTANCE0)
+      .add("clip_distance_0", GL_CLIP_DISTANCE0)
+      .add("color_logic_op", GL_COLOR_LOGIC_OP)
       .add("compute_shader", GL_COMPUTE_SHADER)
       .add("copy_read_buffer", GL_COPY_READ_BUFFER)
       .add("copy_write_buffer", GL_COPY_WRITE_BUFFER)
+      .add("cull_face", GL_CULL_FACE)
+      .add("debug_output", GL_DEBUG_OUTPUT)
+      .add("debug_output_synchronous", GL_DEBUG_OUTPUT_SYNCHRONOUS)
+      .add("depth_clamp", GL_DEPTH_CLAMP)
+      .add("depth_test", GL_DEPTH_TEST)
       .add("dispatch_indirect_buffer", GL_DISPATCH_INDIRECT_BUFFER)
+      .add("dither", GL_DITHER)
       .add("draw_indirect_buffer", GL_DRAW_INDIRECT_BUFFER)
       .add("element_array_buffer", GL_ELEMENT_ARRAY_BUFFER)
       .add("false", GL_FALSE)
       .add("float", GL_FLOAT)
       .add("framebuffer", GL_FRAMEBUFFER)
+      .add("framebuffer_srgb", GL_FRAMEBUFFER_SRGB)
       .add("fragment_shader", GL_FRAGMENT_SHADER)
       .add("geometry_shader", GL_GEOMETRY_SHADER)
       .add("green", GL_GREEN)
       .add("linear", GL_LINEAR)
       .add("linear_mipmap_linear", GL_LINEAR_MIPMAP_LINEAR)
       .add("linear_mipmap_nearest", GL_LINEAR_MIPMAP_NEAREST)
+      .add("line_smooth", GL_LINE_SMOOTH)
       .add("mirror_clamp_to_edge", GL_MIRROR_CLAMP_TO_EDGE)
       .add("mirrored_repeat", GL_MIRRORED_REPEAT)
+      .add("multisample", GL_MULTISAMPLE)
       .add("nearest", GL_NEAREST)
       .add("nearest_mipmap_linear", GL_NEAREST_MIPMAP_LINEAR)
       .add("nearest_mipmap_nearest", GL_NEAREST_MIPMAP_NEAREST)
       .add("pixel_pack_buffer", GL_PIXEL_PACK_BUFFER)
       .add("pixel_unpack_buffer", GL_PIXEL_UNPACK_BUFFER)
+      .add("polygon_offset_fill", GL_POLYGON_OFFSET_FILL)
+      .add("polygon_offset_line", GL_POLYGON_OFFSET_LINE)
+      .add("polygon_offset_point", GL_POLYGON_OFFSET_POINT)
+      .add("polygon_smooth", GL_POLYGON_SMOOTH)
+      .add("primitive_restart", GL_PRIMITIVE_RESTART)
+      .add("primitive_restart_fixed_index", GL_PRIMITIVE_RESTART_FIXED_INDEX)
       .add("program", GL_PROGRAM)
       .add("program_pipeline", GL_PROGRAM_PIPELINE)
+      .add("program_point_size", GL_PROGRAM_POINT_SIZE)
       .add("query", GL_QUERY)
       .add("query_buffer", GL_QUERY_BUFFER)
+      .add("rasterizer_discard", GL_RASTERIZER_DISCARD)
       .add("repeat", GL_REPEAT)
       .add("r8", GL_R8)
       .add("r8ui", GL_R8UI)
@@ -246,6 +309,13 @@ auto map_gl_enump_by_name() noexcept {
       .add("red_integer", GL_RED_INTEGER)
       .add("renderbuffer", GL_RENDERBUFFER)
       .add("sampler", GL_SAMPLER)
+      .add("sample_coverage", GL_SAMPLE_COVERAGE)
+      .add("sample_alpha_to_coverage", GL_SAMPLE_ALPHA_TO_COVERAGE)
+      .add("sample_alpha_to_one", GL_SAMPLE_ALPHA_TO_ONE)
+      .add("sample_mask", GL_SAMPLE_MASK)
+      .add("sample_shading", GL_SAMPLE_SHADING)
+      .add("scissor_test", GL_SCISSOR_TEST)
+      .add("stencil_test", GL_STENCIL_TEST)
       .add("shader", GL_SHADER)
       .add("shader_storage_buffer", GL_SHADER_STORAGE_BUFFER)
       .add("tess_control_shader", GL_TESS_CONTROL_SHADER)
