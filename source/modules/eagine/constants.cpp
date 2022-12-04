@@ -23,6 +23,11 @@ struct within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type> {
 };
 //------------------------------------------------------------------------------
 export template <>
+struct within_limits<oglplus::object_type, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
 struct within_limits<oglplus::pixel_data_type, oglplus::gl_types::enum_type> {
     auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
 };
@@ -66,6 +71,11 @@ struct within_limits<oglplus::texture_swizzle_mode, oglplus::gl_types::enum_type
 //------------------------------------------------------------------------------
 export template <>
 struct within_limits<oglplus::texture_wrap_mode, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::true_false, oglplus::gl_types::enum_type> {
     auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
 };
 //------------------------------------------------------------------------------

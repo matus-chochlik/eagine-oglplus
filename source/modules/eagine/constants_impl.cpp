@@ -39,6 +39,26 @@ auto within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type>::check(
     }
 }
 //------------------------------------------------------------------------------
+auto within_limits<oglplus::object_type, oglplus::gl_types::enum_type>::check(
+  oglplus::gl_types::enum_type x) const noexcept -> bool {
+    switch(x) {
+        case GL_BUFFER:
+        case GL_FRAMEBUFFER:
+        case GL_PROGRAM_PIPELINE:
+        case GL_PROGRAM:
+        case GL_QUERY:
+        case GL_RENDERBUFFER:
+        case GL_SAMPLER:
+        case GL_SHADER:
+        case GL_TEXTURE:
+        case GL_TRANSFORM_FEEDBACK:
+        case GL_VERTEX_ARRAY:
+            return true;
+        default:
+            return false;
+    }
+}
+//------------------------------------------------------------------------------
 auto within_limits<oglplus::pixel_data_type, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
@@ -166,6 +186,17 @@ auto within_limits<oglplus::texture_wrap_mode, oglplus::gl_types::enum_type>::
     }
 }
 //------------------------------------------------------------------------------
+auto within_limits<oglplus::true_false, oglplus::gl_types::enum_type>::check(
+  oglplus::gl_types::enum_type x) const noexcept -> bool {
+    switch(x) {
+        case GL_TRUE:
+        case GL_FALSE:
+            return true;
+        default:
+            return false;
+    }
+}
+//------------------------------------------------------------------------------
 namespace oglplus {
 //------------------------------------------------------------------------------
 auto map_gl_enump_by_name() noexcept {
@@ -175,6 +206,7 @@ auto map_gl_enump_by_name() noexcept {
       .add("array_buffer", GL_ARRAY_BUFFER)
       .add("atomic_counter_buffer", GL_ATOMIC_COUNTER_BUFFER)
       .add("blue", GL_BLUE)
+      .add("buffer", GL_BUFFER)
       .add("clamp_to_border", GL_CLAMP_TO_BORDER)
       .add("clamp_to_edge", GL_CLAMP_TO_EDGE)
       .add("compute_shader", GL_COMPUTE_SHADER)
@@ -183,7 +215,9 @@ auto map_gl_enump_by_name() noexcept {
       .add("dispatch_indirect_buffer", GL_DISPATCH_INDIRECT_BUFFER)
       .add("draw_indirect_buffer", GL_DRAW_INDIRECT_BUFFER)
       .add("element_array_buffer", GL_ELEMENT_ARRAY_BUFFER)
+      .add("false", GL_FALSE)
       .add("float", GL_FLOAT)
+      .add("framebuffer", GL_FRAMEBUFFER)
       .add("fragment_shader", GL_FRAGMENT_SHADER)
       .add("geometry_shader", GL_GEOMETRY_SHADER)
       .add("green", GL_GREEN)
@@ -197,6 +231,9 @@ auto map_gl_enump_by_name() noexcept {
       .add("nearest_mipmap_nearest", GL_NEAREST_MIPMAP_NEAREST)
       .add("pixel_pack_buffer", GL_PIXEL_PACK_BUFFER)
       .add("pixel_unpack_buffer", GL_PIXEL_UNPACK_BUFFER)
+      .add("program", GL_PROGRAM)
+      .add("program_pipeline", GL_PROGRAM_PIPELINE)
+      .add("query", GL_QUERY)
       .add("query_buffer", GL_QUERY_BUFFER)
       .add("repeat", GL_REPEAT)
       .add("r8", GL_R8)
@@ -207,9 +244,13 @@ auto map_gl_enump_by_name() noexcept {
       .add("rgba", GL_RGBA)
       .add("rgba8", GL_RGBA8)
       .add("red_integer", GL_RED_INTEGER)
+      .add("renderbuffer", GL_RENDERBUFFER)
+      .add("sampler", GL_SAMPLER)
+      .add("shader", GL_SHADER)
       .add("shader_storage_buffer", GL_SHADER_STORAGE_BUFFER)
       .add("tess_control_shader", GL_TESS_CONTROL_SHADER)
       .add("tess_evaluation_shader", GL_TESS_EVALUATION_SHADER)
+      .add("texture", GL_TEXTURE)
       .add("texture_1d", GL_TEXTURE_1D)
       .add("texture_1d_array", GL_TEXTURE_1D_ARRAY)
       .add("texture_2d", GL_TEXTURE_2D)
@@ -227,11 +268,14 @@ auto map_gl_enump_by_name() noexcept {
       .add("texture_cube_negative_z", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
       .add("texture_cube_positive_z", GL_TEXTURE_CUBE_MAP_POSITIVE_Z)
       .add("texture_rectangle", GL_TEXTURE_RECTANGLE)
+      .add("transform_feedback", GL_TRANSFORM_FEEDBACK)
       .add("transform_feedback_buffer", GL_TRANSFORM_FEEDBACK_BUFFER)
+      .add("true", GL_TRUE)
       .add("uniform_buffer", GL_UNIFORM_BUFFER)
       .add("unsigned_byte", GL_UNSIGNED_BYTE)
       .add("unsigned_int", GL_UNSIGNED_INT)
       .add("unsigned_short", GL_UNSIGNED_SHORT)
+      .add("vertex_array", GL_VERTEX_ARRAY)
       .add("vertex_shader", GL_VERTEX_SHADER)
       .add("zero", GL_ZERO);
 }
