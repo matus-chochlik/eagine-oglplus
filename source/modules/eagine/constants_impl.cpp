@@ -39,6 +39,24 @@ auto within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type>::check(
     }
 }
 //------------------------------------------------------------------------------
+auto within_limits<oglplus::buffer_usage, oglplus::gl_types::enum_type>::check(
+  oglplus::gl_types::enum_type x) const noexcept -> bool {
+    switch(x) {
+        case GL_STREAM_DRAW:
+        case GL_STREAM_READ:
+        case GL_STREAM_COPY:
+        case GL_STATIC_DRAW:
+        case GL_STATIC_READ:
+        case GL_STATIC_COPY:
+        case GL_DYNAMIC_DRAW:
+        case GL_DYNAMIC_READ:
+        case GL_DYNAMIC_COPY:
+            return true;
+        default:
+            return false;
+    }
+}
+//------------------------------------------------------------------------------
 auto within_limits<oglplus::capability, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
@@ -238,11 +256,6 @@ namespace oglplus {
 //------------------------------------------------------------------------------
 auto map_gl_enump_by_name() noexcept {
     return basic_lc_identifier_trie<gl_types::enum_type>()
-      /*
-              case GL_SCISSOR_TEST:
-              case GL_STENCIL_TEST:
-              case GL_TEXTURE_CUBE_MAP_SEAMLESS:
-              */
       .add("add", GL_ADD)
       .add("alpha", GL_ALPHA)
       .add("array_buffer", GL_ARRAY_BUFFER)
@@ -266,6 +279,9 @@ auto map_gl_enump_by_name() noexcept {
       .add("dispatch_indirect_buffer", GL_DISPATCH_INDIRECT_BUFFER)
       .add("dither", GL_DITHER)
       .add("draw_indirect_buffer", GL_DRAW_INDIRECT_BUFFER)
+      .add("dynamic_copy", GL_DYNAMIC_COPY)
+      .add("dynamic_draw", GL_DYNAMIC_DRAW)
+      .add("dynamic_read", GL_DYNAMIC_READ)
       .add("element_array_buffer", GL_ELEMENT_ARRAY_BUFFER)
       .add("false", GL_FALSE)
       .add("float", GL_FLOAT)
@@ -315,7 +331,13 @@ auto map_gl_enump_by_name() noexcept {
       .add("sample_mask", GL_SAMPLE_MASK)
       .add("sample_shading", GL_SAMPLE_SHADING)
       .add("scissor_test", GL_SCISSOR_TEST)
+      .add("static_copy", GL_STATIC_COPY)
+      .add("static_draw", GL_STATIC_DRAW)
+      .add("static_read", GL_STATIC_READ)
       .add("stencil_test", GL_STENCIL_TEST)
+      .add("stream_copy", GL_STREAM_COPY)
+      .add("stream_draw", GL_STREAM_DRAW)
+      .add("stream_read", GL_STREAM_READ)
       .add("shader", GL_SHADER)
       .add("shader_storage_buffer", GL_SHADER_STORAGE_BUFFER)
       .add("tess_control_shader", GL_TESS_CONTROL_SHADER)
