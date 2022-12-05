@@ -19,6 +19,7 @@ namespace eagine {
 auto within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_ARRAY_BUFFER:
         case GL_ATOMIC_COUNTER_BUFFER:
         case GL_COPY_READ_BUFFER:
@@ -34,6 +35,7 @@ auto within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type>::check(
         case GL_TRANSFORM_FEEDBACK_BUFFER:
         case GL_UNIFORM_BUFFER:
             return true;
+#endif
         default:
             return false;
     }
@@ -42,6 +44,7 @@ auto within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type>::check(
 auto within_limits<oglplus::buffer_usage, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_STREAM_DRAW:
         case GL_STREAM_READ:
         case GL_STREAM_COPY:
@@ -52,6 +55,7 @@ auto within_limits<oglplus::buffer_usage, oglplus::gl_types::enum_type>::check(
         case GL_DYNAMIC_READ:
         case GL_DYNAMIC_COPY:
             return true;
+#endif
         default:
             return false;
     }
@@ -60,6 +64,7 @@ auto within_limits<oglplus::buffer_usage, oglplus::gl_types::enum_type>::check(
 auto within_limits<oglplus::capability, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_BLEND:
         case GL_CLIP_DISTANCE0:
         case GL_COLOR_LOGIC_OP:
@@ -89,6 +94,7 @@ auto within_limits<oglplus::capability, oglplus::gl_types::enum_type>::check(
         case GL_STENCIL_TEST:
         case GL_TEXTURE_CUBE_MAP_SEAMLESS:
             return true;
+#endif
         default:
             return false;
     }
@@ -97,6 +103,7 @@ auto within_limits<oglplus::capability, oglplus::gl_types::enum_type>::check(
 auto within_limits<oglplus::object_type, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_BUFFER:
         case GL_FRAMEBUFFER:
         case GL_PROGRAM_PIPELINE:
@@ -109,6 +116,7 @@ auto within_limits<oglplus::object_type, oglplus::gl_types::enum_type>::check(
         case GL_TRANSFORM_FEEDBACK:
         case GL_VERTEX_ARRAY:
             return true;
+#endif
         default:
             return false;
     }
@@ -117,11 +125,13 @@ auto within_limits<oglplus::object_type, oglplus::gl_types::enum_type>::check(
 auto within_limits<oglplus::pixel_data_type, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_FLOAT:
         case GL_UNSIGNED_BYTE:
         case GL_UNSIGNED_SHORT:
         case GL_UNSIGNED_INT:
             return true;
+#endif
         default:
             return false;
     }
@@ -130,11 +140,13 @@ auto within_limits<oglplus::pixel_data_type, oglplus::gl_types::enum_type>::chec
 auto within_limits<oglplus::pixel_format, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_RED:
         case GL_RED_INTEGER:
         case GL_RGB:
         case GL_RGBA:
             return true;
+#endif
         default:
             return false;
     }
@@ -143,11 +155,13 @@ auto within_limits<oglplus::pixel_format, oglplus::gl_types::enum_type>::check(
 auto within_limits<oglplus::pixel_internal_format, oglplus::gl_types::enum_type>::
   check(oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_R8:
         case GL_R8UI:
         case GL_RGB8:
         case GL_RGBA8:
             return true;
+#endif
         default:
             return false;
     }
@@ -156,6 +170,7 @@ auto within_limits<oglplus::pixel_internal_format, oglplus::gl_types::enum_type>
 auto within_limits<oglplus::shader_type, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_COMPUTE_SHADER:
         case GL_VERTEX_SHADER:
         case GL_TESS_CONTROL_SHADER:
@@ -163,6 +178,7 @@ auto within_limits<oglplus::shader_type, oglplus::gl_types::enum_type>::check(
         case GL_GEOMETRY_SHADER:
         case GL_FRAGMENT_SHADER:
             return true;
+#endif
         default:
             return false;
     }
@@ -171,6 +187,7 @@ auto within_limits<oglplus::shader_type, oglplus::gl_types::enum_type>::check(
 auto within_limits<oglplus::texture_target, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_TEXTURE_1D:
         case GL_TEXTURE_1D_ARRAY:
         case GL_TEXTURE_2D:
@@ -183,6 +200,7 @@ auto within_limits<oglplus::texture_target, oglplus::gl_types::enum_type>::check
         case GL_TEXTURE_RECTANGLE:
         case GL_TEXTURE_BUFFER:
             return true;
+#endif
         default:
             return false;
     }
@@ -191,6 +209,7 @@ auto within_limits<oglplus::texture_target, oglplus::gl_types::enum_type>::check
 auto within_limits<oglplus::texture_min_filter, oglplus::gl_types::enum_type>::
   check(oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_NEAREST:
         case GL_NEAREST_MIPMAP_NEAREST:
         case GL_NEAREST_MIPMAP_LINEAR:
@@ -198,6 +217,7 @@ auto within_limits<oglplus::texture_min_filter, oglplus::gl_types::enum_type>::
         case GL_LINEAR_MIPMAP_NEAREST:
         case GL_LINEAR_MIPMAP_LINEAR:
             return true;
+#endif
         default:
             return false;
     }
@@ -206,9 +226,11 @@ auto within_limits<oglplus::texture_min_filter, oglplus::gl_types::enum_type>::
 auto within_limits<oglplus::texture_mag_filter, oglplus::gl_types::enum_type>::
   check(oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_NEAREST:
         case GL_LINEAR:
             return true;
+#endif
         default:
             return false;
     }
@@ -217,11 +239,13 @@ auto within_limits<oglplus::texture_mag_filter, oglplus::gl_types::enum_type>::
 auto within_limits<oglplus::texture_swizzle_mode, oglplus::gl_types::enum_type>::
   check(oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_RED:
         case GL_GREEN:
         case GL_BLUE:
         case GL_ALPHA:
             return true;
+#endif
         default:
             return false;
     }
@@ -230,12 +254,14 @@ auto within_limits<oglplus::texture_swizzle_mode, oglplus::gl_types::enum_type>:
 auto within_limits<oglplus::texture_wrap_mode, oglplus::gl_types::enum_type>::
   check(oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_REPEAT:
         case GL_CLAMP_TO_EDGE:
         case GL_CLAMP_TO_BORDER:
         case GL_MIRRORED_REPEAT:
         case GL_MIRROR_CLAMP_TO_EDGE:
             return true;
+#endif
         default:
             return false;
     }
@@ -244,9 +270,11 @@ auto within_limits<oglplus::texture_wrap_mode, oglplus::gl_types::enum_type>::
 auto within_limits<oglplus::true_false, oglplus::gl_types::enum_type>::check(
   oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
+#if EAGINE_HAS_GL
         case GL_TRUE:
         case GL_FALSE:
             return true;
+#endif
         default:
             return false;
     }
@@ -256,6 +284,7 @@ namespace oglplus {
 //------------------------------------------------------------------------------
 auto map_gl_enump_by_name() noexcept {
     return basic_lc_identifier_trie<gl_types::enum_type>()
+#if EAGINE_HAS_GL
       .add("add", GL_ADD)
       .add("alpha", GL_ALPHA)
       .add("array_buffer", GL_ARRAY_BUFFER)
@@ -369,7 +398,9 @@ auto map_gl_enump_by_name() noexcept {
       .add("unsigned_short", GL_UNSIGNED_SHORT)
       .add("vertex_array", GL_VERTEX_ARRAY)
       .add("vertex_shader", GL_VERTEX_SHADER)
-      .add("zero", GL_ZERO);
+      .add("zero", GL_ZERO)
+#endif
+      ;
 }
 //------------------------------------------------------------------------------
 auto gl_enum_by_name(const string_view name) noexcept
