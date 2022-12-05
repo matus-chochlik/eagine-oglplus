@@ -29,6 +29,34 @@ auto gl_enum_from_string(
 //------------------------------------------------------------------------------
 export auto from_string(
   const string_view src,
+  const std::type_identity<oglplus::buffer_target> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
+  const std::type_identity<oglplus::buffer_usage> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
+  const std::type_identity<oglplus::capability> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
+  const std::type_identity<oglplus::object_type> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
   const std::type_identity<oglplus::pixel_data_type> tid,
   const default_selector_t) noexcept {
     return gl_enum_from_string(src, tid);
@@ -86,6 +114,13 @@ export auto from_string(
 export auto from_string(
   const string_view src,
   const std::type_identity<oglplus::shader_type> tid,
+  const default_selector_t) noexcept {
+    return gl_enum_from_string(src, tid);
+}
+//------------------------------------------------------------------------------
+export auto from_string(
+  const string_view src,
+  const std::type_identity<oglplus::true_false> tid,
   const default_selector_t) noexcept {
     return gl_enum_from_string(src, tid);
 }
