@@ -282,7 +282,7 @@ auto within_limits<oglplus::true_false, oglplus::gl_types::enum_type>::check(
 //------------------------------------------------------------------------------
 namespace oglplus {
 //------------------------------------------------------------------------------
-auto map_gl_enump_by_name() noexcept {
+auto map_gl_enum_by_name() noexcept {
     return basic_lc_identifier_trie<gl_types::enum_type>()
 #if EAGINE_HAS_GL
       .add("add", GL_ADD)
@@ -406,7 +406,7 @@ auto map_gl_enump_by_name() noexcept {
 auto gl_enum_by_name(const string_view name) noexcept
   -> std::optional<gl_types::enum_type> {
     if(!name.empty()) [[likely]] {
-        static const auto enums{map_gl_enump_by_name()};
+        static const auto enums{map_gl_enum_by_name()};
         if(auto found{enums.find(name)}) [[likely]] {
             return {extract(found)};
         }
