@@ -161,22 +161,17 @@ static void run_loop(
         gl.bind_attrib_location(prog, plane.wrap_coord_loc(), "Coord");
 
         // texture
-        const auto tex_src{embed<"WorleyTex">("worley-bump")};
-
         owned_texture_name tex;
         gl.gen_textures() >> tex;
         const auto cleanup_tex = gl.delete_textures.raii(tex);
         gl.active_texture(GL.texture0);
         gl.bind_texture(GL.texture_2d, tex);
+        build_from_resource(
+          ctx, glapi, search_resource("WorleyTex"), tex, GL.texture_2d);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(tex_src.unpack(ctx)));
 
         // uniform
         oglplus::uniform_location tex_loc;

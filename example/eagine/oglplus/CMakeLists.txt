@@ -86,8 +86,9 @@ eagine_embed_target_resources(
 
 eagine_embed_target_resources(
 	TARGET oglplus-015_worleycraft
-	INPUT_TARGETS
-	worley-bump
+	RESOURCES
+		WorleyTex "worley-bump.eagitex"
+	ENABLE_SEARCH
 )
 
 eagine_embed_target_resources(
