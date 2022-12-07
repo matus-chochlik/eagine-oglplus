@@ -94,9 +94,11 @@ eagine_embed_target_resources(
 eagine_embed_target_resources(
 	TARGET oglplus-019_wooden_crate
 	INPUT_TARGETS
-	wooden_crate-diff
-	wooden_crate-lmap
-	wooden_crate-nmap
+	RESOURCES
+		CrateDiff "wooden_crate-diff.eagitex"
+		CrateLMap "wooden_crate-lmap.eagitex"
+		CrateNMap "wooden_crate-nmap.eagitex"
+	ENABLE_SEARCH
 )
 eagine_embed_target_resources(
 	TARGET oglplus-025_parallax_cube

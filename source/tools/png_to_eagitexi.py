@@ -113,7 +113,7 @@ class ArgumentParser(argparse.ArgumentParser):
 
         self.add_argument(
             "--tex-param", "-P",
-            metavar='INTEGER',
+            metavar=('NAME', 'VALUE'),
             dest='texture_parameters',
             nargs=2,
             action='append',
