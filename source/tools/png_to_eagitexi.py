@@ -111,6 +111,15 @@ class ArgumentParser(argparse.ArgumentParser):
             default=False
         )
 
+        self.add_argument(
+            "--tex-param", "-P",
+            metavar='INTEGER',
+            dest='texture_parameters',
+            nargs=2,
+            action='append',
+            default=[]
+        )
+
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
         if options.cube_map:
@@ -362,6 +371,15 @@ def convert(options):
     options.write(',"data_type":"%s"\n' % image0.data_type())
     options.write(',"format":"%s"\n' % image0.format())
     options.write(',"iformat":"%s"\n' % image0.iformat())
+
+    for name, value in options.texture_parameters:
+        try:
+            options.write(',"%s":%d\n' % (name, int(value)))
+        except ValueError:
+            try:
+                options.write(',"%s":%f\n' % (name, float(value)))
+            except ValueError:
+                options.write(',"%s":"%s"\n' % (name, value))
 
     def _images(image0, options):
         yield image0
