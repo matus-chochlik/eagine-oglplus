@@ -107,8 +107,9 @@ eagine_embed_target_resources(
 )
 eagine_embed_target_resources(
 	TARGET oglplus-027_parallax_sphere
-	INPUT_TARGETS
-	worley-bump
-	round_rect_mask
+	RESOURCES
+		WorleyTex  "worley-bump.eagitex"
+		RectMskTex "round-rect-mask.eagitex"
+	ENABLE_SEARCH
 )
 

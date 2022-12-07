@@ -166,43 +166,35 @@ static void run_loop(
         gl.bind_attrib_location(prog, sphere.wrap_coord_loc(), "TexCoord");
 
         // normal/height texture
-        const auto normal_tex_src{embed<"NormalTex">("worley-bump")};
-
         owned_texture_name normal_tex;
         gl.gen_textures() >> normal_tex;
         const auto cleanup_normal_tex = gl.delete_textures.raii(normal_tex);
         gl.active_texture(GL.texture0);
         gl.bind_texture(GL.texture_2d, normal_tex);
+        build_from_resource(
+          ctx, glapi, search_resource("WorleyTex"), normal_tex, GL.texture_2d);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(normal_tex_src.unpack(ctx)));
+
         oglplus::uniform_location normal_tex_loc;
         gl.get_uniform_location(prog, "normalTex") >> normal_tex_loc;
         glapi.set_uniform(prog, normal_tex_loc, 0);
 
         // mask texture
-        const auto mask_tex_src{embed<"MaskTex">("round_rect_mask")};
-
         owned_texture_name mask_tex;
         gl.gen_textures() >> mask_tex;
         const auto cleanup_mask_tex = gl.delete_textures.raii(mask_tex);
         gl.active_texture(GL.texture0 + 1);
         gl.bind_texture(GL.texture_2d, mask_tex);
+        build_from_resource(
+          ctx, glapi, search_resource("RectMskTex"), mask_tex, GL.texture_2d);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
         gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(mask_tex_src.unpack(ctx)));
+
         oglplus::uniform_location mask_tex_loc;
         gl.get_uniform_location(prog, "maskTex") >> mask_tex_loc;
         glapi.set_uniform(prog, mask_tex_loc, 1);
