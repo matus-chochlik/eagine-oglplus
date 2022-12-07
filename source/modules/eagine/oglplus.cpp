@@ -15,7 +15,6 @@ export import :enum_types;
 export import :type_utils;
 export import :from_string;
 export import :glsl_source;
-export import :image_spec;
 export import :result;
 export import :objects;
 export import :prog_var_loc;
