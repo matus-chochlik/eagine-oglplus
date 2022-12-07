@@ -19,7 +19,6 @@ file(STRINGS "${EAGINE_CORE_ROOT}/VERSION" EAGINE_VERSION)
 add_subdirectory(submodules)
 
 include(EAGineCoreCommon)
-include(OGLplusBaking)
 find_package(EAGinePNG)
 find_package(EAGineGLEW)
 find_package(EAGineGLFW3)
