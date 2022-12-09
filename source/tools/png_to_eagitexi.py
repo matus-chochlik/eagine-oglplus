@@ -91,6 +91,13 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
+            "--eagitex",
+            dest='eagitex',
+            action='store_true',
+            default=False
+        )
+
+        self.add_argument(
             "--flip-y",
             dest='flip_y',
             action='store_true',
@@ -102,6 +109,15 @@ class ArgumentParser(argparse.ArgumentParser):
             dest='cube_map',
             action='store_true',
             default=False
+        )
+
+        self.add_argument(
+            "--tex-param", "-P",
+            metavar=('NAME', 'VALUE'),
+            dest='texture_parameters',
+            nargs=2,
+            action='append',
+            default=[]
         )
 
     # -------------------------------------------------------------------------
@@ -337,7 +353,10 @@ class PngImage(object):
 # ------------------------------------------------------------------------------
 def convert(options):
     image0 = PngImage(options, options.input_paths[0])
-    options.write('{"level":%d\n' % options.image_level)
+    if options.eagitex:
+        options.write('{"levels":1\n')
+    else:
+        options.write('{"level":%d\n' % options.image_level)
     if options.x_offs > 0:
         options.write(',"x_offs":%d\n' % options.x_offs)
     if options.y_offs > 0:
@@ -352,6 +371,15 @@ def convert(options):
     options.write(',"data_type":"%s"\n' % image0.data_type())
     options.write(',"format":"%s"\n' % image0.format())
     options.write(',"iformat":"%s"\n' % image0.iformat())
+
+    for name, value in options.texture_parameters:
+        try:
+            options.write(',"%s":%d\n' % (name, int(value)))
+        except ValueError:
+            try:
+                options.write(',"%s":%f\n' % (name, float(value)))
+            except ValueError:
+                options.write(',"%s":"%s"\n' % (name, value))
 
     def _images(image0, options):
         yield image0

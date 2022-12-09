@@ -25,7 +25,6 @@ import :constants;
 import :prog_var_loc;
 import :type_utils;
 import :glsl_source;
-import :image_spec;
 import :math;
 import :c_api;
 import :api_traits;
@@ -4054,124 +4053,6 @@ public:
           element_view(value),
           true_or_false(math::is_row_major_v<T>),
           canonical_compound_type<T>());
-    }
-
-    // texture image
-    auto spec_tex_image1d(
-      const texture_target tex_tgt,
-      const gl_types::int_type level,
-      const gl_types::int_type border,
-      const image_spec& image) const -> combined_result<void> {
-        return this->tex_image1d(
-          tex_tgt,
-          level,
-          image.internal_format(),
-          image.width(),
-          border,
-          image.format(),
-          image.type(),
-          image.data());
-    }
-
-    auto spec_tex_image2d(
-      const texture_target tex_tgt,
-      const gl_types::int_type level,
-      const gl_types::int_type border,
-      const image_spec& image) const -> combined_result<void> {
-        return this->tex_image2d(
-          tex_tgt,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          border,
-          image.format(),
-          image.type(),
-          image.data());
-    }
-
-    auto spec_tex_image3d(
-      const texture_target tex_tgt,
-      const gl_types::int_type level,
-      const gl_types::int_type border,
-      const image_spec& image) const -> combined_result<void> {
-        return this->tex_image3d(
-          tex_tgt,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          image.depth(),
-          border,
-          image.format(),
-          image.type(),
-          image.data());
-    }
-
-    auto spec_tex_image_cube(
-      const gl_types::int_type level,
-      const gl_types::int_type border,
-      const image_spec& image) const {
-        this->tex_image2d(
-          this->texture_cube_map_positive_x,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          border,
-          image.format(),
-          image.type(),
-          image.data_slice2d(0));
-        this->tex_image2d(
-          this->texture_cube_map_negative_x,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          border,
-          image.format(),
-          image.type(),
-          image.data_slice2d(1));
-        this->tex_image2d(
-          this->texture_cube_map_positive_y,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          border,
-          image.format(),
-          image.type(),
-          image.data_slice2d(2));
-        this->tex_image2d(
-          this->texture_cube_map_negative_y,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          border,
-          image.format(),
-          image.type(),
-          image.data_slice2d(3));
-        this->tex_image2d(
-          this->texture_cube_map_positive_z,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          border,
-          image.format(),
-          image.type(),
-          image.data_slice2d(4));
-        this->tex_image2d(
-          this->texture_cube_map_negative_z,
-          level,
-          image.internal_format(),
-          image.width(),
-          image.height(),
-          border,
-          image.format(),
-          image.type(),
-          image.data_slice2d(5));
     }
 };
 

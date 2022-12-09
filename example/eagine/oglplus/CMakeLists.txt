@@ -72,40 +72,46 @@ eagine_example_common(027_parallax_sphere)
 
 eagine_embed_target_resources(
 	TARGET oglplus-013_displacement
-	INPUT_TARGETS
-	worley-bump
+	RESOURCES
+		WorleyTex "worley-bump.eagitex"
+	ENABLE_SEARCH
 )
 
 eagine_embed_target_resources(
 	TARGET oglplus-014_texture_projection
-	INPUT_TARGETS
-	oglplus
+	RESOURCES
+		ColorTex "oglplus.eagitex"
+	ENABLE_SEARCH
 )
 
 eagine_embed_target_resources(
 	TARGET oglplus-015_worleycraft
-	INPUT_TARGETS
-	worley-bump
+	RESOURCES
+		WorleyTex "worley-bump.eagitex"
+	ENABLE_SEARCH
 )
 
 eagine_embed_target_resources(
 	TARGET oglplus-019_wooden_crate
-	INPUT_TARGETS
-	wooden_crate-diff
-	wooden_crate-lmap
-	wooden_crate-nmap
+	RESOURCES
+		CrateDiff "wooden_crate-diff.eagitex"
+		CrateLMap "wooden_crate-lmap.eagitex"
+		CrateNMap "wooden_crate-nmap.eagitex"
+	ENABLE_SEARCH
 )
 eagine_embed_target_resources(
 	TARGET oglplus-025_parallax_cube
-	INPUT_TARGETS
-	wooden_crate-diff
-	wooden_crate-hmap
-	wooden_crate-nmap
+	RESOURCES
+		CrateDiff "wooden_crate-diff.eagitex"
+		CrateHMap "wooden_crate-hmap.eagitex"
+		CrateNMap "wooden_crate-nmap.eagitex"
+	ENABLE_SEARCH
 )
 eagine_embed_target_resources(
 	TARGET oglplus-027_parallax_sphere
-	INPUT_TARGETS
-	worley-bump
-	round_rect_mask
+	RESOURCES
+		WorleyTex  "worley-bump.eagitex"
+		RectMskTex "round-rect-mask.eagitex"
+	ENABLE_SEARCH
 )
 

@@ -116,68 +116,41 @@ static void run_loop(
         gl.bind_attrib_location(prog, cube.face_coord_loc(), "TexCoord");
 
         // color texture
-        const auto color_tex_src{embed<"ColorTex">("wooden_crate-diff")};
-
         owned_texture_name color_tex;
         gl.gen_textures() >> color_tex;
+        const auto cleanup_color_tex = gl.delete_textures.raii(color_tex);
         gl.active_texture(GL.texture0 + 0);
         gl.bind_texture(GL.texture_2d, color_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(color_tex_src.unpack(ctx)));
-        oglplus::uniform_location color_tex_loc;
+        build_from_resource(
+          ctx, glapi, search_resource("CrateDiff"), color_tex, GL.texture_2d);
+
+        uniform_location color_tex_loc;
         gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
         glapi.set_uniform(prog, color_tex_loc, 0);
 
         // normal texture
-        const auto normal_tex_src{embed<"NormalTex">("wooden_crate-nmap")};
-
         owned_texture_name normal_tex;
         gl.gen_textures() >> normal_tex;
+        const auto cleanup_normal_tex = gl.delete_textures.raii(normal_tex);
         gl.active_texture(GL.texture0 + 1);
         gl.bind_texture(GL.texture_2d, normal_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(normal_tex_src.unpack(ctx)));
-        oglplus::uniform_location normal_tex_loc;
+        build_from_resource(
+          ctx, glapi, search_resource("CrateNMap"), normal_tex, GL.texture_2d);
+
+        uniform_location normal_tex_loc;
         gl.get_uniform_location(prog, "normalTex") >> normal_tex_loc;
         glapi.set_uniform(prog, normal_tex_loc, 1);
 
         // light texture
-        const auto light_tex_src{embed<"LightTex">("wooden_crate-lmap")};
-
         owned_texture_name light_tex;
         gl.gen_textures() >> light_tex;
+        const auto cleanup_light_tex = gl.delete_textures.raii(light_tex);
         gl.active_texture(GL.texture0 + 2);
         gl.bind_texture(GL.texture_2d, light_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(light_tex_src.unpack(ctx)));
-        oglplus::uniform_location light_tex_loc;
+        build_from_resource(
+          ctx, glapi, search_resource("CrateLMap"), light_tex, GL.texture_2d);
+
+        uniform_location light_tex_loc;
         gl.get_uniform_location(prog, "lightTex") >> light_tex_loc;
         glapi.set_uniform(prog, light_tex_loc, 2);
 

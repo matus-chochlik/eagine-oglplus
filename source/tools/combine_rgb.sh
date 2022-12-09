@@ -10,7 +10,7 @@ in_b=${3:-blue.png}
 out=${4:-rgb.png}
 
 convert \
-	"${in_r}" "${in_g}" ${in_b}" \
+	"${in_r}" "${in_g}" "${in_b}" \
 	"-channel"    "RGB" \
 	"-colorspace" "RGB" \
 	"-combine" "${out}"

@@ -53,8 +53,8 @@ static const eagine::oglplus::glsl_source_ref fs_source{R"(
 #version 400
 uniform sampler2D colorTex;
 uniform sampler2D normalTex;
-uniform sampler2D depthTex;
-const float depthMult = 0.12;
+uniform sampler2D offsetTex;
+const float offsetMult = 0.12;
 
 in vec3 vertLight;
 in vec3 vertNormal;
@@ -73,16 +73,16 @@ vec3 normalAt(vec2 c) {
 	return vertNormalMatrix * vec3(-n.xy, n.z);
 }
 
-float depthAt(vec2 c) {
-	return sqrt(1.0 - texture(depthTex, c).r);
+float offsetAt(vec2 c) {
+	return sqrt(1.0 - texture(offsetTex, c).r);
 }
 
 void main() {
 	vec3 viewTangent = normalize(vertViewTangent);
-	float sampleInterval = 1.0 / length(textureSize(depthTex, 0));
+	float sampleInterval = 1.0 / length(textureSize(offsetTex, 0));
 	vec3 sampleStep = viewTangent*sampleInterval;
-	float depth = depthAt(vertTexCoord);
-	float maxOffs = min((depth * depthMult)/(-viewTangent.z), 1.0);
+	float offset = offsetAt(vertTexCoord);
+	float maxOffs = min((offset * offsetMult)/(-viewTangent.z), 1.0);
 	vec3 viewOffs = vec3(0.0, 0.0, 0.0);
 	vec2 offsTexC = vertTexCoord + viewOffs.xy;
 	while(length(viewOffs) < maxOffs)
@@ -93,12 +93,12 @@ void main() {
 		if(offsTexC.y <= 0.0 || offsTexC.y >= 1.0) {
 			discard;
 		}
-		if(depth*depthMult <= -viewOffs.z) {
+		if(offset*offsetMult <= -viewOffs.z) {
 			break;
 		}
 		viewOffs += sampleStep;
 		offsTexC = vertTexCoord + viewOffs.xy;
-		depth = depthAt(offsTexC);
+		offset = offsetAt(offsTexC);
 	}
 	vec3 color = colorAt(offsTexC);
 	vec3 normal = normalAt(offsTexC);
@@ -155,73 +155,43 @@ static void run_loop(
         gl.bind_attrib_location(prog, cube.wrap_coord_loc(), "TexCoord");
 
         // color texture
-        const auto color_tex_src{embed<"ColorTex">("wooden_crate-diff")};
-
         owned_texture_name color_tex;
         gl.gen_textures() >> color_tex;
         const auto cleanup_color_tex = gl.delete_textures.raii(color_tex);
         gl.active_texture(GL.texture0 + 0);
         gl.bind_texture(GL.texture_2d, color_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(color_tex_src.unpack(ctx)));
-        oglplus::uniform_location color_tex_loc;
+        build_from_resource(
+          ctx, glapi, search_resource("CrateDiff"), color_tex, GL.texture_2d);
+
+        uniform_location color_tex_loc;
         gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
         glapi.set_uniform(prog, color_tex_loc, 0);
 
         // normal texture
-        const auto normal_tex_src{embed<"NormalTex">("wooden_crate-nmap")};
-
         owned_texture_name normal_tex;
         gl.gen_textures() >> normal_tex;
         const auto cleanup_normal_tex = gl.delete_textures.raii(normal_tex);
         gl.active_texture(GL.texture0 + 1);
         gl.bind_texture(GL.texture_2d, normal_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_edge);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_edge);
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(normal_tex_src.unpack(ctx)));
-        oglplus::uniform_location normal_tex_loc;
+        build_from_resource(
+          ctx, glapi, search_resource("CrateNMap"), normal_tex, GL.texture_2d);
+
+        uniform_location normal_tex_loc;
         gl.get_uniform_location(prog, "normalTex") >> normal_tex_loc;
         glapi.set_uniform(prog, normal_tex_loc, 1);
 
-        // depth texture
-        const auto depth_tex_src{embed<"LightTex">("wooden_crate-hmap")};
-
-        owned_texture_name depth_tex;
-        gl.gen_textures() >> depth_tex;
-        const auto cleanup_depth_tex = gl.delete_textures.raii(depth_tex);
+        // offset texture
+        owned_texture_name offset_tex;
+        gl.gen_textures() >> offset_tex;
+        const auto cleanup_offset_tex = gl.delete_textures.raii(offset_tex);
         gl.active_texture(GL.texture0 + 2);
-        gl.bind_texture(GL.texture_2d, depth_tex);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_min_filter, GL.linear);
-        gl.tex_parameter_i(GL.texture_2d, GL.texture_mag_filter, GL.linear);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_s, GL.clamp_to_border);
-        gl.tex_parameter_i(
-          GL.texture_2d, GL.texture_wrap_t, GL.clamp_to_border);
-        gl.tex_parameter_fv(
-          GL.texture_2d,
-          GL.texture_border_color,
-          element_view(oglplus::vec3{0.F}));
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(depth_tex_src.unpack(ctx)));
-        oglplus::uniform_location depth_tex_loc;
-        gl.get_uniform_location(prog, "depthTex") >> depth_tex_loc;
-        glapi.set_uniform(prog, depth_tex_loc, 2);
+        gl.bind_texture(GL.texture_2d, offset_tex);
+        build_from_resource(
+          ctx, glapi, search_resource("CrateHMap"), offset_tex, GL.texture_2d);
+
+        uniform_location offset_tex_loc;
+        gl.get_uniform_location(prog, "offsetTex") >> offset_tex_loc;
+        glapi.set_uniform(prog, offset_tex_loc, 2);
 
         // uniforms
         uniform_location perspective_loc;

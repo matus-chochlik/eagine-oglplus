@@ -5,15 +5,93 @@ module;
 export module eagine.oglplus:constants;
 import eagine.core.types;
 import eagine.core.c_api;
+import eagine.core.memory;
 import :config;
 import :enum_types;
 import :objects;
 import :math;
 import :c_api;
 #include <array>
+#include <optional>
 #include <type_traits>
 
-namespace eagine::oglplus {
+namespace eagine {
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::buffer_target, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::buffer_usage, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::capability, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::object_type, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::pixel_data_type, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<
+  oglplus::pixel_internal_format,
+  oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::pixel_format, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::shader_type, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::texture_target, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::texture_min_filter, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::texture_mag_filter, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::texture_swizzle_mode, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::texture_wrap_mode, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+export template <>
+struct within_limits<oglplus::true_false, oglplus::gl_types::enum_type> {
+    auto check(oglplus::gl_types::enum_type) const noexcept -> bool;
+};
+//------------------------------------------------------------------------------
+namespace oglplus {
+export auto gl_enum_by_name(const string_view name) noexcept
+  -> std::optional<gl_types::enum_type>;
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the constants from the GL API.
 /// @ingroup gl_api_wrap
@@ -14280,4 +14358,5 @@ basic_gl_constants<ApiTraits>::basic_gl_constants(
   , utf16_nv("UTF16_NV", traits, api)
   , none("NONE", traits, api) {}
 //------------------------------------------------------------------------------
-} // namespace eagine::oglplus
+} // namespace oglplus
+} // namespace eagine

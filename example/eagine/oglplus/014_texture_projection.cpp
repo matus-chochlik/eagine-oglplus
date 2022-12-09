@@ -124,8 +124,6 @@ static void run_loop(
         gl.use_program(prog);
 
         // color texture
-        const auto color_tex_src{embed<"ColorTex">("oglplus")};
-
         owned_texture_name color_tex;
         gl.gen_textures() >> color_tex;
         const auto cleanup_color_tex = gl.delete_textures.raii(color_tex);
@@ -141,11 +139,8 @@ static void run_loop(
           GL.texture_2d,
           GL.texture_border_color,
           element_view(oglplus::vec3{1.F}));
-        glapi.spec_tex_image2d(
-          GL.texture_2d,
-          0,
-          0,
-          oglplus::texture_image_block(color_tex_src.unpack(ctx)));
+        build_from_resource(
+          ctx, glapi, search_resource("ColorTex"), color_tex, GL.texture_2d);
         oglplus::uniform_location color_tex_loc;
         gl.get_uniform_location(prog, "colorTex") >> color_tex_loc;
         glapi.set_uniform(prog, color_tex_loc, 0);
