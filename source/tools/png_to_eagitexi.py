@@ -232,19 +232,6 @@ class PILPngImageAdapter(object):
     # -------------------------------------------------------------------------
     def chunks(self):
         nc = self.channels()
-        if mode == "P":
-            for i in self._img.getdata():
-                e = self._img.palette[i]
-                for c in range(nc):
-                    yield e[c]
-        else:
-            for e in self._img.getdata():
-                for c in range(nc):
-                    yield e[c]
-
-    # -------------------------------------------------------------------------
-    def chunks(self):
-        nc = self.channels()
         chunk_size = 64 * 1024
         mode = self._img.mode
         temp = bytearray()
