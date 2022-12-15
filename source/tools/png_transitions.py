@@ -1,0 +1,364 @@
+#!/usr/bin/env python3
+# Copyright Matus Chochlik.
+# Distributed under the Boost Software License, Version 1.0.
+# See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt
+
+import os
+import sys
+import numpy
+import argparse
+
+# ------------------------------------------------------------------------------
+class ArgumentParser(argparse.ArgumentParser):
+    # -------------------------------------------------------------------------
+    def __init__(self, **kw):
+        def _positive_int(x):
+            try:
+                assert(int(x) > 0)
+                return int(x)
+            except:
+                self.error("`%s' is not a positive integer value" % str(x))
+
+        argparse.ArgumentParser.__init__(self, **kw)
+
+        self.add_argument(
+            "--input", "-i",
+            metavar='INPUT-FILE',
+            dest='input_paths',
+            nargs='?',
+            type=os.path.realpath,
+            action="append",
+            default=[]
+        )
+
+        self.add_argument(
+            "--output", "-o",
+            metavar='OUTPUT-FILE',
+            dest='output_path',
+            nargs='?',
+            type=os.path.realpath,
+            default=None
+        )
+
+        self.add_argument(
+            "--output-type", "-T",
+            metavar='TYPE',
+            dest='output_type',
+            nargs='?',
+            choices=["ascii", "html", "orig"],
+            default="ascii"
+        )
+
+        self.add_argument(
+            "--channel", "-c",
+            metavar='VALUE',
+            dest='channel',
+            nargs='?',
+            type=_positive_int,
+            default=0
+        )
+
+        self.add_argument(
+            "--threshold", "-t",
+            metavar='VALUE',
+            dest='threshold',
+            nargs='?',
+            type=_positive_int,
+            default=128
+        )
+
+        self.add_argument(
+            "--name-format", "-N",
+            metavar='VALUE',
+            dest='name_format',
+            nargs='?',
+            default="tile_%02X.png"
+        )
+
+    # -------------------------------------------------------------------------
+    def processParsedOptions(self, options):
+        if options.output_path is None:
+            options.output = sys.stdout
+        else:
+            options.output = open(options.output_path, "w")
+        return options
+
+    # -------------------------------------------------------------------------
+    def parseArgs(self):
+        # ----------------------------------------------------------------------
+        class _Options(object):
+            # ------------------------------------------------------------------
+            def __init__(self, base):
+                self.__dict__.update(base.__dict__)
+            # ------------------------------------------------------------------
+            def write(self, data):
+                if type(data) is str:
+                    self.output.buffer.write(data.encode("utf8"))
+                else:
+                    self.output.buffer.write(data)
+
+        return _Options(self.processParsedOptions(
+            argparse.ArgumentParser.parse_args(self)
+        ))
+
+# ------------------------------------------------------------------------------
+def getArgumentParser():
+    return ArgumentParser(
+        prog=os.path.basename(__file__),
+        description="""
+            Converts a PNG image into eagitexi texture image file.
+        """
+    )
+# ------------------------------------------------------------------------------
+# PILPngImageAdapter
+# ------------------------------------------------------------------------------
+class PILPngImageAdapter(object):
+    # -------------------------------------------------------------------------
+    def __init__(self, img):
+        self._img = img
+        self._has_palette = False
+
+        has_transparency = "transparency" in self._img.info
+        has_alpha = False
+        try:
+            for e in self._img.getdata(band=3):
+                if e != 255:
+                    has_alpha = True
+                    break
+        except:
+            pass
+
+        mode = self._img.mode
+
+        if mode == "RGBA":
+            self._channels = 4 if has_alpha else 3
+            self._format = "rgba" if has_alpha else "rgb"
+        if mode == "RGB":
+            self._channels = 3
+            self._format = "rgb"
+        if mode in ["L", "1"]:
+            self._channels = 1
+            self._format = "red"
+        if mode == "P":
+            self._has_palette = True
+            pmode = self._img.palette.mode
+            if pmode in["RGBA", "RGB"]:
+                self._channels = 4 if has_transparency else 3
+                self._format = "rgba" if has_transparency else "rgb"
+            if pmode in ["L", "1"]:
+                self._channels = 1
+                self._format = "red"
+
+    # -------------------------------------------------------------------------
+    def width(self):
+        return self._img.width
+
+    # -------------------------------------------------------------------------
+    def height(self):
+        return self._img.height
+
+    # -------------------------------------------------------------------------
+    def channels(self):
+        return self._channels
+
+    # -------------------------------------------------------------------------
+    def format(self):
+        return self._format
+
+    # -------------------------------------------------------------------------
+    def read_pixels(self):
+        nc = self.channels()
+        mode = self._img.mode
+        if mode == "P":
+            p = {i:c for c,i in self._img.palette.colors.items()}
+            prev = p[0]
+            for i in range(256):
+                try:
+                    prev = p[i]
+                except KeyError:
+                    p[i] = prev
+
+            transparency = self._img.info.get("transparency")
+            if transparency:
+                for i, a in zip(range(len(transparency)), transparency):
+                    r,g,b = p[i]
+                    p[i] = (r,g,b,a)
+
+            for i in self._img.getdata():
+                e = p[i]
+                yield tuple([e[c] for c in range(nc)])
+        elif mode in ["L", "1"]:
+            for e in self._img.getdata():
+                yield (e, )
+        else:
+            for e in self._img.getdata():
+                yield tuple([e[c] for c in range(nc)])
+
+    # -------------------------------------------------------------------------
+    def pixels(self):
+        x = 0
+        y = 0
+        for pix in self.read_pixels():
+            yield x, y, pix
+            x += 1
+            if x >= self.width():
+                x = 0
+                y += 1
+
+    # -------------------------------------------------------------------------
+    def elements(self, options):
+        for x, y, pix in self.pixels():
+            yield x, y, pix[options.channel] >= options.threshold
+
+# ------------------------------------------------------------------------------
+class PngImage(object):
+    # -------------------------------------------------------------------------
+    def __init__(self, options, input_path):
+        self._delegate = None
+        try:
+            import PIL.Image
+            png = PIL.Image.open(input_path)
+            png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+            self._delegate = PILPngImageAdapter(png)
+        except: raise
+
+        assert self._delegate is not None
+
+    # -------------------------------------------------------------------------
+    def width(self):
+        return self._delegate.width()
+
+    # -------------------------------------------------------------------------
+    def height(self):
+        return self._delegate.height()
+
+    # -------------------------------------------------------------------------
+    def channels(self):
+        return self._delegate.channels()
+
+    # -------------------------------------------------------------------------
+    def data_type(self):
+        return self._delegate.data_type()
+
+    # -------------------------------------------------------------------------
+    def format(self):
+        return self._delegate.format()
+
+    # -------------------------------------------------------------------------
+    def rows(self, options):
+        result = []
+        row = None
+        for x, y, v in self._delegate.elements(options):
+            if x == 0:
+                if row is not None:
+                    yield row
+                row = []
+            row.append(v)
+        if row is not None:
+            yield row
+
+    # -------------------------------------------------------------------------
+    def transition_index(self, k):
+        i = 0x00
+        if k[1,1]:
+            i = 0x10
+        elif k[1,0] or k[0,1] or k[2,1] or k[1,2]:
+            if k[1,0]:
+                i |= 0x01
+            if k[0,1]:
+                i |= 0x02
+            if k[2,1]:
+                i |= 0x04
+            if k[1,2]:
+                i |= 0x08
+        elif k[0,0] or k[2,0] or k[0,2] or k[2,2]:
+            i |= 0x10
+            if k[0,0]:
+                i |= 0x01
+            if k[2,0]:
+                i |= 0x02
+            if k[0,2]:
+                i |= 0x04
+            if k[2,2]:
+                i |= 0x08
+
+        return i
+
+    # -------------------------------------------------------------------------
+    def transitions(self, options):
+        m = numpy.array([numpy.array(r) for r in self.rows(options)])
+        m = m.transpose()
+        m = numpy.pad(m, 1, mode='wrap')
+
+        w, h = self.width(), self.height()
+        return numpy.array(
+            [numpy.array([self.transition_index(m[x:x+3, y:y+3])
+                for x in range(w)]) for y in range(h)])
+
+# ------------------------------------------------------------------------------
+def convert_html(options):
+    options.write('<html>\n')
+    options.write('<head>\n')
+    options.write('<style>\n')
+    options.write('body {background-color: black;}\n')
+    options.write('</style>\n')
+    options.write('</head>\n')
+    options.write('<body>\n')
+    for image_path in options.input_paths:
+        options.write('<table class="grid">\n')
+        image = PngImage(options, image_path)
+        for row in image.transitions(options):
+            options.write('<tr class="row">\n')
+            for idx in row:
+                options.write('<td class="cell">\n')
+                options.write('<img src="%s" alt="%d"/>\n' % ((options.name_format % idx), idx))
+                options.write('</td>\n')
+            options.write('</tr>\n')
+        options.write('</table>\n')
+
+    options.write('</body>\n')
+    options.write('</html>\n')
+
+# ------------------------------------------------------------------------------
+def convert_ascii(options):
+    for image_path in options.input_paths:
+        image = PngImage(options, image_path)
+        for row in image.transitions(options):
+            options.write(str().join(("%2d" % x) for x in row))
+            options.write("\n")
+
+# ------------------------------------------------------------------------------
+def convert_orig(options):
+    for image_path in options.input_paths:
+        image = PngImage(options, image_path)
+        options.write("┌" + "──"*image.width() + "┐\n")
+        for row in image.rows(options):
+            options.write("│"+str().join("▓▓" if v else "  " for v in row)+"│\n")
+        options.write("└" + "──"*image.width() + "┘\n")
+
+# ------------------------------------------------------------------------------
+def convert(options):
+    if options.output_type == "html":
+        convert_html(options)
+    elif options.output_type == "ascii":
+        convert_ascii(options)
+    else:
+        convert_orig(options)
+
+# ------------------------------------------------------------------------------
+def main():
+    try:
+        options = getArgumentParser().parseArgs()
+        convert(options)
+        return 0
+    except Exception as error:
+        print(type(error), error)
+        try: os.remove(options.output_path)
+        except: pass
+        raise
+        return 1
+
+# ------------------------------------------------------------------------------
+if __name__ == '__main__':
+    sys.exit(main())
