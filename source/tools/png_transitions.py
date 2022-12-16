@@ -6,6 +6,7 @@
 
 import os
 import sys
+import zlib
 import numpy
 import argparse
 
@@ -46,8 +47,8 @@ class ArgumentParser(argparse.ArgumentParser):
             metavar='TYPE',
             dest='output_type',
             nargs='?',
-            choices=["ascii", "html", "orig"],
-            default="ascii"
+            choices=["eagitexi", "eagitex", "ascii", "html", "orig"],
+            default="eagitexi"
         )
 
         self.add_argument(
@@ -133,22 +134,17 @@ class PILPngImageAdapter(object):
 
         if mode == "RGBA":
             self._channels = 4 if has_alpha else 3
-            self._format = "rgba" if has_alpha else "rgb"
         if mode == "RGB":
             self._channels = 3
-            self._format = "rgb"
         if mode in ["L", "1"]:
             self._channels = 1
-            self._format = "red"
         if mode == "P":
             self._has_palette = True
             pmode = self._img.palette.mode
             if pmode in["RGBA", "RGB"]:
                 self._channels = 4 if has_transparency else 3
-                self._format = "rgba" if has_transparency else "rgb"
             if pmode in ["L", "1"]:
                 self._channels = 1
-                self._format = "red"
 
     # -------------------------------------------------------------------------
     def width(self):
@@ -163,8 +159,9 @@ class PILPngImageAdapter(object):
         return self._channels
 
     # -------------------------------------------------------------------------
-    def format(self):
-        return self._format
+    def same_format_as(self, that):
+        return (self.width() == that.width()) and \
+                (self.height() == that.height())
 
     # -------------------------------------------------------------------------
     def read_pixels(self):
@@ -238,14 +235,6 @@ class PngImage(object):
         return self._delegate.channels()
 
     # -------------------------------------------------------------------------
-    def data_type(self):
-        return self._delegate.data_type()
-
-    # -------------------------------------------------------------------------
-    def format(self):
-        return self._delegate.format()
-
-    # -------------------------------------------------------------------------
     def rows(self, options):
         result = []
         row = None
@@ -296,6 +285,52 @@ class PngImage(object):
             [numpy.array([self.transition_index(m[x:x+3, y:y+3])
                 for x in range(w)]) for y in range(h)])
 
+    # -------------------------------------------------------------------------
+    def chunks(self, options):
+        for row in self.transitions(options):
+            yield bytes([e for e in row])
+
+# ------------------------------------------------------------------------------
+def convert_eagitexi(options):
+    zobj = zlib.compressobj(zlib.Z_BEST_COMPRESSION)
+    def _append(img):
+        for chunk in img.chunks(options):
+            compressed = zobj.compress(chunk)
+            if compressed:
+                options.write(compressed)
+
+    image0 = PngImage(options, options.input_paths[0])
+    if options.output_type == "eagitex":
+        options.write('{"levels":1\n')
+    else:
+        options.write('{"level":1\n')
+    options.write(',"width":%d\n' % image0.width())
+    options.write(',"height":%d\n' % image0.height())
+    if(len(options.input_paths) > 1):
+        options.write(',"depth":%d\n' % len(options.input_paths))
+    options.write(',"channels":1\n')
+    options.write(',"data_type":"unsigned_byte"\n')
+    options.write(',"format":"red"\n')
+    options.write(',"iformat":"r8"\n')
+    options.write(',"min_filter":"nearest"')
+    options.write(',"mag_filter":"nearest"')
+    options.write(',"wrap_s":"repeat"')
+    options.write(',"wrap_t":"repeat"')
+    if(len(options.input_paths) > 1):
+        options.write(',"wrap_r":"repeat"')
+    options.write(',"data_filter":"zlib"')
+    options.write('}')
+    _append(image0)
+
+    for image_path in options.input_paths[1:]:
+        image = PngImage(options, image_path)
+        assert image.same_format_as(image0)
+        _append(image)
+
+    compressed = zobj.flush()
+    if compressed:
+        options.write(compressed)
+
 # ------------------------------------------------------------------------------
 def convert_html(options):
     options.write('<html>\n')
@@ -325,7 +360,7 @@ def convert_ascii(options):
     for image_path in options.input_paths:
         image = PngImage(options, image_path)
         for row in image.transitions(options):
-            options.write(str().join(("%2d" % x) for x in row))
+            options.write(str().join(("%2X" % x) for x in row))
             options.write("\n")
 
 # ------------------------------------------------------------------------------
@@ -339,7 +374,9 @@ def convert_orig(options):
 
 # ------------------------------------------------------------------------------
 def convert(options):
-    if options.output_type == "html":
+    if options.output_type in ["eagitexi", "eagitex"]:
+        convert_eagitexi(options)
+    elif options.output_type == "html":
         convert_html(options)
     elif options.output_type == "ascii":
         convert_ascii(options)
