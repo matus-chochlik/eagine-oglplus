@@ -6,6 +6,8 @@
 
 import os
 import sys
+import zlib
+import numpy
 import argparse
 
 # ------------------------------------------------------------------------------
@@ -20,20 +22,6 @@ class ArgumentParser(argparse.ArgumentParser):
                 self.error("`%s' is not a positive integer value" % str(x))
 
         argparse.ArgumentParser.__init__(self, **kw)
-
-        self.add_argument(
-            "--elements", "-E",
-            dest='write_elements',
-            action="store_true",
-            default=False
-        )
-
-        self.add_argument(
-            "--gzip", "-z",
-            dest='gzip_data',
-            action="store_true",
-            default=False
-        )
 
         self.add_argument(
             "--input", "-i",
@@ -55,78 +43,42 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
-            "--level", "-l",
-            metavar='INTEGER',
-            dest='image_level',
+            "--output-type", "-T",
+            metavar='TYPE',
+            dest='output_type',
+            nargs='?',
+            choices=["eagitexi", "eagitex", "ascii", "html", "orig"],
+            default="eagitexi"
+        )
+
+        self.add_argument(
+            "--channel", "-c",
+            metavar='VALUE',
+            dest='channel',
             nargs='?',
             type=_positive_int,
             default=0
         )
 
         self.add_argument(
-            "--x-offs", "-X",
-            metavar='INTEGER',
-            dest='x_offs',
+            "--threshold", "-t",
+            metavar='VALUE',
+            dest='threshold',
             nargs='?',
             type=_positive_int,
-            default=0
+            default=128
         )
 
         self.add_argument(
-            "--y-offs", "-Y",
-            metavar='INTEGER',
-            dest='y_offs',
+            "--name-format", "-N",
+            metavar='VALUE',
+            dest='name_format',
             nargs='?',
-            type=_positive_int,
-            default=0
-        )
-
-        self.add_argument(
-            "--z-offs", "-Z",
-            metavar='INTEGER',
-            dest='z_offs',
-            nargs='?',
-            type=_positive_int,
-            default=0
-        )
-
-        self.add_argument(
-            "--eagitex",
-            dest='eagitex',
-            action='store_true',
-            default=False
-        )
-
-        self.add_argument(
-            "--flip-y",
-            dest='flip_y',
-            action='store_true',
-            default=False
-        )
-
-        self.add_argument(
-            "--cube-map",
-            dest='cube_map',
-            action='store_true',
-            default=False
-        )
-
-        self.add_argument(
-            "--tex-param", "-P",
-            metavar=('NAME', 'VALUE'),
-            dest='texture_parameters',
-            nargs=2,
-            action='append',
-            default=[]
+            default="tile_%02X.png"
         )
 
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
-        if options.cube_map:
-            options.flip_y = True
-            if len(options.input_paths) % 6 != 0:
-                raise argparse.ArgumentTypeError("invalid number of cube-map images")
-
         if options.output_path is None:
             options.output = sys.stdout
         else:
@@ -167,7 +119,6 @@ class PILPngImageAdapter(object):
     def __init__(self, img):
         self._img = img
         self._has_palette = False
-        self._data_type = "unsigned_byte"
 
         has_transparency = "transparency" in self._img.info
         has_alpha = False
@@ -183,27 +134,17 @@ class PILPngImageAdapter(object):
 
         if mode == "RGBA":
             self._channels = 4 if has_alpha else 3
-            self._format = "rgba" if has_alpha else "rgb"
-            self._iformat = "rgba8" if has_alpha else "rgb8"
         if mode == "RGB":
             self._channels = 3
-            self._format = "rgb"
-            self._iformat = "rgb8"
         if mode in ["L", "1"]:
             self._channels = 1
-            self._format = "red"
-            self._iformat = "r8"
         if mode == "P":
             self._has_palette = True
             pmode = self._img.palette.mode
             if pmode in["RGBA", "RGB"]:
                 self._channels = 4 if has_transparency else 3
-                self._format = "rgba" if has_transparency else "rgb"
-                self._iformat = "rgba8" if has_transparency else "rgb8"
             if pmode in ["L", "1"]:
                 self._channels = 1
-                self._format = "red"
-                self._iformat = "r8"
 
     # -------------------------------------------------------------------------
     def width(self):
@@ -218,23 +159,14 @@ class PILPngImageAdapter(object):
         return self._channels
 
     # -------------------------------------------------------------------------
-    def data_type(self):
-        return self._data_type
+    def same_format_as(self, that):
+        return (self.width() == that.width()) and \
+                (self.height() == that.height())
 
     # -------------------------------------------------------------------------
-    def format(self):
-        return self._format
-
-    # -------------------------------------------------------------------------
-    def iformat(self):
-        return self._iformat
-
-    # -------------------------------------------------------------------------
-    def chunks(self):
+    def read_pixels(self):
         nc = self.channels()
-        chunk_size = 64 * 1024
         mode = self._img.mode
-        temp = bytearray()
         if mode == "P":
             p = {i:c for c,i in self._img.palette.colors.items()}
             prev = p[0]
@@ -252,27 +184,29 @@ class PILPngImageAdapter(object):
 
             for i in self._img.getdata():
                 e = p[i]
-                for c in range(nc):
-                    temp += bytes([e[c]])
-                if len(temp) >= chunk_size:
-                    yield temp
-                    temp = bytearray()
-            yield temp
+                yield tuple([e[c] for c in range(nc)])
         elif mode in ["L", "1"]:
             for e in self._img.getdata():
-                temp += bytes([e])
-                if len(temp) >= chunk_size:
-                    yield temp
-                    temp = bytearray()
-            yield temp
+                yield (e, )
         else:
             for e in self._img.getdata():
-                for c in range(nc):
-                    temp += bytes([e[c]])
-                if len(temp) >= chunk_size:
-                    yield temp
-                    temp = bytearray()
-            yield temp
+                yield tuple([e[c] for c in range(nc)])
+
+    # -------------------------------------------------------------------------
+    def pixels(self):
+        x = 0
+        y = 0
+        for pix in self.read_pixels():
+            yield x, y, pix
+            x += 1
+            if x >= self.width():
+                x = 0
+                y += 1
+
+    # -------------------------------------------------------------------------
+    def elements(self, options):
+        for x, y, pix in self.pixels():
+            yield x, y, pix[options.channel] >= options.threshold
 
 # ------------------------------------------------------------------------------
 class PngImage(object):
@@ -282,8 +216,7 @@ class PngImage(object):
         try:
             import PIL.Image
             png = PIL.Image.open(input_path)
-            if not options.flip_y: # Yes, not
-                png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+            png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
             self._delegate = PILPngImageAdapter(png)
         except: raise
 
@@ -302,110 +235,153 @@ class PngImage(object):
         return self._delegate.channels()
 
     # -------------------------------------------------------------------------
-    def data_type(self):
-        return self._delegate.data_type()
+    def rows(self, options):
+        result = []
+        row = None
+        for x, y, v in self._delegate.elements(options):
+            if x == 0:
+                if row is not None:
+                    yield row
+                row = []
+            row.append(v)
+        if row is not None:
+            yield row
 
     # -------------------------------------------------------------------------
-    def format(self):
-        return self._delegate.format()
+    def transition_index(self, k):
+        i = 0x00
+        if k[1,1]:
+            i = 0x10
+        elif k[1,0] or k[0,1] or k[2,1] or k[1,2]:
+            if k[1,0]:
+                i |= 0x01
+            if k[0,1]:
+                i |= 0x02
+            if k[2,1]:
+                i |= 0x04
+            if k[1,2]:
+                i |= 0x08
+        elif k[0,0] or k[2,0] or k[0,2] or k[2,2]:
+            i |= 0x10
+            if k[0,0]:
+                i |= 0x01
+            if k[2,0]:
+                i |= 0x02
+            if k[0,2]:
+                i |= 0x04
+            if k[2,2]:
+                i |= 0x08
+
+        return i
 
     # -------------------------------------------------------------------------
-    def iformat(self):
-        return self._delegate.iformat()
+    def transitions(self, options):
+        m = numpy.array([numpy.array(r) for r in self.rows(options)])
+        m = m.transpose()
+        m = numpy.pad(m, 1, mode='wrap')
+
+        w, h = self.width(), self.height()
+        return numpy.array(
+            [numpy.array([self.transition_index(m[x:x+3, y:y+3])
+                for x in range(w)]) for y in range(h)])
 
     # -------------------------------------------------------------------------
-    def same_format_as(self, that):
-        return (self.data_type() == that.data_type()) and\
-            (self.channels() == that.channels()) and\
-            (self.iformat() == that.iformat())
-
-    # -------------------------------------------------------------------------
-    def elements(self):
-        return self._delegate.elements()
-
-    # -------------------------------------------------------------------------
-    def chunks(self):
-        return self._delegate.chunks()
-
-    # -------------------------------------------------------------------------
-    def data_filter(self, options):
-        if options.gzip_data:
-            try:
-                import zlib
-                return "zlib"
-            except:
-                pass
-        return "none"
+    def chunks(self, options):
+        for row in self.transitions(options):
+            yield bytes([e for e in row])
 
 # ------------------------------------------------------------------------------
-def convert(options):
+def convert_eagitexi(options):
+    zobj = zlib.compressobj(zlib.Z_BEST_COMPRESSION)
+    def _append(img):
+        for chunk in img.chunks(options):
+            compressed = zobj.compress(chunk)
+            if compressed:
+                options.write(compressed)
+
     image0 = PngImage(options, options.input_paths[0])
-    if options.eagitex:
+    if options.output_type == "eagitex":
         options.write('{"levels":1\n')
     else:
-        options.write('{"level":%d\n' % options.image_level)
-    if options.x_offs > 0:
-        options.write(',"x_offs":%d\n' % options.x_offs)
-    if options.y_offs > 0:
-        options.write(',"y_offs":%d\n' % options.y_offs)
-    if options.z_offs > 0:
-        options.write(',"z_offs":%d\n' % options.z_offs)
+        options.write('{"level":1\n')
     options.write(',"width":%d\n' % image0.width())
     options.write(',"height":%d\n' % image0.height())
     if(len(options.input_paths) > 1):
         options.write(',"depth":%d\n' % len(options.input_paths))
-    options.write(',"channels":%d\n' % image0.channels())
-    options.write(',"data_type":"%s"\n' % image0.data_type())
-    options.write(',"format":"%s"\n' % image0.format())
-    options.write(',"iformat":"%s"\n' % image0.iformat())
-
-    for name, value in options.texture_parameters:
-        try:
-            options.write(',"%s":%d\n' % (name, int(value)))
-        except ValueError:
-            try:
-                options.write(',"%s":%f\n' % (name, float(value)))
-            except ValueError:
-                options.write(',"%s":"%s"\n' % (name, value))
-
-    def _images(image0, options):
-        yield image0
-        for input_path in options.input_paths[1:]:
-            image = PngImage(options, input_path)
-            assert image.same_format_as(image0)
-            yield image
-
-    if options.write_elements:
-        options.write(',"data":[')
-        first_element = True
-        for img in _images(image0, options):
-            for e in img.elements():
-                if first_element:
-                    first_element = False
-                else:
-                    options.write(",")
-                options.write("%d" % e)
-        options.write(']')
-    else:
-        options.write(',"data_filter":"%s"' % image0.data_filter(options))
+    options.write(',"channels":1\n')
+    options.write(',"data_type":"unsigned_byte"\n')
+    options.write(',"format":"red"\n')
+    options.write(',"iformat":"r8"\n')
+    options.write(',"min_filter":"nearest"')
+    options.write(',"mag_filter":"nearest"')
+    options.write(',"wrap_s":"repeat"')
+    options.write(',"wrap_t":"repeat"')
+    if(len(options.input_paths) > 1):
+        options.write(',"wrap_r":"repeat"')
+    options.write(',"data_filter":"zlib"')
     options.write('}')
-    if not options.write_elements:
-        try:
-            assert options.gzip_data
-            import zlib
-            zobj = zlib.compressobj(zlib.Z_BEST_COMPRESSION)
-            for img in _images(image0, options):
-                for chunk in img.chunks():
-                    compressed = zobj.compress(chunk)
-                    if compressed:
-                        options.write(compressed)
-            compressed = zobj.flush()
-            if compressed:
-                options.write(compressed)
-        except:
-            for img in _images(image0, options):
-                for chunk in img.chunks():
-                    options.write(chunk)
+    _append(image0)
+
+    for image_path in options.input_paths[1:]:
+        image = PngImage(options, image_path)
+        assert image.same_format_as(image0)
+        _append(image)
+
+    compressed = zobj.flush()
+    if compressed:
+        options.write(compressed)
+
+# ------------------------------------------------------------------------------
+def convert_html(options):
+    options.write('<html>\n')
+    options.write('<head>\n')
+    options.write('<style>\n')
+    options.write('body {background-color: black;}\n')
+    options.write('</style>\n')
+    options.write('</head>\n')
+    options.write('<body>\n')
+    for image_path in options.input_paths:
+        options.write('<table class="grid">\n')
+        image = PngImage(options, image_path)
+        for row in image.transitions(options):
+            options.write('<tr class="row">\n')
+            for idx in row:
+                options.write('<td class="cell">\n')
+                options.write('<img src="%s" alt="%d"/>\n' % ((options.name_format % idx), idx))
+                options.write('</td>\n')
+            options.write('</tr>\n')
+        options.write('</table>\n')
+
+    options.write('</body>\n')
+    options.write('</html>\n')
+
+# ------------------------------------------------------------------------------
+def convert_ascii(options):
+    for image_path in options.input_paths:
+        image = PngImage(options, image_path)
+        for row in image.transitions(options):
+            options.write(str().join(("%2X" % x) for x in row))
+            options.write("\n")
+
+# ------------------------------------------------------------------------------
+def convert_orig(options):
+    for image_path in options.input_paths:
+        image = PngImage(options, image_path)
+        options.write("┌" + "──"*image.width() + "┐\n")
+        for row in image.rows(options):
+            options.write("│"+str().join("▓▓" if v else "  " for v in row)+"│\n")
+        options.write("└" + "──"*image.width() + "┘\n")
+
+# ------------------------------------------------------------------------------
+def convert(options):
+    if options.output_type in ["eagitexi", "eagitex"]:
+        convert_eagitexi(options)
+    elif options.output_type == "html":
+        convert_html(options)
+    elif options.output_type == "ascii":
+        convert_ascii(options)
+    else:
+        convert_orig(options)
 
 # ------------------------------------------------------------------------------
 def main():
