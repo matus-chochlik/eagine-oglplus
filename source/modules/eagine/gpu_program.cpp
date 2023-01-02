@@ -28,7 +28,7 @@ export class program_input_bindings {
 public:
     /// @brief Indicates is this instance of bindings is initialized.
     auto is_initialized() const noexcept -> bool {
-        return !_mapping.empty();
+        return not _mapping.empty();
     }
 
     /// @brief Indicates is this instance of bindings is initialized.

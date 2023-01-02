@@ -120,7 +120,7 @@ public:
             auto operator()(X&&... x) const noexcept
               -> std::array<T, sizeof...(X)>
                 requires(
-                  (sizeof...(X) > 0) && ... &&
+                  (sizeof...(X) > 0) and ... and
                   std::is_convertible_v<std::decay_t<X>, T>)
             {
                 return {{T(std::forward<X>(x))...}};
@@ -140,7 +140,7 @@ public:
 
         template <typename... X>
         auto operator()(X&&... x) const noexcept -> tvec<T, N>
-            requires((sizeof...(X) == N) && ... && std::is_convertible_v<X, T>)
+            requires((sizeof...(X) == N) and ... and std::is_convertible_v<X, T>)
         {
             return tvec<T, N>(T(std::forward<X>(x))...);
         }
@@ -153,7 +153,7 @@ public:
         template <typename... X>
         auto operator()(X&&... x) const noexcept -> tmat<T, C, R>
             requires(
-              (sizeof...(X) == C * R) && ... && std::is_convertible_v<X, T>)
+              (sizeof...(X) == C * R) and ... and std::is_convertible_v<X, T>)
         {
             return tmat<T, C, R>(T(std::forward<X>(x))...);
         }

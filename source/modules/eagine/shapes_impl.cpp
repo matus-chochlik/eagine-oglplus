@@ -147,7 +147,7 @@ auto make_default_vertex_attrib_bindings(
 //------------------------------------------------------------------------------
 auto geometry::operator=(geometry&& that) noexcept -> geometry& {
     assert(_ops.empty());
-    assert(!_vao);
+    assert(not _vao);
     _instance_count = that._instance_count;
     _ops = std::move(that._ops);
     _vao = std::move(that._vao);

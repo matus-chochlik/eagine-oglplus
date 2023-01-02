@@ -50,7 +50,7 @@ export struct texture_build_info {
     }
 
     auto is_complete() const noexcept -> bool {
-        return width && data_type && format && iformat;
+        return width and data_type and format and iformat;
     }
 
     template <typename T>
@@ -222,7 +222,7 @@ auto texture_build_info::texture_storage1d(
                        0, // border
                        extract(format),
                        extract(data_type),
-                       {}) &&
+                       {}) and
                      result;
             level_width = std::max(level_width / 2, 1);
         }
@@ -264,7 +264,7 @@ auto texture_build_info::texture_storage2d(
                        0, // border
                        extract(format),
                        extract(data_type),
-                       {}) &&
+                       {}) and
                      result;
             level_width = std::max(level_width / 2, 1);
             level_height = std::max(level_height / 2, 1);
@@ -311,7 +311,7 @@ auto texture_build_info::texture_storage3d(
                        0, // border
                        extract(format),
                        extract(data_type),
-                       {}) &&
+                       {}) and
                      result;
             level_width = std::max(level_width / 2, 1);
             level_height = std::max(level_height / 2, 1);
@@ -450,7 +450,7 @@ void texture_build_info::_add_parameter(
   const std::optional<V>& value,
   const basic_gl_api<T>& glapi,
   bool& result) const noexcept {
-    result = _set_parameter(tex, target, parameter, value, glapi) && result;
+    result = _set_parameter(tex, target, parameter, value, glapi) and result;
 }
 //------------------------------------------------------------------------------
 template <typename T>

@@ -28,7 +28,7 @@ class prog_var_location {
 
 public:
     /// @brief Default constructor.
-    /// @post !is_active()
+    /// @post not is_active()
     constexpr prog_var_location() noexcept = default;
 
     /// @brief Explicit location initialization.
