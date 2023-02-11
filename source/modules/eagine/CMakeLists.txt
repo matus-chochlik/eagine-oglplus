@@ -222,12 +222,12 @@ eagine_add_module(
 		shapes
 		resources
 	SOURCES
-		constants_impl
-		api_impl
-		camera_impl
-		shapes_impl
-		framebuffer_impl
-		resources_impl
+		constants
+		api
+		camera
+		shapes
+		framebuffer
+		resources
 	IMPORTS
 		eagine.core.memory
 		eagine.core.string
