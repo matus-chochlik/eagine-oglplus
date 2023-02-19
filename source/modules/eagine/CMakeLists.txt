@@ -240,3 +240,11 @@ target_link_libraries(
 	PUBLIC
 	EAGine::Deps::GLEW
 )
+
+eagine_add_module_tests(
+	eagine.oglplus
+	UNITS
+		constants
+	IMPORTS
+		eagine.core
+)
