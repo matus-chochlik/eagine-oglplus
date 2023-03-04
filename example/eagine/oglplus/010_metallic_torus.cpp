@@ -9,11 +9,7 @@
 import eagine.core;
 import eagine.shapes;
 import eagine.oglplus;
-import <array>;
-import <cmath>;
-import <iostream>;
-import <stdexcept>;
-import <vector>;
+import std;
 
 #include <GLFW/glfw3.h>
 

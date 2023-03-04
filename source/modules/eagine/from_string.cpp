@@ -11,7 +11,7 @@ import eagine.core.memory;
 import eagine.core.string;
 import :enum_types;
 import :constants;
-import <optional>;
+import std;
 
 namespace eagine {
 //------------------------------------------------------------------------------

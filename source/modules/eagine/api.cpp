@@ -29,6 +29,7 @@ import :glsl_source;
 import :math;
 import :c_api;
 import :api_traits;
+import std;
 
 namespace eagine::c_api {
 

@@ -11,7 +11,7 @@ module;
 
 module eagine.oglplus;
 import eagine.core.types;
-import <stdexcept>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

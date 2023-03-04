@@ -9,8 +9,7 @@
 import eagine.core;
 import eagine.shapes;
 import eagine.oglplus;
-import <iostream>;
-import <stdexcept>;
+import std;
 
 #include <GLFW/glfw3.h>
 

@@ -8,8 +8,7 @@
 
 import eagine.core;
 import eagine.oglplus;
-import <iostream>;
-import <stdexcept>;
+import std;
 
 #include <GLFW/glfw3.h>
 

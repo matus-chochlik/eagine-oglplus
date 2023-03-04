@@ -9,9 +9,7 @@ module eagine.oglplus;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.c_api;
-import <algorithm>;
-import <numeric>;
-import <vector>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

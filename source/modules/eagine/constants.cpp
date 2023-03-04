@@ -11,9 +11,7 @@ import :enum_types;
 import :objects;
 import :math;
 import :c_api;
-#include <array>
-#include <optional>
-#include <type_traits>
+import std;
 
 namespace eagine {
 //------------------------------------------------------------------------------

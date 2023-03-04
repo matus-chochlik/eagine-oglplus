@@ -16,7 +16,7 @@ import eagine.core.c_api;
 import :config;
 import :enum_types;
 import :math;
-import <type_traits>;
+import std;
 
 namespace eagine::oglplus {
 export using buffer_data_spec =

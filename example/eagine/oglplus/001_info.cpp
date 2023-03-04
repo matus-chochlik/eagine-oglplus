@@ -9,7 +9,7 @@
 
 import eagine.core;
 import eagine.oglplus;
-import <stdexcept>;
+import std;
 
 #include <GLFW/glfw3.h>
 

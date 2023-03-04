@@ -22,7 +22,7 @@ import :constants;
 import :prog_var_loc;
 import :math;
 import :api;
-import <vector>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

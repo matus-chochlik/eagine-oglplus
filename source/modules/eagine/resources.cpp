@@ -16,9 +16,7 @@ import :config;
 import :objects;
 import :enum_types;
 import :api;
-import <memory>;
-import <optional>;
-import <vector>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

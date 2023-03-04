@@ -11,7 +11,7 @@ module;
 
 export module eagine.oglplus:config;
 import eagine.core.types;
-import <cstdint>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
