@@ -15,7 +15,7 @@ import eagine.core.memory;
 import eagine.core.identifier;
 import eagine.core.c_api;
 import :config;
-import <array>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ class prog_var_location {
 
 public:
     /// @brief Default constructor.
-    /// @post !is_active()
+    /// @post not is_active()
     constexpr prog_var_location() noexcept = default;
 
     /// @brief Explicit location initialization.

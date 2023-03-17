@@ -14,7 +14,7 @@ import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.c_api;
 import :config;
-import <string>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

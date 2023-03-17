@@ -16,7 +16,7 @@ import eagine.core.c_api;
 import :config;
 import :enum_types;
 import :math;
-import <type_traits>;
+import std;
 
 namespace eagine::oglplus {
 export using buffer_data_spec =
@@ -26,13 +26,13 @@ export using buffer_data_spec =
 /// @ingroup gl_api_wrap
 export template <typename T>
 constexpr const bool is_gl_data_type_v =
-  (std::is_same_v<T, gl_types::ubyte_type> ||
-   std::is_same_v<T, gl_types::byte_type> ||
-   std::is_same_v<T, gl_types::ushort_type> ||
-   std::is_same_v<T, gl_types::short_type> ||
-   std::is_same_v<T, gl_types::uint_type> ||
-   std::is_same_v<T, gl_types::int_type> ||
-   std::is_same_v<T, gl_types::float_type> ||
+  (std::is_same_v<T, gl_types::ubyte_type> or
+   std::is_same_v<T, gl_types::byte_type> or
+   std::is_same_v<T, gl_types::ushort_type> or
+   std::is_same_v<T, gl_types::short_type> or
+   std::is_same_v<T, gl_types::uint_type> or
+   std::is_same_v<T, gl_types::int_type> or
+   std::is_same_v<T, gl_types::float_type> or
    std::is_same_v<T, gl_types::double_type>);
 //------------------------------------------------------------------------------
 // data_type_of
@@ -161,7 +161,7 @@ constexpr auto sl_data_type_of() noexcept -> sl_data_type {
 export template <typename T>
 constexpr auto pixel_format_of(const std::type_identity<T>) noexcept
   -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and std::is_integral_v<T>)
 {
 #ifdef GL_RED_INTEGER
     return GL_RED_INTEGER;
@@ -173,7 +173,7 @@ constexpr auto pixel_format_of(const std::type_identity<T>) noexcept
 export template <typename T>
 constexpr auto pixel_format_of(const std::type_identity<T>) noexcept
   -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && !std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and not std::is_integral_v<T>)
 {
 #ifdef GL_RED
     return GL_RED;
@@ -185,7 +185,7 @@ constexpr auto pixel_format_of(const std::type_identity<T>) noexcept
 export template <typename T, bool V>
 constexpr auto pixel_format_of(
   const std::type_identity<vector<T, 2, V>>) noexcept -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and std::is_integral_v<T>)
 {
 #ifdef GL_RG_INTEGER
     return GL_RG_INTEGER;
@@ -197,7 +197,7 @@ constexpr auto pixel_format_of(
 export template <typename T, bool V>
 constexpr auto pixel_format_of(
   const std::type_identity<vector<T, 2, V>>) noexcept -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && !std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and not std::is_integral_v<T>)
 {
 #ifdef GL_RG
     return GL_RG;
@@ -209,7 +209,7 @@ constexpr auto pixel_format_of(
 export template <typename T, bool V>
 constexpr auto pixel_format_of(
   const std::type_identity<vector<T, 3, V>>) noexcept -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and std::is_integral_v<T>)
 {
 #ifdef GL_RGB_INTEGER
     return GL_RGB_INTEGER;
@@ -221,7 +221,7 @@ constexpr auto pixel_format_of(
 export template <typename T, bool V>
 constexpr auto pixel_format_of(
   const std::type_identity<vector<T, 3, V>>) noexcept -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && !std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and not std::is_integral_v<T>)
 {
 #ifdef GL_RGB
     return GL_RGB;
@@ -233,7 +233,7 @@ constexpr auto pixel_format_of(
 export template <typename T, bool V>
 constexpr auto pixel_format_of(
   const std::type_identity<vector<T, 4, V>>) noexcept -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and std::is_integral_v<T>)
 {
 #ifdef GL_RGBA_INTEGER
     return GL_RGBA_INTEGER;
@@ -245,7 +245,7 @@ constexpr auto pixel_format_of(
 export template <typename T, bool V>
 constexpr auto pixel_format_of(
   const std::type_identity<vector<T, 4, V>>) noexcept -> gl_types::enum_type
-    requires(is_gl_data_type_v<T> && !std::is_integral_v<T>)
+    requires(is_gl_data_type_v<T> and not std::is_integral_v<T>)
 {
 #ifdef GL_RGBA
     return GL_RGBA;

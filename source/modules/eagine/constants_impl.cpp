@@ -13,6 +13,7 @@ module eagine.oglplus;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.container;
+import std;
 
 namespace eagine {
 //------------------------------------------------------------------------------
@@ -405,7 +406,7 @@ auto map_gl_enum_by_name() noexcept {
 //------------------------------------------------------------------------------
 auto gl_enum_by_name(const string_view name) noexcept
   -> std::optional<gl_types::enum_type> {
-    if(!name.empty()) [[likely]] {
+    if(not name.empty()) [[likely]] {
         static const auto enums{map_gl_enum_by_name()};
         if(auto found{enums.find(name)}) [[likely]] {
             return {extract(found)};

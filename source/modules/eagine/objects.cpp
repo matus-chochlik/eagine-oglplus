@@ -10,6 +10,7 @@ import eagine.core.types;
 import eagine.core.identifier;
 import eagine.core.c_api;
 import :config;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

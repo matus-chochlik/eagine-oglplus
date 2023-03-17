@@ -14,6 +14,7 @@ import eagine.core.utility;
 import eagine.core.runtime;
 import eagine.core.reflection;
 import eagine.core.value_tree;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
@@ -91,7 +92,7 @@ private:
 //------------------------------------------------------------------------------
 void texture_builder::unparsed_data(
   span<const memory::const_block> data) noexcept {
-    if(!_decompression.is_initialized()) {
+    if(not _decompression.is_initialized()) {
         init_decompression(data_compression_method::none);
     }
     if(_success) {
@@ -125,9 +126,9 @@ auto texture_builder::finish() noexcept -> bool {
     if(_success) {
         _decompression.finish();
         if(_info.is_complete()) {
-            _success = _success && handle_texture_storage();
-            if(_success && !_pixel_data.empty()) {
-                _success = _success && handle_texture_image();
+            _success = _success and handle_texture_storage();
+            if(_success and not _pixel_data.empty()) {
+                _success = _success and handle_texture_image();
             }
         } else {
             _success = false;

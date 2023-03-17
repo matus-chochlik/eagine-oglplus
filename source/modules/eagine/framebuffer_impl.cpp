@@ -9,9 +9,7 @@ module eagine.oglplus;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.c_api;
-import <algorithm>;
-import <numeric>;
-import <vector>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
@@ -24,8 +22,8 @@ auto framebuffer_configuration::add_color_attachment(
          _color_attchs.begin(),
          _color_attchs.end(),
          [=](const auto& entry) {
-             return (entry.format == format) && (entry.iformat == iformat) &&
-                    (entry.data_type == data_type) &&
+             return (entry.format == format) and (entry.iformat == iformat) and
+                    (entry.data_type == data_type) and
                     (entry.is_texture == is_texture);
          })};
        pos != _color_attchs.end()) {
@@ -90,10 +88,10 @@ auto framebuffer_configuration::renderbuffer_count() const noexcept
       [](const auto state, const auto& entry) {
           return state + (entry.is_texture ? 0 : entry.count);
       })};
-    if(!_depth_attch.is_texture) {
+    if(not _depth_attch.is_texture) {
         result += _depth_attch.count;
     }
-    if(!_stencil_attch.is_texture) {
+    if(not _stencil_attch.is_texture) {
         result += _stencil_attch.count;
     }
 
@@ -137,7 +135,7 @@ void framebuffer_configuration::_init(
   gl_object_name_vector<texture_tag>& texs,
   const span<const gl_types::enum_type> units) const noexcept {
     texs.resize(integer(texture_count()));
-    if(!texs.empty()) {
+    if(not texs.empty()) {
         const auto& [gl, GL] = _glapi;
         gl.gen_textures(texs);
 
@@ -195,11 +193,11 @@ void framebuffer_configuration::_init(
   gl_object_name_vector<renderbuffer_tag>& rbos) const noexcept {
     rbos.resize(integer(renderbuffer_count()));
     span_size_t i{0};
-    if(!rbos.empty()) {
+    if(not rbos.empty()) {
         const auto& [gl, GL] = _glapi;
         gl.gen_renderbuffers(rbos);
         for(const auto& entry : _color_attchs) {
-            if(!entry.is_texture) {
+            if(not entry.is_texture) {
                 _init_rbo(width, height, rbos, i, entry);
                 gl.framebuffer_renderbuffer(
                   GL.draw_framebuffer,
@@ -210,7 +208,7 @@ void framebuffer_configuration::_init(
             }
         }
         if(_depth_attch.count > 0) {
-            if(!_depth_attch.is_texture) {
+            if(not _depth_attch.is_texture) {
                 _init_rbo(width, height, rbos, i, _depth_attch);
                 gl.framebuffer_renderbuffer(
                   GL.draw_framebuffer,
@@ -221,7 +219,7 @@ void framebuffer_configuration::_init(
             }
         }
         if(_stencil_attch.count > 0) {
-            if(!_stencil_attch.is_texture) {
+            if(not _stencil_attch.is_texture) {
                 _init_rbo(width, height, rbos, i, _stencil_attch);
                 gl.framebuffer_renderbuffer(
                   GL.draw_framebuffer,
@@ -260,7 +258,7 @@ auto offscreen_framebuffer::resize(
   gl_types::sizei_type height,
   const framebuffer_configuration& config,
   const span<const gl_types::enum_type> tex_units) -> offscreen_framebuffer& {
-    if(_width != width || _height != height) {
+    if(_width != width or _height != height) {
         _width = width;
         _height = height;
 

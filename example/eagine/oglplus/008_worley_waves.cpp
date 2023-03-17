@@ -9,8 +9,7 @@
 import eagine.core;
 import eagine.shapes;
 import eagine.oglplus;
-import <iostream>;
-import <stdexcept>;
+import std;
 
 #include <GLFW/glfw3.h>
 
@@ -211,7 +210,7 @@ static void run_loop(
 
             int new_width, new_height;
             glfwGetWindowSize(window, &new_width, &new_height);
-            if((width != new_width) || (height != new_height)) {
+            if((width != new_width) or (height != new_height)) {
                 width = new_width;
                 height = new_height;
             }
@@ -232,7 +231,7 @@ static void run_loop(
 }
 
 static void init_and_run(eagine::main_ctx& ctx) {
-    if(!glfwInit()) {
+    if(not glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     } else {
         auto ensure_glfw_cleanup = eagine::finally(glfwTerminate);
@@ -256,7 +255,7 @@ static void init_and_run(eagine::main_ctx& ctx) {
         GLFWwindow* window =
           glfwCreateWindow(width, height, "OGLplus example", nullptr, nullptr);
 
-        if(!window) {
+        if(not window) {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);

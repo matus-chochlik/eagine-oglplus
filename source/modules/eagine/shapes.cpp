@@ -22,7 +22,7 @@ import :constants;
 import :prog_var_loc;
 import :math;
 import :api;
-import <vector>;
+import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
@@ -717,7 +717,7 @@ void shape_generator::attrib_setup(
 
     const auto is_integral{is_attrib_integral(vav)};
     const auto is_normalized{is_attrib_normalized(api, vav)};
-    if(is_integral && !is_normalized) [[unlikely]] {
+    if(is_integral and not is_normalized) [[unlikely]] {
         gl.vertex_attrib_ipointer(
           loc,
           limit_cast<gl_types::int_type>(values_per_vertex(vav)),
@@ -1183,7 +1183,7 @@ public:
 
     /// @brief Indicates if this instance of geometry and bindings is initialized.
     auto is_initialized() const noexcept -> bool {
-        return vertex_attrib_bindings::is_initialized() &&
+        return vertex_attrib_bindings::is_initialized() and
                geometry::is_initialized();
     }
 

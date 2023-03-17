@@ -8,6 +8,7 @@
 module;
 
 #include "gl_def.hpp"
+#include <cassert>
 
 export module eagine.oglplus:api;
 import eagine.core.types;
@@ -28,6 +29,7 @@ import :glsl_source;
 import :math;
 import :c_api;
 import :api_traits;
+import std;
 
 namespace eagine::c_api {
 
@@ -37,7 +39,7 @@ struct cast_to_map<const oglplus::gl_types::ubyte_type*, string_view> {
     constexpr auto operator()(size_constant<0> i, P&&... p) const noexcept {
         return trivial_map{}(i, std::forward<P>(p)...)
           .transformed([](auto src, bool valid) {
-              return valid && src
+              return valid and src
                        ? string_view{reinterpret_cast<const char*>(src)}
                        : string_view{};
           });
@@ -254,9 +256,9 @@ public:
           Query query,
           PostParams... post_params) const noexcept
             requires(
-              (true || ... ||
-               c_api::is_enum_class_value_v<QueryClasses, Query>) &&
-              (!std::is_array_v<typename Query::tag_type>))
+              (true or ... or
+               c_api::is_enum_class_value_v<QueryClasses, Query>) and
+              (not std::is_array_v<typename Query::tag_type>))
         {
             using RV = typename Query::tag_type;
             QueryResult result{};
@@ -273,13 +275,12 @@ public:
           PostParams... post_params,
           span<QueryResult> dest) const noexcept
             requires(
-              true || ... || c_api::is_enum_class_value_v<QueryClasses, Query>)
+              true or ... or c_api::is_enum_class_value_v<QueryClasses, Query>)
         {
             if constexpr(std::is_array_v<typename Query::tag_type>) {
-                EAGINE_ASSERT(
-                  dest.size() >= std::extent_v<typename Query::tag_type>);
+                assert(dest.size() >= std::extent_v<typename Query::tag_type>);
             } else {
-                EAGINE_ASSERT(dest.size() > 0);
+                assert(dest.size() > 0);
             }
             return base::operator()(
               pre_params..., enum_type(query), post_params..., dest.data());

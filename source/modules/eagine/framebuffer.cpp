@@ -13,8 +13,7 @@ import :enum_types;
 import :objects;
 import :constants;
 import :api;
-import <algorithm>;
-import <vector>;
+import std;
 
 namespace eagine::oglplus {
 

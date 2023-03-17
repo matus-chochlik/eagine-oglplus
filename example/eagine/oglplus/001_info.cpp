@@ -9,7 +9,7 @@
 
 import eagine.core;
 import eagine.oglplus;
-import <stdexcept>;
+import std;
 
 #include <GLFW/glfw3.h>
 
@@ -56,12 +56,12 @@ static void run(main_ctx& ctx) {
           .print(
             console_entry_kind::error,
             "failed to get extension list: ${message}")
-          .arg("message", (!extensions).message());
+          .arg("message", (not extensions).message());
     }
 }
 
 static void init_and_run(main_ctx& ctx) {
-    if(!glfwInit()) {
+    if(not glfwInit()) {
         throw std::runtime_error("GLFW initialization error");
     } else {
         auto ensure_glfw_cleanup = eagine::finally(glfwTerminate);
@@ -73,7 +73,7 @@ static void init_and_run(main_ctx& ctx) {
         GLFWwindow* window =
           glfwCreateWindow(width, height, "OGLplus example", nullptr, nullptr);
 
-        if(!window) {
+        if(not window) {
             throw std::runtime_error("Error creating GLFW window");
         } else {
             glfwMakeContextCurrent(window);

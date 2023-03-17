@@ -222,12 +222,12 @@ eagine_add_module(
 		shapes
 		resources
 	SOURCES
-		constants_impl
-		api_impl
-		camera_impl
-		shapes_impl
-		framebuffer_impl
-		resources_impl
+		constants
+		api
+		camera
+		shapes
+		framebuffer
+		resources
 	IMPORTS
 		eagine.core.memory
 		eagine.core.string
@@ -239,4 +239,12 @@ target_link_libraries(
 	eagine.oglplus
 	PUBLIC
 	EAGine::Deps::GLEW
+)
+
+eagine_add_module_tests(
+	eagine.oglplus
+	UNITS
+		constants
+	IMPORTS
+		eagine.core
 )
