@@ -6,7 +6,7 @@
    height="256"
    viewBox="0 0 143 143"
    version="1.1"
-   id="svg_tile_035">
+   id="svg_tile_036">
 	<defs id="defs">
 		<marker
 			viewBox="0 0 20 20"
@@ -30,6 +30,6 @@
     <path id="wire_2" d="M   0.0  23.5 H  23.5"/>
     <path id="wire_4" d="M   0.0  71.5 H  23.5" marker-end="url(#term)"/>
     <path id="wire_6" d="M  23.5   0.0 V  23.5" marker-end="url(#term)"/>
-    <path id="wire_7" d="M  71.5   0.0 V  23.5" marker-end="url(#term)"/>
+    <path id="wire_7" d="M  71.5   0.0 V  13.5 L  92.0  41.0" marker-end="url(#term)"/>
 	</g>
 </svg>
