@@ -29,6 +29,7 @@ eagine_add_module(
 	eagine.oglplus PARTITION extensions
 	IMPORTS
 		eagine.core.types
+		eagine.core.memory
 		eagine.core.math
 )
 
