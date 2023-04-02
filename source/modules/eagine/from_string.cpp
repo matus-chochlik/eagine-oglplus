@@ -6,12 +6,12 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 export module eagine.oglplus:from_string;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.string;
 import :enum_types;
 import :constants;
-import std;
 
 namespace eagine {
 //------------------------------------------------------------------------------

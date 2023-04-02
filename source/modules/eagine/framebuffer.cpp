@@ -6,6 +6,7 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 export module eagine.oglplus:framebuffer;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import :config;
@@ -13,7 +14,6 @@ import :enum_types;
 import :objects;
 import :constants;
 import :api;
-import std;
 
 namespace eagine::oglplus {
 

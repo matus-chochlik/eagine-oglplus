@@ -6,10 +6,10 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 module eagine.oglplus;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.c_api;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

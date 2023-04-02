@@ -7,6 +7,7 @@
 ///
 
 module eagine.oglplus;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.string;
@@ -14,7 +15,6 @@ import eagine.core.utility;
 import eagine.core.runtime;
 import eagine.core.reflection;
 import eagine.core.value_tree;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

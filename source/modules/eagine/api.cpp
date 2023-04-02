@@ -11,6 +11,7 @@ module;
 #include <cassert>
 
 export module eagine.oglplus:api;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.string;
@@ -29,7 +30,6 @@ import :glsl_source;
 import :math;
 import :c_api;
 import :api_traits;
-import std;
 
 namespace eagine::c_api {
 

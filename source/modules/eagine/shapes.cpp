@@ -10,6 +10,7 @@ module;
 #include <cassert>
 
 export module eagine.oglplus:shapes;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.utility;
@@ -22,7 +23,6 @@ import :constants;
 import :prog_var_loc;
 import :math;
 import :api;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

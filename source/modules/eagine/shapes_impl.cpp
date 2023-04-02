@@ -10,10 +10,10 @@ module;
 #include <cassert>
 
 module eagine.oglplus;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.shapes;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
