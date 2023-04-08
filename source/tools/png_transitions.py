@@ -77,6 +77,13 @@ class ArgumentParser(argparse.ArgumentParser):
             default="tile_%02X.png"
         )
 
+        self.add_argument(
+            "--invert", "-I",
+            dest='invert',
+            action="store_true",
+            default=False
+        )
+
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
         if options.output_path is None:
@@ -206,7 +213,8 @@ class PILPngImageAdapter(object):
     # -------------------------------------------------------------------------
     def elements(self, options):
         for x, y, pix in self.pixels():
-            yield x, y, pix[options.channel] >= options.threshold
+            e = pix[options.channel] >= options.threshold
+            yield x, y, not e if options.invert else e
 
 # ------------------------------------------------------------------------------
 class PngImage(object):
@@ -347,7 +355,7 @@ def convert_html(options):
             options.write('<tr class="row">\n')
             for idx in row:
                 options.write('<td class="cell">\n')
-                options.write('<img src="%s" alt="%d"/>\n' % ((options.name_format % idx), idx))
+                options.write('<img src="%s" alt="%02x"/>\n' % ((options.name_format % idx), idx))
                 options.write('</td>\n')
             options.write('</tr>\n')
         options.write('</table>\n')
