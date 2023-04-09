@@ -38,6 +38,29 @@ class RandomVariantGetter(object):
         return random.choice(self._choices)
 
 # ------------------------------------------------------------------------------
+class TilingVariantGetter(object):
+    # -------------------------------------------------------------------------
+    def __init__(self, fd):
+        self._rows = None
+        for line in fd:
+            line = line.strip();
+            if len(line) == 0:
+                break
+            if self._rows:
+                assert len(line) == len(self._rows[0])
+                self._rows.append(line)
+            else:
+                self._rows = [line]
+        assert self._rows
+
+    # -------------------------------------------------------------------------
+    def __call__(self, x, y, i):
+        y = y % len(self._rows)
+        x = x % len(self._rows[y])
+        print(x, y, self._rows[y][x])
+        return self._rows[y][x]
+
+# ------------------------------------------------------------------------------
 class ArgumentParser(argparse.ArgumentParser):
     # -------------------------------------------------------------------------
     def __init__(self, **kw):
@@ -51,12 +74,15 @@ class ArgumentParser(argparse.ArgumentParser):
         def _variant_kind(x):
             try:
                 v = int(x)
-                assert(v >= 0 or v <= 16)
+                assert v >= 0 or v <= 16
                 return ConstantVariantGetter(v)
             except:
-                if x == "random16":
-                    return RandomVariantGetter(0, 15)
-                self.error("`%s' is not a valid variant specifier" % str(x))
+                try:
+                    return TilingVariantGetter(open(x, "rt"))
+                except:
+                    if x == "random16":
+                        return RandomVariantGetter(0, 15)
+                    self.error("`%s' is not a valid variant specifier" % str(x))
 
         argparse.ArgumentParser.__init__(self, **kw)
 
