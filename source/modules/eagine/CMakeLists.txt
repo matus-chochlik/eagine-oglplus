@@ -22,7 +22,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.math
 		eagine.core.valid_if
-		eagine.core.utility
+		eagine.core.units
 )
 
 eagine_add_module(
