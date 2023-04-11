@@ -6,11 +6,11 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#include <GLFW/glfw3.h>
+
+import std;
 import eagine.core;
 import eagine.oglplus;
-import std;
-
-#include <GLFW/glfw3.h>
 
 static void run_loop(GLFWwindow* window, int width, int height) {
     using namespace eagine::oglplus;

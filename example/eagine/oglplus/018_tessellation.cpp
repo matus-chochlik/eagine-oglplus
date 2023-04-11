@@ -6,12 +6,12 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 
+#include <GLFW/glfw3.h>
+
+import std;
 import eagine.core;
 import eagine.shapes;
 import eagine.oglplus;
-import std;
-
-#include <GLFW/glfw3.h>
 
 static const eagine::oglplus::glsl_string_ref vs_source{R"(
 #version 400

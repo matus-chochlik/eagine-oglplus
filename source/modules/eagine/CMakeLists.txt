@@ -230,16 +230,24 @@ eagine_add_module(
 		framebuffer
 		resources
 	IMPORTS
+		eagine.core.c_api
+		eagine.core.container
+		eagine.core.math
 		eagine.core.memory
-		eagine.core.string
-		eagine.core.utility
-		eagine.core.runtime
 		eagine.core.reflection
+		eagine.core.runtime
+		eagine.core.string
+		eagine.core.types
+		eagine.core.units
+		eagine.core.utility
+		eagine.core.valid_if
+		eagine.core.value_tree
+		eagine.shapes
 )
 target_link_libraries(
 	eagine.oglplus
 	PUBLIC
-	EAGine::Deps::GLEW
+		EAGine::Deps::GLEW
 )
 
 eagine_add_module_tests(

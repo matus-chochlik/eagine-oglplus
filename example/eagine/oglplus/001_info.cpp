@@ -6,12 +6,11 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
+import std;
 import eagine.core;
 import eagine.oglplus;
-import std;
-
-#include <GLFW/glfw3.h>
 
 namespace eagine {
 
