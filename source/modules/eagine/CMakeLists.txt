@@ -199,7 +199,6 @@ eagine_add_module(
 
 eagine_add_module(
 	eagine.oglplus
-	PP_NAME OGLPLUS
 	INTERFACES oglplus
 	PARTITIONS
 		config
