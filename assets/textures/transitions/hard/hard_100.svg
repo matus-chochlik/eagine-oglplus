@@ -6,9 +6,13 @@
    height="256"
    viewBox="0 0 256 256"
    version="1.1"
-   id="svg_tile_100">
+   id="svg_tile_110">
+  <path
+     style="fill:black;fill-opacity:1;stroke:none"
+     d="M 0 0 H 256 V 256 H 0 Z"
+     id="tile_bg" />
   <path
      style="fill:white;fill-opacity:1;stroke:none"
-     d="M 0 0 H 256 V 256 H 0 Z"
+     d="M 0 0 H 64 Q 64 64 0 64 Z"
      id="tile_fg" />
 </svg>
