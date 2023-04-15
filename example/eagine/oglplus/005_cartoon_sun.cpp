@@ -8,10 +8,10 @@
 
 #include <GLFW/glfw3.h>
 
+import std;
 import eagine.core;
 import eagine.shapes;
 import eagine.oglplus;
-import std;
 
 static const eagine::string_view vs_source{R"(
 #version 140
