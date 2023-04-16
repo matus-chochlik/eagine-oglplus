@@ -21,27 +21,27 @@ static void run(main_ctx& ctx) {
     const main_ctx_object out{"OGLplus", ctx};
 
     if(const ok info{gl.get_string(gl.vendor)}) {
-        out.cio_print("Vendor: ${info}").arg("info", extract(info));
+        out.cio_print("Vendor: ${info}").arg("info", info);
     }
 
     if(const ok info{gl.get_string(gl.renderer)}) {
-        out.cio_print("Renderer: ${info}").arg("info", extract(info));
+        out.cio_print("Renderer: ${info}").arg("info", info);
     }
 
     if(const ok info{gl.get_string(gl.version)}) {
-        out.cio_print("Version: ${info}").arg("info", extract(info));
+        out.cio_print("Version: ${info}").arg("info", info);
     }
 
     if(const ok info{gl.get_integer(gl.major_version)}) {
-        out.cio_print("Major version: ${info}").arg("info", extract(info));
+        out.cio_print("Major version: ${info}").arg("info", info);
     }
 
     if(const ok info{gl.get_integer(gl.minor_version)}) {
-        out.cio_print("Minor version: ${info}").arg("info", extract(info));
+        out.cio_print("Minor version: ${info}").arg("info", info);
     }
 
     if(const ok info{gl.get_string(gl.shading_language_version)}) {
-        out.cio_print("GLSL version: ${info}").arg("info", extract(info));
+        out.cio_print("GLSL version: ${info}").arg("info", info);
     }
 
     const auto ext_cio{out.cio_print("Extensions:").to_be_continued()};
