@@ -204,14 +204,14 @@ auto texture_build_info::texture_storage1d(
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_storage1d) {
         return bool(glapi.texture_storage1d(
-          tex, extract_or(levels, 1), extract(iformat), extract(width)));
+          tex, levels.value_or(1), extract(iformat), extract(width)));
     } else if(glapi.tex_storage1d) {
         return bool(glapi.tex_storage1d(
-          target, extract_or(levels, 1), extract(iformat), extract(width)));
+          target, levels.value_or(1), extract(iformat), extract(width)));
     } else if(glapi.tex_image1d) {
         bool result{true};
         auto level_width = extract(width);
-        for(auto level : integer_range(extract_or(levels, 1))) {
+        for(auto level : integer_range(levels.value_or(1))) {
             result = glapi.tex_image1d(
                        target,
                        level,
@@ -237,14 +237,14 @@ auto texture_build_info::texture_storage2d(
     if(glapi.texture_storage2d) {
         return bool(glapi.texture_storage2d(
           tex,
-          extract_or(levels, 1),
+          levels.value_or(1),
           extract(iformat),
           extract(width),
           extract(height)));
     } else if(glapi.tex_storage2d) {
         return bool(glapi.tex_storage2d(
           target,
-          extract_or(levels, 1),
+          levels.value_or(1),
           extract(iformat),
           extract(width),
           extract(height)));
@@ -252,7 +252,7 @@ auto texture_build_info::texture_storage2d(
         bool result{true};
         auto level_width = extract(width);
         auto level_height = extract(height);
-        for(auto level : integer_range(extract_or(levels, 1))) {
+        for(auto level : integer_range(levels.value_or(1))) {
             result = glapi.tex_image2d(
                        target,
                        level,
@@ -280,7 +280,7 @@ auto texture_build_info::texture_storage3d(
     if(glapi.texture_storage3d) {
         return bool(glapi.texture_storage3d(
           tex,
-          extract_or(levels, 1),
+          levels.value_or(1),
           extract(iformat),
           extract(width),
           extract(height),
@@ -288,7 +288,7 @@ auto texture_build_info::texture_storage3d(
     } else if(glapi.tex_storage3d) {
         return bool(glapi.tex_storage3d(
           target,
-          extract_or(levels, 1),
+          levels.value_or(1),
           extract(iformat),
           extract(width),
           extract(height),
@@ -298,7 +298,7 @@ auto texture_build_info::texture_storage3d(
         auto level_width = extract(width);
         auto level_height = extract(height);
         auto level_depth = extract(depth);
-        for(auto level : integer_range(extract_or(levels, 1))) {
+        for(auto level : integer_range(levels.value_or(1))) {
             result = glapi.tex_image3d(
                        target,
                        level,
