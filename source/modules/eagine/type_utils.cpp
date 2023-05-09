@@ -10,13 +10,13 @@ module;
 #include "gl_def.hpp"
 
 export module eagine.oglplus:type_utils;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.c_api;
 import :config;
 import :enum_types;
 import :math;
-import std;
 
 namespace eagine::oglplus {
 export using buffer_data_spec =

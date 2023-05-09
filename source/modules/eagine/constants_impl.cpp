@@ -10,10 +10,10 @@ module;
 #include "gl_def.hpp"
 
 module eagine.oglplus;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.container;
-import std;
 
 namespace eagine {
 //------------------------------------------------------------------------------

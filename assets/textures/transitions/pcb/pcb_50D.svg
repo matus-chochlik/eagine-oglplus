@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="256"
+   height="256"
+   viewBox="0 0 143 143"
+   version="1.1"
+   id="svg_tile_50D">
+	<defs id="defs">
+		<marker
+			viewBox="0 0 20 20"
+			markerWidth="20"
+			markerHeight="20"
+			refX="10"
+			refY="10"
+			orient="auto"
+			id="term">
+		  <circle cx="10" cy="10" r="2" style="fill:black;stroke:white;stroke-width:0.45"/>
+		  <circle cx="10" cy="10" r="1" style="fill:black;stroke:white;stroke-width:0.72"/>
+		</marker>
+	</defs>
+  <path
+     style="fill:black;fill-opacity:1;stroke:none"
+     d="M 0 0 H 143 V 143 H 0 Z"
+     id="tile_bg"/>
+  <g style="fill:none;stroke:white;stroke-opacity:1;stroke-width:5">
+    <path id="wire_0" d="M   0.0  23.5 H  23.5"/>
+    <path id="wire_2" d="M   0.0 119.5 H  23.5"/>
+    <path id="wire_6" d="M  23.5   0.0 V  23.5" marker-end="url(#term)"/>
+    <path id="wire_9" d="M  23.5 143.0 V 119.5" marker-end="url(#term)"/>
+    <path id="wire_F" d="M  53.0  23.0 V  53.0 H  23.0" marker-start="url(#term)" marker-end="url(#term)"/>
+    <path id="wire_G" d="M  23.5  88.0 H  55.5 V 119.5" marker-start="url(#term)" marker-end="url(#term)"/>
+	</g>
+</svg>

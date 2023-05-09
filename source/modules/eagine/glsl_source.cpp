@@ -10,11 +10,11 @@ module;
 #include <cassert>
 
 export module eagine.oglplus:glsl_source;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.c_api;
 import :config;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

@@ -7,9 +7,9 @@
 ///
 
 #include <eagine/testing/unit_begin.hpp>
+import std;
 import eagine.core;
 import eagine.oglplus;
-import std;
 //------------------------------------------------------------------------------
 void constants_enum_by_name(auto& s) {
     eagitest::case_ test{s, 1, "GL enum by name"};

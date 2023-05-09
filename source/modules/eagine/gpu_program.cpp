@@ -6,6 +6,7 @@
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
 export module eagine.oglplus:gpu_program;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.shapes;
@@ -16,7 +17,6 @@ import :glsl_source;
 import :prog_var_loc;
 import :shapes;
 import :api;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

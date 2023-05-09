@@ -11,6 +11,7 @@ module;
 #include <cassert>
 
 export module eagine.oglplus:api;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.string;
@@ -29,7 +30,6 @@ import :glsl_source;
 import :math;
 import :c_api;
 import :api_traits;
-import std;
 
 namespace eagine::c_api {
 
@@ -38,7 +38,7 @@ struct cast_to_map<const oglplus::gl_types::ubyte_type*, string_view> {
     template <typename... P>
     constexpr auto operator()(size_constant<0> i, P&&... p) const noexcept {
         return trivial_map{}(i, std::forward<P>(p)...)
-          .transformed([](auto src, bool valid) {
+          .transform([](auto src, bool valid) {
               return valid and src
                        ? string_view{reinterpret_cast<const char*>(src)}
                        : string_view{};
@@ -307,7 +307,7 @@ public:
         constexpr auto operator()() const noexcept {
             name_type n{};
             return base::operator()(cover_one(n))
-              .transformed([&n](auto, bool valid) {
+              .transform([&n](auto, bool valid) {
                   return gl_owned_object_name<ObjTag>(valid ? n : 0);
               });
         }
@@ -3442,7 +3442,7 @@ public:
 
     // get_strings
     auto get_strings(string_query query, char separator) const noexcept {
-        return get_string(query).transformed([separator](auto src, bool) {
+        return get_string(query).transform([separator](auto src, bool) {
             return split_into_string_list(src, separator);
         });
     }
@@ -3454,7 +3454,7 @@ public:
 #else
         return get_string(string_query(0x1F03))
 #endif
-          .transformed(
+          .transform(
             [](auto src, bool) { return split_into_string_list(src, ' '); });
     }
 

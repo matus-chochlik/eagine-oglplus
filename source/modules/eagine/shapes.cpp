@@ -10,6 +10,7 @@ module;
 #include <cassert>
 
 export module eagine.oglplus:shapes;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.utility;
@@ -22,7 +23,6 @@ import :constants;
 import :prog_var_loc;
 import :math;
 import :api;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------
@@ -969,6 +969,13 @@ public:
     auto position_loc(span_size_t idx = 0) const noexcept
       -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::position, idx});
+    }
+
+    /// @brief Returns the index at which the inner position variant is bound.
+    /// @see location
+    auto inner_position_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::inner_position, idx});
     }
 
     /// @brief Returns the index at which the normal variant is bound.

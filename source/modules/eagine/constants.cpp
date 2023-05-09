@@ -3,6 +3,7 @@ module;
 #include "gl_def.hpp"
 
 export module eagine.oglplus:constants;
+import std;
 import eagine.core.types;
 import eagine.core.c_api;
 import eagine.core.memory;
@@ -11,7 +12,6 @@ import :enum_types;
 import :objects;
 import :math;
 import :c_api;
-import std;
 
 namespace eagine {
 //------------------------------------------------------------------------------

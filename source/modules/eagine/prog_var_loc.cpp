@@ -10,12 +10,12 @@ module;
 #include "gl_def.hpp"
 
 export module eagine.oglplus:prog_var_loc;
+import std;
 import eagine.core.types;
 import eagine.core.memory;
 import eagine.core.identifier;
 import eagine.core.c_api;
 import :config;
-import std;
 
 namespace eagine::oglplus {
 //------------------------------------------------------------------------------

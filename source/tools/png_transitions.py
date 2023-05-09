@@ -8,7 +8,57 @@ import os
 import sys
 import zlib
 import numpy
+import random
 import argparse
+
+# ------------------------------------------------------------------------------
+class NoVariantGetter(object):
+    # -------------------------------------------------------------------------
+    def __call__(self, x, y, i):
+        return ""
+
+# ------------------------------------------------------------------------------
+class ConstantVariantGetter(object):
+    # -------------------------------------------------------------------------
+    def __init__(self, c):
+        self._v = str(c)
+
+    # -------------------------------------------------------------------------
+    def __call__(self, x, y, i):
+        return self._v
+
+# ------------------------------------------------------------------------------
+class RandomVariantGetter(object):
+    # -------------------------------------------------------------------------
+    def __init__(self, mn, mx):
+        self._choices = [("%X" % x) for x in range(mn, mx+1)]
+
+    # -------------------------------------------------------------------------
+    def __call__(self, x, y, i):
+        return random.choice(self._choices)
+
+# ------------------------------------------------------------------------------
+class TilingVariantGetter(object):
+    # -------------------------------------------------------------------------
+    def __init__(self, fd):
+        self._rows = None
+        for line in fd:
+            line = line.strip();
+            if len(line) == 0:
+                break
+            if self._rows:
+                assert len(line) == len(self._rows[0])
+                self._rows.append(line)
+            else:
+                self._rows = [line]
+        assert self._rows
+
+    # -------------------------------------------------------------------------
+    def __call__(self, x, y, i):
+        y = y % len(self._rows)
+        x = x % len(self._rows[y])
+        print(x, y, self._rows[y][x])
+        return self._rows[y][x]
 
 # ------------------------------------------------------------------------------
 class ArgumentParser(argparse.ArgumentParser):
@@ -20,6 +70,19 @@ class ArgumentParser(argparse.ArgumentParser):
                 return int(x)
             except:
                 self.error("`%s' is not a positive integer value" % str(x))
+
+        def _variant_kind(x):
+            try:
+                v = int(x)
+                assert v >= 0 or v <= 16
+                return ConstantVariantGetter(v)
+            except:
+                try:
+                    return TilingVariantGetter(open(x, "rt"))
+                except:
+                    if x == "random16":
+                        return RandomVariantGetter(0, 15)
+                    self.error("`%s' is not a valid variant specifier" % str(x))
 
         argparse.ArgumentParser.__init__(self, **kw)
 
@@ -70,11 +133,27 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
+            "--variant", "-V",
+            metavar='VALUE',
+            dest='variant',
+            nargs='?',
+            type=_variant_kind,
+            default=NoVariantGetter()
+        )
+
+        self.add_argument(
             "--name-format", "-N",
             metavar='VALUE',
             dest='name_format',
             nargs='?',
-            default="tile_%02X.png"
+            default="tile_%02X%s.png"
+        )
+
+        self.add_argument(
+            "--invert", "-I",
+            dest='invert',
+            action="store_true",
+            default=False
         )
 
     # -------------------------------------------------------------------------
@@ -206,7 +285,8 @@ class PILPngImageAdapter(object):
     # -------------------------------------------------------------------------
     def elements(self, options):
         for x, y, pix in self.pixels():
-            yield x, y, pix[options.channel] >= options.threshold
+            e = pix[options.channel] >= options.threshold
+            yield x, y, not e if options.invert else e
 
 # ------------------------------------------------------------------------------
 class PngImage(object):
@@ -238,12 +318,12 @@ class PngImage(object):
     def rows(self, options):
         result = []
         row = None
-        for x, y, v in self._delegate.elements(options):
+        for x, y, e in self._delegate.elements(options):
             if x == 0:
                 if row is not None:
                     yield row
                 row = []
-            row.append(v)
+            row.append(e)
         if row is not None:
             yield row
 
@@ -343,13 +423,21 @@ def convert_html(options):
     for image_path in options.input_paths:
         options.write('<table class="grid">\n')
         image = PngImage(options, image_path)
+        y = 0
         for row in image.transitions(options):
             options.write('<tr class="row">\n')
+            x = 0
             for idx in row:
+                var = options.variant(x, y, idx)
                 options.write('<td class="cell">\n')
-                options.write('<img src="%s" alt="%d"/>\n' % ((options.name_format % idx), idx))
+                options.write('<img src="%s" alt="%02X%s"/>\n' % ((
+                    options.name_format % (idx, var)),
+                    idx, var
+                ))
                 options.write('</td>\n')
+                x += 1
             options.write('</tr>\n')
+            y += 1
         options.write('</table>\n')
 
     options.write('</body>\n')
