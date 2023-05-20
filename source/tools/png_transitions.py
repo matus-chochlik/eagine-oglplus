@@ -19,6 +19,10 @@ class NoVariantGetter(object):
     def __call__(self, x, y, i):
         return ""
 
+    # -------------------------------------------------------------------------
+    def __call__(self):
+        yield ""
+
 # ------------------------------------------------------------------------------
 class ConstantVariantGetter(object):
     # -------------------------------------------------------------------------
@@ -27,6 +31,10 @@ class ConstantVariantGetter(object):
 
     # -------------------------------------------------------------------------
     def __call__(self, x, y, i):
+        return self._v
+
+    # -------------------------------------------------------------------------
+    def __call__(self):
         return self._v
 
 # ------------------------------------------------------------------------------
@@ -39,13 +47,21 @@ class RandomVariantGetter(object):
     def __call__(self, x, y, i):
         return random.choice(self._choices)
 
+    # -------------------------------------------------------------------------
+    def __call__(self):
+        for c in self._choices:
+            yield c
+
 # ------------------------------------------------------------------------------
 class TilingVariantGetter(object):
     # -------------------------------------------------------------------------
     def __init__(self, fd):
+        self._choices = set()
         self._rows = None
         for line in fd:
             line = line.strip();
+            for c in line:
+                self._choices.add(c)
             if len(line) == 0:
                 break
             if self._rows:
@@ -61,6 +77,11 @@ class TilingVariantGetter(object):
         x = x % len(self._rows[y])
         print(x, y, self._rows[y][x])
         return self._rows[y][x]
+
+    # -------------------------------------------------------------------------
+    def __call__(self):
+        for c in self._choices:
+            yield c
 
 # ------------------------------------------------------------------------------
 class ArgumentParser(argparse.ArgumentParser):
@@ -158,9 +179,18 @@ class ArgumentParser(argparse.ArgumentParser):
             default=False
         )
 
-        self.add_argument(
+        muog = self.add_mutually_exclusive_group()
+
+        muog.add_argument(
             "--print-combinations", "-C",
             dest='print_combinations',
+            action="store_true",
+            default=False
+        )
+
+        muog.add_argument(
+            "--print-missing", "-M",
+            dest='print_missing',
             action="store_true",
             default=False
         )
@@ -508,6 +538,16 @@ def make_combinations():
 def print_combinations(options):
     for c in make_combinations():
         print("%02X" % c)
+
+# ------------------------------------------------------------------------------
+def print_missing(options):
+    prefix = os.path.dirname(options.output_path)
+    for c in make_combinations():
+        for v in options.variant():
+            name = options.name_format % (c, v)
+            path = os.path.join(prefix, name)
+            if not os.path.isfile(path):
+                print(path)
 # ------------------------------------------------------------------------------
 #  Main function
 # ------------------------------------------------------------------------------
@@ -516,6 +556,8 @@ def main():
         options = getArgumentParser().parseArgs()
         if options.print_combinations:
             print_combinations(options)
+        elif options.print_missing:
+            print_missing(options)
         else:
             convert(options)
         return 0
