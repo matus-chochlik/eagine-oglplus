@@ -12,6 +12,8 @@ import random
 import argparse
 
 # ------------------------------------------------------------------------------
+#  Argument parsing
+# ------------------------------------------------------------------------------
 class NoVariantGetter(object):
     # -------------------------------------------------------------------------
     def __call__(self, x, y, i):
@@ -156,6 +158,13 @@ class ArgumentParser(argparse.ArgumentParser):
             default=False
         )
 
+        self.add_argument(
+            "--print-combinations", "-C",
+            dest='print_combinations',
+            action="store_true",
+            default=False
+        )
+
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
         if options.output_path is None:
@@ -191,7 +200,35 @@ def getArgumentParser():
         """
     )
 # ------------------------------------------------------------------------------
-# PILPngImageAdapter
+#  Transitions indices
+# ------------------------------------------------------------------------------
+def transition_index(k):
+    i = 0x00
+    if k[1,1]:
+        i = 0xFF
+    else:
+        if k[1,0]:
+            i |= 0x01
+        if k[0,1]:
+            i |= 0x02
+        if k[2,1]:
+            i |= 0x04
+        if k[1,2]:
+            i |= 0x08
+
+        if k[0,0] and not k[1,0] and not k[0,1]:
+            i |= 0x10
+        if k[2,0] and not k[1,0] and not k[2,1]:
+            i |= 0x20
+        if k[0,2] and not k[0,1] and not k[1,2]:
+            i |= 0x40
+        if k[2,2] and not k[2,1] and not k[1,2]:
+            i |= 0x80
+
+    return i
+
+# ------------------------------------------------------------------------------
+#  PNG loading
 # ------------------------------------------------------------------------------
 class PILPngImageAdapter(object):
     # -------------------------------------------------------------------------
@@ -328,33 +365,6 @@ class PngImage(object):
             yield row
 
     # -------------------------------------------------------------------------
-    def transition_index(self, k):
-        i = 0x00
-        if k[1,1]:
-            i = 0x10
-        elif k[1,0] or k[0,1] or k[2,1] or k[1,2]:
-            if k[1,0]:
-                i |= 0x01
-            if k[0,1]:
-                i |= 0x02
-            if k[2,1]:
-                i |= 0x04
-            if k[1,2]:
-                i |= 0x08
-        elif k[0,0] or k[2,0] or k[0,2] or k[2,2]:
-            i |= 0x10
-            if k[0,0]:
-                i |= 0x01
-            if k[2,0]:
-                i |= 0x02
-            if k[0,2]:
-                i |= 0x04
-            if k[2,2]:
-                i |= 0x08
-
-        return i
-
-    # -------------------------------------------------------------------------
     def transitions(self, options):
         m = numpy.array([numpy.array(r) for r in self.rows(options)])
         m = m.transpose()
@@ -362,7 +372,7 @@ class PngImage(object):
 
         w, h = self.width(), self.height()
         return numpy.array(
-            [numpy.array([self.transition_index(m[x:x+3, y:y+3])
+            [numpy.array([transition_index(m[x:x+3, y:y+3])
                 for x in range(w)]) for y in range(h)])
 
     # -------------------------------------------------------------------------
@@ -370,6 +380,8 @@ class PngImage(object):
         for row in self.transitions(options):
             yield bytes([e for e in row])
 
+# ------------------------------------------------------------------------------
+#  Output conversions
 # ------------------------------------------------------------------------------
 def convert_eagitexi(options):
     zobj = zlib.compressobj(zlib.Z_BEST_COMPRESSION)
@@ -472,10 +484,40 @@ def convert(options):
         convert_orig(options)
 
 # ------------------------------------------------------------------------------
+#  Other output functions
+# ------------------------------------------------------------------------------
+def pixel_configurations():
+    for i in range(512):
+        mat = []
+        for by in range(3):
+            row = []
+            for bx in range(3):
+                b = 0x01 << (by * 3 + bx)
+                row.append(i & b == b)
+            mat.append(row)
+        yield numpy.array([row for row in mat])
+# ------------------------------------------------------------------------------
+def make_combinations():
+    combinations = set()
+    for mat in pixel_configurations():
+        combinations.add(transition_index(mat))
+
+    for c in combinations:
+        yield c
+# ------------------------------------------------------------------------------
+def print_combinations(options):
+    for c in make_combinations():
+        print("%02X" % c)
+# ------------------------------------------------------------------------------
+#  Main function
+# ------------------------------------------------------------------------------
 def main():
     try:
         options = getArgumentParser().parseArgs()
-        convert(options)
+        if options.print_combinations:
+            print_combinations(options)
+        else:
+            convert(options)
         return 0
     except Exception as error:
         print(type(error), error)
