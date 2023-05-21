@@ -28,6 +28,6 @@
     <path id="wire_0" d="M   0.0  23.5 H  23.5"/>
     <path id="wire_2" d="M 143.0  23.5 H 131.5 L 119.5  11.5 V   0.0"/>
     <path id="wire_6" d="M  23.5   0.0 V  23.5" marker-end="url(#term)"/>
-    <path id="wire_7" d="M  71.5   0.0 V  13.5 L  55.0  23.0" marker-end="url(#term)"/>
+    <path id="wire_7" d="M  71.5   0.0 V  13.5 L  55.0  23.5" marker-end="url(#term)"/>
 	</g>
 </svg>

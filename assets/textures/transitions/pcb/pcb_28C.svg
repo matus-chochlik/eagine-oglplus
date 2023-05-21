@@ -6,7 +6,7 @@
    height="256"
    viewBox="0 0 143 143"
    version="1.1"
-   id="svg_tile_22B">
+   id="svg_tile_22C">
 	<defs id="defs">
 		<marker
 			viewBox="0 0 20 20"
@@ -26,9 +26,9 @@
      id="tile_bg"/>
   <g style="fill:none;stroke:white;stroke-opacity:1;stroke-width:5">
     <path id="wire_0" d="M 143.0  23.5 H 131.5 L 119.5  11.5 V   0.0"/>
-    <path id="wire_1" d="M  88.0  23.0 H 109.5 L 119.5  35.0 V  55.0" marker-start="url(#term)" marker-end="url(#term)"/>
+    <path id="wire_1" d="M  88.0  23.5 H 109.5 L 119.5  35.0 V  55.0" marker-start="url(#term)" marker-end="url(#term)"/>
     <path id="wire_2" d="M 143.0 119.5 H 131.5 L 119.5 131.5 V 143.0"/>
     <path id="wire_3" d="M  23.5 143.0 V 131.5 L  33.5 119.5 H  61.5 L  71.5 131.5 V 143.0"/>
-    <path id="wire_9" d="M   0.0 119.5 H  11.5 L  28.5  99.5 H  79.0 L  97.0 119.5" marker-end="url(#term)"/>
+    <path id="wire_9" d="M   0.0 119.5 H  11.5 L  28.5  99.5 H  59.0 L  77.0  69.5" marker-end="url(#term)"/>
 	</g>
 </svg>

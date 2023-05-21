@@ -27,7 +27,7 @@
   <g style="fill:none;stroke:white;stroke-opacity:1;stroke-width:5">
     <path id="wire_0" d="M   0.0  23.5 H  11.5 L  23.5  11.5 V   0.0"/>
     <path id="wire_3" d="M 143.0 119.5 H 131.5 L 119.5 131.5 V 143.0"/>
-    <path id="wire_F" d="M  53.0  23.0 V  53.0 H  23.0" marker-start="url(#term)" marker-end="url(#term)"/>
+    <path id="wire_F" d="M  53.0  23.5 V  53.0 H  23.5" marker-start="url(#term)" marker-end="url(#term)"/>
     <path id="wire_G" d="M 119.5  88.5 H  88.5 V 119.5" marker-start="url(#term)" marker-end="url(#term)"/>
 	</g>
 </svg>

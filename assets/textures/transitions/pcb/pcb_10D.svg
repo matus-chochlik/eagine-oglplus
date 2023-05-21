@@ -26,6 +26,6 @@
      id="tile_bg"/>
   <g style="fill:none;stroke:white;stroke-opacity:1;stroke-width:5">
     <path id="wire_0" d="M   0.0  23.5 H  11.5 L  23.5  11.5 V   0.0"/>
-    <path id="wire_G" d="M  53.0  23.0 V  43.0 L  43.0  53.0 H  23.0" marker-start="url(#term)" marker-end="url(#term)"/>
+    <path id="wire_G" d="M  53.0  23.5 V  43.0 L  43.0  53.0 H  23.5" marker-start="url(#term)" marker-end="url(#term)"/>
 	</g>
 </svg>

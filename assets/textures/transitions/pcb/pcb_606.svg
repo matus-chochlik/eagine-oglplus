@@ -13,6 +13,6 @@
      id="tile_bg"/>
   <g style="fill:none;stroke:white;stroke-opacity:1;stroke-width:5">
     <path id="wire_1" d="M   0.0 119.5 H  11.5 L 119.5  11.5 V   0.0"/>
-    <path id="wire_2" d="M  23.0 143.0 V 131.5 L 131.5  23.5 H 143.0"/>
+    <path id="wire_2" d="M  23.5 143.0 V 131.5 L 131.5  23.5 H 143.0"/>
 	</g>
 </svg>

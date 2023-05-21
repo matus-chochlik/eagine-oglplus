@@ -26,7 +26,7 @@
      id="tile_bg"/>
   <g style="fill:none;stroke:white;stroke-opacity:1;stroke-width:5">
     <path id="wire_0" d="M   0.0  23.5 H  11.5 L  23.5  11.5 V   0.0"/>
-    <path id="wire_1" d="M  53.0  23.0 H  33.0 L  23.0  33.0 V  53.0" marker-start="url(#term)" marker-end="url(#term)"/>
+    <path id="wire_1" d="M  53.0  23.5 H  33.0 L  23.5  33.0 V  53.0" marker-start="url(#term)" marker-end="url(#term)"/>
     <path id="wire_2" d="M 143.0  23.5 H 131.5 L 119.5  11.5 V   0.0"/>
     <path id="wire_5" d="M 143.0 119.5 H 131.5 L 119.5 107.5 V  79.5 L 131.5  71.5 H 143.0"/>
     <path id="wire_B" d="M 119.5 143.0 V 131.5 L  98.0 109.0 V  90.0 L  60.0  60.0" marker-end="url(#term)"/>
