@@ -20,7 +20,7 @@ class NoVariantGetter(object):
         return ""
 
     # -------------------------------------------------------------------------
-    def __call__(self):
+    def options(self):
         yield ""
 
 # ------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class ConstantVariantGetter(object):
         return self._v
 
     # -------------------------------------------------------------------------
-    def __call__(self):
+    def options(self):
         return self._v
 
 # ------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ class RandomVariantGetter(object):
         return random.choice(self._choices)
 
     # -------------------------------------------------------------------------
-    def __call__(self):
+    def options(self):
         for c in self._choices:
             yield c
 
@@ -75,11 +75,10 @@ class TilingVariantGetter(object):
     def __call__(self, x, y, i):
         y = y % len(self._rows)
         x = x % len(self._rows[y])
-        print(x, y, self._rows[y][x])
         return self._rows[y][x]
 
     # -------------------------------------------------------------------------
-    def __call__(self):
+    def options(self):
         for c in self._choices:
             yield c
 
@@ -407,8 +406,12 @@ class PngImage(object):
 
     # -------------------------------------------------------------------------
     def chunks(self, options):
+        y = 0
         for row in self.transitions(options):
-            yield bytes([e for e in row])
+            x = 0
+            for idx in row:
+                var = options.variant(x, y, idx)
+                yield bytes([idx, int(var, 16)])
 
 # ------------------------------------------------------------------------------
 #  Output conversions
@@ -430,10 +433,10 @@ def convert_eagitexi(options):
     options.write(',"height":%d\n' % image0.height())
     if(len(options.input_paths) > 1):
         options.write(',"depth":%d\n' % len(options.input_paths))
-    options.write(',"channels":1\n')
+    options.write(',"channels":2\n')
     options.write(',"data_type":"unsigned_byte"\n')
-    options.write(',"format":"red"\n')
-    options.write(',"iformat":"r8"\n')
+    options.write(',"format":"rg"\n')
+    options.write(',"iformat":"rg8"\n')
     options.write(',"min_filter":"nearest"')
     options.write(',"mag_filter":"nearest"')
     options.write(',"wrap_s":"repeat"')
@@ -543,7 +546,7 @@ def print_combinations(options):
 def print_missing(options):
     prefix = os.path.dirname(options.output_path)
     for c in make_combinations():
-        for v in options.variant():
+        for v in options.variant.options():
             name = options.name_format % (c, v)
             path = os.path.join(prefix, name)
             if not os.path.isfile(path):
