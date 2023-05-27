@@ -158,6 +158,8 @@ eagine_add_module(
 		objects constants api
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.utility
+		eagine.core.valid_if
 		eagine.shapes
 )
 
@@ -178,6 +180,7 @@ eagine_add_module(
 		config objects enum_types
 		api
 		eagine.core.types
+		eagine.core.memory
 		eagine.core.reflection
 		eagine.core.value_tree
 		eagine.core.resource
