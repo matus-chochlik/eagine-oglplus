@@ -204,28 +204,6 @@ eagine_add_module(
 
 eagine_add_module(
 	eagine.oglplus
-	INTERFACES oglplus
-	PARTITIONS
-		config
-		math
-		camera
-		extensions
-		enum_types
-		type_utils
-		glsl_source
-		result
-		objects
-		prog_var_loc
-		c_api
-		api_traits
-		constants
-		api
-		from_string
-		gl_debug_logger
-		gpu_program
-		framebuffer
-		shapes
-		resources
 	SOURCES
 		constants
 		api
