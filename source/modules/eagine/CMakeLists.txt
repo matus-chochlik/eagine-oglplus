@@ -115,6 +115,7 @@ eagine_add_module(
 		objects math c_api
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.valid_if
 		eagine.core.c_api
 )
 
@@ -142,6 +143,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.string
+		eagine.core.valid_if
 )
 
 eagine_add_module(

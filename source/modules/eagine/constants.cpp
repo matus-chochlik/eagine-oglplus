@@ -7,6 +7,7 @@ import std;
 import eagine.core.types;
 import eagine.core.c_api;
 import eagine.core.memory;
+import eagine.core.valid_if;
 import :config;
 import :enum_types;
 import :objects;
@@ -89,7 +90,7 @@ struct within_limits<oglplus::true_false, oglplus::gl_types::enum_type> {
 //------------------------------------------------------------------------------
 namespace oglplus {
 export auto gl_enum_by_name(const string_view name) noexcept
-  -> std::optional<gl_types::enum_type>;
+  -> optionally_valid<gl_types::enum_type>;
 //------------------------------------------------------------------------------
 /// @brief Class wrapping the constants from the GL API.
 /// @ingroup gl_api_wrap
