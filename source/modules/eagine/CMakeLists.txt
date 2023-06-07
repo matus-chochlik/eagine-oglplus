@@ -2,6 +2,8 @@
 # Distributed under the Boost Software License, Version 1.0.
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
+configure_file(gl_def.hpp gl_def.hpp COPYONLY)
+
 eagine_add_module(
 	eagine.oglplus PARTITION config
 	IMPORTS eagine.core.types
@@ -113,6 +115,7 @@ eagine_add_module(
 		objects math c_api
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.valid_if
 		eagine.core.c_api
 )
 
@@ -140,6 +143,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.string
+		eagine.core.valid_if
 )
 
 eagine_add_module(
@@ -158,6 +162,8 @@ eagine_add_module(
 		objects constants api
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.utility
+		eagine.core.valid_if
 		eagine.shapes
 )
 
@@ -178,6 +184,7 @@ eagine_add_module(
 		config objects enum_types
 		api
 		eagine.core.types
+		eagine.core.memory
 		eagine.core.reflection
 		eagine.core.value_tree
 		eagine.core.resource
@@ -199,28 +206,6 @@ eagine_add_module(
 
 eagine_add_module(
 	eagine.oglplus
-	INTERFACES oglplus
-	PARTITIONS
-		config
-		math
-		camera
-		extensions
-		enum_types
-		type_utils
-		glsl_source
-		result
-		objects
-		prog_var_loc
-		c_api
-		api_traits
-		constants
-		api
-		from_string
-		gl_debug_logger
-		gpu_program
-		framebuffer
-		shapes
-		resources
 	SOURCES
 		constants
 		api

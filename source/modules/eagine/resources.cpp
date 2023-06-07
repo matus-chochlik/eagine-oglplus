@@ -203,23 +203,23 @@ auto texture_build_info::texture_storage1d(
   texture_target target,
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_storage1d) {
-        return bool(glapi.texture_storage1d(
-          tex, levels.value_or(1), extract(iformat), extract(width)));
+        return bool(
+          glapi.texture_storage1d(tex, levels.value_or(1), *iformat, *width));
     } else if(glapi.tex_storage1d) {
-        return bool(glapi.tex_storage1d(
-          target, levels.value_or(1), extract(iformat), extract(width)));
+        return bool(
+          glapi.tex_storage1d(target, levels.value_or(1), *iformat, *width));
     } else if(glapi.tex_image1d) {
         bool result{true};
-        auto level_width = extract(width);
+        auto level_width = *width;
         for(auto level : integer_range(levels.value_or(1))) {
             result = glapi.tex_image1d(
                        target,
                        level,
-                       extract(iformat),
+                       *iformat,
                        level_width,
                        0, // border
-                       extract(format),
-                       extract(data_type),
+                       *format,
+                       *data_type,
                        {}) and
                      result;
             level_width = std::max(level_width / 2, 1);
@@ -236,32 +236,24 @@ auto texture_build_info::texture_storage2d(
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_storage2d) {
         return bool(glapi.texture_storage2d(
-          tex,
-          levels.value_or(1),
-          extract(iformat),
-          extract(width),
-          extract(height)));
+          tex, levels.value_or(1), *iformat, *width, *height));
     } else if(glapi.tex_storage2d) {
         return bool(glapi.tex_storage2d(
-          target,
-          levels.value_or(1),
-          extract(iformat),
-          extract(width),
-          extract(height)));
+          target, levels.value_or(1), *iformat, *width, *height));
     } else if(glapi.tex_image2d) {
         bool result{true};
-        auto level_width = extract(width);
-        auto level_height = extract(height);
+        auto level_width = *width;
+        auto level_height = *height;
         for(auto level : integer_range(levels.value_or(1))) {
             result = glapi.tex_image2d(
                        target,
                        level,
-                       extract(iformat),
+                       *iformat,
                        level_width,
                        level_height,
                        0, // border
-                       extract(format),
-                       extract(data_type),
+                       *format,
+                       *data_type,
                        {}) and
                      result;
             level_width = std::max(level_width / 2, 1);
@@ -279,36 +271,26 @@ auto texture_build_info::texture_storage3d(
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_storage3d) {
         return bool(glapi.texture_storage3d(
-          tex,
-          levels.value_or(1),
-          extract(iformat),
-          extract(width),
-          extract(height),
-          extract(depth)));
+          tex, levels.value_or(1), *iformat, *width, *height, *depth));
     } else if(glapi.tex_storage3d) {
         return bool(glapi.tex_storage3d(
-          target,
-          levels.value_or(1),
-          extract(iformat),
-          extract(width),
-          extract(height),
-          extract(depth)));
+          target, levels.value_or(1), *iformat, *width, *height, *depth));
     } else if(glapi.tex_image3d) {
         bool result{true};
-        auto level_width = extract(width);
-        auto level_height = extract(height);
-        auto level_depth = extract(depth);
+        auto level_width = *width;
+        auto level_height = *height;
+        auto level_depth = *depth;
         for(auto level : integer_range(levels.value_or(1))) {
             result = glapi.tex_image3d(
                        target,
                        level,
-                       extract(iformat),
+                       *iformat,
                        level_width,
                        level_height,
                        level_depth,
                        0, // border
-                       extract(format),
-                       extract(data_type),
+                       *format,
+                       *data_type,
                        {}) and
                      result;
             level_width = std::max(level_width / 2, 1);
@@ -331,22 +313,16 @@ auto texture_build_info::texture_image1d(
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_sub_image1d) {
         return bool(glapi.texture_sub_image1d(
-          tex,
-          level,
-          0,
-          extract(width),
-          extract(format),
-          extract(data_type),
-          data));
+          tex, level, 0, *width, *format, *data_type, data));
     } else if(glapi.tex_image1d) {
         return bool(glapi.tex_image1d(
           target,
           level,
-          extract(iformat),
-          extract(width),
+          *iformat,
+          *width,
           0, // border
-          extract(format),
-          extract(data_type),
+          *format,
+          *data_type,
           data));
     }
     return false;
@@ -361,25 +337,17 @@ auto texture_build_info::texture_image2d(
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(glapi.texture_sub_image2d) {
         return bool(glapi.texture_sub_image2d(
-          tex,
-          level,
-          0,
-          0,
-          extract(width),
-          extract(height),
-          extract(format),
-          extract(data_type),
-          data));
+          tex, level, 0, 0, *width, *height, *format, *data_type, data));
     } else if(glapi.tex_image2d) {
         return bool(glapi.tex_image2d(
           target,
           level,
-          extract(iformat),
-          extract(width),
-          extract(height),
+          *iformat,
+          *width,
+          *height,
           0, // border
-          extract(format),
-          extract(data_type),
+          *format,
+          *data_type,
           data));
     }
     return false;
@@ -399,23 +367,23 @@ auto texture_build_info::texture_image3d(
           0,
           0,
           0,
-          extract(width),
-          extract(height),
-          extract(depth),
-          extract(format),
-          extract(data_type),
+          *width,
+          *height,
+          *depth,
+          *format,
+          *data_type,
           data));
     } else if(glapi.tex_image3d) {
         return bool(glapi.tex_image3d(
           target,
           level,
-          extract(iformat),
-          extract(width),
-          extract(height),
-          extract(depth),
+          *iformat,
+          *width,
+          *height,
+          *depth,
           0, // border
-          extract(format),
-          extract(data_type),
+          *format,
+          *data_type,
           data));
     }
     return false;
@@ -430,9 +398,9 @@ auto texture_build_info::_set_parameter(
   const basic_gl_api<T>& glapi) const noexcept -> bool {
     if(value) {
         if(glapi.texture_parameter_i) {
-            return glapi.texture_parameter_i(tex, parameter, extract(value));
+            return glapi.texture_parameter_i(tex, parameter, *value);
         } else if(glapi.tex_parameter_i) {
-            return glapi.tex_parameter_i(target, parameter, extract(value));
+            return glapi.tex_parameter_i(target, parameter, *value);
         } else {
             return false;
         }

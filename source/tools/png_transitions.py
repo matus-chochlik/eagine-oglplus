@@ -12,10 +12,16 @@ import random
 import argparse
 
 # ------------------------------------------------------------------------------
+#  Argument parsing
+# ------------------------------------------------------------------------------
 class NoVariantGetter(object):
     # -------------------------------------------------------------------------
     def __call__(self, x, y, i):
         return ""
+
+    # -------------------------------------------------------------------------
+    def options(self):
+        yield ""
 
 # ------------------------------------------------------------------------------
 class ConstantVariantGetter(object):
@@ -25,6 +31,10 @@ class ConstantVariantGetter(object):
 
     # -------------------------------------------------------------------------
     def __call__(self, x, y, i):
+        return self._v
+
+    # -------------------------------------------------------------------------
+    def options(self):
         return self._v
 
 # ------------------------------------------------------------------------------
@@ -37,13 +47,21 @@ class RandomVariantGetter(object):
     def __call__(self, x, y, i):
         return random.choice(self._choices)
 
+    # -------------------------------------------------------------------------
+    def options(self):
+        for c in self._choices:
+            yield c
+
 # ------------------------------------------------------------------------------
 class TilingVariantGetter(object):
     # -------------------------------------------------------------------------
     def __init__(self, fd):
+        self._choices = set()
         self._rows = None
         for line in fd:
             line = line.strip();
+            for c in line:
+                self._choices.add(c)
             if len(line) == 0:
                 break
             if self._rows:
@@ -57,8 +75,12 @@ class TilingVariantGetter(object):
     def __call__(self, x, y, i):
         y = y % len(self._rows)
         x = x % len(self._rows[y])
-        print(x, y, self._rows[y][x])
         return self._rows[y][x]
+
+    # -------------------------------------------------------------------------
+    def options(self):
+        for c in self._choices:
+            yield c
 
 # ------------------------------------------------------------------------------
 class ArgumentParser(argparse.ArgumentParser):
@@ -156,6 +178,22 @@ class ArgumentParser(argparse.ArgumentParser):
             default=False
         )
 
+        muog = self.add_mutually_exclusive_group()
+
+        muog.add_argument(
+            "--print-combinations", "-C",
+            dest='print_combinations',
+            action="store_true",
+            default=False
+        )
+
+        muog.add_argument(
+            "--print-missing", "-M",
+            dest='print_missing',
+            action="store_true",
+            default=False
+        )
+
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
         if options.output_path is None:
@@ -191,7 +229,35 @@ def getArgumentParser():
         """
     )
 # ------------------------------------------------------------------------------
-# PILPngImageAdapter
+#  Transitions indices
+# ------------------------------------------------------------------------------
+def transition_index(k):
+    i = 0x00
+    if k[1,1]:
+        i = 0xFF
+    else:
+        if k[1,0]:
+            i |= 0x01
+        if k[0,1]:
+            i |= 0x02
+        if k[2,1]:
+            i |= 0x04
+        if k[1,2]:
+            i |= 0x08
+
+        if k[0,0] and not k[1,0] and not k[0,1]:
+            i |= 0x10
+        if k[2,0] and not k[1,0] and not k[2,1]:
+            i |= 0x20
+        if k[0,2] and not k[0,1] and not k[1,2]:
+            i |= 0x40
+        if k[2,2] and not k[2,1] and not k[1,2]:
+            i |= 0x80
+
+    return i
+
+# ------------------------------------------------------------------------------
+#  PNG loading
 # ------------------------------------------------------------------------------
 class PILPngImageAdapter(object):
     # -------------------------------------------------------------------------
@@ -328,33 +394,6 @@ class PngImage(object):
             yield row
 
     # -------------------------------------------------------------------------
-    def transition_index(self, k):
-        i = 0x00
-        if k[1,1]:
-            i = 0x10
-        elif k[1,0] or k[0,1] or k[2,1] or k[1,2]:
-            if k[1,0]:
-                i |= 0x01
-            if k[0,1]:
-                i |= 0x02
-            if k[2,1]:
-                i |= 0x04
-            if k[1,2]:
-                i |= 0x08
-        elif k[0,0] or k[2,0] or k[0,2] or k[2,2]:
-            i |= 0x10
-            if k[0,0]:
-                i |= 0x01
-            if k[2,0]:
-                i |= 0x02
-            if k[0,2]:
-                i |= 0x04
-            if k[2,2]:
-                i |= 0x08
-
-        return i
-
-    # -------------------------------------------------------------------------
     def transitions(self, options):
         m = numpy.array([numpy.array(r) for r in self.rows(options)])
         m = m.transpose()
@@ -362,14 +401,20 @@ class PngImage(object):
 
         w, h = self.width(), self.height()
         return numpy.array(
-            [numpy.array([self.transition_index(m[x:x+3, y:y+3])
+            [numpy.array([transition_index(m[x:x+3, y:y+3])
                 for x in range(w)]) for y in range(h)])
 
     # -------------------------------------------------------------------------
     def chunks(self, options):
+        y = 0
         for row in self.transitions(options):
-            yield bytes([e for e in row])
+            x = 0
+            for idx in row:
+                var = options.variant(x, y, idx)
+                yield bytes([idx, int(var, 16)])
 
+# ------------------------------------------------------------------------------
+#  Output conversions
 # ------------------------------------------------------------------------------
 def convert_eagitexi(options):
     zobj = zlib.compressobj(zlib.Z_BEST_COMPRESSION)
@@ -388,10 +433,10 @@ def convert_eagitexi(options):
     options.write(',"height":%d\n' % image0.height())
     if(len(options.input_paths) > 1):
         options.write(',"depth":%d\n' % len(options.input_paths))
-    options.write(',"channels":1\n')
+    options.write(',"channels":2\n')
     options.write(',"data_type":"unsigned_byte"\n')
-    options.write(',"format":"red"\n')
-    options.write(',"iformat":"r8"\n')
+    options.write(',"format":"rg"\n')
+    options.write(',"iformat":"rg8"\n')
     options.write(',"min_filter":"nearest"')
     options.write(',"mag_filter":"nearest"')
     options.write(',"wrap_s":"repeat"')
@@ -472,10 +517,52 @@ def convert(options):
         convert_orig(options)
 
 # ------------------------------------------------------------------------------
+#  Other output functions
+# ------------------------------------------------------------------------------
+def pixel_configurations():
+    for i in range(512):
+        mat = []
+        for by in range(3):
+            row = []
+            for bx in range(3):
+                b = 0x01 << (by * 3 + bx)
+                row.append(i & b == b)
+            mat.append(row)
+        yield numpy.array([row for row in mat])
+# ------------------------------------------------------------------------------
+def make_combinations():
+    combinations = set()
+    for mat in pixel_configurations():
+        combinations.add(transition_index(mat))
+
+    for c in combinations:
+        yield c
+# ------------------------------------------------------------------------------
+def print_combinations(options):
+    for c in make_combinations():
+        print("%02X" % c)
+
+# ------------------------------------------------------------------------------
+def print_missing(options):
+    prefix = os.path.dirname(options.output_path)
+    for c in make_combinations():
+        for v in options.variant.options():
+            name = options.name_format % (c, v)
+            path = os.path.join(prefix, name)
+            if not os.path.isfile(path):
+                print(path)
+# ------------------------------------------------------------------------------
+#  Main function
+# ------------------------------------------------------------------------------
 def main():
     try:
         options = getArgumentParser().parseArgs()
-        convert(options)
+        if options.print_combinations:
+            print_combinations(options)
+        elif options.print_missing:
+            print_missing(options)
+        else:
+            convert(options)
         return 0
     except Exception as error:
         print(type(error), error)
