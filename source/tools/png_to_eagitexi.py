@@ -7,6 +7,7 @@
 import os
 import sys
 import argparse
+import asyncio
 import shutil
 import subprocess
 import tempfile
@@ -35,20 +36,47 @@ class PngInputs(object):
         cmdline += [
             '--export-filename=%s' % output_path,
             input_path]
-        print("converting '%s' to PNG" % input_path)
-        subprocess.run(cmdline)
+        subprocess.run(cmdline, stderr=subprocess.DEVNULL)
         return output_path
 
     # -------------------------------------------------------------------------
-    def _convert(self, input_path):
+    def _convert_one(self, input_path):
         ext = os.path.splitext(input_path)[-1]
         if ext == ".svg":
             return self._convert_svg2png(input_path)
+
+    # -------------------------------------------------------------------------
+    def _convert(self, input_paths, jobs):
+        assert jobs > 0
+        result = []
+        async def _convert_loop(input_paths, jobs):
+            tasks = []
+
+            async def _consume():
+                output_path = await tasks[0]
+                print("converted '%s' to PNG" % output_path)
+                result.append(output_path)
+                del tasks[0]
+
+            for input_path in input_paths:
+                if len(tasks) >= jobs:
+                    await _consume()
+                tasks.append(
+                    asyncio.create_task(
+                        asyncio.to_thread(self._convert_one, input_path)))
+
+            while len(tasks) > 0:
+                await _consume()
+
+        asyncio.run(_convert_loop(input_paths, jobs))
+
+        return result
+
     # -------------------------------------------------------------------------
     def __init__(self, options):
         self._options = options
         self._work_dir = tempfile.mkdtemp()
-        self._converted_inputs = [self._convert(p) for p in options.input_paths]
+        self._converted_inputs = self._convert(options.input_paths, options.jobs)
 
     # -------------------------------------------------------------------------
     def __del__(self):
@@ -81,6 +109,15 @@ class ArgumentParser(argparse.ArgumentParser):
             dest='write_elements',
             action="store_true",
             default=False
+        )
+
+        self.add_argument(
+            "--jobs", "-j",
+            metavar='INTEGER',
+            dest='jobs',
+            nargs='?',
+            type=_positive_int,
+            default=1
         )
 
         self.add_argument(
