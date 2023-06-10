@@ -7,6 +7,49 @@
 import os
 import sys
 import argparse
+import shutil
+import subprocess
+import tempfile
+
+# ------------------------------------------------------------------------------
+class PngInputs(object):
+    # -------------------------------------------------------------------------
+    def _convert_svg2png(self, input_path):
+        output_path = os.path.basename(input_path)+'.png'
+        output_path = os.path.join(self._work_dir, output_path)
+        cmdline = [
+            self._options.inkscape_command,
+            '--batch-process',
+            '--export-overwrite',
+            '--export-area-page',
+            '--export-filename=%s' % output_path,
+            input_path]
+        subprocess.run(cmdline)
+        return output_path
+
+    # -------------------------------------------------------------------------
+    def _convert(self, input_path):
+        ext = os.path.splitext(input_path)[-1]
+        if ext == ".svg":
+            return self._convert_svg2png(input_path)
+    # -------------------------------------------------------------------------
+    def __init__(self, options):
+        self._options = options
+        self._work_dir = tempfile.mkdtemp()
+        self._converted_inputs = [self._convert(p) for p in options.input_paths]
+
+    # -------------------------------------------------------------------------
+    def __del__(self):
+        shutil.rmtree(self._work_dir)
+
+    # -------------------------------------------------------------------------
+    def __len__(self):
+        return len(self._converted_inputs)
+
+    # -------------------------------------------------------------------------
+    def __getitem__(self, index):
+        assert isinstance(index, slice) or isinstance(index, int)
+        return self._converted_inputs[index]
 
 # ------------------------------------------------------------------------------
 class ArgumentParser(argparse.ArgumentParser):
@@ -33,6 +76,14 @@ class ArgumentParser(argparse.ArgumentParser):
             dest='gzip_data',
             action="store_true",
             default=False
+        )
+
+        self.add_argument(
+            "--inkscape",
+            metavar='PATH',
+            dest='inkscape_command',
+            nargs='?',
+            default='inkscape'
         )
 
         self.add_argument(
@@ -126,6 +177,8 @@ class ArgumentParser(argparse.ArgumentParser):
             options.flip_y = True
             if len(options.input_paths) % 6 != 0:
                 raise argparse.ArgumentTypeError("invalid number of cube-map images")
+
+        options.input_paths = PngInputs(options)
 
         if options.output_path is None:
             options.output = sys.stdout
