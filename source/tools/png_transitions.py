@@ -231,7 +231,37 @@ def getArgumentParser():
 # ------------------------------------------------------------------------------
 #  Transitions indices
 # ------------------------------------------------------------------------------
-def transition_index(k):
+def pixel_configurations():
+    for i in range(512):
+        mat = []
+        for by in range(3):
+            row = []
+            for bx in range(3):
+                b = 0x01 << (by * 3 + bx)
+                row.append(i & b == b)
+            mat.append(row)
+        yield numpy.array([row for row in mat])
+# ------------------------------------------------------------------------------
+def make_combinations():
+    combinations = set()
+    for mat in pixel_configurations():
+        combinations.add(transition_code(mat))
+
+    for c in combinations:
+        yield c
+# ------------------------------------------------------------------------------
+_transition_combinations = None
+def get_combinations():
+    global _transition_combinations
+    if _transition_combinations is None:
+        _transition_combinations = sorted([c for c in make_combinations()])
+    return _transition_combinations
+# ------------------------------------------------------------------------------
+def transition_index(code):
+    return get_combinations().index(code)
+
+# ------------------------------------------------------------------------------
+def transition_code(k):
     i = 0x00
     if k[1,1]:
         i = 0xFF
@@ -401,7 +431,7 @@ class PngImage(object):
 
         w, h = self.width(), self.height()
         return numpy.array(
-            [numpy.array([transition_index(m[x:x+3, y:y+3])
+            [numpy.array([transition_code(m[x:x+3, y:y+3])
                 for x in range(w)]) for y in range(h)])
 
     # -------------------------------------------------------------------------
@@ -409,9 +439,10 @@ class PngImage(object):
         y = 0
         for row in self.transitions(options):
             x = 0
-            for idx in row:
-                var = options.variant(x, y, idx)
-                yield bytes([idx, int(var, 16)])
+            for code in row:
+                var = options.variant(x, y, code)
+                idx = transition_index(code)
+                yield bytes([idx, int(var, 16) if var else 0])
 
 # ------------------------------------------------------------------------------
 #  Output conversions
@@ -472,12 +503,12 @@ def convert_html(options):
         for row in image.transitions(options):
             options.write('<tr class="row">\n')
             x = 0
-            for idx in row:
-                var = options.variant(x, y, idx)
+            for code in row:
+                var = options.variant(x, y, code)
                 options.write('<td class="cell">\n')
                 options.write('<img src="%s" alt="%02X%s"/>\n' % ((
-                    options.name_format % (idx, var)),
-                    idx, var
+                    options.name_format % (code, var)),
+                    code, var
                 ))
                 options.write('</td>\n')
                 x += 1
@@ -519,33 +550,14 @@ def convert(options):
 # ------------------------------------------------------------------------------
 #  Other output functions
 # ------------------------------------------------------------------------------
-def pixel_configurations():
-    for i in range(512):
-        mat = []
-        for by in range(3):
-            row = []
-            for bx in range(3):
-                b = 0x01 << (by * 3 + bx)
-                row.append(i & b == b)
-            mat.append(row)
-        yield numpy.array([row for row in mat])
-# ------------------------------------------------------------------------------
-def make_combinations():
-    combinations = set()
-    for mat in pixel_configurations():
-        combinations.add(transition_index(mat))
-
-    for c in combinations:
-        yield c
-# ------------------------------------------------------------------------------
 def print_combinations(options):
-    for c in make_combinations():
+    for c in get_combinations():
         print("%02X" % c)
 
 # ------------------------------------------------------------------------------
 def print_missing(options):
     prefix = os.path.dirname(options.output_path)
-    for c in make_combinations():
+    for c in get_combinations():
         for v in options.variant.options():
             name = options.name_format % (c, v)
             path = os.path.join(prefix, name)
