@@ -14,6 +14,11 @@ import tempfile
 # ------------------------------------------------------------------------------
 class PngInputs(object):
     # -------------------------------------------------------------------------
+    @staticmethod
+    def extensions():
+        return [".svg"]
+
+    # -------------------------------------------------------------------------
     def _convert_svg2png(self, input_path):
         output_path = os.path.basename(input_path)+'.png'
         output_path = os.path.join(self._work_dir, output_path)
@@ -21,9 +26,16 @@ class PngInputs(object):
             self._options.inkscape_command,
             '--batch-process',
             '--export-overwrite',
-            '--export-area-page',
+            '--export-area-page']
+
+        if self._options.inkscape_color is not None:
+            cmdline += [
+                '--export-png-color-mode=%s' % self._options.inkscape_color]
+
+        cmdline += [
             '--export-filename=%s' % output_path,
             input_path]
+        print("converting '%s' to PNG" % input_path)
         subprocess.run(cmdline)
         return output_path
 
@@ -76,6 +88,26 @@ class ArgumentParser(argparse.ArgumentParser):
             dest='gzip_data',
             action="store_true",
             default=False
+        )
+
+        self.add_argument(
+            "--inkscape-color",
+            metavar='OPTION',
+            dest='inkscape_color',
+            nargs='?',
+            choices=[
+                "Gray_1",
+                "Gray_2",
+                "Gray_4",
+                "Gray_8",
+                "Gray_16",
+                "RGB_8",
+                "RGB_16",
+                "GrayAlpha_8",
+                "GrayAlpha_16",
+                "RGBA_8",
+                "RGBA_16"],
+            default=None
         )
 
         self.add_argument(
@@ -172,7 +204,38 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
     # -------------------------------------------------------------------------
+    def tilesetCombinations(self):
+        return ["00","01","02","03","04","05","06","07","08","09","0A","0B","0C","0D","0E","0F"\
+               ,"10","14","18","1C","20","22","28","2A","30","38","40","41","44","45","50","54"\
+               ,"60","70","80","81","82","83","90","A0","A2","B0","C0","C1","D0","E0","F0","FF"]
+
+    # -------------------------------------------------------------------------
+    def tilesetVariants(self):
+        return ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
+
+    # -------------------------------------------------------------------------
+    def getTilesetInputs(self, dir_path):
+        result = []
+        for c in self.tilesetCombinations():
+            for v in self.tilesetVariants():
+                found = False
+                for e in [".png"] + PngInputs.extensions():
+                    file_path = os.path.join(dir_path, "%s%s%s" % (c,v,e))
+                    if os.path.isfile(file_path):
+                        found = True
+                        result.append(file_path)
+                        break
+                if not found:
+                    return None
+        return result
+
+    # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
+        if len(options.input_paths) and os.path.isdir(options.input_paths[0]):
+            tileset = self.getTilesetInputs(options.input_paths[0])
+            assert tileset is not None
+            options.input_paths = tileset
+
         if options.cube_map:
             options.flip_y = True
             if len(options.input_paths) % 6 != 0:
@@ -476,3 +539,4 @@ def main():
 # ------------------------------------------------------------------------------
 if __name__ == '__main__':
     sys.exit(main())
+
