@@ -491,7 +491,7 @@ export auto make_texture_builder(
   const gl_api& glapi,
   memory::buffer_pool&,
   texture_name tex,
-  texture_target target) noexcept -> std::unique_ptr<valtree::object_builder>;
+  texture_target target) noexcept -> unique_holder<valtree::object_builder>;
 //------------------------------------------------------------------------------
 export template <typename T>
 auto build_from_resource(

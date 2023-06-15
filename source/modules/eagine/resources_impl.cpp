@@ -141,8 +141,8 @@ auto make_texture_builder(
   const gl_api& glapi,
   memory::buffer_pool& buffers,
   texture_name tex,
-  texture_target target) noexcept -> std::unique_ptr<valtree::object_builder> {
-    return std::make_unique<texture_builder>(glapi, buffers, tex, target);
+  texture_target target) noexcept -> unique_holder<valtree::object_builder> {
+    return {hold<texture_builder>, glapi, buffers, tex, target};
 }
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
