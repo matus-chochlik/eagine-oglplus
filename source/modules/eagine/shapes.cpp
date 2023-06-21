@@ -659,16 +659,14 @@ public:
         return _gen->bounding_sphere();
     }
 
-    auto ray_intersection(const line& ray) const -> std::optional<float> {
+    auto ray_intersection(const line& ray) const -> optionally_valid<float> {
         return _gen->ray_intersection(ray);
     }
 
     auto ray_intersection(const optionally_valid<line>& opt_ray) const
-      -> std::optional<float> {
-        if(opt_ray) {
-            return ray_intersection(extract(opt_ray));
-        }
-        return {};
+      -> optionally_valid<float> {
+        return opt_ray.and_then(
+          [this](const line& ray) { return _gen->ray_intersection(ray); });
     }
 };
 //------------------------------------------------------------------------------
