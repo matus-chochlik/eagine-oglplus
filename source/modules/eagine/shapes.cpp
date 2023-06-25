@@ -409,15 +409,15 @@ void draw_using_instructions(
 export class shape_generator {
 private:
     using generator = shapes::generator;
-    std::shared_ptr<generator> _gen{};
+    shared_holder<generator> _gen{};
 
 public:
     template <typename A>
-    shape_generator(const basic_gl_api<A>&, std::shared_ptr<generator>);
+    shape_generator(const basic_gl_api<A>&, shared_holder<generator>);
 
     template <typename A, typename Gen>
-    shape_generator(const basic_gl_api<A>& api, std::shared_ptr<Gen> gen)
-      : shape_generator(api, std::shared_ptr<generator>(std::move(gen))) {}
+    shape_generator(const basic_gl_api<A>& api, shared_holder<Gen> gen)
+      : shape_generator(api, shared_holder<generator>(std::move(gen))) {}
 
     auto indexed_drawing(const shapes::drawing_variant var) const -> bool {
         return _gen->indexed_drawing(var);
@@ -673,7 +673,7 @@ public:
 template <typename A>
 shape_generator::shape_generator(
   const basic_gl_api<A>& api,
-  std::shared_ptr<shapes::generator> gen)
+  shared_holder<shapes::generator> gen)
   : _gen{std::move(gen)} {
     using shapes::generator_capability;
     auto& [gl, GL] = api;
@@ -874,11 +874,11 @@ export struct vertex_attrib_binding_intf
 };
 
 export auto make_default_vertex_attrib_bindings(const shape_generator& shape)
-  -> std::shared_ptr<vertex_attrib_binding_intf>;
+  -> shared_holder<vertex_attrib_binding_intf>;
 
 export auto make_default_vertex_attrib_bindings(
   std::initializer_list<shapes::vertex_attrib_variant> vavs)
-  -> std::shared_ptr<vertex_attrib_binding_intf>;
+  -> shared_holder<vertex_attrib_binding_intf>;
 
 /// @brief Class that specifies bindings between attribute variant and array index.
 /// @ingroup shapes
@@ -896,7 +896,7 @@ public:
     ~vertex_attrib_bindings() noexcept = default;
 
     vertex_attrib_bindings(
-      std::shared_ptr<vertex_attrib_binding_intf> pimpl) noexcept
+      shared_holder<vertex_attrib_binding_intf> pimpl) noexcept
       : _pimpl{std::move(pimpl)} {
         assert(_pimpl);
     }
@@ -1061,7 +1061,7 @@ public:
     }
 
 private:
-    std::shared_ptr<vertex_attrib_binding_intf> _pimpl;
+    shared_holder<vertex_attrib_binding_intf> _pimpl;
 };
 //------------------------------------------------------------------------------
 /// @brief Class wrapping a vertex attribute array and buffers storing shape geometry.
