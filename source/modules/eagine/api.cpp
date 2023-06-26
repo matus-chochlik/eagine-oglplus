@@ -37,12 +37,10 @@ template <>
 struct cast_to_map<const oglplus::gl_types::ubyte_type*, string_view> {
     template <typename... P>
     constexpr auto operator()(size_constant<0> i, P&&... p) const noexcept {
-        return trivial_map{}(i, std::forward<P>(p)...)
-          .transform([](auto src, bool valid) {
-              return valid and src
-                       ? string_view{reinterpret_cast<const char*>(src)}
+        return trivial_map{}(i, std::forward<P>(p)...).transform([](auto src) {
+            return src ? string_view{reinterpret_cast<const char*>(src)}
                        : string_view{};
-          });
+        });
     }
 };
 
@@ -307,7 +305,7 @@ public:
         constexpr auto operator()() const noexcept {
             name_type n{};
             return base::operator()(cover_one(n))
-              .transform([&n](auto, bool valid) {
+              .transform_if([&n](auto, bool valid) {
                   return gl_owned_object_name<ObjTag>(valid ? n : 0);
               });
         }
@@ -3442,7 +3440,7 @@ public:
 
     // get_strings
     auto get_strings(string_query query, char separator) const noexcept {
-        return get_string(query).transform([separator](auto src, bool) {
+        return get_string(query).transform([separator](auto src) {
             return split_into_string_list(src, separator);
         });
     }
@@ -3454,8 +3452,7 @@ public:
 #else
         return get_string(string_query(0x1F03))
 #endif
-          .transform(
-            [](auto src, bool) { return split_into_string_list(src, ' '); });
+          .transform([](auto src) { return split_into_string_list(src, ' '); });
     }
 
     // has_extension
@@ -3692,9 +3689,11 @@ public:
     basic_gl_api(ApiTraits traits)
       : ApiTraits{std::move(traits)}
       , basic_gl_operations<ApiTraits>{*static_cast<ApiTraits*>(this)}
-      , basic_gl_constants<ApiTraits>{
-          *static_cast<ApiTraits*>(this),
-          *static_cast<basic_gl_operations<ApiTraits>*>(this)} {}
+      , basic_gl_constants<ApiTraits> {
+        *static_cast<ApiTraits*>(this),
+          *static_cast<basic_gl_operations<ApiTraits>*>(this)
+    }
+    {}
 
     /// @brief Default constructor.
     basic_gl_api()

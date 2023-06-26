@@ -133,14 +133,14 @@ private:
 };
 //------------------------------------------------------------------------------
 auto make_default_vertex_attrib_bindings(const shape_generator& shape)
-  -> std::shared_ptr<vertex_attrib_binding_intf> {
-    return std::make_shared<default_vertex_attrib_bindings>(shape);
+  -> shared_holder<vertex_attrib_binding_intf> {
+    return {hold<default_vertex_attrib_bindings>, shape};
 }
 //------------------------------------------------------------------------------
 auto make_default_vertex_attrib_bindings(
   std::initializer_list<shapes::vertex_attrib_variant> vavs)
-  -> std::shared_ptr<vertex_attrib_binding_intf> {
-    return std::make_shared<default_vertex_attrib_bindings>(vavs);
+  -> shared_holder<vertex_attrib_binding_intf> {
+    return {hold<default_vertex_attrib_bindings>, vavs};
 }
 //------------------------------------------------------------------------------
 // geometry
