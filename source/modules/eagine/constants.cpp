@@ -92,6 +92,7 @@ namespace oglplus {
 export auto gl_enum_by_name(const string_view name) noexcept
   -> optionally_valid<gl_types::enum_type>;
 //------------------------------------------------------------------------------
+using c_api::opt_constant;
 /// @brief Class wrapping the constants from the GL API.
 /// @ingroup gl_api_wrap
 /// @see basic_gl_c_api
@@ -99,8 +100,6 @@ export auto gl_enum_by_name(const string_view name) noexcept
 export template <typename ApiTraits>
 class basic_gl_constants {
 public:
-    template <typename ClassList, typename Constant, typename Tag = nothing_t>
-    using opt_constant = c_api::opt_constant<ClassList, Constant, Tag>;
     //
     /// @brief Constant wrapper that can also be used to construct instances.
     template <typename Wrap, typename T = typename Wrap::tag_type>
