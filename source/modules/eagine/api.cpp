@@ -3679,6 +3679,9 @@ class basic_gl_api
   , public basic_gl_constants<ApiTraits> {
 
 public:
+    using operations_type = basic_gl_operations<ApiTraits>;
+    using constants_type = basic_gl_constants<ApiTraits>;
+
     template <typename R>
     using combined_result = typename ApiTraits::template combined_result<R>;
 
@@ -4056,6 +4059,10 @@ public:
     }
 };
 
+export template <typename ApiTraits>
+using basic_gl_api_reference =
+  c_api::basic_api_reference<basic_gl_api<ApiTraits>>;
+
 export template <std::size_t I, typename ApiTraits>
 auto get(const basic_gl_api<ApiTraits>& x) noexcept -> const
   typename std::tuple_element<I, basic_gl_api<ApiTraits>>::type& {
@@ -4074,6 +4081,8 @@ auto translate(const basic_gl_api<A>& api, const bool value) noexcept
 /// @brief Alias for the default instantation of basic_gl_api.
 /// @ingroup gl_api_wrap
 export using gl_api = basic_gl_api<gl_api_traits>;
+
+export using gl_api_reference = basic_gl_api_reference<gl_api_traits>;
 } // namespace eagine::oglplus
 
 // NOLINTNEXTLINE(cert-dcl58-cpp)
