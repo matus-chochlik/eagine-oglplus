@@ -17,7 +17,7 @@ void constants_enum_by_name(auto& s) {
 
     const auto check{[&](eagine::string_view name) {
         if(auto value{eagine::oglplus::gl_enum_by_name(name)}) {
-            distinct.insert(extract(value));
+            distinct.insert(*value);
         } else {
             test.fail(name);
         }
