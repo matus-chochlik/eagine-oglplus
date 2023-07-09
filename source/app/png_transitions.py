@@ -137,6 +137,13 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
+            "--eagitex",
+            dest='eagitex',
+            action='store_true',
+            default=False
+        )
+
+        self.add_argument(
             "--channel", "-c",
             metavar='VALUE',
             dest='channel',
@@ -196,6 +203,8 @@ class ArgumentParser(argparse.ArgumentParser):
 
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
+        if options.eagitex and options.output_type == "eagitexi":
+            options.output_type = "eagitex"
         if options.output_path is None:
             options.output = sys.stdout
         else:
@@ -468,13 +477,13 @@ def convert_eagitexi(options):
     options.write(',"data_type":"unsigned_byte"\n')
     options.write(',"format":"rg"\n')
     options.write(',"iformat":"rg8"\n')
-    options.write(',"min_filter":"nearest"')
-    options.write(',"mag_filter":"nearest"')
-    options.write(',"wrap_s":"repeat"')
-    options.write(',"wrap_t":"repeat"')
+    options.write(',"min_filter":"nearest"\n')
+    options.write(',"mag_filter":"nearest"\n')
+    options.write(',"wrap_s":"repeat"\n')
+    options.write(',"wrap_t":"repeat"\n')
     if(len(options.input_paths) > 1):
         options.write(',"wrap_r":"repeat"')
-    options.write(',"data_filter":"zlib"')
+    options.write(',"data_filter":"zlib"\n')
     options.write('}')
     _append(image0)
 
