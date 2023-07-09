@@ -43,9 +43,9 @@ class PngInputs(object):
     def _convert_one(self, input_path):
         ext = os.path.splitext(input_path)[-1]
         if ext in [".png", ".PNG"]:
-            return input_path
+            return input_path, False
         if ext == ".svg":
-            return self._convert_svg2png(input_path)
+            return self._convert_svg2png(input_path), True
 
     # -------------------------------------------------------------------------
     def _convert(self, input_paths, jobs):
@@ -55,8 +55,9 @@ class PngInputs(object):
             tasks = []
 
             async def _consume():
-                output_path = await tasks[0]
-                print("converted '%s' to PNG" % output_path)
+                output_path, converted = await tasks[0]
+                if converted:
+                    print("converted '%s' to PNG" % output_path)
                 result.append(output_path)
                 del tasks[0]
 
@@ -436,7 +437,6 @@ class PngImage(object):
         self._delegate = None
         try:
             import PIL.Image
-            print(input_path)
             png = PIL.Image.open(input_path)
             if not options.flip_y: # Yes, not
                 png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
