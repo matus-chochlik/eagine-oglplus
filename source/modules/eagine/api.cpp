@@ -4094,4 +4094,12 @@ struct tuple_element<1, eagine::oglplus::basic_gl_api<ApiTraits>> {
 };
 //------------------------------------------------------------------------------
 } // namespace std
+namespace eagine::oglplus {
+//------------------------------------------------------------------------------
+export template <typename ApiTraits>
+using basic_gl_api_reference =
+  c_api::basic_api_reference<basic_gl_api<ApiTraits>>;
+
+export using gl_api_reference = basic_gl_api_reference<gl_api_traits>;
+} // namespace eagine::oglplus
 
