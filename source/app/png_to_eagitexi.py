@@ -42,6 +42,8 @@ class PngInputs(object):
     # -------------------------------------------------------------------------
     def _convert_one(self, input_path):
         ext = os.path.splitext(input_path)[-1]
+        if ext in [".png", ".PNG"]:
+            return input_path
         if ext == ".svg":
             return self._convert_svg2png(input_path)
 
@@ -256,7 +258,7 @@ class ArgumentParser(argparse.ArgumentParser):
         for c in self.tilesetCombinations():
             for v in self.tilesetVariants():
                 found = False
-                for e in [".png"] + PngInputs.extensions():
+                for e in [".png", ".PNG"] + PngInputs.extensions():
                     file_path = os.path.join(dir_path, "%s%s%s" % (c,v,e))
                     if os.path.isfile(file_path):
                         found = True
@@ -434,6 +436,7 @@ class PngImage(object):
         self._delegate = None
         try:
             import PIL.Image
+            print(input_path)
             png = PIL.Image.open(input_path)
             if not options.flip_y: # Yes, not
                 png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
