@@ -322,6 +322,8 @@ class PILPngImageAdapter(object):
             self._channels = 3
         if mode in ["L", "1"]:
             self._channels = 1
+        if mode in ["LA"]:
+            self._channels = 2
         if mode == "P":
             self._has_palette = True
             pmode = self._img.palette.mode
@@ -478,8 +480,8 @@ def convert_eagitexi(options):
         options.write(',"depth":%d\n' % len(options.input_paths))
     options.write(',"channels":2\n')
     options.write(',"data_type":"unsigned_byte"\n')
-    options.write(',"format":"rg_integer"\n')
-    options.write(',"iformat":"rg8ui"\n')
+    options.write(',"format":"rg"\n')
+    options.write(',"iformat":"rg8"\n')
     options.write(',"wrap_s":"repeat"\n')
     options.write(',"wrap_t":"repeat"\n')
     if(len(options.input_paths) > 1):
