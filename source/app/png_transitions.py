@@ -450,8 +450,11 @@ class PngImage(object):
             x = 0
             for code in row:
                 var = options.variant(x, y, code)
+                var = int(var, 16) if var else 0
                 idx = transition_index(code)
-                yield bytes([idx, int(var, 16) if var else 0])
+                yield bytes([idx, var])
+                x += 1
+            y += 1
 
 # ------------------------------------------------------------------------------
 #  Output conversions
@@ -475,15 +478,13 @@ def convert_eagitexi(options):
         options.write(',"depth":%d\n' % len(options.input_paths))
     options.write(',"channels":2\n')
     options.write(',"data_type":"unsigned_byte"\n')
-    options.write(',"format":"rg"\n')
-    options.write(',"iformat":"rg8"\n')
-    options.write(',"min_filter":"nearest"\n')
-    options.write(',"mag_filter":"nearest"\n')
+    options.write(',"format":"rg_integer"\n')
+    options.write(',"iformat":"rg8ui"\n')
     options.write(',"wrap_s":"repeat"\n')
     options.write(',"wrap_t":"repeat"\n')
     if(len(options.input_paths) > 1):
-        options.write(',"wrap_r":"repeat"')
-    options.write(',"data_filter":"zlib"\n')
+        options.write(',"wrap_r":"repeat"\n')
+    options.write(',"data_filter":"zlib"')
     options.write('}')
     _append(image0)
 
