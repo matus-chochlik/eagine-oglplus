@@ -17,7 +17,7 @@ and clicking on the target window):
 
 ::
 
-  xwininfo | grep 'id: 0x'
+  xwininfo | sed -n 's/.*Window id:\s*\(0x[0-9A-Z]\+\).*/\1/p'
 
 
 Start recording the content of the target window by running, with the window id
@@ -37,4 +37,4 @@ also limiting the output file size to 14.5MB):
 
 ::
 
-  ffmpeg -y -i out.ogv -fs 14500000 -r 15 out.gif
+  ffmpeg -y -i out.ogv -filter:v scale=400:300 -fs 14500000 -r 15 out.gif
