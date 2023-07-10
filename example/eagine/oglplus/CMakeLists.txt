@@ -64,6 +64,7 @@ eagine_example_common(016_cloud_morphing)
 eagine_example_common(017_subroutines)
 eagine_example_common(018_tessellation)
 eagine_example_common(019_wooden_crate)
+eagine_example_common(020_tiling)
 eagine_example_common(022_multi_viewport)
 eagine_example_common(023_octree)
 eagine_example_common(024_metaballs)
@@ -97,6 +98,13 @@ eagine_embed_target_resources(
 		CrateDiff "wooden_crate-diff.eagitex"
 		CrateLMap "wooden_crate-lmap.eagitex"
 		CrateNMap "wooden_crate-nmap.eagitex"
+	ENABLE_SEARCH
+)
+eagine_embed_target_resources(
+	TARGET oglplus-020_tiling
+	RESOURCES
+		Transition "transition.eagitex"
+		Tileset "pcb_tiles.eagitex"
 	ENABLE_SEARCH
 )
 eagine_embed_target_resources(
