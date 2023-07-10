@@ -145,8 +145,12 @@ auto within_limits<oglplus::pixel_format, oglplus::gl_types::enum_type>::check(
 #if EAGINE_HAS_GL
         case GL_RED:
         case GL_RED_INTEGER:
+        case GL_RG:
+        case GL_RG_INTEGER:
         case GL_RGB:
+        case GL_RGB_INTEGER:
         case GL_RGBA:
+        case GL_RGBA_INTEGER:
             return true;
 #endif
         default:
@@ -160,8 +164,12 @@ auto within_limits<oglplus::pixel_internal_format, oglplus::gl_types::enum_type>
 #if EAGINE_HAS_GL
         case GL_R8:
         case GL_R8UI:
+        case GL_RG8:
+        case GL_RG8UI:
         case GL_RGB8:
+        case GL_RGB8UI:
         case GL_RGBA8:
+        case GL_RGBA8UI:
             return true;
 #endif
         default:
@@ -349,11 +357,19 @@ auto map_gl_enum_by_name() noexcept {
       .add("r8", GL_R8)
       .add("r8ui", GL_R8UI)
       .add("red", GL_RED)
+      .add("rg", GL_RG)
+      .add("rg8", GL_RG8)
+      .add("rg8ui", GL_RG8UI)
       .add("rgb", GL_RGB)
       .add("rgb8", GL_RGB8)
+      .add("rgb8ui", GL_RGB8UI)
       .add("rgba", GL_RGBA)
       .add("rgba8", GL_RGBA8)
+      .add("rgba8ui", GL_RGBA8UI)
       .add("red_integer", GL_RED_INTEGER)
+      .add("rg_integer", GL_RG_INTEGER)
+      .add("rgb_integer", GL_RGB_INTEGER)
+      .add("rgba_integer", GL_RGBA_INTEGER)
       .add("renderbuffer", GL_RENDERBUFFER)
       .add("sampler", GL_SAMPLER)
       .add("sample_coverage", GL_SAMPLE_COVERAGE)
