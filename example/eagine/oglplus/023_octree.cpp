@@ -211,7 +211,7 @@ public:
         gl.gen_vertex_arrays(vao.raw_handles());
         gl.gen_transform_feedbacks(xfb.raw_handles());
 
-        for(const auto l : integer_range(node_count.size())) {
+        for(const auto l : index_range(node_count)) {
             const auto ls = signedness_cast(l);
             node_count[l] = 1;
             for([[maybe_unused]] const auto p : integer_range(l)) {

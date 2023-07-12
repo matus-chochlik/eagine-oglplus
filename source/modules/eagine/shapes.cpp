@@ -808,7 +808,7 @@ void shape_generator::instructions(
     std::vector<shapes::draw_operation> tmp(integer(operation_count(dv)));
     _gen->instructions(dv, cover(tmp));
 
-    for(const auto i : integer_range(tmp.size())) {
+    for(const auto i : index_range(tmp)) {
         ops[span_size(i)] = shape_draw_operation(api, tmp[i]);
     }
 }

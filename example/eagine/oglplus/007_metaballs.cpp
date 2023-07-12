@@ -133,7 +133,7 @@ static void run_loop(
         auto update_metaballs =
           [&glapi, &loops, &metaball_data, t{0.F}]() mutable {
               const auto& [gl_, GL_] = glapi;
-              for(const auto i : integer_range(loops.size())) {
+              for(const auto i : index_range(loops)) {
                   for(const auto c : integer_range(std_size(4))) {
                       const auto p = loops[i].position(t);
                       metaball_data[i * 4U + c] = p[limit_cast<int>(c)];

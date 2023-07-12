@@ -202,7 +202,7 @@ static void run_loop(
                 .set_orbit_factor(math::sine_wave01(t * 0.1F))
                 .matrix(aspect));
 
-            for(const auto s : integer_range(subroutines.size())) {
+            for(const auto s : index_range(subroutines)) {
                 const auto angle = turns_(float(s) / float(subroutines.size()));
 
                 glapi.set_uniform(
