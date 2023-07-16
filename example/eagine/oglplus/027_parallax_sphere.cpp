@@ -161,7 +161,7 @@ static void run_loop(
         gl.bind_attrib_location(prog, sphere.position_loc(), "Position");
         gl.bind_attrib_location(prog, sphere.normal_loc(), "Normal");
         gl.bind_attrib_location(prog, sphere.tangent_loc(), "Tangent");
-        gl.bind_attrib_location(prog, sphere.wrap_coord_loc(), "TexCoord");
+        gl.bind_attrib_location(prog, sphere.face_coord_loc(), "TexCoord");
 
         // normal/height texture
         owned_texture_name normal_tex;
