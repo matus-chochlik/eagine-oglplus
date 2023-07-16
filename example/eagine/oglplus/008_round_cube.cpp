@@ -87,7 +87,8 @@ static void run_loop(
           glapi,
           shapes::unit_round_cube(
             shapes::vertex_attrib_kind::position |
-            shapes::vertex_attrib_kind::normal));
+              shapes::vertex_attrib_kind::normal,
+            16));
 
         std::vector<shape_draw_operation> _ops;
         _ops.resize(std_size(shape.operation_count()));
@@ -140,7 +141,11 @@ static void run_loop(
         gl.get_uniform_location(prog, "Camera") >> camera_loc;
 
         orbiting_camera camera;
-        camera.set_near(0.1F).set_far(50.F).set_fov(right_angle_());
+        camera.set_near(0.1F)
+          .set_far(50.F)
+          .set_fov(right_angle_())
+          .set_orbit_min(0.6F)
+          .set_orbit_max(1.0F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
@@ -177,8 +182,8 @@ static void run_loop(
             glapi.set_uniform(
               prog,
               camera_loc,
-              camera.set_azimuth(radians_(t))
-                .set_elevation(radians_(std::sin(t)))
+              camera.set_azimuth(radians_(t * 0.25F))
+                .set_elevation(radians_(std::sin(t * 0.5F)))
                 .set_orbit_factor(math::sine_wave01(t * 0.1F))
                 .matrix(aspect));
             draw_using_instructions(glapi, view(_ops));

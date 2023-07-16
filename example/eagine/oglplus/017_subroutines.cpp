@@ -160,8 +160,8 @@ static void run_loop(
         camera.set_near(0.1F)
           .set_far(50.F)
           .set_fov(right_angle_())
-          .set_orbit_min(4.F)
-          .set_orbit_max(5.F);
+          .set_orbit_min(2.F)
+          .set_orbit_max(2.5F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
@@ -208,7 +208,7 @@ static void run_loop(
                 glapi.set_uniform(
                   prog,
                   center_loc,
-                  vec3(2.5F * cos(angle), 0.F, 2.5F * sin(angle)));
+                  vec3(1.25F * cos(angle), 0.F, 1.25F * sin(angle)));
                 gl.uniform_subroutines(GL.fragment_shader, subroutines[s]);
 
                 cube.draw(glapi);

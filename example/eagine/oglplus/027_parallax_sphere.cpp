@@ -79,10 +79,10 @@ void main() {
     vec3 viewOffs = vec3(0.0, 0.0, 0.0);
     vec2 offsTexC = vertTexCoord + viewOffs.xy;
     while(true) {
-        if(offsTexC.x <= 0.0 or offsTexC.x >= 1.0) {
+        if(offsTexC.x <= 0.0 || offsTexC.x >= 1.0) {
             discard;
         }
-        if(offsTexC.y <= 0.0 or offsTexC.y >= 1.0) {
+        if(offsTexC.y <= 0.0 || offsTexC.y >= 1.0) {
             discard;
         }
         if(depth*depthMult <= -viewOffs.z) {
@@ -211,11 +211,11 @@ static void run_loop(
         gl.get_uniform_location(prog, "lightPos") >> light_pos_loc;
 
         orbiting_camera camera;
-        camera.set_near(0.1F)
-          .set_far(50.F)
+        camera.set_near(0.01F)
+          .set_far(10.F)
           .set_fov(degrees_(60))
-          .set_orbit_min(1.8F)
-          .set_orbit_max(2.0F);
+          .set_orbit_min(1.0F)
+          .set_orbit_max(1.1F);
 
         gl.clear_color(0.05F, 0.05F, 0.05F, 1.0F);
         gl.clear_depth(1);
