@@ -22,6 +22,7 @@ add_custom_target(eagine-oglplus-deb)
 
 if(TARGET eagine.oglplus)
 	add_subdirectory(dev)
+	add_subdirectory(tools)
 endif()
 
 if(NOT TARGET eagine-deb)

@@ -119,7 +119,7 @@ public:
 
     auto location(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_location final {
-        for(const integer i : integer_range(_bindings.size())) {
+        for(const integer i : index_range(_bindings)) {
             const auto& entry = _bindings[i];
             if(entry == vav) {
                 return vertex_attrib_location{i};

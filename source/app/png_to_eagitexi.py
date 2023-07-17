@@ -42,8 +42,10 @@ class PngInputs(object):
     # -------------------------------------------------------------------------
     def _convert_one(self, input_path):
         ext = os.path.splitext(input_path)[-1]
+        if ext in [".png", ".PNG"]:
+            return input_path, False
         if ext == ".svg":
-            return self._convert_svg2png(input_path)
+            return self._convert_svg2png(input_path), True
 
     # -------------------------------------------------------------------------
     def _convert(self, input_paths, jobs):
@@ -53,8 +55,9 @@ class PngInputs(object):
             tasks = []
 
             async def _consume():
-                output_path = await tasks[0]
-                print("converted '%s' to PNG" % output_path)
+                output_path, converted = await tasks[0]
+                if converted:
+                    print("converted '%s' to PNG" % output_path)
                 result.append(output_path)
                 del tasks[0]
 
@@ -256,7 +259,7 @@ class ArgumentParser(argparse.ArgumentParser):
         for c in self.tilesetCombinations():
             for v in self.tilesetVariants():
                 found = False
-                for e in [".png"] + PngInputs.extensions():
+                for e in [".png", ".PNG"] + PngInputs.extensions():
                     file_path = os.path.join(dir_path, "%s%s%s" % (c,v,e))
                     if os.path.isfile(file_path):
                         found = True

@@ -127,7 +127,7 @@ auto texture_builder::finish() noexcept -> bool {
         if(_info.is_complete()) {
             _success = _success and handle_texture_storage();
             if(_success and not _pixel_data.empty()) {
-                _success = _success and handle_texture_image();
+                _success = handle_texture_image();
             }
         } else {
             _success = false;
