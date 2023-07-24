@@ -57,7 +57,7 @@ Package: eagine-oglplus-dev
 Version: %s
 Architecture: %s
 Installed-Size: %d
-Depends: libglew-dev,eagine-core-dev,eagine-shapes-dev
+Depends: libglew-dev,eagine-core-dev (>= @EAGINE_VERSION@),eagine-shapes-dev (>= @EAGINE_VERSION@)
 Maintainer: Matus Chochlik <chochlik@gmail.com>
 Description: C++ wrapper for OpenGL.
 """ % (
