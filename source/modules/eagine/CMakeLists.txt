@@ -6,13 +6,15 @@ configure_file(gl_def.hpp gl_def.hpp COPYONLY)
 
 eagine_add_module(
 	eagine.oglplus PARTITION config
-	IMPORTS eagine.core.types
+	IMPORTS
+		std
+		eagine.core.types
 )
 
 eagine_add_module(
 	eagine.oglplus PARTITION math
 	IMPORTS
-		config
+		std config
 		eagine.core.types
 		eagine.core.math
 )
@@ -20,7 +22,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION camera
 	IMPORTS
-		config math
+		std config math
 		eagine.core.types
 		eagine.core.math
 		eagine.core.valid_if
@@ -30,6 +32,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION extensions
 	IMPORTS
+		std
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.math
@@ -38,7 +41,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION enum_types
 	IMPORTS
-		config
+		std config
 		eagine.core.types
 		eagine.core.identifier
 		eagine.core.c_api
@@ -47,7 +50,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION type_utils
 	IMPORTS
-		config enum_types math
+		std config enum_types math
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.c_api
@@ -56,7 +59,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION glsl_source
 	IMPORTS
-		config
+		std config
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.c_api
@@ -65,7 +68,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION result
 	IMPORTS
-		config
+		std config
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.c_api
@@ -74,7 +77,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION objects
 	IMPORTS
-		config
+		std config
 		eagine.core.types
 		eagine.core.identifier
 		eagine.core.c_api
@@ -83,7 +86,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION prog_var_loc
 	IMPORTS
-		config enum_types
+		std config enum_types
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.identifier
@@ -93,7 +96,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION c_api
 	IMPORTS
-		config result
+		std config result
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.c_api
@@ -102,7 +105,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION api_traits
 	IMPORTS
-		config result
+		std config result
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.c_api
@@ -111,7 +114,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION constants
 	IMPORTS
-		config enum_types
+		std config enum_types
 		objects math c_api
 		eagine.core.types
 		eagine.core.memory
@@ -122,7 +125,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION api
 	IMPORTS
-		config enum_types
+		std config enum_types
 		objects constants extensions
 		glsl_source math
 		prog_var_loc type_utils
@@ -139,7 +142,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION from_string
 	IMPORTS
-		enum_types constants
+		std enum_types constants
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.string
@@ -149,7 +152,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION gl_debug_logger
 	IMPORTS
-		config
+		std config
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.main_ctx
@@ -158,7 +161,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION shapes
 	IMPORTS
-		config enum_types
+		std config enum_types
 		objects constants api
 		eagine.core.types
 		eagine.core.memory
@@ -170,8 +173,8 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION gpu_program
 	IMPORTS
-		config enum_types shapes
-		glsl_source
+		std config enum_types
+		shapes glsl_source
 		prog_var_loc object api
 		eagine.core.types
 		eagine.core.memory
@@ -181,8 +184,8 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION resources
 	IMPORTS
-		config objects enum_types
-		api
+		std config objects
+		enum_types api
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.reflection
@@ -194,7 +197,7 @@ eagine_add_module(
 eagine_add_module(
 	eagine.oglplus PARTITION framebuffer
 	IMPORTS
-		config enum_types
+		std config enum_types
 		object constants
 		prog_var_loc math api
 		eagine.core.types
@@ -214,6 +217,7 @@ eagine_add_module(
 		framebuffer
 		resources
 	IMPORTS
+		std
 		eagine.core.c_api
 		eagine.core.container
 		eagine.core.math
