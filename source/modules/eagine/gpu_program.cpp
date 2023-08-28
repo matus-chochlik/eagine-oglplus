@@ -60,7 +60,11 @@ public:
                 ++done;
             }
         }
-        return _mapping.size() == done;
+        if(_mapping.size() == done) {
+            glapi.link_program(prog);
+            return true;
+        }
+        return false;
     }
 
     /// @brief Clear the bindings.
