@@ -849,20 +849,9 @@ void shape_generator::instructions(
     }
 }
 //------------------------------------------------------------------------------
-using vertex_attrib_value_variant =
-  std::variant<std::monostate, float, vec2, vec3, vec3, int, ivec2, ivec3, ivec4>;
 /// @brief Type for storing of vertex attribute values.
 /// @ingroup shapes
-export class vertex_attrib_value : public vertex_attrib_value_variant {
-    using base = vertex_attrib_value_variant;
-
-public:
-    using base::base;
-
-    constexpr explicit operator bool() const noexcept {
-        return not std::holds_alternative<std::monostate>(*this);
-    }
-};
+export using vertex_attrib_value = shapes::vertex_attrib_value;
 
 export using vertex_attrib_values =
   shapes::vertex_attrib_map<vertex_attrib_value>;

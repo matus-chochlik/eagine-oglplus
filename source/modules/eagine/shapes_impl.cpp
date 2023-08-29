@@ -130,7 +130,7 @@ public:
 
     auto value(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_value final {
-        return vertex_attrib_value{};
+        return shapes::default_attrib_value(vav);
     }
 
 private:
