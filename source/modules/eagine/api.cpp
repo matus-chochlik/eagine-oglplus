@@ -133,6 +133,7 @@ public:
 
     using sizei_type = typename gl_types::sizei_type;
     using sizeiptr_type = typename gl_types::sizeiptr_type;
+    using short_type = typename gl_types::short_type;
     using int_type = typename gl_types::int_type;
     using uint_type = typename gl_types::uint_type;
     using int64_type = typename gl_types::int64_type;
@@ -1790,6 +1791,71 @@ public:
       &gl_api::DisableVertexArrayAttrib,
       void(vertex_array_name, vertex_attrib_location)>
       disable_vertex_array_attrib{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttrib1s,
+        void(vertex_attrib_location, short_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2s,
+        void(vertex_attrib_location, short_type, short_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3s,
+        void(vertex_attrib_location, short_type, short_type, short_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4s,
+        void(vertex_attrib_location, short_type, short_type, short_type, short_type)>>
+      vertex_attrib_s{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttribI1i,
+        void(vertex_attrib_location, int_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttribI2i,
+        void(vertex_attrib_location, int_type, int_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttribI3i,
+        void(vertex_attrib_location, int_type, int_type, int_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttribI4i,
+        void(vertex_attrib_location, int_type, int_type, int_type, int_type)>>
+      vertex_attrib_i{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttrib1f,
+        void(vertex_attrib_location, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2f,
+        void(vertex_attrib_location, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3f,
+        void(vertex_attrib_location, float_type, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4f,
+        void(vertex_attrib_location, float_type, float_type, float_type, float_type)>>
+      vertex_attrib_f{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttrib1d,
+        void(vertex_attrib_location, double_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2d,
+        void(vertex_attrib_location, double_type, double_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3d,
+        void(vertex_attrib_location, double_type, double_type, double_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4d,
+        void(
+          vertex_attrib_location,
+          double_type,
+          double_type,
+          double_type,
+          double_type)>>
+      vertex_attrib_d{*this};
 
     simple_adapted_function<
       &gl_api::VertexAttribFormat,
