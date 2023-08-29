@@ -9,6 +9,7 @@ export module eagine.oglplus:gpu_program;
 import std;
 import eagine.core.types;
 import eagine.core.memory;
+import eagine.core.valid_if;
 import eagine.shapes;
 import :config;
 import :enum_types;
@@ -37,44 +38,23 @@ public:
     }
 
     /// @brief Returns the count of input attributes.
-    auto count() const noexcept -> span_size_t {
-        return span_size(_mapping.size());
-    }
+    auto count() const noexcept -> span_size_t;
 
     /// @brief Adds mapping from input variable name to vertex attribute variant
     auto add(std::string name, shapes::vertex_attrib_variant vav)
-      -> program_input_bindings& {
-        _mapping.emplace(std::move(name), vav);
-        return *this;
-    }
+      -> program_input_bindings&;
 
     /// @brief Applies this mapping and vertex attribute bindings to a program.
     auto apply(
       const gl_api& glapi,
       program_name prog,
-      const vertex_attrib_bindings& bindings) const noexcept -> bool {
-        std::size_t done{0};
-        for(auto& [name, vav] : _mapping) {
-            if(auto loc{bindings.location(vav)}) {
-                glapi.bind_attrib_location(prog, loc, name);
-                ++done;
-            }
-        }
-        if(_mapping.size() == done) {
-            glapi.link_program(prog);
-            return true;
-        }
-        return false;
-    }
+      const vertex_attrib_bindings& bindings) const noexcept -> bool;
 
     /// @brief Clear the bindings.
-    auto clear() noexcept -> program_input_bindings& {
-        _mapping.clear();
-        return *this;
-    }
+    auto clear() noexcept -> program_input_bindings&;
 
 private:
-    std::map<std::string, shapes::vertex_attrib_variant> _mapping;
+    shapes::vertex_attrib_map<std::string> _mapping;
 };
 //------------------------------------------------------------------------------
 export class gpu_program : public owned_program_name {

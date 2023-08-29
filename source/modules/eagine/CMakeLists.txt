@@ -178,6 +178,7 @@ eagine_add_module(
 		prog_var_loc object api
 		eagine.core.types
 		eagine.core.memory
+		eagine.core.valid_if
 		eagine.shapes
 )
 
@@ -214,6 +215,7 @@ eagine_add_module(
 		api
 		camera
 		shapes
+		gpu_program
 		framebuffer
 		resources
 	IMPORTS

@@ -128,6 +128,11 @@ public:
         return vertex_attrib_location{};
     }
 
+    auto value(shapes::vertex_attrib_variant vav) noexcept
+      -> vertex_attrib_value final {
+        return vertex_attrib_value{};
+    }
+
 private:
     std::vector<shapes::vertex_attrib_variant> _bindings;
 };
