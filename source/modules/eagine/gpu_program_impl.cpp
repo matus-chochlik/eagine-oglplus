@@ -33,17 +33,19 @@ auto program_input_bindings::apply(
     span_size_t done{0};
     glapi.use_program(prog);
     for(auto& [vav, name] : _mapping) {
-        if(const auto loc{bindings.location(vav)}) {
-            glapi.bind_attrib_location(prog, loc, name);
+        if(const auto bloc{bindings.location(vav)}) {
+            glapi.bind_attrib_location(prog, bloc, name);
             ++done;
-        } else if(const auto loc{glapi.get_attrib_location(prog, name)}) {
-            if(const auto val{bindings.value(vav)}) {
-                if(set_vertex_attrib_value(glapi, *loc, val)) {
+        } else {
+            const auto [vloc, val] = bindings.location_and_value(vav);
+            if(vloc and val) {
+                glapi.bind_attrib_location(prog, vloc, name);
+                if(set_vertex_attrib_value(glapi, vloc, val)) {
                     ++done;
                 }
+            } else {
+                ++done;
             }
-        } else {
-            ++done;
         }
     }
     if(_mapping.size() == done) {

@@ -916,8 +916,8 @@ export struct vertex_attrib_binding_intf
 
     /// @brief Returns the single value of the specified attribute variant.
     /// @see attrib_variant
-    virtual auto value(shapes::vertex_attrib_variant vav) noexcept
-      -> vertex_attrib_value = 0;
+    virtual auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> = 0;
 };
 
 export auto make_default_vertex_attrib_bindings(const shape_generator& shape)
@@ -1009,12 +1009,12 @@ public:
         return {};
     }
 
-    /// @brief Returns the single value of the specified attribute variant.
+    /// @brief Returns the default value of the specified attribute variant.
     /// @see attrib_variant
-    auto value(shapes::vertex_attrib_variant vav) const noexcept
-      -> vertex_attrib_value {
+    auto location_and_value(shapes::vertex_attrib_variant vav) const noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> {
         if(_pimpl) {
-            return _pimpl->value(vav);
+            return _pimpl->location_and_value(vav);
         }
         return {};
     }
