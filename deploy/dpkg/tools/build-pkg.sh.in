@@ -25,6 +25,9 @@ cp "${src_dir}/source/app/png_transitions.py" \
 
 cp "${src_dir}/source/app/tiling_to_eagitexi.py" \
    "${bin_prefix}/eagine-tiling-to-eagitexi"
+
+cp "${src_dir}/source/app/generate_eagitexi.py" \
+   "${bin_prefix}/eagine-generate-eagitexi"
 # ------------------------------------------------------------------------------
 mkdir -p "${pkg_dir}/DEBIAN"
 cat << CONTROL > "${pkg_dir}/DEBIAN/control"
