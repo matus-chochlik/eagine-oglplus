@@ -31,7 +31,7 @@ static void run_loop(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
         gl.disable(GL.depth_test);
-        gl.clear_color(0.4F, 0.4F, 0.4F, 0.0F);
+        gl.clear_color(math::string_to_rgba("Gray", 1.F).or_default());
 
         float time = 0.F;
 

@@ -684,9 +684,11 @@ public:
       void(face_mode, uint_type)>
       stencil_mask_separate{*this};
 
-    simple_adapted_function<
-      &gl_api::ClearColor,
-      void(float_type, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ClearColor,
+        void(float_type, float_type, float_type, float_type)>,
+      simple_adapted_function<&gl_api::ClearColor, void(vec4)>>
       clear_color{*this};
 
     simple_adapted_function<&gl_api::ClearDepth, void(float_type)> clear_depth{
