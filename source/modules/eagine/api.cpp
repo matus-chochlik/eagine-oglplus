@@ -1076,19 +1076,25 @@ public:
       void(uniform_location, float_type)>
       uniform1f{*this};
 
-    simple_adapted_function<
-      &gl_api::Uniform2f,
-      void(uniform_location, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::Uniform2f,
+        void(uniform_location, float_type, float_type)>,
+      simple_adapted_function<&gl_api::Uniform2f, void(uniform_location, vec2)>>
       uniform2f{*this};
 
-    simple_adapted_function<
-      &gl_api::Uniform3f,
-      void(uniform_location, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::Uniform3f,
+        void(uniform_location, float_type, float_type, float_type)>,
+      simple_adapted_function<&gl_api::Uniform3f, void(uniform_location, vec3)>>
       uniform3f{*this};
 
-    simple_adapted_function<
-      &gl_api::Uniform4f,
-      void(uniform_location, float_type, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::Uniform4f,
+        void(uniform_location, float_type, float_type, float_type, float_type)>,
+      simple_adapted_function<&gl_api::Uniform4f, void(uniform_location, vec4)>>
       uniform4f{*this};
 
     simple_adapted_function<
@@ -1279,25 +1285,37 @@ public:
       void(program_name, uniform_location, float_type)>
       program_uniform1f{*this};
 
-    simple_adapted_function<
-      &gl_api::ProgramUniform2f,
-      void(program_name, uniform_location, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ProgramUniform2f,
+        void(program_name, uniform_location, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::ProgramUniform2f,
+        void(program_name, uniform_location, vec2)>>
       program_uniform2f{*this};
 
-    simple_adapted_function<
-      &gl_api::ProgramUniform3f,
-      void(program_name, uniform_location, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ProgramUniform3f,
+        void(program_name, uniform_location, float_type, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::ProgramUniform3f,
+        void(program_name, uniform_location, vec3)>>
       program_uniform3f{*this};
 
-    simple_adapted_function<
-      &gl_api::ProgramUniform4f,
-      void(
-        program_name,
-        uniform_location,
-        float_type,
-        float_type,
-        float_type,
-        float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ProgramUniform4f,
+        void(
+          program_name,
+          uniform_location,
+          float_type,
+          float_type,
+          float_type,
+          float_type)>,
+      simple_adapted_function<
+        &gl_api::ProgramUniform4f,
+        void(program_name, uniform_location, vec4)>>
       program_uniform4f{*this};
 
     simple_adapted_function<
@@ -1836,7 +1854,16 @@ public:
         void(vertex_attrib_location, float_type, float_type, float_type)>,
       simple_adapted_function<
         &gl_api::VertexAttrib4f,
-        void(vertex_attrib_location, float_type, float_type, float_type, float_type)>>
+        void(vertex_attrib_location, float_type, float_type, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2f,
+        void(vertex_attrib_location, vec2)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3f,
+        void(vertex_attrib_location, vec3)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4f,
+        void(vertex_attrib_location, vec4)>>
       vertex_attrib_f{*this};
 
     c_api::combined<
