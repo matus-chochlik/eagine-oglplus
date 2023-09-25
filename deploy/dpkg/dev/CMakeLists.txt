@@ -7,7 +7,7 @@ set(PKG_NAME "eagine-oglplus-dev_${EAGINE_VERSION}-${EAGINE_GIT_COMMITS_SINCE_VE
 set(PKG_DIR "${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}")
 set(PKG_PREFIX "${PKG_DIR}/usr")
 # ------------------------------------------------------------------------------
-eagine_generate_module_json(oglplus)
+eagine_generate_module_json(eagine.oglplus)
 # ------------------------------------------------------------------------------
 configure_file(build-pkg.py.in build-pkg.py @ONLY)
 # ------------------------------------------------------------------------------
