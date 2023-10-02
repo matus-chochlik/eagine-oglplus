@@ -229,8 +229,8 @@ static void run_loop(
         camera.set_near(0.1F)
           .set_far(50.F)
           .set_fov(degrees_(65))
-          .set_orbit_min(1.5F)
-          .set_orbit_max(12.0F);
+          .set_orbit_min(0.75F)
+          .set_orbit_max(6.0F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);

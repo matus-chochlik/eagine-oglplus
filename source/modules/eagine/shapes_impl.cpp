@@ -13,6 +13,7 @@ module eagine.oglplus;
 import std;
 import eagine.core.types;
 import eagine.core.memory;
+import eagine.core.container;
 import eagine.shapes;
 
 namespace eagine::oglplus {
@@ -94,17 +95,18 @@ public:
         shape.for_each_attrib(
           {construct_from, [this](const auto attribs, const auto info) {
                if(attribs.has(info.enumerator)) {
-                   _bindings.emplace_back(info.enumerator, 0);
+                   _bindings.insert(
+                     shapes::vertex_attrib_variant{info.enumerator, 0});
                }
            }});
     }
 
     default_vertex_attrib_bindings(
       std::initializer_list<shapes::vertex_attrib_variant> vavs) noexcept
-      : _bindings{vavs.begin(), vavs.end()} {}
+      : _bindings{vavs} {}
 
     auto add(shapes::vertex_attrib_variant vav) noexcept -> auto& {
-        _bindings.push_back(vav);
+        _bindings.insert(vav);
         return *this;
     }
 
@@ -114,22 +116,26 @@ public:
 
     auto attrib_variant(span_size_t index) noexcept
       -> shapes::vertex_attrib_variant final {
-        return _bindings[integer(index)];
+        return _bindings.underlying()[index];
     }
 
     auto location(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_location final {
-        for(const integer i : index_range(_bindings)) {
-            const auto& entry = _bindings[i];
-            if(entry == vav) {
-                return vertex_attrib_location{i};
-            }
+        if(_bindings.contains(vav)) {
+            return vertex_attrib_location(shapes::attrib_index(vav));
         }
         return vertex_attrib_location{};
     }
 
+    auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> final {
+        return {
+          vertex_attrib_location(shapes::attrib_index(vav)),
+          shapes::default_attrib_value(vav)};
+    }
+
 private:
-    std::vector<shapes::vertex_attrib_variant> _bindings;
+    flat_set<shapes::vertex_attrib_variant> _bindings;
 };
 //------------------------------------------------------------------------------
 auto make_default_vertex_attrib_bindings(const shape_generator& shape)
@@ -182,13 +188,9 @@ geometry::geometry(
     gl.bind_vertex_array(_vao);
 
     for(const integer i : integer_range(attrib_count)) {
-        shape.attrib_setup(
-          glapi,
-          _vao,
-          _buffers[i],
-          vertex_attrib_location{i},
-          bindings.attrib_variant(i),
-          temp);
+        const auto vav{bindings.attrib_variant(i)};
+        const auto loc{bindings.location(vav)};
+        shape.attrib_setup(glapi, _vao, _buffers[i], loc, vav, temp);
     }
     if(indexed) {
         shape.index_setup(glapi, _buffers[attrib_count], temp);

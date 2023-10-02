@@ -133,6 +133,7 @@ public:
 
     using sizei_type = typename gl_types::sizei_type;
     using sizeiptr_type = typename gl_types::sizeiptr_type;
+    using short_type = typename gl_types::short_type;
     using int_type = typename gl_types::int_type;
     using uint_type = typename gl_types::uint_type;
     using int64_type = typename gl_types::int64_type;
@@ -683,9 +684,11 @@ public:
       void(face_mode, uint_type)>
       stencil_mask_separate{*this};
 
-    simple_adapted_function<
-      &gl_api::ClearColor,
-      void(float_type, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ClearColor,
+        void(float_type, float_type, float_type, float_type)>,
+      simple_adapted_function<&gl_api::ClearColor, void(vec4)>>
       clear_color{*this};
 
     simple_adapted_function<&gl_api::ClearDepth, void(float_type)> clear_depth{
@@ -1073,19 +1076,25 @@ public:
       void(uniform_location, float_type)>
       uniform1f{*this};
 
-    simple_adapted_function<
-      &gl_api::Uniform2f,
-      void(uniform_location, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::Uniform2f,
+        void(uniform_location, float_type, float_type)>,
+      simple_adapted_function<&gl_api::Uniform2f, void(uniform_location, vec2)>>
       uniform2f{*this};
 
-    simple_adapted_function<
-      &gl_api::Uniform3f,
-      void(uniform_location, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::Uniform3f,
+        void(uniform_location, float_type, float_type, float_type)>,
+      simple_adapted_function<&gl_api::Uniform3f, void(uniform_location, vec3)>>
       uniform3f{*this};
 
-    simple_adapted_function<
-      &gl_api::Uniform4f,
-      void(uniform_location, float_type, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::Uniform4f,
+        void(uniform_location, float_type, float_type, float_type, float_type)>,
+      simple_adapted_function<&gl_api::Uniform4f, void(uniform_location, vec4)>>
       uniform4f{*this};
 
     simple_adapted_function<
@@ -1276,25 +1285,37 @@ public:
       void(program_name, uniform_location, float_type)>
       program_uniform1f{*this};
 
-    simple_adapted_function<
-      &gl_api::ProgramUniform2f,
-      void(program_name, uniform_location, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ProgramUniform2f,
+        void(program_name, uniform_location, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::ProgramUniform2f,
+        void(program_name, uniform_location, vec2)>>
       program_uniform2f{*this};
 
-    simple_adapted_function<
-      &gl_api::ProgramUniform3f,
-      void(program_name, uniform_location, float_type, float_type, float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ProgramUniform3f,
+        void(program_name, uniform_location, float_type, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::ProgramUniform3f,
+        void(program_name, uniform_location, vec3)>>
       program_uniform3f{*this};
 
-    simple_adapted_function<
-      &gl_api::ProgramUniform4f,
-      void(
-        program_name,
-        uniform_location,
-        float_type,
-        float_type,
-        float_type,
-        float_type)>
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ProgramUniform4f,
+        void(
+          program_name,
+          uniform_location,
+          float_type,
+          float_type,
+          float_type,
+          float_type)>,
+      simple_adapted_function<
+        &gl_api::ProgramUniform4f,
+        void(program_name, uniform_location, vec4)>>
       program_uniform4f{*this};
 
     simple_adapted_function<
@@ -1790,6 +1811,80 @@ public:
       &gl_api::DisableVertexArrayAttrib,
       void(vertex_array_name, vertex_attrib_location)>
       disable_vertex_array_attrib{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttrib1s,
+        void(vertex_attrib_location, short_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2s,
+        void(vertex_attrib_location, short_type, short_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3s,
+        void(vertex_attrib_location, short_type, short_type, short_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4s,
+        void(vertex_attrib_location, short_type, short_type, short_type, short_type)>>
+      vertex_attrib_s{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttribI1i,
+        void(vertex_attrib_location, int_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttribI2i,
+        void(vertex_attrib_location, int_type, int_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttribI3i,
+        void(vertex_attrib_location, int_type, int_type, int_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttribI4i,
+        void(vertex_attrib_location, int_type, int_type, int_type, int_type)>>
+      vertex_attrib_i{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttrib1f,
+        void(vertex_attrib_location, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2f,
+        void(vertex_attrib_location, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3f,
+        void(vertex_attrib_location, float_type, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4f,
+        void(vertex_attrib_location, float_type, float_type, float_type, float_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2f,
+        void(vertex_attrib_location, vec2)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3f,
+        void(vertex_attrib_location, vec3)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4f,
+        void(vertex_attrib_location, vec4)>>
+      vertex_attrib_f{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttrib1d,
+        void(vertex_attrib_location, double_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib2d,
+        void(vertex_attrib_location, double_type, double_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib3d,
+        void(vertex_attrib_location, double_type, double_type, double_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttrib4d,
+        void(
+          vertex_attrib_location,
+          double_type,
+          double_type,
+          double_type,
+          double_type)>>
+      vertex_attrib_d{*this};
 
     simple_adapted_function<
       &gl_api::VertexAttribFormat,

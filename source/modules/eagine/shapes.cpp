@@ -849,6 +849,48 @@ void shape_generator::instructions(
     }
 }
 //------------------------------------------------------------------------------
+/// @brief Type for storing of vertex attribute values.
+/// @ingroup shapes
+export using vertex_attrib_value = shapes::vertex_attrib_value;
+
+export using vertex_attrib_values =
+  shapes::vertex_attrib_map<vertex_attrib_value>;
+//------------------------------------------------------------------------------
+export template <typename A>
+auto set_vertex_attrib_value(
+  const basic_gl_api<A>& api,
+  const vertex_attrib_location loc,
+  const vertex_attrib_value& val) noexcept -> bool {
+    if(val) {
+        std::visit(
+          overloaded(
+            [&](const float v) { api.vertex_attrib_f(loc, v); },
+            [&](const int v) { api.vertex_attrib_i(loc, v); },
+            [&]<bool V>(const vector<int, 2, V> v) {
+                api.vertex_attrib_i(loc, v.x(), v.y());
+            },
+            [&]<bool V>(const vector<int, 3, V> v) {
+                api.vertex_attrib_i(loc, v.x(), v.y(), v.z());
+            },
+            [&]<bool V>(const vector<int, 4, V> v) {
+                api.vertex_attrib_i(loc, v.x(), v.y(), v.z(), v.w());
+            },
+            [&]<bool V>(const vector<float, 2, V> v) {
+                api.vertex_attrib_f(loc, v.x(), v.y());
+            },
+            [&]<bool V>(const vector<float, 3, V> v) {
+                api.vertex_attrib_f(loc, v.x(), v.y(), v.z());
+            },
+            [&]<bool V>(const vector<float, 4, V> v) {
+                api.vertex_attrib_f(loc, v.x(), v.y(), v.z(), v.w());
+            },
+            [&](const auto&) {}),
+          val);
+        return true;
+    }
+    return false;
+}
+//------------------------------------------------------------------------------
 /// @brief Interface for bindings between attribute variant and vertex array index.
 /// @ingroup shapes
 /// @see vertex_attrib_bindings
@@ -871,6 +913,11 @@ export struct vertex_attrib_binding_intf
     /// @see attrib_variant
     virtual auto location(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_location = 0;
+
+    /// @brief Returns the single value of the specified attribute variant.
+    /// @see attrib_variant
+    virtual auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> = 0;
 };
 
 export auto make_default_vertex_attrib_bindings(const shape_generator& shape)
@@ -958,6 +1005,16 @@ public:
       -> vertex_attrib_location {
         if(_pimpl) {
             return _pimpl->location(vav);
+        }
+        return {};
+    }
+
+    /// @brief Returns the default value of the specified attribute variant.
+    /// @see attrib_variant
+    auto location_and_value(shapes::vertex_attrib_variant vav) const noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> {
+        if(_pimpl) {
+            return _pimpl->location_and_value(vav);
         }
         return {};
     }

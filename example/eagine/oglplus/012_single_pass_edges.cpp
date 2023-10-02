@@ -191,10 +191,10 @@ static void run_loop(
 
         orbiting_camera camera;
         camera.set_near(0.1F)
-          .set_far(50.F)
+          .set_far(10.F)
           .set_fov(right_angle_())
-          .set_orbit_min(2.F)
-          .set_orbit_max(3.F);
+          .set_orbit_min(1.0F)
+          .set_orbit_max(1.5F);
 
         gl.clear_color(0.35F, 0.35F, 0.35F, 1.0F);
         gl.clear_depth(1);
