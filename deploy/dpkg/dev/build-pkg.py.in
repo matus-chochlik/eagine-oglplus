@@ -38,7 +38,7 @@ def copy_module_files(build_dir, info):
     for subinfo in info["submodules"]:
         copy_module_files(build_dir, subinfo)
 
-with open(os.path.join("@CMAKE_CURRENT_BINARY_DIR@", "oglplus.json"), "rb") as module_json:
+with open(os.path.join("@CMAKE_CURRENT_BINARY_DIR@", "eagine.oglplus.json"), "rb") as module_json:
     info = json.load(module_json)
     copy_module_files(info["build_directory"], info["module"])
 # ------------------------------------------------------------------------------
