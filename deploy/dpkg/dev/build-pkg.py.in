@@ -58,7 +58,7 @@ Version: %s
 Architecture: %s
 Installed-Size: %d
 Depends: libglew-dev,eagine-core-dev (>= @EAGINE_VERSION@),eagine-shapes-dev (>= @EAGINE_VERSION@)
-Maintainer: Matus Chochlik <chochlik@gmail.com>
+Maintainer: Matus Chochlik <matus.chochlik@proton.me>
 Description: C++ wrapper for OpenGL.
 """ % (
     "@PKG_VERSION@",

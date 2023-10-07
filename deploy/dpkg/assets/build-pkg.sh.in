@@ -22,7 +22,7 @@ Package: eagine-oglplus-assets
 Version: @PKG_VERSION@
 Architecture: all
 Installed-Size: $(du -k -s "${pkg_dir:-.}" | cut -f 1)
-Maintainer: Matus Chochlik <chochlik@gmail.com>
+Maintainer: Matus Chochlik <matus.chochlik@proton.me>
 Description: Collection of assets usable with the EAGine applications.
 CONTROL
 # ------------------------------------------------------------------------------
