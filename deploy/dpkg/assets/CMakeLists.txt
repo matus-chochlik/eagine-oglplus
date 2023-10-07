@@ -31,5 +31,10 @@ add_custom_target(
 	DEPENDS ${PKG_NAME}.deb
 )
 
+if(NOT TARGET eagine-assets-deb)
+	add_custom_target(eagine-assets-deb)
+endif()
+
+add_dependencies(eagine-assets-deb eagine-oglplus-assets-deb)
 add_dependencies(eagine-oglplus-deb eagine-oglplus-assets-deb)
 
