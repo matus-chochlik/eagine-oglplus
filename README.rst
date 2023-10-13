@@ -2,7 +2,7 @@
 EAGine OGLplus
 ==============
 
-:Author: Matúš Chochlík <chochlik@gmail.com>
+:Author: Matúš Chochlík <matus.chochlik@proton.me>
 
 EAGine is a collection of C++ libraries providing set of basic utilities, C++
 wrappers for OpenGL, OpenAL, EGL, SSL, and a message bus useful for writing

@@ -38,7 +38,7 @@ def copy_module_files(build_dir, info):
     for subinfo in info["submodules"]:
         copy_module_files(build_dir, subinfo)
 
-with open(os.path.join("@CMAKE_CURRENT_BINARY_DIR@", "oglplus.json"), "rb") as module_json:
+with open(os.path.join("@CMAKE_CURRENT_BINARY_DIR@", "eagine.oglplus.json"), "rb") as module_json:
     info = json.load(module_json)
     copy_module_files(info["build_directory"], info["module"])
 # ------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ Version: %s
 Architecture: %s
 Installed-Size: %d
 Depends: libglew-dev,eagine-core-dev (>= @EAGINE_VERSION@),eagine-shapes-dev (>= @EAGINE_VERSION@)
-Maintainer: Matus Chochlik <chochlik@gmail.com>
+Maintainer: Matus Chochlik <matus.chochlik@proton.me>
 Description: C++ wrapper for OpenGL.
 """ % (
     "@PKG_VERSION@",

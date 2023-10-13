@@ -20,6 +20,7 @@ set(BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/../..")
 
 add_custom_target(eagine-oglplus-deb)
 
+add_subdirectory(assets)
 if(TARGET eagine.oglplus)
 	add_subdirectory(dev)
 	add_subdirectory(tools)
