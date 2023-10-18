@@ -3533,6 +3533,30 @@ public:
     simple_adapted_function<&gl_api::GetString, string_view(string_query)>
       get_string{*this};
 
+    auto get_vendor() const noexcept {
+#ifdef GL_VENDOR
+        return get_string(string_query(GL_VENDOR));
+#else
+        return get_string(string_query(0x1F00));
+#endif
+    }
+
+    auto get_renderer() const noexcept {
+#ifdef GL_RENDERER
+        return get_string(string_query(GL_RENDERER));
+#else
+        return get_string(string_query(0x1F01));
+#endif
+    }
+
+    auto get_version() const noexcept {
+#ifdef GL_VERSION
+        return get_string(string_query(GL_VERSION));
+#else
+        return get_string(string_query(0x1F02));
+#endif
+    }
+
     // get_strings
     auto get_strings(string_query query, char separator) const noexcept {
         return get_string(query).transform([separator](auto src) {
