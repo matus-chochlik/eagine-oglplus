@@ -5,10 +5,6 @@
 /// See accompanying file LICENSE_1_0.txt or copy at
 ///  http://www.boost.org/LICENSE_1_0.txt
 ///
-module;
-
-#include <cassert>
-
 export module eagine.oglplus:gl_debug_logger;
 import eagine.core.types;
 import eagine.core.memory;
@@ -19,8 +15,23 @@ namespace eagine::oglplus {
 
 export class gl_debug_logger : public main_ctx_object {
 public:
+    void install(const auto& api) const noexcept {
+        log_info("GL renderer: ${renderer}")
+          .tag("GLinfo")
+          .arg("vendor", api.get_vendor().value_or("N/A"))
+          .arg("renderer", api.get_renderer().value_or("N/A"))
+          .arg("version", api.get_version().value_or("N/A"));
+
+        api.debug_message_callback(*this);
+    }
+
     gl_debug_logger(main_ctx_parent parent)
       : main_ctx_object{"GLDbgLoger", parent} {}
+
+    gl_debug_logger(main_ctx_parent parent, const auto& api)
+      : gl_debug_logger{parent} {
+        install(api);
+    }
 
     auto callback() const noexcept -> decltype(auto) {
         return &_callback;
@@ -31,34 +42,16 @@ public:
     }
 
 private:
-    auto _do_log(
-      [[maybe_unused]] const gl_types::enum_type severity,
-      const string_view msg) const noexcept {
-        switch(severity) {
-            case 0x9146:
-                return this->log_error(msg);
-            case 0x9147:
-                return this->log_warning(msg);
-            default:
-                return this->log_debug(msg);
-        }
-    }
+    auto _do_log(const gl_types::enum_type severity, const string_view msg)
+      const noexcept;
 
     void _log(
-      [[maybe_unused]] const gl_types::enum_type source,
-      [[maybe_unused]] const gl_types::enum_type type,
-      [[maybe_unused]] const gl_types::uint_type id,
-      [[maybe_unused]] const gl_types::enum_type severity,
-      [[maybe_unused]] const gl_types::sizei_type length,
-      [[maybe_unused]] const gl_types::char_type* message) const noexcept {
-        const auto msg = length >= 0 ? string_view(message, span_size(length))
-                                     : string_view(message);
-        _do_log(severity, msg)
-          .arg("severity", "DbgOutSvrt", severity)
-          .arg("source", "DbgOutSrce", source)
-          .arg("type", "DbgOutType", type)
-          .arg("id", id);
-    }
+      const gl_types::enum_type source,
+      const gl_types::enum_type type,
+      const gl_types::uint_type id,
+      const gl_types::enum_type severity,
+      const gl_types::sizei_type length,
+      const gl_types::char_type* message) const noexcept;
 
     static void _callback(
       gl_types::enum_type source,
@@ -67,11 +60,7 @@ private:
       gl_types::enum_type severity,
       gl_types::sizei_type length,
       const gl_types::char_type* message,
-      const void* raw_this) {
-        assert(raw_this);
-        static_cast<const gl_debug_logger*>(raw_this)->_log(
-          source, type, id, severity, length, message);
-    }
+      const void* raw_this);
 };
 } // namespace eagine::oglplus
 

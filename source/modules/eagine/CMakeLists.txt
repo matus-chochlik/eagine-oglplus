@@ -213,6 +213,7 @@ eagine_add_module(
 	SOURCES
 		constants
 		api
+		gl_debug_logger
 		camera
 		shapes
 		gpu_program

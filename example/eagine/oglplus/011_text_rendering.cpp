@@ -28,9 +28,7 @@ static void run_loop(
       gl.clear and gl.create_paths_nv and gl.delete_paths_nv;
 
     if(has_requirements) {
-        gl_debug_logger gdl{ctx};
-
-        gl.debug_message_callback(gdl);
+        gl_debug_logger gdl{ctx, glapi};
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 

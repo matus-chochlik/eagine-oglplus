@@ -117,9 +117,7 @@ static void run_loop(
     const auto& [gl, GL] = glapi;
 
     if(gl.clear) {
-        gl_debug_logger gdl{ctx};
-
-        gl.debug_message_callback(gdl);
+        gl_debug_logger gdl{ctx, glapi};
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
