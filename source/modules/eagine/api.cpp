@@ -3873,6 +3873,28 @@ public:
         return this->attach_shader(prog, shdr);
     }
 
+    auto shader_info_log(const shader_name prog) const
+      -> optionally_valid<std::string> {
+        if(const auto l1{this->get_shader_i(prog, this->info_log_length)}) {
+            string_buffer logstr{*l1 + 1};
+            if(const auto l2{this->get_shader_info_log(prog, cover(logstr))}) {
+                return {logstr.clip(*l2).get_string(), true};
+            }
+        }
+        return {};
+    }
+
+    auto program_info_log(const program_name prog) const
+      -> optionally_valid<std::string> {
+        if(const auto l1{this->get_program_i(prog, this->info_log_length)}) {
+            string_buffer logstr{*l1 + 1};
+            if(const auto l2{this->get_program_info_log(prog, cover(logstr))}) {
+                return {logstr.clip(*l2).get_string(), true};
+            }
+        }
+        return {};
+    }
+
 private:
     // set_uniform
     template <typename ProgramUniformFunc, typename UniformFunc, typename T>
