@@ -162,6 +162,18 @@ auto within_limits<oglplus::pixel_internal_format, oglplus::gl_types::enum_type>
   check(oglplus::gl_types::enum_type x) const noexcept -> bool {
     switch(x) {
 #if EAGINE_HAS_GL
+        case GL_DEPTH_COMPONENT:
+        case GL_DEPTH_STENCIL:
+        case GL_RED:
+        case GL_RG:
+        case GL_RGB:
+        case GL_RGBA:
+        case GL_COMPRESSED_RED:
+        case GL_COMPRESSED_RG:
+        case GL_COMPRESSED_RGB:
+        case GL_COMPRESSED_RGBA:
+        case GL_COMPRESSED_SRGB:
+        case GL_COMPRESSED_SRGB_ALPHA:
         case GL_R8:
         case GL_R8UI:
         case GL_RG8:
@@ -307,6 +319,12 @@ auto map_gl_enum_by_name() noexcept {
       .add("clip_distance", GL_CLIP_DISTANCE0)
       .add("clip_distance_0", GL_CLIP_DISTANCE0)
       .add("color_logic_op", GL_COLOR_LOGIC_OP)
+      .add("compressed_red", GL_COMPRESSED_RED)
+      .add("compressed_rg", GL_COMPRESSED_RG)
+      .add("compressed_rgb", GL_COMPRESSED_RGB)
+      .add("compressed_rgba", GL_COMPRESSED_RGBA)
+      .add("compressed_srgb", GL_COMPRESSED_SRGB)
+      .add("compressed_srgb_alpha", GL_COMPRESSED_SRGB_ALPHA)
       .add("compute_shader", GL_COMPUTE_SHADER)
       .add("copy_read_buffer", GL_COPY_READ_BUFFER)
       .add("copy_write_buffer", GL_COPY_WRITE_BUFFER)
