@@ -403,7 +403,7 @@ class PngImage(object):
         try:
             import PIL.Image
             png = PIL.Image.open(input_path)
-            png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+            png = png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
             self._delegate = PILPngImageAdapter(png)
         except: raise
 
