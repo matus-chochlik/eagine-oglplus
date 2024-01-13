@@ -439,7 +439,7 @@ class PngImage(object):
             import PIL.Image
             png = PIL.Image.open(input_path)
             if not options.flip_y: # Yes, not
-                png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
+                png = png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
             self._delegate = PILPngImageAdapter(png)
         except: raise
 
