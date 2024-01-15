@@ -219,6 +219,12 @@ auto within_limits<oglplus::texture_target, oglplus::gl_types::enum_type>::check
         case GL_TEXTURE_3D:
         case GL_TEXTURE_CUBE_MAP:
         case GL_TEXTURE_CUBE_MAP_ARRAY:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
         case GL_TEXTURE_RECTANGLE:
         case GL_TEXTURE_BUFFER:
             return true;
@@ -418,12 +424,12 @@ auto map_gl_enum_by_name() noexcept {
       .add("texture_buffer", GL_TEXTURE_BUFFER)
       .add("texture_cube_map", GL_TEXTURE_CUBE_MAP)
       .add("texture_cube_map_array", GL_TEXTURE_CUBE_MAP_ARRAY)
-      .add("texture_cube_negative_x", GL_TEXTURE_CUBE_MAP_NEGATIVE_X)
-      .add("texture_cube_positive_x", GL_TEXTURE_CUBE_MAP_POSITIVE_X)
-      .add("texture_cube_negative_y", GL_TEXTURE_CUBE_MAP_NEGATIVE_Y)
-      .add("texture_cube_positive_y", GL_TEXTURE_CUBE_MAP_POSITIVE_Y)
-      .add("texture_cube_negative_z", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
-      .add("texture_cube_positive_z", GL_TEXTURE_CUBE_MAP_POSITIVE_Z)
+      .add("texture_cube_map_negative_x", GL_TEXTURE_CUBE_MAP_NEGATIVE_X)
+      .add("texture_cube_map_positive_x", GL_TEXTURE_CUBE_MAP_POSITIVE_X)
+      .add("texture_cube_map_negative_y", GL_TEXTURE_CUBE_MAP_NEGATIVE_Y)
+      .add("texture_cube_map_positive_y", GL_TEXTURE_CUBE_MAP_POSITIVE_Y)
+      .add("texture_cube_map_negative_z", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
+      .add("texture_cube_map_positive_z", GL_TEXTURE_CUBE_MAP_POSITIVE_Z)
       .add("texture_rectangle", GL_TEXTURE_RECTANGLE)
       .add("transform_feedback", GL_TRANSFORM_FEEDBACK)
       .add("transform_feedback_buffer", GL_TRANSFORM_FEEDBACK_BUFFER)
