@@ -472,16 +472,18 @@ def convert_eagitexi(options):
     options.write(',"data_type":"unsigned_byte"\n')
     if options.variant is None:
         options.write(',"channels":1\n')
-        options.write(',"format":"red"\n')
-        options.write(',"iformat":"r8"\n')
+        options.write(',"format":"red_integer"\n')
+        options.write(',"iformat":"r8ui"\n')
     else:
         options.write(',"channels":2\n')
         options.write(',"format":"rg"\n')
         options.write(',"iformat":"rg8"\n')
-    options.write(',"wrap_s":"repeat"\n')
-    options.write(',"wrap_t":"repeat"\n')
-    if(len(options.input_paths) > 1):
-        options.write(',"wrap_r":"repeat"\n')
+    if options.output_type == "eagitex":
+        options.write(',"wrap_s":"repeat"\n')
+        options.write(',"wrap_t":"repeat"\n')
+        if(len(options.input_paths) > 1):
+            options.write(',"wrap_r":"repeat"\n')
+    options.write(',"tag":["generated","transition"]\n')
     options.write(',"data_filter":"zlib"')
     options.write('}')
     _append(image0)
