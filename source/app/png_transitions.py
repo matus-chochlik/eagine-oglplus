@@ -12,18 +12,6 @@ import random
 import argparse
 
 # ------------------------------------------------------------------------------
-#  Argument parsing
-# ------------------------------------------------------------------------------
-class NoVariantGetter(object):
-    # -------------------------------------------------------------------------
-    def __call__(self, x, y, i):
-        return ""
-
-    # -------------------------------------------------------------------------
-    def options(self):
-        yield ""
-
-# ------------------------------------------------------------------------------
 class ConstantVariantGetter(object):
     # -------------------------------------------------------------------------
     def __init__(self, c):
@@ -167,7 +155,7 @@ class ArgumentParser(argparse.ArgumentParser):
             dest='variant',
             nargs='?',
             type=_variant_kind,
-            default=NoVariantGetter()
+            default=None
         )
 
         self.add_argument(
@@ -451,10 +439,13 @@ class PngImage(object):
         for row in self.transitions(options):
             x = 0
             for code in row:
-                var = options.variant(x, y, code)
-                var = int(var, 16) if var else 0
-                idx = transition_index(code)
-                yield bytes([idx, var])
+                if options.variant is None:
+                    yield bytes([transition_index(code)])
+                else:
+                    var = options.variant(x, y, code)
+                    var = int(var, 16) if var else 0
+                    idx = transition_index(code)
+                    yield bytes([idx, var])
                 x += 1
             y += 1
 
@@ -473,15 +464,20 @@ def convert_eagitexi(options):
     if options.output_type == "eagitex":
         options.write('{"levels":1\n')
     else:
-        options.write('{"level":1\n')
+        options.write('{"level":0\n')
     options.write(',"width":%d\n' % image0.width())
     options.write(',"height":%d\n' % image0.height())
     if(len(options.input_paths) > 1):
         options.write(',"depth":%d\n' % len(options.input_paths))
-    options.write(',"channels":2\n')
     options.write(',"data_type":"unsigned_byte"\n')
-    options.write(',"format":"rg"\n')
-    options.write(',"iformat":"rg8"\n')
+    if options.variant is None:
+        options.write(',"channels":1\n')
+        options.write(',"format":"red"\n')
+        options.write(',"iformat":"r8"\n')
+    else:
+        options.write(',"channels":2\n')
+        options.write(',"format":"rg"\n')
+        options.write(',"iformat":"rg8"\n')
     options.write(',"wrap_s":"repeat"\n')
     options.write(',"wrap_t":"repeat"\n')
     if(len(options.input_paths) > 1):
