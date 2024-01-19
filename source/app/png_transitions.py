@@ -97,6 +97,13 @@ class ArgumentParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, **kw)
 
         self.add_argument(
+            "--print-bash-completion",
+            metavar='FILE|-',
+            dest='print_bash_completion',
+            default=None
+        )
+
+        self.add_argument(
             "--input", "-i",
             metavar='INPUT-FILE',
             dest='input_paths',
@@ -574,12 +581,34 @@ def print_missing(options):
             if not os.path.isfile(path):
                 print(path)
 # ------------------------------------------------------------------------------
+#  bash completion
+# ------------------------------------------------------------------------------
+def printBashCompletion(argparser, options):
+    from eagine.argparseUtil import printBashComplete
+    def _printIt(fd):
+        printBashComplete(
+            argparser,
+            "_eagine_png_transitions",
+            "eagine-png-transitions",
+            ["--print-bash-completion"],
+            fd)
+    if options.print_bash_completion == "-":
+        _printIt(sys.stdout)
+    else:
+        with open(options.print_bash_completion, "wt") as fd:
+            _printIt(fd)
+
+# ------------------------------------------------------------------------------
 #  Main function
 # ------------------------------------------------------------------------------
 def main():
     try:
-        options = getArgumentParser().parseArgs()
-        if options.print_combinations:
+        argparser = getArgumentParser()
+        options = argparser.parseArgs()
+        if options.print_bash_completion:
+            printBashCompletion(argparser, options)
+            return 0
+        elif options.print_combinations:
             print_combinations(options)
         elif options.print_missing:
             print_missing(options)

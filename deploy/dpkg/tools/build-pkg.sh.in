@@ -12,22 +12,27 @@ mkdir -p "${pkg_dir}/usr"
 pkg_prefix=$(realpath "@PKG_DIR@/usr")
 lib_prefix="${pkg_prefix}/lib/@PKG_MULTIARCH@"
 bin_prefix="${pkg_prefix}/bin"
+bco_prefix="${pkg_dir}/etc/bash_completion.d"
 cmk_prefix="${lib_prefix}/cmake/EAGine"
 
 # ------------------------------------------------------------------------------
 mkdir -p "${bin_prefix}"
+mkdir -p "${bco_prefix}"
 
 cp "${src_dir}/source/app/png_to_eagitexi.py" \
    "${bin_prefix}/eagine-png-to-eagitexi"
+"${src_dir}/source/app/png_to_eagitexi.py" \
+	--print-bash-completion "${bco_prefix}/eagine-png-to-eagitexi"
 
 cp "${src_dir}/source/app/png_transitions.py" \
    "${bin_prefix}/eagine-png-transitions"
+"${src_dir}/source/app/png_transitions.py" \
+	--print-bash-completion "${bco_prefix}/eagine-png-transitions"
 
 cp "${src_dir}/source/app/tiling_to_eagitexi.py" \
    "${bin_prefix}/eagine-tiling-to-eagitexi"
-
-cp "${src_dir}/source/app/generate_eagitexi.py" \
-   "${bin_prefix}/eagine-generate-eagitexi"
+"${src_dir}/source/app/tiling_to_eagitexi.py" \
+	--print-bash-completion "${bco_prefix}/eagine-tiling-to-eagitexi"
 # ------------------------------------------------------------------------------
 mkdir -p "${pkg_dir}/DEBIAN"
 cat << CONTROL > "${pkg_dir}/DEBIAN/control"
