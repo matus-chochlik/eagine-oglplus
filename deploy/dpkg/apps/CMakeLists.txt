@@ -3,7 +3,7 @@
 # See accompanying file LICENSE_1_0.txt or copy at
 #  http://www.boost.org/LICENSE_1_0.txt
 #
-set(PKG_NAME "eagine-oglplus-tools_${EAGINE_VERSION}-${EAGINE_GIT_COMMITS_SINCE_VERSION}_${PKG_ARCH}")
+set(PKG_NAME "eagine-oglplus-apps_${EAGINE_VERSION}-${EAGINE_GIT_COMMITS_SINCE_VERSION}_${PKG_ARCH}")
 set(PKG_DIR "${CMAKE_CURRENT_BINARY_DIR}/${PKG_NAME}")
 set(PKG_PREFIX "${PKG_DIR}/usr")
 
@@ -27,9 +27,9 @@ add_custom_command(
 )
 
 add_custom_target(
-	eagine-oglplus-tools-deb
+	eagine-oglplus-apps-deb
 	DEPENDS ${PKG_NAME}.deb
 )
 
-add_dependencies(eagine-oglplus-deb eagine-oglplus-tools-deb)
+add_dependencies(eagine-oglplus-deb eagine-oglplus-apps-deb)
 
