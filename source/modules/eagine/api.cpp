@@ -3948,6 +3948,18 @@ public:
     auto set_uniform(
       const program_name prog,
       const uniform_location loc,
+      const texture_unit tex_unit) const -> combined_result<void> {
+        return _set_uniform(
+          this->program_uniform1i,
+          this->uniform1i,
+          prog,
+          loc,
+          int_type(tex_unit.value() - constants().texture0.value()));
+    }
+
+    auto set_uniform(
+      const program_name prog,
+      const uniform_location loc,
       const span<const int_type> value,
       const std::type_identity<int_type[1]>) const -> combined_result<void> {
         return _set_uniform(
