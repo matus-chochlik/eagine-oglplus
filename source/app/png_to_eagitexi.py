@@ -108,6 +108,13 @@ class ArgumentParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, **kw)
 
         self.add_argument(
+            "--print-bash-completion",
+            metavar='FILE|-',
+            dest='print_bash_completion',
+            default=None
+        )
+
+        self.add_argument(
             "--elements", "-E",
             dest='write_elements',
             action="store_true",
@@ -564,11 +571,36 @@ def convert(options):
                     options.write(chunk)
 
 # ------------------------------------------------------------------------------
+#  bash completion
+# ------------------------------------------------------------------------------
+def printBashCompletion(argparser, options):
+    from eagine.argparseUtil import printBashComplete
+    def _printIt(fd):
+        printBashComplete(
+            argparser,
+            "_eagine_png_to_eagitexi",
+            "eagine-png-to-eagitexi",
+            ["--print-bash-completion"],
+            fd)
+    if options.print_bash_completion == "-":
+        _printIt(sys.stdout)
+    else:
+        with open(options.print_bash_completion, "wt") as fd:
+            _printIt(fd)
+
+# ------------------------------------------------------------------------------
+# main
+# ------------------------------------------------------------------------------
 def main():
     try:
-        options = getArgumentParser().parseArgs()
-        convert(options)
-        return 0
+        argparser = getArgumentParser()
+        options = argparser.parseArgs()
+        if options.print_bash_completion:
+            printBashCompletion(argparser, options)
+            return 0
+        else:
+            convert(options)
+            return 0
     except Exception as error:
         print(type(error), error)
         try: os.remove(options.output_path)

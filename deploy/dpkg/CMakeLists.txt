@@ -23,7 +23,7 @@ add_custom_target(eagine-oglplus-deb)
 add_subdirectory(assets)
 if(TARGET eagine.oglplus)
 	add_subdirectory(dev)
-	add_subdirectory(tools)
+	add_subdirectory(apps)
 endif()
 
 if(NOT TARGET eagine-deb)

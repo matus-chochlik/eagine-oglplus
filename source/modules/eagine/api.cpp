@@ -3948,6 +3948,18 @@ public:
     auto set_uniform(
       const program_name prog,
       const uniform_location loc,
+      const texture_unit tex_unit) const -> combined_result<void> {
+        return _set_uniform(
+          this->program_uniform1i,
+          this->uniform1i,
+          prog,
+          loc,
+          int_type(tex_unit.value() - constants().texture0.value()));
+    }
+
+    auto set_uniform(
+      const program_name prog,
+      const uniform_location loc,
       const span<const int_type> value,
       const std::type_identity<int_type[1]>) const -> combined_result<void> {
         return _set_uniform(
@@ -4222,17 +4234,15 @@ namespace std {
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
 struct tuple_size<eagine::oglplus::basic_gl_api<ApiTraits>>
-  : public std::integral_constant<std::size_t, 2> {};
+  : integral_constant<std::size_t, 2> {};
 
 template <typename ApiTraits>
-struct tuple_element<0, eagine::oglplus::basic_gl_api<ApiTraits>> {
-    using type = eagine::oglplus::basic_gl_operations<ApiTraits>;
-};
+struct tuple_element<0, eagine::oglplus::basic_gl_api<ApiTraits>>
+  : type_identity<eagine::oglplus::basic_gl_operations<ApiTraits>> {};
 
 template <typename ApiTraits>
-struct tuple_element<1, eagine::oglplus::basic_gl_api<ApiTraits>> {
-    using type = eagine::oglplus::basic_gl_constants<ApiTraits>;
-};
+struct tuple_element<1, eagine::oglplus::basic_gl_api<ApiTraits>>
+  : type_identity<eagine::oglplus::basic_gl_constants<ApiTraits>> {};
 //------------------------------------------------------------------------------
 } // namespace std
 namespace eagine::oglplus {

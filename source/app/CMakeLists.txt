@@ -20,9 +20,3 @@ install(
 	DESTINATION bin
 )
 
-install(
-	PROGRAMS generate_eagitexi.py
-	RENAME eagine-generate-eagitexi
-	DESTINATION bin
-)
-
