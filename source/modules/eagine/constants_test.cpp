@@ -119,12 +119,12 @@ void constants_enum_by_name(auto& s) {
     check("texture_buffer");
     check("texture_cube_map");
     check("texture_cube_map_array");
-    check("texture_cube_negative_x");
-    check("texture_cube_positive_x");
-    check("texture_cube_negative_y");
-    check("texture_cube_positive_y");
-    check("texture_cube_negative_z");
-    check("texture_cube_positive_z");
+    check("texture_cube_map_negative_x");
+    check("texture_cube_map_positive_x");
+    check("texture_cube_map_negative_y");
+    check("texture_cube_map_positive_y");
+    check("texture_cube_map_negative_z");
+    check("texture_cube_map_positive_z");
     check("texture_rectangle");
     check("transform_feedback");
     check("transform_feedback_buffer");
