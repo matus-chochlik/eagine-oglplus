@@ -278,6 +278,13 @@ class ArgumentParser(argparse.ArgumentParser):
 
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
+        for i, path in enumerate(options.input_paths):
+            if not (os.path.exists(path) and os.path.isfile(path)):
+                self.error(
+                    "'%(path)s' (input %(i)d) is not a valid input file path" % {
+                        "i": i,
+                        "path": path})
+
         if len(options.input_paths) and os.path.isdir(options.input_paths[0]):
             tileset = self.getTilesetInputs(options.input_paths[0])
             assert tileset is not None
@@ -286,8 +293,9 @@ class ArgumentParser(argparse.ArgumentParser):
         if options.cube_map:
             options.flip_y = True
             if len(options.input_paths) % 6 != 0:
-                raise argparse.ArgumentTypeError("invalid number of cube-map images")
-
+                self.error(
+                    "invalid number (%d instead of 6) of cube-map images" %
+                    len(options.input_paths))
         options.input_paths = PngInputs(options)
 
         if options.output_path is None:
