@@ -174,12 +174,20 @@ auto within_limits<oglplus::pixel_internal_format, oglplus::gl_types::enum_type>
         case GL_COMPRESSED_RGBA:
         case GL_COMPRESSED_SRGB:
         case GL_COMPRESSED_SRGB_ALPHA:
+        case GL_R16F:
+        case GL_R32F:
         case GL_R8:
         case GL_R8UI:
+        case GL_RG16F:
+        case GL_RG32F:
         case GL_RG8:
         case GL_RG8UI:
+        case GL_RGB16F:
+        case GL_RGB32F:
         case GL_RGB8:
         case GL_RGB8UI:
+        case GL_RGBA16F:
+        case GL_RGBA32F:
         case GL_RGBA8:
         case GL_RGBA8UI:
             return true;
@@ -378,16 +386,24 @@ auto map_gl_enum_by_name() noexcept {
       .add("query_buffer", GL_QUERY_BUFFER)
       .add("rasterizer_discard", GL_RASTERIZER_DISCARD)
       .add("repeat", GL_REPEAT)
+      .add("r16f", GL_R16F)
+      .add("r32f", GL_R32F)
       .add("r8", GL_R8)
       .add("r8ui", GL_R8UI)
       .add("red", GL_RED)
       .add("rg", GL_RG)
+      .add("rg16f", GL_RG16F)
+      .add("rg32f", GL_RG32F)
       .add("rg8", GL_RG8)
       .add("rg8ui", GL_RG8UI)
       .add("rgb", GL_RGB)
+      .add("rgb16f", GL_RGB16F)
+      .add("rgb32f", GL_RGB32F)
       .add("rgb8", GL_RGB8)
       .add("rgb8ui", GL_RGB8UI)
       .add("rgba", GL_RGBA)
+      .add("rgba16f", GL_RGBA16F)
+      .add("rgba32f", GL_RGBA32F)
       .add("rgba8", GL_RGBA8)
       .add("rgba8ui", GL_RGBA8UI)
       .add("red_integer", GL_RED_INTEGER)
