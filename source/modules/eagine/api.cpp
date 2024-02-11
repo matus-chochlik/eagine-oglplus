@@ -3808,11 +3808,9 @@ public:
     basic_gl_api(ApiTraits traits)
       : ApiTraits{std::move(traits)}
       , basic_gl_operations<ApiTraits>{*static_cast<ApiTraits*>(this)}
-      , basic_gl_constants<ApiTraits> {
-        *static_cast<ApiTraits*>(this),
-          *static_cast<basic_gl_operations<ApiTraits>*>(this)
-    }
-    {}
+      , basic_gl_constants<ApiTraits>{
+          *static_cast<ApiTraits*>(this),
+          *static_cast<basic_gl_operations<ApiTraits>*>(this)} {}
 
     /// @brief Default constructor.
     basic_gl_api()
@@ -4227,6 +4225,29 @@ auto translate(const basic_gl_api<A>& api, const bool value) noexcept
 /// @brief Alias for the default instantation of basic_gl_api.
 /// @ingroup gl_api_wrap
 export using gl_api = basic_gl_api<gl_api_traits>;
+
+export using buffer_object =
+  gl_object<basic_gl_operations<gl_api_traits>, buffer_tag>;
+export using shader_object =
+  gl_object<basic_gl_operations<gl_api_traits>, shader_tag>;
+export using program_object =
+  gl_object<basic_gl_operations<gl_api_traits>, program_tag>;
+export using program_pipeline_object =
+  gl_object<basic_gl_operations<gl_api_traits>, program_pipeline_tag>;
+export using sampler_object =
+  gl_object<basic_gl_operations<gl_api_traits>, sampler_tag>;
+export using texture_object =
+  gl_object<basic_gl_operations<gl_api_traits>, texture_tag>;
+export using renderbuffer_object =
+  gl_object<basic_gl_operations<gl_api_traits>, renderbuffer_tag>;
+export using framebuffer_object =
+  gl_object<basic_gl_operations<gl_api_traits>, framebuffer_tag>;
+export using query_object =
+  gl_object<basic_gl_operations<gl_api_traits>, query_tag>;
+export using transform_feedback_object =
+  gl_object<basic_gl_operations<gl_api_traits>, transform_feedback_tag>;
+
+//------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
 // NOLINTNEXTLINE(cert-dcl58-cpp)
