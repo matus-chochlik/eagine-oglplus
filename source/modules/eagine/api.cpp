@@ -630,6 +630,24 @@ public:
 
     c_api::combined<
       simple_adapted_function<
+        &gl_api::Scissor,
+        void(int_type, int_type, sizei_type, sizei_type)>,
+      simple_adapted_function<
+        &gl_api::Scissor,
+        void(c_api::defaulted, c_api::defaulted, sizei_type, sizei_type)>>
+      scissor{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ScissorArrayv,
+        void(uint_type, memory::chunk_span<const int_type, 4>)>,
+      simple_adapted_function<
+        &gl_api::ScissorArrayv,
+        void(c_api::defaulted, memory::chunk_span<const int_type, 4>)>>
+      scissor_array{*this};
+
+    c_api::combined<
+      simple_adapted_function<
         &gl_api::StencilFunc,
         void(compare_function, int_type, uint_type)>,
       simple_adapted_function<
