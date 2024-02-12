@@ -3584,23 +3584,38 @@ public:
         });
     }
 
-    // get_extensions
-    auto get_extensions() const noexcept {
-#ifdef GL_EXTENSIONS
-        return get_string(string_query(GL_EXTENSIONS))
+    auto get_extension_count() const noexcept -> int_type {
+        int_type count{0};
+#ifdef GL_NUM_EXTENSIONS
+        this->GetIntegerv(GL_NUM_EXTENSIONS, &count);
 #else
-        return get_string(string_query(0x1F03))
+        this->GetIntegerv(0x821D, &count);
 #endif
-          .transform([](auto src) { return split_into_string_list(src, ' '); });
+        return count;
+    }
+
+    auto get_extension(int_type i) const noexcept -> string_view {
+#ifdef GL_EXTENSIONS
+        return string_view{
+          reinterpret_cast<const char*>(this->GetStringi(GL_EXTENSIONS, i))};
+#else
+        return string_view{
+          reinterpret_cast<const char*>(this->GetStringi(0x1F03, i))};
+#endif
+    }
+
+    // get_extensions
+    auto get_extensions() const noexcept -> generator<string_view> {
+        for(const auto i : integer_range(get_extension_count())) {
+            co_yield get_extension(i);
+        }
     }
 
     // has_extension
     auto has_extension(string_view which) const noexcept {
-        if(ok extensions{get_extensions()}) {
-            for(auto ext_name : extensions) {
-                if(ends_with(ext_name, which)) {
-                    return true;
-                }
+        for(const auto i : integer_range(get_extension_count())) {
+            if(ends_with(get_extension(i), which)) {
+                return true;
             }
         }
         return false;
