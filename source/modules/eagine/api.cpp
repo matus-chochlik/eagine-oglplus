@@ -3765,8 +3765,8 @@ public:
       void(
         debug_output_source,
         debug_output_type,
-        debug_output_severity,
         uint_type,
+        debug_output_severity,
         string_view)>
       debug_message_insert{*this};
 
