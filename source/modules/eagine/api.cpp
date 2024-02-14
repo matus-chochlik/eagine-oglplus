@@ -32,7 +32,7 @@ import :c_api;
 import :api_traits;
 
 namespace eagine::c_api {
-
+//------------------------------------------------------------------------------
 template <>
 struct cast_to_map<const oglplus::gl_types::ubyte_type*, string_view> {
     template <typename... P>
@@ -4304,5 +4304,69 @@ using basic_gl_api_reference =
   c_api::basic_api_reference<basic_gl_api<ApiTraits>>;
 
 export using gl_api_reference = basic_gl_api_reference<gl_api_traits>;
+//------------------------------------------------------------------------------
+export struct gl_context_handler : interface<gl_context_handler> {
+    virtual auto make_current() noexcept -> bool = 0;
+};
+//------------------------------------------------------------------------------
+export template <typename ApiTraits>
+struct basic_gl_api_context {
+    basic_gl_api_context() noexcept = default;
+    basic_gl_api_context(ApiTraits traits) noexcept
+      : gl_api{std::move(traits)} {}
+
+    shared_holder<gl_context_handler> gl_context{};
+    basic_gl_api<ApiTraits> gl_api{};
+};
+//------------------------------------------------------------------------------
+export template <typename ApiTraits>
+class basic_shared_gl_api_context {
+public:
+    explicit operator bool() const noexcept {
+        return bool(_shared);
+    }
+
+    auto set_context(shared_holder<gl_context_handler> context) noexcept
+      -> basic_shared_gl_api_context& {
+        assert(_shared);
+        _shared->gl_context = std::move(context);
+        return *this;
+    }
+
+    auto ensure() -> basic_shared_gl_api_context& {
+        _shared.ensure();
+        return *this;
+    }
+
+    auto ensure(ApiTraits traits) -> basic_shared_gl_api_context& {
+        _shared.ensure(std::move(traits));
+        return *this;
+    }
+
+    auto make_current() noexcept -> bool {
+        if(_shared and _shared->gl_context) {
+            return _shared->gl_context->make_current();
+        }
+        return false;
+    }
+
+    auto gl_ref() const noexcept -> basic_gl_api_reference<ApiTraits> {
+        if(_shared) {
+            return {_shared->gl_api};
+        }
+        return {};
+    }
+
+    auto gl_api() const noexcept -> basic_gl_api<ApiTraits>& {
+        assert(_shared);
+        return _shared->gl_api;
+    }
+
+private:
+    shared_holder<basic_gl_api_context<ApiTraits>> _shared;
+};
+
+export using shared_gl_api_context = basic_shared_gl_api_context<gl_api_traits>;
+//------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
