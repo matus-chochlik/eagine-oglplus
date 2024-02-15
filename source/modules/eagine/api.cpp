@@ -4322,6 +4322,14 @@ struct basic_gl_api_context {
 export template <typename ApiTraits>
 class basic_shared_gl_api_context {
 public:
+    basic_shared_gl_api_context() noexcept = default;
+
+    template <std::derived_from<gl_context_handler> ContextHandler>
+    basic_shared_gl_api_context(shared_holder<ContextHandler> handler) noexcept
+      : _shared{default_selector} {
+        set_context(std::move(handler));
+    }
+
     explicit operator bool() const noexcept {
         return bool(_shared);
     }
