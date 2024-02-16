@@ -2791,7 +2791,7 @@ public:
 
     simple_adapted_function<
       &gl_api::NamedFramebufferDrawBuffer,
-      void(framebuffer_name, surface_buffer)>
+      void(framebuffer_name, framebuffer_attachment)>
       named_framebuffer_draw_buffer{*this};
 
     simple_adapted_function<&gl_api::ReadBuffer, void(surface_buffer)>
@@ -2799,7 +2799,7 @@ public:
 
     simple_adapted_function<
       &gl_api::NamedFramebufferReadBuffer,
-      void(framebuffer_name, surface_buffer)>
+      void(framebuffer_name, framebuffer_attachment)>
       named_framebuffer_read_buffer{*this};
 
     simple_adapted_function<
