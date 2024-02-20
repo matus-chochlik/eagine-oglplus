@@ -4301,7 +4301,7 @@ namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 export template <typename ApiTraits>
 using basic_gl_api_reference =
-  c_api::basic_api_reference<basic_gl_api<ApiTraits>>;
+  c_api::basic_api_reference<const basic_gl_api<ApiTraits>>;
 
 export using gl_api_reference = basic_gl_api_reference<gl_api_traits>;
 //------------------------------------------------------------------------------
@@ -4316,7 +4316,7 @@ struct basic_gl_api_context {
       : gl_api{std::move(traits)} {}
 
     shared_holder<gl_context_handler> gl_context{};
-    basic_gl_api<ApiTraits> gl_api{};
+    const basic_gl_api<ApiTraits> gl_api{};
 };
 //------------------------------------------------------------------------------
 export template <typename ApiTraits>
@@ -4365,7 +4365,7 @@ public:
         return {};
     }
 
-    auto gl_api() const noexcept -> basic_gl_api<ApiTraits>& {
+    auto gl_api() const noexcept -> const basic_gl_api<ApiTraits>& {
         assert(_shared);
         return _shared->gl_api;
     }
