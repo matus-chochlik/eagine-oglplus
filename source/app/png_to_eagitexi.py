@@ -138,6 +138,13 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
+            "--force-alpha", "-A",
+            dest='force_alpha',
+            action="store_true",
+            default=False
+        )
+
+        self.add_argument(
             "--inkscape-color",
             metavar='OPTION',
             dest='inkscape_color',
@@ -335,20 +342,24 @@ def getArgumentParser():
 # ------------------------------------------------------------------------------
 class PILPngImageAdapter(object):
     # -------------------------------------------------------------------------
-    def __init__(self, img):
+    def __init__(self, options, img):
+        self._options = options
         self._img = img
         self._has_palette = False
         self._data_type = "unsigned_byte"
 
         has_transparency = "transparency" in self._img.info
         has_alpha = False
-        try:
-            for e in self._img.getdata(band=3):
-                if e != 255:
-                    has_alpha = True
-                    break
-        except:
-            pass
+        if self._options.force_alpha:
+            has_alpha = True
+        else:
+            try:
+                for e in self._img.getdata(band=3):
+                    if e != 255:
+                        has_alpha = True
+                        break
+            except:
+                pass
 
         mode = self._img.mode
 
@@ -455,7 +466,7 @@ class PngImage(object):
             png = PIL.Image.open(input_path)
             if not options.flip_y: # Yes, not
                 png = png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
-            self._delegate = PILPngImageAdapter(png)
+            self._delegate = PILPngImageAdapter(options, png)
         except: raise
 
         assert self._delegate is not None
