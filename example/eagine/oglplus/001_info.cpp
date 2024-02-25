@@ -46,16 +46,8 @@ static void run(main_ctx& ctx) {
 
     const auto ext_cio{out.cio_print("Extensions:").to_be_continued()};
 
-    if(const ok extensions{gl.get_extensions()}) {
-        for(auto name : extensions) {
-            ext_cio.print(name);
-        }
-    } else {
-        ext_cio
-          .print(
-            console_entry_kind::error,
-            "failed to get extension list: ${message}")
-          .arg("message", (not extensions).message());
+    for(auto name : gl.get_extensions()) {
+        ext_cio.print(name);
     }
 }
 
@@ -103,7 +95,6 @@ auto main(main_ctx& ctx) -> int {
     }
     return 1;
 }
-
 } // namespace eagine
 
 auto main(int argc, const char** argv) -> int {

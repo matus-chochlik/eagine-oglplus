@@ -81,8 +81,22 @@ void constants_enum_by_name(auto& s) {
     check("query_buffer");
     check("rasterizer_discard");
     check("repeat");
+    check("r16f");
+    check("r32f");
     check("r8");
     check("r8ui");
+    check("rg16f");
+    check("rg32f");
+    check("rg8");
+    check("rg8ui");
+    check("rgb16f");
+    check("rgb32f");
+    check("rgb8");
+    check("rgb8ui");
+    check("rgba16f");
+    check("rgba32f");
+    check("rgba8");
+    check("rgba8ui");
     check("red");
     check("rgb");
     check("rgb8");
@@ -137,7 +151,7 @@ void constants_enum_by_name(auto& s) {
     check("vertex_shader");
     check("zero");
 
-    test.check_equal(distinct.size(), 112U, "constant count");
+    test.check_equal(distinct.size(), 124U, "constant count");
 }
 //------------------------------------------------------------------------------
 auto main(int argc, const char** argv) -> int {

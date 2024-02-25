@@ -138,6 +138,13 @@ class ArgumentParser(argparse.ArgumentParser):
         )
 
         self.add_argument(
+            "--force-alpha", "-A",
+            dest='force_alpha',
+            action="store_true",
+            default=False
+        )
+
+        self.add_argument(
             "--inkscape-color",
             metavar='OPTION',
             dest='inkscape_color',
@@ -278,6 +285,13 @@ class ArgumentParser(argparse.ArgumentParser):
 
     # -------------------------------------------------------------------------
     def processParsedOptions(self, options):
+        for i, path in enumerate(options.input_paths):
+            if not (os.path.exists(path) and os.path.isfile(path)):
+                self.error(
+                    "'%(path)s' (input %(i)d) is not a valid input file path" % {
+                        "i": i,
+                        "path": path})
+
         if len(options.input_paths) and os.path.isdir(options.input_paths[0]):
             tileset = self.getTilesetInputs(options.input_paths[0])
             assert tileset is not None
@@ -286,8 +300,9 @@ class ArgumentParser(argparse.ArgumentParser):
         if options.cube_map:
             options.flip_y = True
             if len(options.input_paths) % 6 != 0:
-                raise argparse.ArgumentTypeError("invalid number of cube-map images")
-
+                self.error(
+                    "invalid number (%d instead of 6) of cube-map images" %
+                    len(options.input_paths))
         options.input_paths = PngInputs(options)
 
         if options.output_path is None:
@@ -327,20 +342,24 @@ def getArgumentParser():
 # ------------------------------------------------------------------------------
 class PILPngImageAdapter(object):
     # -------------------------------------------------------------------------
-    def __init__(self, img):
+    def __init__(self, options, img):
+        self._options = options
         self._img = img
         self._has_palette = False
         self._data_type = "unsigned_byte"
 
         has_transparency = "transparency" in self._img.info
         has_alpha = False
-        try:
-            for e in self._img.getdata(band=3):
-                if e != 255:
-                    has_alpha = True
-                    break
-        except:
-            pass
+        if self._options.force_alpha:
+            has_alpha = True
+        else:
+            try:
+                for e in self._img.getdata(band=3):
+                    if e != 255:
+                        has_alpha = True
+                        break
+            except:
+                pass
 
         mode = self._img.mode
 
@@ -447,7 +466,7 @@ class PngImage(object):
             png = PIL.Image.open(input_path)
             if not options.flip_y: # Yes, not
                 png = png.transpose(PIL.Image.FLIP_TOP_BOTTOM)
-            self._delegate = PILPngImageAdapter(png)
+            self._delegate = PILPngImageAdapter(options, png)
         except: raise
 
         assert self._delegate is not None

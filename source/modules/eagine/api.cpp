@@ -32,7 +32,7 @@ import :c_api;
 import :api_traits;
 
 namespace eagine::c_api {
-
+//------------------------------------------------------------------------------
 template <>
 struct cast_to_map<const oglplus::gl_types::ubyte_type*, string_view> {
     template <typename... P>
@@ -161,19 +161,21 @@ public:
 
     /// @var ARB_debug_output
     /// @glextwrap{ARB_debug_output}
-    extension ARB_debug_output;
+    extension ARB_debug_output{"ARB_debug_output", *this};
 
     /// @var ARB_compatibility
     /// @glextwrap{ARB_compatibility}
-    extension ARB_compatibility;
+    extension ARB_compatibility{"ARB_compatibility", *this};
 
     /// @var ARB_robustness
     /// @glextwrap{ARB_robustness}
-    extension ARB_robustness;
+    extension ARB_robustness{"ARB_robustness", *this};
 
     /// @var ARB_shading_language_include
     /// @glextwrap{ARB_shading_language_include}
-    extension ARB_shading_language_include;
+    extension ARB_shading_language_include{
+      "ARB_shading_language_include",
+      *this};
 
     // utilities
     static constexpr auto type_of(buffer_name) noexcept {
@@ -627,6 +629,24 @@ public:
         &gl_api::ViewportArrayv,
         void(c_api::defaulted, memory::chunk_span<const float_type, 4>)>>
       viewport_array{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::Scissor,
+        void(int_type, int_type, sizei_type, sizei_type)>,
+      simple_adapted_function<
+        &gl_api::Scissor,
+        void(c_api::defaulted, c_api::defaulted, sizei_type, sizei_type)>>
+      scissor{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::ScissorArrayv,
+        void(uint_type, memory::chunk_span<const int_type, 4>)>,
+      simple_adapted_function<
+        &gl_api::ScissorArrayv,
+        void(c_api::defaulted, memory::chunk_span<const int_type, 4>)>>
+      scissor_array{*this};
 
     c_api::combined<
       simple_adapted_function<
@@ -2771,7 +2791,7 @@ public:
 
     simple_adapted_function<
       &gl_api::NamedFramebufferDrawBuffer,
-      void(framebuffer_name, surface_buffer)>
+      void(framebuffer_name, framebuffer_attachment)>
       named_framebuffer_draw_buffer{*this};
 
     simple_adapted_function<&gl_api::ReadBuffer, void(surface_buffer)>
@@ -2779,7 +2799,7 @@ public:
 
     simple_adapted_function<
       &gl_api::NamedFramebufferReadBuffer,
-      void(framebuffer_name, surface_buffer)>
+      void(framebuffer_name, framebuffer_attachment)>
       named_framebuffer_read_buffer{*this};
 
     simple_adapted_function<
@@ -3564,23 +3584,38 @@ public:
         });
     }
 
-    // get_extensions
-    auto get_extensions() const noexcept {
-#ifdef GL_EXTENSIONS
-        return get_string(string_query(GL_EXTENSIONS))
+    auto get_extension_count() const noexcept -> int_type {
+        int_type count{0};
+#ifdef GL_NUM_EXTENSIONS
+        this->GetIntegerv(GL_NUM_EXTENSIONS, &count);
 #else
-        return get_string(string_query(0x1F03))
+        this->GetIntegerv(0x821D, &count);
 #endif
-          .transform([](auto src) { return split_into_string_list(src, ' '); });
+        return count;
+    }
+
+    auto get_extension(int_type i) const noexcept -> string_view {
+#ifdef GL_EXTENSIONS
+        return string_view{
+          reinterpret_cast<const char*>(this->GetStringi(GL_EXTENSIONS, i))};
+#else
+        return string_view{
+          reinterpret_cast<const char*>(this->GetStringi(0x1F03, i))};
+#endif
+    }
+
+    // get_extensions
+    auto get_extensions() const noexcept -> generator<string_view> {
+        for(const auto i : integer_range(get_extension_count())) {
+            co_yield get_extension(i);
+        }
     }
 
     // has_extension
     auto has_extension(string_view which) const noexcept {
-        if(ok extensions{get_extensions()}) {
-            for(auto ext_name : extensions) {
-                if(ends_with(ext_name, which)) {
-                    return true;
-                }
+        for(const auto i : integer_range(get_extension_count())) {
+            if(ends_with(get_extension(i), which)) {
+                return true;
             }
         }
         return false;
@@ -3730,8 +3765,8 @@ public:
       void(
         debug_output_source,
         debug_output_type,
-        debug_output_severity,
         uint_type,
+        debug_output_severity,
         string_view)>
       debug_message_insert{*this};
 
@@ -3781,11 +3816,7 @@ public:
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
 basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
-  : gl_api{traits}
-  , ARB_debug_output{"ARB_debug_output", *this}
-  , ARB_compatibility{"ARB_compatibility", *this}
-  , ARB_robustness{"ARB_robustness", *this}
-  , ARB_shading_language_include{"ARB_shading_language_include", *this} {}
+  : gl_api{traits} {}
 //------------------------------------------------------------------------------
 /// @brief Combined wrapper for the GL API operations and constants.
 /// @ingroup gl_api_wrap
@@ -3808,11 +3839,9 @@ public:
     basic_gl_api(ApiTraits traits)
       : ApiTraits{std::move(traits)}
       , basic_gl_operations<ApiTraits>{*static_cast<ApiTraits*>(this)}
-      , basic_gl_constants<ApiTraits> {
-        *static_cast<ApiTraits*>(this),
-          *static_cast<basic_gl_operations<ApiTraits>*>(this)
-    }
-    {}
+      , basic_gl_constants<ApiTraits>{
+          *static_cast<ApiTraits*>(this),
+          *static_cast<basic_gl_operations<ApiTraits>*>(this)} {}
 
     /// @brief Default constructor.
     basic_gl_api()
@@ -4227,6 +4256,29 @@ auto translate(const basic_gl_api<A>& api, const bool value) noexcept
 /// @brief Alias for the default instantation of basic_gl_api.
 /// @ingroup gl_api_wrap
 export using gl_api = basic_gl_api<gl_api_traits>;
+
+export using buffer_object =
+  gl_object<basic_gl_operations<gl_api_traits>, buffer_tag>;
+export using shader_object =
+  gl_object<basic_gl_operations<gl_api_traits>, shader_tag>;
+export using program_object =
+  gl_object<basic_gl_operations<gl_api_traits>, program_tag>;
+export using program_pipeline_object =
+  gl_object<basic_gl_operations<gl_api_traits>, program_pipeline_tag>;
+export using sampler_object =
+  gl_object<basic_gl_operations<gl_api_traits>, sampler_tag>;
+export using texture_object =
+  gl_object<basic_gl_operations<gl_api_traits>, texture_tag>;
+export using renderbuffer_object =
+  gl_object<basic_gl_operations<gl_api_traits>, renderbuffer_tag>;
+export using framebuffer_object =
+  gl_object<basic_gl_operations<gl_api_traits>, framebuffer_tag>;
+export using query_object =
+  gl_object<basic_gl_operations<gl_api_traits>, query_tag>;
+export using transform_feedback_object =
+  gl_object<basic_gl_operations<gl_api_traits>, transform_feedback_tag>;
+
+//------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
 // NOLINTNEXTLINE(cert-dcl58-cpp)
@@ -4249,8 +4301,80 @@ namespace eagine::oglplus {
 //------------------------------------------------------------------------------
 export template <typename ApiTraits>
 using basic_gl_api_reference =
-  c_api::basic_api_reference<basic_gl_api<ApiTraits>>;
+  c_api::basic_api_reference<const basic_gl_api<ApiTraits>>;
 
 export using gl_api_reference = basic_gl_api_reference<gl_api_traits>;
+//------------------------------------------------------------------------------
+export struct gl_context_handler : interface<gl_context_handler> {
+    virtual auto make_current() noexcept -> bool = 0;
+};
+//------------------------------------------------------------------------------
+export template <typename ApiTraits>
+struct basic_gl_api_context {
+    basic_gl_api_context() noexcept = default;
+    basic_gl_api_context(ApiTraits traits) noexcept
+      : gl_api{std::move(traits)} {}
+
+    shared_holder<gl_context_handler> gl_context{};
+    const basic_gl_api<ApiTraits> gl_api{};
+};
+//------------------------------------------------------------------------------
+export template <typename ApiTraits>
+class basic_shared_gl_api_context {
+public:
+    basic_shared_gl_api_context() noexcept = default;
+
+    template <std::derived_from<gl_context_handler> ContextHandler>
+    basic_shared_gl_api_context(shared_holder<ContextHandler> handler) noexcept
+      : _shared{default_selector} {
+        set_context(std::move(handler));
+    }
+
+    explicit operator bool() const noexcept {
+        return bool(_shared);
+    }
+
+    auto set_context(shared_holder<gl_context_handler> context) noexcept
+      -> basic_shared_gl_api_context& {
+        assert(_shared);
+        _shared->gl_context = std::move(context);
+        return *this;
+    }
+
+    auto ensure() -> basic_shared_gl_api_context& {
+        _shared.ensure();
+        return *this;
+    }
+
+    auto ensure(ApiTraits traits) -> basic_shared_gl_api_context& {
+        _shared.ensure(std::move(traits));
+        return *this;
+    }
+
+    auto make_current() noexcept -> bool {
+        if(_shared and _shared->gl_context) {
+            return _shared->gl_context->make_current();
+        }
+        return false;
+    }
+
+    auto gl_ref() const noexcept -> basic_gl_api_reference<ApiTraits> {
+        if(_shared) {
+            return {_shared->gl_api};
+        }
+        return {};
+    }
+
+    auto gl_api() const noexcept -> const basic_gl_api<ApiTraits>& {
+        assert(_shared);
+        return _shared->gl_api;
+    }
+
+private:
+    shared_holder<basic_gl_api_context<ApiTraits>> _shared;
+};
+
+export using shared_gl_api_context = basic_shared_gl_api_context<gl_api_traits>;
+//------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
