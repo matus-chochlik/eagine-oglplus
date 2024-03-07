@@ -3903,22 +3903,22 @@ public:
     }
 
     auto shader_info_log(const shader_name prog) const
-      -> optionally_valid<std::string> {
+      -> valid_if_not_empty<std::string> {
         if(const auto len{this->get_shader_i(prog, this->info_log_length)}) {
             string_buffer logstr{*len + 1};
             if(const auto s{this->get_shader_info_log(prog, cover(logstr))}) {
-                return {to_string(*s), true};
+                return {to_string(*s)};
             }
         }
         return {};
     }
 
     auto program_info_log(const program_name prog) const
-      -> optionally_valid<std::string> {
+      -> valid_if_not_empty<std::string> {
         if(const auto len{this->get_program_i(prog, this->info_log_length)}) {
             string_buffer logstr{*len + 1};
             if(const auto s{this->get_program_info_log(prog, cover(logstr))}) {
-                return {to_string(*s), true};
+                return {to_string(*s)};
             }
         }
         return {};
