@@ -4236,6 +4236,17 @@ public:
           true_or_false(math::is_row_major_v<T>),
           canonical_compound_type<T>());
     }
+
+    template <typename T>
+    auto try_set_uniform(
+      const program_name prog,
+      string_view name,
+      const T& value) const noexcept {
+        return this->get_uniform_location(prog, name)
+          .and_then([&, this](auto loc) {
+              return this->set_uniform(prog, loc, value);
+          });
+    }
 };
 
 export template <std::size_t I, typename ApiTraits>
