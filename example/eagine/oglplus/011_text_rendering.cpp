@@ -21,7 +21,7 @@ static void run_loop(
     using namespace eagine;
     using namespace eagine::oglplus;
 
-    const gl_api glapi;
+    const gl_api glapi{ctx};
     const auto& [gl, GL] = glapi;
 
     const bool has_requirements =

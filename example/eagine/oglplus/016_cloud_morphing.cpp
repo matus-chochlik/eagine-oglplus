@@ -58,7 +58,7 @@ static void run_loop(
     set_progress_update_callback(
       ctx, {construct_from, progress_callback}, std::chrono::milliseconds{100});
 
-    const gl_api glapi;
+    const gl_api glapi{ctx};
     const auto& [gl, GL] = glapi;
 
     if(gl.clear) {

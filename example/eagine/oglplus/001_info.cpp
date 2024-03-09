@@ -17,7 +17,7 @@ namespace eagine {
 static void run(main_ctx& ctx) {
     using namespace eagine::oglplus;
 
-    const gl_api gl;
+    const gl_api gl{ctx};
     const main_ctx_object out{"OGLplus", ctx};
 
     if(const ok info{gl.get_string(gl.vendor)}) {

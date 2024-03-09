@@ -19,6 +19,7 @@ import eagine.core.math;
 import eagine.core.units;
 import eagine.core.utility;
 import eagine.core.c_api;
+import eagine.core.main_ctx;
 import :config;
 import :enum_types;
 import :extensions;
@@ -3824,7 +3825,8 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
 /// @see gl_api
 export template <typename ApiTraits>
 class basic_gl_api
-  : protected ApiTraits
+  : public main_ctx_object
+  , protected ApiTraits
   , public basic_gl_operations<ApiTraits>
   , public basic_gl_constants<ApiTraits> {
 
@@ -3836,16 +3838,17 @@ public:
     using float_type = typename gl_types::float_type;
 
     /// @brief Constructor using API traits..
-    basic_gl_api(ApiTraits traits)
-      : ApiTraits{std::move(traits)}
+    basic_gl_api(main_ctx_parent parent, ApiTraits traits)
+      : main_ctx_object{"GLAPI", parent}
+      , ApiTraits{std::move(traits)}
       , basic_gl_operations<ApiTraits>{*static_cast<ApiTraits*>(this)}
       , basic_gl_constants<ApiTraits>{
           *static_cast<ApiTraits*>(this),
           *static_cast<basic_gl_operations<ApiTraits>*>(this)} {}
 
     /// @brief Default constructor.
-    basic_gl_api()
-      : basic_gl_api{ApiTraits{}} {}
+    basic_gl_api(main_ctx_parent parent)
+      : basic_gl_api{parent, ApiTraits{}} {}
 
     /// @brief Returns a reference to the wrapped operations.
     auto operations() const noexcept -> const basic_gl_operations<ApiTraits>& {
@@ -4322,12 +4325,14 @@ export struct gl_context_handler : interface<gl_context_handler> {
 //------------------------------------------------------------------------------
 export template <typename ApiTraits>
 struct basic_gl_api_context {
-    basic_gl_api_context() noexcept = default;
-    basic_gl_api_context(ApiTraits traits) noexcept
-      : gl_api{std::move(traits)} {}
+    basic_gl_api_context(main_ctx_parent parent) noexcept
+      : gl_api{parent} {}
+
+    basic_gl_api_context(main_ctx_parent parent, ApiTraits traits) noexcept
+      : gl_api{parent, std::move(traits)} {}
 
     shared_holder<gl_context_handler> gl_context{};
-    const basic_gl_api<ApiTraits> gl_api{};
+    const basic_gl_api<ApiTraits> gl_api;
 };
 //------------------------------------------------------------------------------
 export template <typename ApiTraits>
@@ -4336,8 +4341,10 @@ public:
     basic_shared_gl_api_context() noexcept = default;
 
     template <std::derived_from<gl_context_handler> ContextHandler>
-    basic_shared_gl_api_context(shared_holder<ContextHandler> handler) noexcept
-      : _shared{default_selector} {
+    basic_shared_gl_api_context(
+      main_ctx_parent parent,
+      shared_holder<ContextHandler> handler) noexcept
+      : _shared{default_selector, parent} {
         set_context(std::move(handler));
     }
 
@@ -4352,13 +4359,14 @@ public:
         return *this;
     }
 
-    auto ensure() -> basic_shared_gl_api_context& {
-        _shared.ensure();
+    auto ensure(main_ctx_parent parent) -> basic_shared_gl_api_context& {
+        _shared.ensure(parent);
         return *this;
     }
 
-    auto ensure(ApiTraits traits) -> basic_shared_gl_api_context& {
-        _shared.ensure(std::move(traits));
+    auto ensure(main_ctx_parent parent, ApiTraits traits)
+      -> basic_shared_gl_api_context& {
+        _shared.ensure(parent, std::move(traits));
         return *this;
     }
 
