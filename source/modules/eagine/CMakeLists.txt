@@ -138,6 +138,7 @@ eagine_add_module(
 		eagine.core.utility
 		eagine.core.c_api
 		eagine.core.main_ctx
+		eagine.core.resource
 )
 
 eagine_add_module(

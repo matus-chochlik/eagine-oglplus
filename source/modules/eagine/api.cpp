@@ -20,6 +20,7 @@ import eagine.core.units;
 import eagine.core.utility;
 import eagine.core.c_api;
 import eagine.core.main_ctx;
+import eagine.core.resource;
 import :config;
 import :enum_types;
 import :extensions;
@@ -3875,6 +3876,14 @@ public:
         return b ? true_false(this->true_) : true_false(this->false_);
     }
 
+    /// @brief Adds shader source from embedded_resource.
+    auto shader_resource(
+      const shader_name shdr,
+      const embedded_resource& shdr_res) const noexcept {
+        this->shared_source(
+          shdr, glsl_string_ref(shdr_res.unpack(main_context())));
+    }
+
     /// @brief Compiles and attaches a shader to the specified program.
     /// @see build_program
     auto add_shader(
@@ -3883,7 +3892,7 @@ public:
       const glsl_source_ref& shdr_src) const -> combined_result<void> {
         owned_shader_name shdr;
         this->create_shader(shdr_type) >> shdr;
-        auto cleanup = this->delete_shader.raii(shdr);
+        const auto cleanup{this->delete_shader.raii(shdr)};
         this->shader_source(shdr, shdr_src);
         this->compile_shader(shdr);
         return this->attach_shader(prog, shdr);
@@ -3898,13 +3907,39 @@ public:
       const string_view label) const -> combined_result<void> {
         owned_shader_name shdr;
         this->create_shader(shdr_type) >> shdr;
-        auto cleanup = this->delete_shader.raii(shdr);
+        const auto cleanup{this->delete_shader.raii(shdr)};
         this->object_label(shdr, label);
         this->shader_source(shdr, shdr_src);
         this->compile_shader(shdr);
         return this->attach_shader(prog, shdr);
     }
 
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const embedded_resource& shdr_res) const {
+        return add_shader(
+          prog, shdr_type, glsl_string_ref(shdr_res.unpack(main_context())));
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const embedded_resource& shdr_res,
+      const string_view label) const -> combined_result<void> {
+        return add_shader(
+          prog,
+          shdr_type,
+          glsl_string_ref(shdr_res.unpack(main_context())),
+          label);
+    }
+
+    /// @brief Returns the info-log for the specified shader object.
+    /// @see program_info_log
     auto shader_info_log(const shader_name prog) const
       -> valid_if_not_empty<std::string> {
         if(const auto len{this->get_shader_i(prog, this->info_log_length)}) {
@@ -3916,6 +3951,8 @@ public:
         return {};
     }
 
+    /// @brief Returns the info-log for the specified program object.
+    /// @see shader_info_log
     auto program_info_log(const program_name prog) const
       -> valid_if_not_empty<std::string> {
         if(const auto len{this->get_program_i(prog, this->info_log_length)}) {
