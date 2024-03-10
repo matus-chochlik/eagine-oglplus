@@ -305,6 +305,7 @@ public:
       : simple_adapted_function<Wrapper, void(span<name_type>)> {
         using base = simple_adapted_function<Wrapper, void(span<name_type>)>;
         using base::base;
+        using _object_t = basic_gl_object<basic_gl_api<ApiTraits>, ObjTag>;
         using base::operator();
 
         constexpr auto operator()(
@@ -320,18 +321,13 @@ public:
               });
         }
 
-        constexpr auto object() const noexcept
-          -> basic_gl_object<basic_gl_api<ApiTraits>, ObjTag> {
-            gl_owned_object_name<ObjTag> name;
+        constexpr auto object() const noexcept -> _object_t {
+            const auto& api_ref{
+              static_cast<const basic_gl_api<ApiTraits>&>(base::api())};
             return (*this)()
-              .and_then(
-                [this](auto name)
-                  -> combined_result<
-                    basic_gl_object<basic_gl_api<ApiTraits>, ObjTag>> {
-                    return {
-                      static_cast<const basic_gl_api<ApiTraits>&>(base::api()),
-                      std::move(name)};
-                })
+              .transform([&api_ref, this](auto&& name) -> _object_t {
+                  return {api_ref, std::move(name)};
+              })
               .or_default();
         }
     };
@@ -342,18 +338,16 @@ public:
     struct : _create_shader_t {
         using base = _create_shader_t;
         using base::base;
+        using _object_t = basic_gl_object<basic_gl_api<ApiTraits>, shader_tag>;
 
         constexpr auto object(shader_type shdr_type) const noexcept
-          -> basic_gl_object<basic_gl_api<ApiTraits>, shader_tag> {
+          -> _object_t {
+            const auto& api_ref{
+              static_cast<const basic_gl_api<ApiTraits>&>(base::api())};
             return (*this)(shdr_type)
-              .and_then(
-                [this](auto name)
-                  -> combined_result<
-                    basic_gl_object<basic_gl_api<ApiTraits>, shader_tag>> {
-                    return {
-                      static_cast<const basic_gl_api<ApiTraits>&>(base::api()),
-                      std::move(name)};
-                })
+              .transform([&api_ref, this](auto&& name) -> _object_t {
+                  return {api_ref, std::move(name)};
+              })
               .or_default();
         }
     } create_shader{*this};
@@ -363,18 +357,15 @@ public:
     struct : _create_program_t {
         using base = _create_program_t;
         using base::base;
+        using _object_t = basic_gl_object<basic_gl_api<ApiTraits>, program_tag>;
 
-        constexpr auto object() const noexcept
-          -> basic_gl_object<basic_gl_api<ApiTraits>, program_tag> {
+        constexpr auto object() const noexcept -> _object_t {
+            const auto& api_ref{
+              static_cast<const basic_gl_api<ApiTraits>&>(base::api())};
             return (*this)()
-              .and_then(
-                [this](auto name)
-                  -> combined_result<
-                    basic_gl_object<basic_gl_api<ApiTraits>, shader_tag>> {
-                    return {
-                      static_cast<const basic_gl_api<ApiTraits>&>(base::api()),
-                      std::move(name)};
-                })
+              .transform([&api_ref, this](auto&& name) -> _object_t {
+                  return {api_ref, std::move(name)};
+              })
               .or_default();
         }
     } create_program{*this};
