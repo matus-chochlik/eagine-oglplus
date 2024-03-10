@@ -18,6 +18,7 @@ import eagine.core.string;
 import eagine.core.math;
 import eagine.core.units;
 import eagine.core.utility;
+import eagine.core.identifier;
 import eagine.core.c_api;
 import eagine.core.main_ctx;
 import eagine.core.resource;
@@ -305,7 +306,6 @@ public:
       : simple_adapted_function<Wrapper, void(span<name_type>)> {
         using base = simple_adapted_function<Wrapper, void(span<name_type>)>;
         using base::base;
-        using _object_t = basic_gl_object<basic_gl_api<ApiTraits>, ObjTag>;
         using base::operator();
 
         constexpr auto operator()(
@@ -320,59 +320,29 @@ public:
                   return gl_owned_object_name<ObjTag>(valid ? n : 0);
               });
         }
-
-        constexpr auto object() const noexcept -> _object_t {
-            const auto& api_ref{
-              static_cast<const basic_gl_api<ApiTraits>&>(base::api())};
-            return (*this)()
-              .transform([&api_ref, this](auto&& name) -> _object_t {
-                  return {api_ref, std::move(name)};
-              })
-              .or_default();
-        }
     };
 
-    using _create_shader_t = simple_adapted_function<
-      &gl_api::CreateShader,
-      owned_shader_name(shader_type)>;
-    struct : _create_shader_t {
-        using base = _create_shader_t;
-        using base::base;
-        using _object_t = basic_gl_object<basic_gl_api<ApiTraits>, shader_tag>;
+    simple_adapted_function<&gl_api::CreateShader, owned_shader_name(shader_type)>
+      create_shader{*this};
 
-        constexpr auto object(shader_type shdr_type) const noexcept
-          -> _object_t {
-            const auto& api_ref{
-              static_cast<const basic_gl_api<ApiTraits>&>(base::api())};
-            return (*this)(shdr_type)
-              .transform([&api_ref, this](auto&& name) -> _object_t {
-                  return {api_ref, std::move(name)};
-              })
-              .or_default();
-        }
-    } create_shader{*this};
+    auto create_function(shader_tag) const noexcept -> const auto& {
+        return create_shader;
+    }
 
-    using _create_program_t =
-      simple_adapted_function<&gl_api::CreateProgram, owned_program_name()>;
-    struct : _create_program_t {
-        using base = _create_program_t;
-        using base::base;
-        using _object_t = basic_gl_object<basic_gl_api<ApiTraits>, program_tag>;
+    simple_adapted_function<&gl_api::CreateProgram, owned_program_name()>
+      create_program{*this};
 
-        constexpr auto object() const noexcept -> _object_t {
-            const auto& api_ref{
-              static_cast<const basic_gl_api<ApiTraits>&>(base::api())};
-            return (*this)()
-              .transform([&api_ref, this](auto&& name) -> _object_t {
-                  return {api_ref, std::move(name)};
-              })
-              .or_default();
-        }
-    } create_program{*this};
+    auto create_function(program_tag) const noexcept -> const auto& {
+        return create_program;
+    }
 
     make_object_func<&gl_api::GenBuffers, buffer_tag> gen_buffers{*this};
 
     make_object_func<&gl_api::CreateBuffers, buffer_tag> create_buffers{*this};
+
+    auto create_function(buffer_tag) const noexcept -> const auto& {
+        return create_buffers;
+    }
 
     make_object_func<&gl_api::GenFramebuffers, framebuffer_tag> gen_framebuffers{
       *this};
@@ -380,15 +350,27 @@ public:
     make_object_func<&gl_api::CreateFramebuffers, framebuffer_tag>
       create_framebuffers{*this};
 
+    auto create_function(framebuffer_tag) const noexcept -> const auto& {
+        return create_framebuffers;
+    }
+
     make_object_func<&gl_api::GenProgramPipelines, program_pipeline_tag>
       gen_program_pipelines{*this};
 
     make_object_func<&gl_api::CreateProgramPipelines, program_pipeline_tag>
       create_program_pipelines{*this};
 
+    auto create_function(program_pipeline_tag) const noexcept -> const auto& {
+        return create_program_pipelines;
+    }
+
     make_object_func<&gl_api::GenQueries, query_tag> gen_queries{*this};
 
     make_object_func<&gl_api::CreateQueries, query_tag> create_queries{*this};
+
+    auto create_function(query_tag) const noexcept -> const auto& {
+        return create_queries;
+    }
 
     make_object_func<&gl_api::GenRenderbuffers, renderbuffer_tag>
       gen_renderbuffers{*this};
@@ -396,15 +378,27 @@ public:
     make_object_func<&gl_api::CreateRenderbuffers, renderbuffer_tag>
       create_renderbuffers{*this};
 
+    auto create_function(renderbuffer_tag) const noexcept -> const auto& {
+        return create_renderbuffers;
+    }
+
     make_object_func<&gl_api::GenSamplers, sampler_tag> gen_samplers{*this};
 
     make_object_func<&gl_api::CreateSamplers, sampler_tag> create_samplers{
       *this};
 
+    auto create_function(sampler_tag) const noexcept -> const auto& {
+        return create_samplers;
+    }
+
     make_object_func<&gl_api::GenTextures, texture_tag> gen_textures{*this};
 
     make_object_func<&gl_api::CreateTextures, texture_tag> create_textures{
       *this};
+
+    auto create_function(texture_tag) const noexcept -> const auto& {
+        return create_textures;
+    }
 
     make_object_func<&gl_api::GenTransformFeedbacks, transform_feedback_tag>
       gen_transform_feedbacks{*this};
@@ -412,14 +406,26 @@ public:
     make_object_func<&gl_api::CreateTransformFeedbacks, transform_feedback_tag>
       create_transform_feedbacks{*this};
 
+    auto create_function(transform_feedback_tag) const noexcept -> const auto& {
+        return create_transform_feedbacks;
+    }
+
     make_object_func<&gl_api::GenVertexArrays, vertex_array_tag>
       gen_vertex_arrays{*this};
 
     make_object_func<&gl_api::CreateVertexArrays, vertex_array_tag>
       create_vertex_arrays{*this};
 
+    auto create_function(vertex_array_tag) const noexcept -> const auto& {
+        return create_vertex_arrays;
+    }
+
     simple_adapted_function<&gl_api::GenPathsNV, owned_path_nv_name(sizei_type)>
       create_paths_nv{*this};
+
+    auto create_function(path_nv_tag) const noexcept -> const auto& {
+        return create_vertex_arrays;
+    }
 
     // delete objects
     simple_adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{
@@ -3888,6 +3894,79 @@ public:
         return b ? true_false(this->true_) : true_false(this->false_);
     }
 
+    template <identifier_value Id>
+    auto to_object(gl_owned_object_name<gl_lib_tag<Id>> name) const noexcept
+      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+        return {*this, std::move(name)};
+    }
+
+    template <identifier_value Id, typename Info, c_api::result_validity validity>
+    auto to_object(
+      c_api::result<gl_owned_object_name<gl_lib_tag<Id>>, Info, validity>&& res)
+      const noexcept
+      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+        return std::move(res)
+          .transform(
+            [this](auto&& name)
+              -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+                return {*this, std::move(name)};
+            })
+          .or_default();
+    }
+
+    template <identifier_value Id>
+    auto create_object(gl_lib_tag<Id> tg) const noexcept {
+        return to_object(this->create_function(tg)());
+    }
+
+    auto create_object(shader_tag tg, shader_type shdr_type) const noexcept {
+        return to_object(this->create_function(tg)(shdr_type));
+    }
+
+    auto create_buffer_object() const noexcept {
+        return create_object(buffer_tag{});
+    }
+
+    auto create_framebuffer_object() const noexcept {
+        return create_object(framebuffer_tag{});
+    }
+
+    auto create_program_pipeline_object() const noexcept {
+        return create_object(program_pipeline_tag{});
+    }
+
+    auto create_program_object() const noexcept {
+        return create_object(program_tag{});
+    }
+
+    auto create_query_object() const noexcept {
+        return create_object(query_tag{});
+    }
+
+    auto create_renderbuffer_object() const noexcept {
+        return create_object(renderbuffer_tag{});
+    }
+
+    auto create_sampler_object() const noexcept {
+        return create_object(sampler_tag{});
+    }
+
+    auto create_shader_object(shader_type shdr_type) const noexcept {
+        return create_object(shader_tag{}, shdr_type);
+    }
+
+    auto create_texture_object() const noexcept {
+        return create_object(texture_tag{});
+    }
+
+    auto create_transform_feedback_object() const noexcept {
+        return create_object(transform_feedback_tag{});
+    }
+
+    auto create_vertex_array_object() const noexcept {
+        return create_object(vertex_array_tag{});
+    }
+
     /// @brief Adds shader source from embedded_resource.
     auto shader_resource(
       const shader_name shdr,
@@ -4316,22 +4395,24 @@ export using gl_api = basic_gl_api<gl_api_traits>;
 
 export using buffer_object =
   basic_gl_object<basic_gl_api<gl_api_traits>, buffer_tag>;
-export using shader_object =
-  basic_gl_object<basic_gl_api<gl_api_traits>, shader_tag>;
+export using framebuffer_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, framebuffer_tag>;
+export using path_nv_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, path_nv_tag>;
 export using program_object =
   basic_gl_object<basic_gl_api<gl_api_traits>, program_tag>;
 export using program_pipeline_object =
   basic_gl_object<basic_gl_api<gl_api_traits>, program_pipeline_tag>;
-export using sampler_object =
-  basic_gl_object<basic_gl_api<gl_api_traits>, sampler_tag>;
-export using texture_object =
-  basic_gl_object<basic_gl_api<gl_api_traits>, texture_tag>;
-export using renderbuffer_object =
-  basic_gl_object<basic_gl_api<gl_api_traits>, renderbuffer_tag>;
-export using framebuffer_object =
-  basic_gl_object<basic_gl_api<gl_api_traits>, framebuffer_tag>;
 export using query_object =
   basic_gl_object<basic_gl_api<gl_api_traits>, query_tag>;
+export using renderbuffer_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, renderbuffer_tag>;
+export using sampler_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, sampler_tag>;
+export using shader_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, shader_tag>;
+export using texture_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, texture_tag>;
 export using transform_feedback_object =
   basic_gl_object<basic_gl_api<gl_api_traits>, transform_feedback_tag>;
 

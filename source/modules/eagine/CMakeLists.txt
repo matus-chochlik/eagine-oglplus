@@ -136,6 +136,7 @@ eagine_add_module(
 		eagine.core.math
 		eagine.core.units
 		eagine.core.utility
+		eagine.core.identifier
 		eagine.core.c_api
 		eagine.core.main_ctx
 		eagine.core.resource

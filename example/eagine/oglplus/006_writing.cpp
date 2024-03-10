@@ -70,22 +70,22 @@ static void run_loop(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
         // vertex shader
-        const auto vs{gl.create_shader.object(GL.vertex_shader)};
+        const auto vs{glapi.create_shader_object(GL.vertex_shader)};
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
         // geometry shader
-        const auto gs{gl.create_shader.object(GL.geometry_shader)};
+        const auto gs{glapi.create_shader_object(GL.geometry_shader)};
         gl.shader_source(gs, glsl_string_ref(gs_source));
         gl.compile_shader(gs);
 
         // fragment shader
-        const auto fs{gl.create_shader.object(GL.fragment_shader)};
+        const auto fs{glapi.create_shader_object(GL.fragment_shader)};
         gl.shader_source(fs, glsl_string_ref(fs_source));
         gl.compile_shader(fs);
 
         // program
-        const auto prog{gl.create_program.object()};
+        const auto prog{glapi.create_program_object()};
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, gs);
         gl.attach_shader(prog, fs);
