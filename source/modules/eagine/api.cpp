@@ -113,6 +113,9 @@ export struct api_initializer {
       const int /*gl_ver_minor*/ = 3);
 };
 //------------------------------------------------------------------------------
+export template <typename ApiTraits>
+class basic_gl_api;
+//------------------------------------------------------------------------------
 class gl_debug_logger;
 using c_api::adapted_function;
 using c_api::enum_parameter_value;
@@ -125,6 +128,8 @@ using c_api::simple_adapted_function;
 /// @see basic_gl_c_api
 export template <typename ApiTraits>
 class basic_gl_operations : public basic_gl_c_api<ApiTraits> {
+    template <typename R>
+    using combined_result = typename ApiTraits::template combined_result<R>;
 
 public:
     /// @brief Alias for the traits policy class.
@@ -316,12 +321,18 @@ public:
         }
 
         constexpr auto object() const noexcept
-          -> gl_object<basic_gl_operations, ObjTag> {
+          -> basic_gl_object<basic_gl_api<ApiTraits>, ObjTag> {
             gl_owned_object_name<ObjTag> name;
-            (*this)() >> name;
-            return {
-              static_cast<const basic_gl_operations&>(base::api()),
-              std::move(name)};
+            return (*this)()
+              .and_then(
+                [this](auto name)
+                  -> combined_result<
+                    basic_gl_object<basic_gl_api<ApiTraits>, ObjTag>> {
+                    return {
+                      static_cast<const basic_gl_api<ApiTraits>&>(base::api()),
+                      std::move(name)};
+                })
+              .or_default();
         }
     };
 
@@ -333,12 +344,17 @@ public:
         using base::base;
 
         constexpr auto object(shader_type shdr_type) const noexcept
-          -> gl_object<basic_gl_operations, shader_tag> {
-            owned_shader_name shdr;
-            (*this)(shdr_type) >> shdr;
-            return {
-              static_cast<const basic_gl_operations&>(base::api()),
-              std::move(shdr)};
+          -> basic_gl_object<basic_gl_api<ApiTraits>, shader_tag> {
+            return (*this)(shdr_type)
+              .and_then(
+                [this](auto name)
+                  -> combined_result<
+                    basic_gl_object<basic_gl_api<ApiTraits>, shader_tag>> {
+                    return {
+                      static_cast<const basic_gl_api<ApiTraits>&>(base::api()),
+                      std::move(name)};
+                })
+              .or_default();
         }
     } create_shader{*this};
 
@@ -349,12 +365,17 @@ public:
         using base::base;
 
         constexpr auto object() const noexcept
-          -> gl_object<basic_gl_operations, program_tag> {
-            owned_program_name prog;
-            (*this)() >> prog;
-            return {
-              static_cast<const basic_gl_operations&>(base::api()),
-              std::move(prog)};
+          -> basic_gl_object<basic_gl_api<ApiTraits>, program_tag> {
+            return (*this)()
+              .and_then(
+                [this](auto name)
+                  -> combined_result<
+                    basic_gl_object<basic_gl_api<ApiTraits>, shader_tag>> {
+                    return {
+                      static_cast<const basic_gl_api<ApiTraits>&>(base::api()),
+                      std::move(name)};
+                })
+              .or_default();
         }
     } create_program{*this};
 
@@ -3884,60 +3905,6 @@ public:
           shdr, glsl_string_ref(shdr_res.unpack(main_context())));
     }
 
-    /// @brief Compiles and attaches a shader to the specified program.
-    /// @see build_program
-    auto add_shader(
-      const program_name prog,
-      shader_type shdr_type,
-      const glsl_source_ref& shdr_src) const -> combined_result<void> {
-        owned_shader_name shdr;
-        this->create_shader(shdr_type) >> shdr;
-        const auto cleanup{this->delete_shader.raii(shdr)};
-        this->shader_source(shdr, shdr_src);
-        this->compile_shader(shdr);
-        return this->attach_shader(prog, shdr);
-    }
-
-    /// @brief Compiles and attaches a shader to the specified program.
-    /// @see build_program
-    auto add_shader(
-      const program_name prog,
-      shader_type shdr_type,
-      const glsl_source_ref& shdr_src,
-      const string_view label) const -> combined_result<void> {
-        owned_shader_name shdr;
-        this->create_shader(shdr_type) >> shdr;
-        const auto cleanup{this->delete_shader.raii(shdr)};
-        this->object_label(shdr, label);
-        this->shader_source(shdr, shdr_src);
-        this->compile_shader(shdr);
-        return this->attach_shader(prog, shdr);
-    }
-
-    /// @brief Compiles and attaches a shader to the specified program.
-    /// @see build_program
-    auto add_shader(
-      const program_name prog,
-      shader_type shdr_type,
-      const embedded_resource& shdr_res) const {
-        return add_shader(
-          prog, shdr_type, glsl_string_ref(shdr_res.unpack(main_context())));
-    }
-
-    /// @brief Compiles and attaches a shader to the specified program.
-    /// @see build_program
-    auto add_shader(
-      const program_name prog,
-      shader_type shdr_type,
-      const embedded_resource& shdr_res,
-      const string_view label) const -> combined_result<void> {
-        return add_shader(
-          prog,
-          shdr_type,
-          glsl_string_ref(shdr_res.unpack(main_context())),
-          label);
-    }
-
     /// @brief Returns the info-log for the specified shader object.
     /// @see program_info_log
     auto shader_info_log(const shader_name prog) const
@@ -3962,6 +3929,54 @@ public:
             }
         }
         return {};
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const glsl_source_ref& shdr_src,
+      const string_view label) const {
+        owned_shader_name shdr;
+        this->create_shader(shdr_type) >> shdr;
+        const auto cleanup{this->delete_shader.raii(shdr)};
+        this->object_label(shdr, label);
+        this->shader_source(shdr, shdr_src);
+        this->compile_shader(shdr);
+        return this->attach_shader(prog, shdr);
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const glsl_source_ref& shdr_src) const {
+        add_shader(prog, shdr_type, shdr_src, {});
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const embedded_resource& shdr_res,
+      const string_view label) const {
+        return add_shader(
+          prog,
+          shdr_type,
+          glsl_string_ref(shdr_res.unpack(main_context())),
+          label);
+    }
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const embedded_resource& shdr_res) const {
+        return add_shader(prog, shdr_type, shdr_res, {});
     }
 
 private:
@@ -4309,25 +4324,25 @@ auto translate(const basic_gl_api<A>& api, const bool value) noexcept
 export using gl_api = basic_gl_api<gl_api_traits>;
 
 export using buffer_object =
-  gl_object<basic_gl_operations<gl_api_traits>, buffer_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, buffer_tag>;
 export using shader_object =
-  gl_object<basic_gl_operations<gl_api_traits>, shader_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, shader_tag>;
 export using program_object =
-  gl_object<basic_gl_operations<gl_api_traits>, program_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, program_tag>;
 export using program_pipeline_object =
-  gl_object<basic_gl_operations<gl_api_traits>, program_pipeline_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, program_pipeline_tag>;
 export using sampler_object =
-  gl_object<basic_gl_operations<gl_api_traits>, sampler_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, sampler_tag>;
 export using texture_object =
-  gl_object<basic_gl_operations<gl_api_traits>, texture_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, texture_tag>;
 export using renderbuffer_object =
-  gl_object<basic_gl_operations<gl_api_traits>, renderbuffer_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, renderbuffer_tag>;
 export using framebuffer_object =
-  gl_object<basic_gl_operations<gl_api_traits>, framebuffer_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, framebuffer_tag>;
 export using query_object =
-  gl_object<basic_gl_operations<gl_api_traits>, query_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, query_tag>;
 export using transform_feedback_object =
-  gl_object<basic_gl_operations<gl_api_traits>, transform_feedback_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, transform_feedback_tag>;
 
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus

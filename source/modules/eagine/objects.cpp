@@ -35,8 +35,12 @@ using gl_owned_object_name =
 /// @see gl_object_name
 /// @see gl_owned_object_name
 export template <typename Api, typename Tag, typename... P>
-using gl_object =
-  c_api::basic_object_from_handle_t<Api, gl_object_name<Tag>, P...>;
+struct basic_gl_object
+  : c_api::basic_object_from_handle_t<Api, gl_object_name<Tag>, P...> {
+    using base =
+      c_api::basic_object_from_handle_t<Api, gl_object_name<Tag>, P...>;
+    using base::base;
+};
 
 /// @brief Alias for template wrapping a mutable span of GL object handles.
 /// @ingroup gl_api_wrap
