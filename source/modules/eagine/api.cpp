@@ -3896,23 +3896,13 @@ public:
 
     template <identifier_value Id>
     auto to_object(gl_owned_object_name<gl_lib_tag<Id>> name) const noexcept
-      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
-        return {*this, std::move(name)};
-    }
+      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>>;
 
     template <identifier_value Id, typename Info, c_api::result_validity validity>
     auto to_object(
       c_api::result<gl_owned_object_name<gl_lib_tag<Id>>, Info, validity>&& res)
       const noexcept
-      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
-        return std::move(res)
-          .transform(
-            [this](auto&& name)
-              -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
-                return {*this, std::move(name)};
-            })
-          .or_default();
-    }
+      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>>;
 
     template <identifier_value Id>
     auto create_object(gl_lib_tag<Id> tg) const noexcept {
@@ -4007,11 +3997,13 @@ public:
       const program_name prog,
       shader_type shdr_type,
       const glsl_source_ref& shdr_src,
-      const string_view label) const {
+      const string_view label) const noexcept {
         owned_shader_name shdr;
         this->create_shader(shdr_type) >> shdr;
         const auto cleanup{this->delete_shader.raii(shdr)};
-        this->object_label(shdr, label);
+        if(not label.empty()) {
+            this->object_label(shdr, label);
+        }
         this->shader_source(shdr, shdr_src);
         this->compile_shader(shdr);
         return this->attach_shader(prog, shdr);
@@ -4022,8 +4014,8 @@ public:
     auto add_shader(
       const program_name prog,
       shader_type shdr_type,
-      const glsl_source_ref& shdr_src) const {
-        add_shader(prog, shdr_type, shdr_src, {});
+      const glsl_source_ref& shdr_src) const noexcept {
+        return add_shader(prog, shdr_type, shdr_src, {});
     }
 
     /// @brief Compiles and attaches a shader to the specified program.
@@ -4032,7 +4024,7 @@ public:
       const program_name prog,
       shader_type shdr_type,
       const embedded_resource& shdr_res,
-      const string_view label) const {
+      const string_view label) const noexcept {
         return add_shader(
           prog,
           shdr_type,
@@ -4045,7 +4037,7 @@ public:
     auto add_shader(
       const program_name prog,
       shader_type shdr_type,
-      const embedded_resource& shdr_res) const {
+      const embedded_resource& shdr_res) const noexcept {
         return add_shader(prog, shdr_type, shdr_res, {});
     }
 
@@ -4380,8 +4372,30 @@ auto get(const basic_gl_api<ApiTraits>& x) noexcept -> const
     return x;
 }
 //------------------------------------------------------------------------------
-template <typename A>
-auto translate(const basic_gl_api<A>& api, const bool value) noexcept
+template <typename ApiTraits>
+template <identifier_value Id>
+auto basic_gl_api<ApiTraits>::to_object(
+  gl_owned_object_name<gl_lib_tag<Id>> name) const noexcept
+  -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+    return {*this, std::move(name)};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+template <identifier_value Id, typename Info, c_api::result_validity validity>
+auto basic_gl_api<ApiTraits>::to_object(
+  c_api::result<gl_owned_object_name<gl_lib_tag<Id>>, Info, validity>&& res)
+  const noexcept -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+    return std::move(res)
+      .transform(
+        [this](auto&& name)
+          -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+            return {*this, std::move(name)};
+        })
+      .or_default();
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+auto translate(const basic_gl_api<ApiTraits>& api, const bool value) noexcept
   -> true_false {
     if(value) {
         return api.true_;
