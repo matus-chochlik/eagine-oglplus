@@ -3968,28 +3968,12 @@ public:
     /// @brief Returns the info-log for the specified shader object.
     /// @see program_info_log
     auto shader_info_log(const shader_name prog) const
-      -> valid_if_not_empty<std::string> {
-        if(const auto len{this->get_shader_i(prog, this->info_log_length)}) {
-            string_buffer logstr{*len + 1};
-            if(const auto s{this->get_shader_info_log(prog, cover(logstr))}) {
-                return {to_string(*s)};
-            }
-        }
-        return {};
-    }
+      -> valid_if_not_empty<std::string>;
 
     /// @brief Returns the info-log for the specified program object.
     /// @see shader_info_log
     auto program_info_log(const program_name prog) const
-      -> valid_if_not_empty<std::string> {
-        if(const auto len{this->get_program_i(prog, this->info_log_length)}) {
-            string_buffer logstr{*len + 1};
-            if(const auto s{this->get_program_info_log(prog, cover(logstr))}) {
-                return {to_string(*s)};
-            }
-        }
-        return {};
-    }
+      -> valid_if_not_empty<std::string>;
 
     /// @brief Compiles and attaches a shader to the specified program.
     /// @see build_program
@@ -3997,17 +3981,7 @@ public:
       const program_name prog,
       shader_type shdr_type,
       const glsl_source_ref& shdr_src,
-      const string_view label) const noexcept {
-        owned_shader_name shdr;
-        this->create_shader(shdr_type) >> shdr;
-        const auto cleanup{this->delete_shader.raii(shdr)};
-        if(not label.empty()) {
-            this->object_label(shdr, label);
-        }
-        this->shader_source(shdr, shdr_src);
-        this->compile_shader(shdr);
-        return this->attach_shader(prog, shdr);
-    }
+      const string_view label) const noexcept -> combined_result<void>;
 
     /// @brief Compiles and attaches a shader to the specified program.
     /// @see build_program
@@ -4049,17 +4023,7 @@ private:
       UniformFunc& uniform_func,
       const program_name prog,
       const uniform_location loc,
-      T&& value) const -> combined_result<void> {
-        if(program_uniform_func) {
-            return program_uniform_func(prog, loc, std::forward<T>(value));
-        } else {
-            if(auto use_res{this->use_program(prog)}) {
-                return uniform_func(loc, std::forward<T>(value));
-            } else {
-                return use_res;
-            }
-        }
-    }
+      T&& value) const -> combined_result<void>;
 
     template <typename ProgramUniformFunc, typename UniformFunc, typename T>
     auto _set_uniform_matrix(
@@ -4068,18 +4032,7 @@ private:
       const program_name prog,
       const uniform_location loc,
       T&& value,
-      true_false transpose) const -> combined_result<void> {
-        if(program_uniform_func) {
-            return program_uniform_func(
-              prog, loc, transpose, std::forward<T>(value));
-        } else {
-            if(auto use_res{this->use_program(prog)}) {
-                return uniform_func(loc, transpose, std::forward<T>(value));
-            } else {
-                return use_res;
-            }
-        }
-    }
+      true_false transpose) const -> combined_result<void>;
 
 public:
     // int
@@ -4394,6 +4347,86 @@ auto basic_gl_api<ApiTraits>::to_object(
       .or_default();
 }
 //------------------------------------------------------------------------------
+template <typename ApiTraits>
+auto basic_gl_api<ApiTraits>::shader_info_log(const shader_name prog) const
+  -> valid_if_not_empty<std::string> {
+    if(const auto len{this->get_shader_i(prog, this->info_log_length)}) {
+        string_buffer logstr{*len + 1};
+        if(const auto s{this->get_shader_info_log(prog, cover(logstr))}) {
+            return {to_string(*s)};
+        }
+    }
+    return {};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+auto basic_gl_api<ApiTraits>::program_info_log(const program_name prog) const
+  -> valid_if_not_empty<std::string> {
+    if(const auto len{this->get_program_i(prog, this->info_log_length)}) {
+        string_buffer logstr{*len + 1};
+        if(const auto s{this->get_program_info_log(prog, cover(logstr))}) {
+            return {to_string(*s)};
+        }
+    }
+    return {};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+auto basic_gl_api<ApiTraits>::add_shader(
+  const program_name prog,
+  shader_type shdr_type,
+  const glsl_source_ref& shdr_src,
+  const string_view label) const noexcept -> combined_result<void> {
+    owned_shader_name shdr;
+    this->create_shader(shdr_type) >> shdr;
+    const auto cleanup{this->delete_shader.raii(shdr)};
+    if(not label.empty()) {
+        this->object_label(shdr, label);
+    }
+    this->shader_source(shdr, shdr_src);
+    this->compile_shader(shdr);
+    return {this->attach_shader(prog, shdr)};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+template <typename ProgramUniformFunc, typename UniformFunc, typename T>
+auto basic_gl_api<ApiTraits>::_set_uniform(
+  ProgramUniformFunc& program_uniform_func,
+  UniformFunc& uniform_func,
+  const program_name prog,
+  const uniform_location loc,
+  T&& value) const -> combined_result<void> {
+    if(program_uniform_func) {
+        return program_uniform_func(prog, loc, std::forward<T>(value));
+    } else {
+        if(auto use_res{this->use_program(prog)}) {
+            return uniform_func(loc, std::forward<T>(value));
+        } else {
+            return use_res;
+        }
+    }
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+template <typename ProgramUniformFunc, typename UniformFunc, typename T>
+auto basic_gl_api<ApiTraits>::_set_uniform_matrix(
+  ProgramUniformFunc& program_uniform_func,
+  UniformFunc& uniform_func,
+  const program_name prog,
+  const uniform_location loc,
+  T&& value,
+  true_false transpose) const -> combined_result<void> {
+    if(program_uniform_func) {
+        return program_uniform_func(
+          prog, loc, transpose, std::forward<T>(value));
+    } else {
+        if(auto use_res{this->use_program(prog)}) {
+            return uniform_func(loc, transpose, std::forward<T>(value));
+        } else {
+            return use_res;
+        }
+    }
+}
 template <typename ApiTraits>
 auto translate(const basic_gl_api<ApiTraits>& api, const bool value) noexcept
   -> true_false {
