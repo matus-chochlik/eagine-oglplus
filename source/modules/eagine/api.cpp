@@ -3981,7 +3981,8 @@ public:
       const program_name prog,
       shader_type shdr_type,
       const glsl_source_ref& shdr_src,
-      const string_view label) const noexcept -> combined_result<void>;
+      const string_view label) const noexcept -> c_api::
+      result<void, c_api::string_message_info, c_api::result_validity::maybe>;
 
     /// @brief Compiles and attaches a shader to the specified program.
     /// @see build_program
@@ -4376,16 +4377,23 @@ auto basic_gl_api<ApiTraits>::add_shader(
   const program_name prog,
   shader_type shdr_type,
   const glsl_source_ref& shdr_src,
-  const string_view label) const noexcept -> combined_result<void> {
+  const string_view label) const noexcept -> c_api::
+  result<void, c_api::string_message_info, c_api::result_validity::maybe> {
     owned_shader_name shdr;
     this->create_shader(shdr_type) >> shdr;
     const auto cleanup{this->delete_shader.raii(shdr)};
     if(not label.empty()) {
         this->object_label(shdr, label);
     }
-    this->shader_source(shdr, shdr_src);
-    this->compile_shader(shdr);
-    return {this->attach_shader(prog, shdr)};
+    if(this->shader_source(shdr, shdr_src)) {
+        if(this->compile_shader(shdr)) {
+            return {this->attach_shader(prog, shdr)};
+        }
+    }
+    if(auto info_log{shader_info_log(shdr)}) {
+        return {false, c_api::string_message_info{std::move(*info_log)}};
+    }
+    return {};
 }
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
