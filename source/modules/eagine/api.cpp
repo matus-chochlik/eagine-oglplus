@@ -4385,15 +4385,13 @@ auto basic_gl_api<ApiTraits>::add_shader(
     if(not label.empty()) {
         this->object_label(shdr, label);
     }
-    if(this->shader_source(shdr, shdr_src)) {
-        if(this->compile_shader(shdr)) {
-            return {this->attach_shader(prog, shdr)};
-        }
-    }
-    if(auto info_log{shader_info_log(shdr)}) {
-        return {false, c_api::string_message_info{std::move(*info_log)}};
-    }
-    return {};
+    std::string info_log;
+    bool success{false};
+    success = this->shader_source(shdr, shdr_src) and success;
+    success = this->compile_shader(shdr) and success;
+    shader_info_log(shdr).and_then(_1.assign_to(info_log));
+    success = this->attach_shader(prog, shdr) and success;
+    return {success, c_api::string_message_info{std::move(info_log)}};
 }
 //------------------------------------------------------------------------------
 template <typename ApiTraits>
