@@ -1117,6 +1117,13 @@ public:
         return location({shapes::vertex_attrib_kind::roughness, idx});
     }
 
+    /// @brief Returns the index at which the pointiness variant is bound.
+    /// @see location
+    auto pointiness_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::pointiness, idx});
+    }
+
     /// @brief Returns the index at which the occlusion variant is bound.
     /// @see location
     auto occlusion_loc(span_size_t idx = 0) const noexcept
