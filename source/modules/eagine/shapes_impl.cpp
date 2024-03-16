@@ -89,16 +89,14 @@ void shape_generator::index_data(
 //------------------------------------------------------------------------------
 class default_vertex_attrib_bindings : public vertex_attrib_binding_intf {
 public:
-    default_vertex_attrib_bindings() noexcept = default;
-
     default_vertex_attrib_bindings(const shape_generator& shape) noexcept {
-        shape.for_each_attrib(
-          {construct_from, [this](const auto attribs, const auto info) {
-               if(attribs.has(info.enumerator)) {
-                   _bindings.insert(
-                     shapes::vertex_attrib_variant{info.enumerator, 0});
-               }
-           }});
+        const auto init{[this](const auto attribs, const auto info) {
+            if(attribs.has(info.enumerator)) {
+                _bindings.insert(
+                  shapes::vertex_attrib_variant{info.enumerator, 0});
+            }
+        }};
+        shape.for_each_attrib({construct_from, init});
     }
 
     default_vertex_attrib_bindings(
@@ -152,30 +150,39 @@ auto make_default_vertex_attrib_bindings(
 //------------------------------------------------------------------------------
 class all_vertex_attrib_bindings : public vertex_attrib_binding_intf {
 public:
-    all_vertex_attrib_bindings() noexcept = default;
-
     all_vertex_attrib_bindings(const shape_generator& shape) noexcept {
-        shape.for_each_attrib(
-          {construct_from, [this](const auto attribs, const auto info) {
-               if(attribs.has(info.enumerator)) {
-                   _bindings[shapes::vertex_attrib_index(info.enumerator)] =
-                     true;
-               }
-           }});
+        const auto init{[this](const auto attribs, const auto info) {
+            _bindings.set(
+              shapes::vertex_attrib_index(info.enumerator),
+              attribs.has(info.enumerator));
+        }};
+        shape.for_each_attrib({construct_from, init});
     }
 
     auto attrib_count() noexcept -> span_size_t final {
-        return span_size(_bindings.size());
+        span_size_t count{0};
+        for(const auto i : index_range(_bindings)) {
+            count += span_size(_bindings.test(i));
+        }
+        return count;
     }
 
     auto attrib_variant(span_size_t index) noexcept
       -> shapes::vertex_attrib_variant final {
-        return shapes::vertex_attrib_variant_by_index(index);
+        for(const auto i : index_range(_bindings)) {
+            if(_bindings.test(i)) {
+                if(index == 0) {
+                    return shapes::vertex_attrib_variant_by_index(i);
+                }
+                --index;
+            }
+        }
+        return shapes::vertex_attrib_variant{};
     }
 
     auto location(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_location final {
-        if(_bindings[shapes::vertex_attrib_index(vav.attribute())]) {
+        if(_bindings.test(shapes::vertex_attrib_index(vav.attribute()))) {
             return vertex_attrib_location{
               gl_types::int_type(shapes::vertex_attrib_index(vav))};
         }
@@ -188,7 +195,7 @@ public:
     }
 
 private:
-    std::array<bool, shapes::vertex_attrib_kind_count()> _bindings{};
+    std::bitset<shapes::vertex_attrib_kind_count()> _bindings{};
 };
 //------------------------------------------------------------------------------
 auto make_all_vertex_attrib_bindings(const shape_generator& shape)
