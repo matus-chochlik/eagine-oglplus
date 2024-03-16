@@ -191,7 +191,10 @@ public:
 
     auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
       -> std::tuple<vertex_attrib_location, vertex_attrib_value> final {
-        return {location(vav), shapes::default_attrib_value(vav)};
+        return {
+          vertex_attrib_location{
+            gl_types::int_type(shapes::vertex_attrib_index(vav))},
+          shapes::default_attrib_value(vav)};
     }
 
 private:
