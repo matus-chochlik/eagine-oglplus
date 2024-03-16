@@ -919,14 +919,17 @@ export struct vertex_attrib_binding_intf
     virtual auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
       -> std::tuple<vertex_attrib_location, vertex_attrib_value> = 0;
 };
-
+//------------------------------------------------------------------------------
 export auto make_default_vertex_attrib_bindings(const shape_generator& shape)
   -> shared_holder<vertex_attrib_binding_intf>;
 
 export auto make_default_vertex_attrib_bindings(
   std::initializer_list<shapes::vertex_attrib_variant> vavs)
   -> shared_holder<vertex_attrib_binding_intf>;
-
+//------------------------------------------------------------------------------
+export auto make_all_vertex_attrib_bindings(const shape_generator& shape)
+  -> shared_holder<vertex_attrib_binding_intf>;
+//------------------------------------------------------------------------------
 /// @brief Class that specifies bindings between attribute variant and array index.
 /// @ingroup shapes
 /// @see generator

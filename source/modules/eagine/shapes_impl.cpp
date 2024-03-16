@@ -121,17 +121,16 @@ public:
 
     auto location(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_location final {
-        if(_bindings.contains(vav)) {
-            return vertex_attrib_location(shapes::attrib_index(vav));
+        if(const auto pos{_bindings.find(vav)}; pos != _bindings.end()) {
+            return vertex_attrib_location{
+              gl_types::int_type(std::distance(_bindings.begin(), pos))};
         }
         return vertex_attrib_location{};
     }
 
     auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
       -> std::tuple<vertex_attrib_location, vertex_attrib_value> final {
-        return {
-          vertex_attrib_location(shapes::attrib_index(vav)),
-          shapes::default_attrib_value(vav)};
+        return {location(vav), shapes::default_attrib_value(vav)};
     }
 
 private:
@@ -147,6 +146,54 @@ auto make_default_vertex_attrib_bindings(
   std::initializer_list<shapes::vertex_attrib_variant> vavs)
   -> shared_holder<vertex_attrib_binding_intf> {
     return {hold<default_vertex_attrib_bindings>, vavs};
+}
+//------------------------------------------------------------------------------
+// all_vertex_attrib_bindings
+//------------------------------------------------------------------------------
+class all_vertex_attrib_bindings : public vertex_attrib_binding_intf {
+public:
+    all_vertex_attrib_bindings() noexcept = default;
+
+    all_vertex_attrib_bindings(const shape_generator& shape) noexcept {
+        shape.for_each_attrib(
+          {construct_from, [this](const auto attribs, const auto info) {
+               if(attribs.has(info.enumerator)) {
+                   _bindings[shapes::vertex_attrib_index(info.enumerator)] =
+                     true;
+               }
+           }});
+    }
+
+    auto attrib_count() noexcept -> span_size_t final {
+        return span_size(_bindings.size());
+    }
+
+    auto attrib_variant(span_size_t index) noexcept
+      -> shapes::vertex_attrib_variant final {
+        return shapes::vertex_attrib_variant_by_index(index);
+    }
+
+    auto location(shapes::vertex_attrib_variant vav) noexcept
+      -> vertex_attrib_location final {
+        if(_bindings[shapes::vertex_attrib_index(vav.attribute())]) {
+            return vertex_attrib_location{
+              gl_types::int_type(shapes::vertex_attrib_index(vav))};
+        }
+        return vertex_attrib_location{};
+    }
+
+    auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> final {
+        return {location(vav), shapes::default_attrib_value(vav)};
+    }
+
+private:
+    std::array<bool, shapes::vertex_attrib_kind_count()> _bindings{};
+};
+//------------------------------------------------------------------------------
+auto make_all_vertex_attrib_bindings(const shape_generator& shape)
+  -> shared_holder<vertex_attrib_binding_intf> {
+    return {hold<all_vertex_attrib_bindings>, shape};
 }
 //------------------------------------------------------------------------------
 // geometry
