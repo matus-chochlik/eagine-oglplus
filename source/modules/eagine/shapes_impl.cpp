@@ -89,6 +89,14 @@ void shape_generator::index_data(
 //------------------------------------------------------------------------------
 class default_vertex_attrib_bindings : public vertex_attrib_binding_intf {
 public:
+    default_vertex_attrib_bindings(
+      std::initializer_list<shapes::vertex_attrib_variant> vavs) noexcept
+      : _bindings{vavs} {}
+
+    default_vertex_attrib_bindings(
+      const shapes::shared_vertex_attrib_variants& vavs) noexcept
+      : _bindings{vavs.begin(), vavs.end()} {}
+
     default_vertex_attrib_bindings(const shape_generator& shape) noexcept {
         const auto init{[this](const auto attribs, const auto info) {
             if(attribs.has(info.enumerator)) {
@@ -98,10 +106,6 @@ public:
         }};
         shape.for_each_attrib({construct_from, init});
     }
-
-    default_vertex_attrib_bindings(
-      std::initializer_list<shapes::vertex_attrib_variant> vavs) noexcept
-      : _bindings{vavs} {}
 
     auto add(shapes::vertex_attrib_variant vav) noexcept -> auto& {
         _bindings.insert(vav);
@@ -134,17 +138,6 @@ public:
 private:
     flat_set<shapes::vertex_attrib_variant> _bindings;
 };
-//------------------------------------------------------------------------------
-auto make_default_vertex_attrib_bindings(const shape_generator& shape)
-  -> shared_holder<vertex_attrib_binding_intf> {
-    return {hold<default_vertex_attrib_bindings>, shape};
-}
-//------------------------------------------------------------------------------
-auto make_default_vertex_attrib_bindings(
-  std::initializer_list<shapes::vertex_attrib_variant> vavs)
-  -> shared_holder<vertex_attrib_binding_intf> {
-    return {hold<default_vertex_attrib_bindings>, vavs};
-}
 //------------------------------------------------------------------------------
 // all_vertex_attrib_bindings
 //------------------------------------------------------------------------------
@@ -205,6 +198,26 @@ auto make_all_vertex_attrib_bindings(const shape_generator& shape)
   -> shared_holder<vertex_attrib_binding_intf> {
     return {hold<all_vertex_attrib_bindings>, shape};
 }
+//------------------------------------------------------------------------------
+// vertex_attrib_bindings
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  shared_holder<vertex_attrib_binding_intf> pimpl) noexcept
+  : _pimpl{std::move(pimpl)} {
+    assert(_pimpl);
+}
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  std::initializer_list<shapes::vertex_attrib_variant> vavs) noexcept
+  : vertex_attrib_bindings{{hold<default_vertex_attrib_bindings>, vavs}} {}
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  const shapes::shared_vertex_attrib_variants& vavs) noexcept
+  : vertex_attrib_bindings{{hold<default_vertex_attrib_bindings>, vavs}} {}
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  const shape_generator& shape) noexcept
+  : vertex_attrib_bindings{{hold<default_vertex_attrib_bindings>, shape}} {}
 //------------------------------------------------------------------------------
 // geometry
 //------------------------------------------------------------------------------

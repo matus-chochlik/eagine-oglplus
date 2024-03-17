@@ -920,13 +920,6 @@ export struct vertex_attrib_binding_intf
       -> std::tuple<vertex_attrib_location, vertex_attrib_value> = 0;
 };
 //------------------------------------------------------------------------------
-export auto make_default_vertex_attrib_bindings(const shape_generator& shape)
-  -> shared_holder<vertex_attrib_binding_intf>;
-
-export auto make_default_vertex_attrib_bindings(
-  std::initializer_list<shapes::vertex_attrib_variant> vavs)
-  -> shared_holder<vertex_attrib_binding_intf>;
-//------------------------------------------------------------------------------
 export auto make_all_vertex_attrib_bindings(const shape_generator& shape)
   -> shared_holder<vertex_attrib_binding_intf>;
 //------------------------------------------------------------------------------
@@ -946,19 +939,18 @@ public:
     ~vertex_attrib_bindings() noexcept = default;
 
     vertex_attrib_bindings(
-      shared_holder<vertex_attrib_binding_intf> pimpl) noexcept
-      : _pimpl{std::move(pimpl)} {
-        assert(_pimpl);
-    }
+      shared_holder<vertex_attrib_binding_intf> pimpl) noexcept;
 
-    /// @brief Constructor matching supported attributes from a shape generator.
-    vertex_attrib_bindings(const shape_generator& shape)
-      : vertex_attrib_bindings{make_default_vertex_attrib_bindings(shape)} {}
-
-    /// @brief Constructor matching supported attributes from a shape generator.
+    /// @brief Constructor getting supported attributes from a list.
     vertex_attrib_bindings(
-      std::initializer_list<shapes::vertex_attrib_variant> vavs)
-      : vertex_attrib_bindings{make_default_vertex_attrib_bindings(vavs)} {}
+      std::initializer_list<shapes::vertex_attrib_variant> vavs) noexcept;
+
+    /// @brief Constructor getting supported attributes from a shared collection.
+    vertex_attrib_bindings(
+      const shapes::shared_vertex_attrib_variants& vavs) noexcept;
+
+    /// @brief Constructor getting supported attributes from a shape generator.
+    vertex_attrib_bindings(const shape_generator& shape) noexcept;
 
     /// @brief Indicates if this bindings wrapper is initialized.
     auto is_initialized() const noexcept -> bool {
