@@ -431,6 +431,10 @@ public:
         return _gen->attrib_divisor(vav);
     }
 
+    auto has_variant(const shapes::vertex_attrib_variant vav) const -> bool {
+        return _gen->has_variant(vav);
+    }
+
     auto find_variant(
       const shapes::vertex_attrib_kind attrib,
       const string_view name) const -> shapes::vertex_attrib_variant {
@@ -947,7 +951,8 @@ public:
 
     /// @brief Constructor getting supported attributes from a shared collection.
     vertex_attrib_bindings(
-      const shapes::shared_vertex_attrib_variants& vavs) noexcept;
+      const shapes::shared_vertex_attrib_variants& vavs,
+      const shape_generator& shape) noexcept;
 
     /// @brief Constructor getting supported attributes from a shape generator.
     vertex_attrib_bindings(const shape_generator& shape) noexcept;
