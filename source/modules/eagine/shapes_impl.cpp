@@ -89,21 +89,19 @@ void shape_generator::index_data(
 //------------------------------------------------------------------------------
 class default_vertex_attrib_bindings : public vertex_attrib_binding_intf {
 public:
-    default_vertex_attrib_bindings() noexcept = default;
-
-    default_vertex_attrib_bindings(const shape_generator& shape) noexcept {
-        shape.for_each_attrib(
-          {construct_from, [this](const auto attribs, const auto info) {
-               if(attribs.has(info.enumerator)) {
-                   _bindings.insert(
-                     shapes::vertex_attrib_variant{info.enumerator, 0});
-               }
-           }});
-    }
-
     default_vertex_attrib_bindings(
       std::initializer_list<shapes::vertex_attrib_variant> vavs) noexcept
       : _bindings{vavs} {}
+
+    default_vertex_attrib_bindings(const shape_generator& shape) noexcept {
+        const auto init{[this](const auto attribs, const auto info) {
+            if(attribs.has(info.enumerator)) {
+                _bindings.insert(
+                  shapes::vertex_attrib_variant{info.enumerator, 0});
+            }
+        }};
+        shape.for_each_attrib({construct_from, init});
+    }
 
     auto add(shapes::vertex_attrib_variant vav) noexcept -> auto& {
         _bindings.insert(vav);
@@ -121,8 +119,133 @@ public:
 
     auto location(shapes::vertex_attrib_variant vav) noexcept
       -> vertex_attrib_location final {
-        if(_bindings.contains(vav)) {
-            return vertex_attrib_location(shapes::attrib_index(vav));
+        if(const auto pos{_bindings.find(vav)}; pos != _bindings.end()) {
+            return vertex_attrib_location{
+              gl_types::int_type(std::distance(_bindings.begin(), pos))};
+        }
+        return vertex_attrib_location{};
+    }
+
+    auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> final {
+        return {location(vav), shapes::default_attrib_value(vav)};
+    }
+
+private:
+    flat_set<shapes::vertex_attrib_variant> _bindings;
+};
+//------------------------------------------------------------------------------
+// selected_vertex_attrib_bindings
+//------------------------------------------------------------------------------
+class selected_vertex_attrib_bindings : public vertex_attrib_binding_intf {
+public:
+    selected_vertex_attrib_bindings(
+      const shapes::shared_vertex_attrib_variants& vavs,
+      const shape_generator& shape) noexcept {
+        _bindings.reserve(std_size(vavs.size()));
+        for(const auto& vav : vavs) {
+            _bindings.emplace_back(vav, shape.has_variant(vav));
+        }
+    }
+
+    auto add(shapes::vertex_attrib_variant vav) noexcept -> auto& {
+        _bindings.emplace_back(vav, true);
+        return *this;
+    }
+
+    auto attrib_count() noexcept -> span_size_t final {
+        return span_size(std::count_if(
+          _bindings.begin(), _bindings.end(), [](const auto& entry) {
+              return std::get<1>(entry);
+          }));
+    }
+
+    auto attrib_variant(span_size_t index) noexcept
+      -> shapes::vertex_attrib_variant final {
+        for(const auto& [vav, enabled] : _bindings) {
+            if(enabled) {
+                if(index == 0) {
+                    return vav;
+                }
+                --index;
+            }
+        }
+        return shapes::vertex_attrib_variant{};
+    }
+
+    auto location_anyway(const shapes::vertex_attrib_variant vav) noexcept
+      -> vertex_attrib_location {
+        gl_types::int_type loc = 0;
+        for(const auto& [bvav, enabled] : _bindings) {
+            (void)enabled;
+            if(bvav == vav) {
+                return vertex_attrib_location{loc};
+            }
+            ++loc;
+        }
+        return vertex_attrib_location{};
+    }
+
+    auto location(const shapes::vertex_attrib_variant vav) noexcept
+      -> vertex_attrib_location final {
+        gl_types::int_type loc = 0;
+        for(const auto& [bvav, enabled] : _bindings) {
+            if(enabled and bvav == vav) {
+                return vertex_attrib_location{loc};
+            }
+            ++loc;
+        }
+        return vertex_attrib_location{};
+    }
+
+    auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
+      -> std::tuple<vertex_attrib_location, vertex_attrib_value> final {
+        return {location_anyway(vav), shapes::default_attrib_value(vav)};
+    }
+
+private:
+    small_vector<std::tuple<shapes::vertex_attrib_variant, bool>, 16> _bindings;
+};
+//------------------------------------------------------------------------------
+// all_vertex_attrib_bindings
+//------------------------------------------------------------------------------
+class all_vertex_attrib_bindings : public vertex_attrib_binding_intf {
+public:
+    all_vertex_attrib_bindings(const shape_generator& shape) noexcept {
+        const auto init{[this](const auto attribs, const auto info) {
+            _bindings.set(
+              shapes::vertex_attrib_index(info.enumerator),
+              attribs.has(info.enumerator));
+        }};
+        shape.for_each_attrib({construct_from, init});
+    }
+
+    auto attrib_count() noexcept -> span_size_t final {
+        span_size_t count{0};
+        for(const auto i : index_range(_bindings)) {
+            count += span_size(_bindings.test(i));
+        }
+        return count;
+    }
+
+    auto attrib_variant(span_size_t index) noexcept
+      -> shapes::vertex_attrib_variant final {
+        for(const auto i : index_range(_bindings)) {
+            if(_bindings.test(i)) {
+                if(index == 0) {
+                    return shapes::vertex_attrib_variant_by_index(i);
+                }
+                --index;
+            }
+        }
+        return shapes::vertex_attrib_variant{};
+    }
+
+    auto location(shapes::vertex_attrib_variant vav) noexcept
+      -> vertex_attrib_location final {
+        if(_bindings.test(shapes::vertex_attrib_index(vav.attribute()))) {
+            return vertex_attrib_location{
+              gl_types::int_type(shapes::vertex_attrib_index(vav))};
         }
         return vertex_attrib_location{};
     }
@@ -130,24 +253,41 @@ public:
     auto location_and_value(shapes::vertex_attrib_variant vav) noexcept
       -> std::tuple<vertex_attrib_location, vertex_attrib_value> final {
         return {
-          vertex_attrib_location(shapes::attrib_index(vav)),
+          vertex_attrib_location{
+            gl_types::int_type(shapes::vertex_attrib_index(vav))},
           shapes::default_attrib_value(vav)};
     }
 
 private:
-    flat_set<shapes::vertex_attrib_variant> _bindings;
+    std::bitset<shapes::vertex_attrib_kind_count()> _bindings{};
 };
 //------------------------------------------------------------------------------
-auto make_default_vertex_attrib_bindings(const shape_generator& shape)
+auto make_all_vertex_attrib_bindings(const shape_generator& shape)
   -> shared_holder<vertex_attrib_binding_intf> {
-    return {hold<default_vertex_attrib_bindings>, shape};
+    return {hold<all_vertex_attrib_bindings>, shape};
 }
 //------------------------------------------------------------------------------
-auto make_default_vertex_attrib_bindings(
-  std::initializer_list<shapes::vertex_attrib_variant> vavs)
-  -> shared_holder<vertex_attrib_binding_intf> {
-    return {hold<default_vertex_attrib_bindings>, vavs};
+// vertex_attrib_bindings
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  shared_holder<vertex_attrib_binding_intf> pimpl) noexcept
+  : _pimpl{std::move(pimpl)} {
+    assert(_pimpl);
 }
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  std::initializer_list<shapes::vertex_attrib_variant> vavs) noexcept
+  : vertex_attrib_bindings{{hold<default_vertex_attrib_bindings>, vavs}} {}
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  const shapes::shared_vertex_attrib_variants& vavs,
+  const shape_generator& shape) noexcept
+  : vertex_attrib_bindings{
+      {hold<selected_vertex_attrib_bindings>, vavs, shape}} {}
+//------------------------------------------------------------------------------
+vertex_attrib_bindings::vertex_attrib_bindings(
+  const shape_generator& shape) noexcept
+  : vertex_attrib_bindings{{hold<default_vertex_attrib_bindings>, shape}} {}
 //------------------------------------------------------------------------------
 // geometry
 //------------------------------------------------------------------------------

@@ -63,7 +63,7 @@ static void run_loop(
 
     int divisions = 512;
 
-    const gl_api glapi;
+    const gl_api glapi{ctx};
     const auto& [gl, GL] = glapi;
 
     if(gl.clear) {

@@ -18,7 +18,10 @@ import eagine.core.string;
 import eagine.core.math;
 import eagine.core.units;
 import eagine.core.utility;
+import eagine.core.identifier;
 import eagine.core.c_api;
+import eagine.core.main_ctx;
+import eagine.core.resource;
 import :config;
 import :enum_types;
 import :extensions;
@@ -111,6 +114,9 @@ export struct api_initializer {
       const int /*gl_ver_minor*/ = 3);
 };
 //------------------------------------------------------------------------------
+export template <typename ApiTraits>
+class basic_gl_api;
+//------------------------------------------------------------------------------
 class gl_debug_logger;
 using c_api::adapted_function;
 using c_api::enum_parameter_value;
@@ -123,6 +129,8 @@ using c_api::simple_adapted_function;
 /// @see basic_gl_c_api
 export template <typename ApiTraits>
 class basic_gl_operations : public basic_gl_c_api<ApiTraits> {
+    template <typename R>
+    using combined_result = typename ApiTraits::template combined_result<R>;
 
 public:
     /// @brief Alias for the traits policy class.
@@ -312,53 +320,29 @@ public:
                   return gl_owned_object_name<ObjTag>(valid ? n : 0);
               });
         }
-
-        constexpr auto object() const noexcept
-          -> gl_object<basic_gl_operations, ObjTag> {
-            gl_owned_object_name<ObjTag> name;
-            (*this)() >> name;
-            return {
-              static_cast<const basic_gl_operations&>(base::api()),
-              std::move(name)};
-        }
     };
 
-    using _create_shader_t = simple_adapted_function<
-      &gl_api::CreateShader,
-      owned_shader_name(shader_type)>;
-    struct : _create_shader_t {
-        using base = _create_shader_t;
-        using base::base;
+    simple_adapted_function<&gl_api::CreateShader, owned_shader_name(shader_type)>
+      create_shader{*this};
 
-        constexpr auto object(shader_type shdr_type) const noexcept
-          -> gl_object<basic_gl_operations, shader_tag> {
-            owned_shader_name shdr;
-            (*this)(shdr_type) >> shdr;
-            return {
-              static_cast<const basic_gl_operations&>(base::api()),
-              std::move(shdr)};
-        }
-    } create_shader{*this};
+    auto create_function(shader_tag) const noexcept -> const auto& {
+        return create_shader;
+    }
 
-    using _create_program_t =
-      simple_adapted_function<&gl_api::CreateProgram, owned_program_name()>;
-    struct : _create_program_t {
-        using base = _create_program_t;
-        using base::base;
+    simple_adapted_function<&gl_api::CreateProgram, owned_program_name()>
+      create_program{*this};
 
-        constexpr auto object() const noexcept
-          -> gl_object<basic_gl_operations, program_tag> {
-            owned_program_name prog;
-            (*this)() >> prog;
-            return {
-              static_cast<const basic_gl_operations&>(base::api()),
-              std::move(prog)};
-        }
-    } create_program{*this};
+    auto create_function(program_tag) const noexcept -> const auto& {
+        return create_program;
+    }
 
     make_object_func<&gl_api::GenBuffers, buffer_tag> gen_buffers{*this};
 
     make_object_func<&gl_api::CreateBuffers, buffer_tag> create_buffers{*this};
+
+    auto create_function(buffer_tag) const noexcept -> const auto& {
+        return create_buffers;
+    }
 
     make_object_func<&gl_api::GenFramebuffers, framebuffer_tag> gen_framebuffers{
       *this};
@@ -366,15 +350,27 @@ public:
     make_object_func<&gl_api::CreateFramebuffers, framebuffer_tag>
       create_framebuffers{*this};
 
+    auto create_function(framebuffer_tag) const noexcept -> const auto& {
+        return create_framebuffers;
+    }
+
     make_object_func<&gl_api::GenProgramPipelines, program_pipeline_tag>
       gen_program_pipelines{*this};
 
     make_object_func<&gl_api::CreateProgramPipelines, program_pipeline_tag>
       create_program_pipelines{*this};
 
+    auto create_function(program_pipeline_tag) const noexcept -> const auto& {
+        return create_program_pipelines;
+    }
+
     make_object_func<&gl_api::GenQueries, query_tag> gen_queries{*this};
 
     make_object_func<&gl_api::CreateQueries, query_tag> create_queries{*this};
+
+    auto create_function(query_tag) const noexcept -> const auto& {
+        return create_queries;
+    }
 
     make_object_func<&gl_api::GenRenderbuffers, renderbuffer_tag>
       gen_renderbuffers{*this};
@@ -382,15 +378,27 @@ public:
     make_object_func<&gl_api::CreateRenderbuffers, renderbuffer_tag>
       create_renderbuffers{*this};
 
+    auto create_function(renderbuffer_tag) const noexcept -> const auto& {
+        return create_renderbuffers;
+    }
+
     make_object_func<&gl_api::GenSamplers, sampler_tag> gen_samplers{*this};
 
     make_object_func<&gl_api::CreateSamplers, sampler_tag> create_samplers{
       *this};
 
+    auto create_function(sampler_tag) const noexcept -> const auto& {
+        return create_samplers;
+    }
+
     make_object_func<&gl_api::GenTextures, texture_tag> gen_textures{*this};
 
     make_object_func<&gl_api::CreateTextures, texture_tag> create_textures{
       *this};
+
+    auto create_function(texture_tag) const noexcept -> const auto& {
+        return create_textures;
+    }
 
     make_object_func<&gl_api::GenTransformFeedbacks, transform_feedback_tag>
       gen_transform_feedbacks{*this};
@@ -398,14 +406,26 @@ public:
     make_object_func<&gl_api::CreateTransformFeedbacks, transform_feedback_tag>
       create_transform_feedbacks{*this};
 
+    auto create_function(transform_feedback_tag) const noexcept -> const auto& {
+        return create_transform_feedbacks;
+    }
+
     make_object_func<&gl_api::GenVertexArrays, vertex_array_tag>
       gen_vertex_arrays{*this};
 
     make_object_func<&gl_api::CreateVertexArrays, vertex_array_tag>
       create_vertex_arrays{*this};
 
+    auto create_function(vertex_array_tag) const noexcept -> const auto& {
+        return create_vertex_arrays;
+    }
+
     simple_adapted_function<&gl_api::GenPathsNV, owned_path_nv_name(sizei_type)>
       create_paths_nv{*this};
+
+    auto create_function(path_nv_tag) const noexcept -> const auto& {
+        return create_vertex_arrays;
+    }
 
     // delete objects
     simple_adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{
@@ -3824,7 +3844,8 @@ basic_gl_operations<ApiTraits>::basic_gl_operations(api_traits& traits)
 /// @see gl_api
 export template <typename ApiTraits>
 class basic_gl_api
-  : protected ApiTraits
+  : public main_ctx_object
+  , protected ApiTraits
   , public basic_gl_operations<ApiTraits>
   , public basic_gl_constants<ApiTraits> {
 
@@ -3836,16 +3857,17 @@ public:
     using float_type = typename gl_types::float_type;
 
     /// @brief Constructor using API traits..
-    basic_gl_api(ApiTraits traits)
-      : ApiTraits{std::move(traits)}
+    basic_gl_api(main_ctx_parent parent, ApiTraits traits)
+      : main_ctx_object{"GLAPI", parent}
+      , ApiTraits{std::move(traits)}
       , basic_gl_operations<ApiTraits>{*static_cast<ApiTraits*>(this)}
       , basic_gl_constants<ApiTraits>{
           *static_cast<ApiTraits*>(this),
           *static_cast<basic_gl_operations<ApiTraits>*>(this)} {}
 
     /// @brief Default constructor.
-    basic_gl_api()
-      : basic_gl_api{ApiTraits{}} {}
+    basic_gl_api(main_ctx_parent parent)
+      : basic_gl_api{parent, ApiTraits{}} {}
 
     /// @brief Returns a reference to the wrapped operations.
     auto operations() const noexcept -> const basic_gl_operations<ApiTraits>& {
@@ -3872,19 +3894,86 @@ public:
         return b ? true_false(this->true_) : true_false(this->false_);
     }
 
-    /// @brief Compiles and attaches a shader to the specified program.
-    /// @see build_program
-    auto add_shader(
-      const program_name prog,
-      shader_type shdr_type,
-      const glsl_source_ref& shdr_src) const -> combined_result<void> {
-        owned_shader_name shdr;
-        this->create_shader(shdr_type) >> shdr;
-        auto cleanup = this->delete_shader.raii(shdr);
-        this->shader_source(shdr, shdr_src);
-        this->compile_shader(shdr);
-        return this->attach_shader(prog, shdr);
+    template <identifier_value Id>
+    auto to_object(gl_owned_object_name<gl_lib_tag<Id>> name) const noexcept
+      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>>;
+
+    template <identifier_value Id, typename Info, c_api::result_validity validity>
+    auto to_object(
+      c_api::result<gl_owned_object_name<gl_lib_tag<Id>>, Info, validity>&& res)
+      const noexcept
+      -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>>;
+
+    template <identifier_value Id>
+    auto create_object(gl_lib_tag<Id> tg) const noexcept {
+        return to_object(this->create_function(tg)());
     }
+
+    auto create_object(shader_tag tg, shader_type shdr_type) const noexcept {
+        return to_object(this->create_function(tg)(shdr_type));
+    }
+
+    auto create_buffer_object() const noexcept {
+        return create_object(buffer_tag{});
+    }
+
+    auto create_framebuffer_object() const noexcept {
+        return create_object(framebuffer_tag{});
+    }
+
+    auto create_program_pipeline_object() const noexcept {
+        return create_object(program_pipeline_tag{});
+    }
+
+    auto create_program_object() const noexcept {
+        return create_object(program_tag{});
+    }
+
+    auto create_query_object() const noexcept {
+        return create_object(query_tag{});
+    }
+
+    auto create_renderbuffer_object() const noexcept {
+        return create_object(renderbuffer_tag{});
+    }
+
+    auto create_sampler_object() const noexcept {
+        return create_object(sampler_tag{});
+    }
+
+    auto create_shader_object(shader_type shdr_type) const noexcept {
+        return create_object(shader_tag{}, shdr_type);
+    }
+
+    auto create_texture_object() const noexcept {
+        return create_object(texture_tag{});
+    }
+
+    auto create_transform_feedback_object() const noexcept {
+        return create_object(transform_feedback_tag{});
+    }
+
+    auto create_vertex_array_object() const noexcept {
+        return create_object(vertex_array_tag{});
+    }
+
+    /// @brief Adds shader source from embedded_resource.
+    auto shader_resource(
+      const shader_name shdr,
+      const embedded_resource& shdr_res) const noexcept {
+        this->shared_source(
+          shdr, glsl_string_ref(shdr_res.unpack(main_context())));
+    }
+
+    /// @brief Returns the info-log for the specified shader object.
+    /// @see program_info_log
+    auto shader_info_log(const shader_name prog) const
+      -> valid_if_not_empty<std::string>;
+
+    /// @brief Returns the info-log for the specified program object.
+    /// @see shader_info_log
+    auto program_info_log(const program_name prog) const
+      -> valid_if_not_empty<std::string>;
 
     /// @brief Compiles and attaches a shader to the specified program.
     /// @see build_program
@@ -3892,36 +3981,39 @@ public:
       const program_name prog,
       shader_type shdr_type,
       const glsl_source_ref& shdr_src,
-      const string_view label) const -> combined_result<void> {
-        owned_shader_name shdr;
-        this->create_shader(shdr_type) >> shdr;
-        auto cleanup = this->delete_shader.raii(shdr);
-        this->object_label(shdr, label);
-        this->shader_source(shdr, shdr_src);
-        this->compile_shader(shdr);
-        return this->attach_shader(prog, shdr);
+      const string_view label) const noexcept -> c_api::
+      result<void, c_api::string_message_info, c_api::result_validity::maybe>;
+
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const glsl_source_ref& shdr_src) const noexcept {
+        return add_shader(prog, shdr_type, shdr_src, {});
     }
 
-    auto shader_info_log(const shader_name prog) const
-      -> optionally_valid<std::string> {
-        if(const auto len{this->get_shader_i(prog, this->info_log_length)}) {
-            string_buffer logstr{*len + 1};
-            if(const auto s{this->get_shader_info_log(prog, cover(logstr))}) {
-                return {to_string(*s), true};
-            }
-        }
-        return {};
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const embedded_resource& shdr_res,
+      const string_view label) const noexcept {
+        return add_shader(
+          prog,
+          shdr_type,
+          glsl_string_ref(shdr_res.unpack(main_context())),
+          label);
     }
 
-    auto program_info_log(const program_name prog) const
-      -> optionally_valid<std::string> {
-        if(const auto len{this->get_program_i(prog, this->info_log_length)}) {
-            string_buffer logstr{*len + 1};
-            if(const auto s{this->get_program_info_log(prog, cover(logstr))}) {
-                return {to_string(*s), true};
-            }
-        }
-        return {};
+    /// @brief Compiles and attaches a shader to the specified program.
+    /// @see build_program
+    auto add_shader(
+      const program_name prog,
+      shader_type shdr_type,
+      const embedded_resource& shdr_res) const noexcept {
+        return add_shader(prog, shdr_type, shdr_res, {});
     }
 
 private:
@@ -3932,17 +4024,7 @@ private:
       UniformFunc& uniform_func,
       const program_name prog,
       const uniform_location loc,
-      T&& value) const -> combined_result<void> {
-        if(program_uniform_func) {
-            return program_uniform_func(prog, loc, std::forward<T>(value));
-        } else {
-            if(auto use_res{this->use_program(prog)}) {
-                return uniform_func(loc, std::forward<T>(value));
-            } else {
-                return use_res;
-            }
-        }
-    }
+      T&& value) const -> combined_result<void>;
 
     template <typename ProgramUniformFunc, typename UniformFunc, typename T>
     auto _set_uniform_matrix(
@@ -3951,18 +4033,7 @@ private:
       const program_name prog,
       const uniform_location loc,
       T&& value,
-      true_false transpose) const -> combined_result<void> {
-        if(program_uniform_func) {
-            return program_uniform_func(
-              prog, loc, transpose, std::forward<T>(value));
-        } else {
-            if(auto use_res{this->use_program(prog)}) {
-                return uniform_func(loc, transpose, std::forward<T>(value));
-            } else {
-                return use_res;
-            }
-        }
-    }
+      true_false transpose) const -> combined_result<void>;
 
 public:
     // int
@@ -4236,6 +4307,17 @@ public:
           true_or_false(math::is_row_major_v<T>),
           canonical_compound_type<T>());
     }
+
+    template <typename T>
+    auto try_set_uniform(
+      const program_name prog,
+      string_view name,
+      const T& value) const noexcept {
+        return this->get_uniform_location(prog, name)
+          .and_then([&, this](auto loc) {
+              return this->set_uniform(prog, loc, value);
+          });
+    }
 };
 
 export template <std::size_t I, typename ApiTraits>
@@ -4244,8 +4326,115 @@ auto get(const basic_gl_api<ApiTraits>& x) noexcept -> const
     return x;
 }
 //------------------------------------------------------------------------------
-template <typename A>
-auto translate(const basic_gl_api<A>& api, const bool value) noexcept
+template <typename ApiTraits>
+template <identifier_value Id>
+auto basic_gl_api<ApiTraits>::to_object(
+  gl_owned_object_name<gl_lib_tag<Id>> name) const noexcept
+  -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+    return {*this, std::move(name)};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+template <identifier_value Id, typename Info, c_api::result_validity validity>
+auto basic_gl_api<ApiTraits>::to_object(
+  c_api::result<gl_owned_object_name<gl_lib_tag<Id>>, Info, validity>&& res)
+  const noexcept -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+    return std::move(res)
+      .transform(
+        [this](auto&& name)
+          -> basic_gl_object<basic_gl_api<ApiTraits>, gl_lib_tag<Id>> {
+            return {*this, std::move(name)};
+        })
+      .or_default();
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+auto basic_gl_api<ApiTraits>::shader_info_log(const shader_name prog) const
+  -> valid_if_not_empty<std::string> {
+    if(const auto len{this->get_shader_i(prog, this->info_log_length)}) {
+        string_buffer logstr{*len + 1};
+        if(const auto s{this->get_shader_info_log(prog, cover(logstr))}) {
+            return {to_string(*s)};
+        }
+    }
+    return {};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+auto basic_gl_api<ApiTraits>::program_info_log(const program_name prog) const
+  -> valid_if_not_empty<std::string> {
+    if(const auto len{this->get_program_i(prog, this->info_log_length)}) {
+        string_buffer logstr{*len + 1};
+        if(const auto s{this->get_program_info_log(prog, cover(logstr))}) {
+            return {to_string(*s)};
+        }
+    }
+    return {};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+auto basic_gl_api<ApiTraits>::add_shader(
+  const program_name prog,
+  shader_type shdr_type,
+  const glsl_source_ref& shdr_src,
+  const string_view label) const noexcept -> c_api::
+  result<void, c_api::string_message_info, c_api::result_validity::maybe> {
+    owned_shader_name shdr;
+    this->create_shader(shdr_type) >> shdr;
+    const auto cleanup{this->delete_shader.raii(shdr)};
+    if(not label.empty()) {
+        this->object_label(shdr, label);
+    }
+    std::string info_log;
+    bool success{false};
+    success = this->shader_source(shdr, shdr_src) and success;
+    success = this->compile_shader(shdr) and success;
+    shader_info_log(shdr).and_then(_1.assign_to(info_log));
+    success = this->attach_shader(prog, shdr) and success;
+    return {success, c_api::string_message_info{std::move(info_log)}};
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+template <typename ProgramUniformFunc, typename UniformFunc, typename T>
+auto basic_gl_api<ApiTraits>::_set_uniform(
+  ProgramUniformFunc& program_uniform_func,
+  UniformFunc& uniform_func,
+  const program_name prog,
+  const uniform_location loc,
+  T&& value) const -> combined_result<void> {
+    if(program_uniform_func) {
+        return program_uniform_func(prog, loc, std::forward<T>(value));
+    } else {
+        if(auto use_res{this->use_program(prog)}) {
+            return uniform_func(loc, std::forward<T>(value));
+        } else {
+            return use_res;
+        }
+    }
+}
+//------------------------------------------------------------------------------
+template <typename ApiTraits>
+template <typename ProgramUniformFunc, typename UniformFunc, typename T>
+auto basic_gl_api<ApiTraits>::_set_uniform_matrix(
+  ProgramUniformFunc& program_uniform_func,
+  UniformFunc& uniform_func,
+  const program_name prog,
+  const uniform_location loc,
+  T&& value,
+  true_false transpose) const -> combined_result<void> {
+    if(program_uniform_func) {
+        return program_uniform_func(
+          prog, loc, transpose, std::forward<T>(value));
+    } else {
+        if(auto use_res{this->use_program(prog)}) {
+            return uniform_func(loc, transpose, std::forward<T>(value));
+        } else {
+            return use_res;
+        }
+    }
+}
+template <typename ApiTraits>
+auto translate(const basic_gl_api<ApiTraits>& api, const bool value) noexcept
   -> true_false {
     if(value) {
         return api.true_;
@@ -4258,25 +4447,27 @@ auto translate(const basic_gl_api<A>& api, const bool value) noexcept
 export using gl_api = basic_gl_api<gl_api_traits>;
 
 export using buffer_object =
-  gl_object<basic_gl_operations<gl_api_traits>, buffer_tag>;
-export using shader_object =
-  gl_object<basic_gl_operations<gl_api_traits>, shader_tag>;
-export using program_object =
-  gl_object<basic_gl_operations<gl_api_traits>, program_tag>;
-export using program_pipeline_object =
-  gl_object<basic_gl_operations<gl_api_traits>, program_pipeline_tag>;
-export using sampler_object =
-  gl_object<basic_gl_operations<gl_api_traits>, sampler_tag>;
-export using texture_object =
-  gl_object<basic_gl_operations<gl_api_traits>, texture_tag>;
-export using renderbuffer_object =
-  gl_object<basic_gl_operations<gl_api_traits>, renderbuffer_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, buffer_tag>;
 export using framebuffer_object =
-  gl_object<basic_gl_operations<gl_api_traits>, framebuffer_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, framebuffer_tag>;
+export using path_nv_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, path_nv_tag>;
+export using program_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, program_tag>;
+export using program_pipeline_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, program_pipeline_tag>;
 export using query_object =
-  gl_object<basic_gl_operations<gl_api_traits>, query_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, query_tag>;
+export using renderbuffer_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, renderbuffer_tag>;
+export using sampler_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, sampler_tag>;
+export using shader_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, shader_tag>;
+export using texture_object =
+  basic_gl_object<basic_gl_api<gl_api_traits>, texture_tag>;
 export using transform_feedback_object =
-  gl_object<basic_gl_operations<gl_api_traits>, transform_feedback_tag>;
+  basic_gl_object<basic_gl_api<gl_api_traits>, transform_feedback_tag>;
 
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
@@ -4311,12 +4502,14 @@ export struct gl_context_handler : interface<gl_context_handler> {
 //------------------------------------------------------------------------------
 export template <typename ApiTraits>
 struct basic_gl_api_context {
-    basic_gl_api_context() noexcept = default;
-    basic_gl_api_context(ApiTraits traits) noexcept
-      : gl_api{std::move(traits)} {}
+    basic_gl_api_context(main_ctx_parent parent) noexcept
+      : gl_api{parent} {}
+
+    basic_gl_api_context(main_ctx_parent parent, ApiTraits traits) noexcept
+      : gl_api{parent, std::move(traits)} {}
 
     shared_holder<gl_context_handler> gl_context{};
-    const basic_gl_api<ApiTraits> gl_api{};
+    const basic_gl_api<ApiTraits> gl_api;
 };
 //------------------------------------------------------------------------------
 export template <typename ApiTraits>
@@ -4325,8 +4518,10 @@ public:
     basic_shared_gl_api_context() noexcept = default;
 
     template <std::derived_from<gl_context_handler> ContextHandler>
-    basic_shared_gl_api_context(shared_holder<ContextHandler> handler) noexcept
-      : _shared{default_selector} {
+    basic_shared_gl_api_context(
+      main_ctx_parent parent,
+      shared_holder<ContextHandler> handler) noexcept
+      : _shared{default_selector, parent} {
         set_context(std::move(handler));
     }
 
@@ -4341,13 +4536,14 @@ public:
         return *this;
     }
 
-    auto ensure() -> basic_shared_gl_api_context& {
-        _shared.ensure();
+    auto ensure(main_ctx_parent parent) -> basic_shared_gl_api_context& {
+        _shared.ensure(parent);
         return *this;
     }
 
-    auto ensure(ApiTraits traits) -> basic_shared_gl_api_context& {
-        _shared.ensure(std::move(traits));
+    auto ensure(main_ctx_parent parent, ApiTraits traits)
+      -> basic_shared_gl_api_context& {
+        _shared.ensure(parent, std::move(traits));
         return *this;
     }
 
