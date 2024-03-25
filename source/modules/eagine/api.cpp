@@ -393,8 +393,33 @@ public:
 
     make_object_func<&gl_api::GenTextures, texture_tag> gen_textures{*this};
 
-    make_object_func<&gl_api::CreateTextures, texture_tag> create_textures{
-      *this};
+    struct _create_texture_func
+      : simple_adapted_function<
+          &gl_api::CreateTextures,
+          void(texture_target, span<name_type>)> {
+        using base = simple_adapted_function<
+          &gl_api::CreateTextures,
+          void(texture_target, span<name_type>)>;
+
+        using base::base;
+        using base::operator();
+
+        constexpr auto operator()(
+          texture_target tgt,
+          gl_object_name_span<texture_tag> names) const noexcept {
+            return (*this)(tgt, names.raw_handles());
+        }
+
+        constexpr auto operator()(texture_target tgt) const noexcept {
+            name_type n{};
+            return base::operator()(tgt, cover_one(n))
+              .transform_if([&n](auto, bool valid) {
+                  return owned_texture_name(valid ? n : 0);
+              });
+        }
+    };
+
+    _create_texture_func create_textures{*this};
 
     auto create_function(texture_tag) const noexcept -> const auto& {
         return create_textures;
@@ -3913,6 +3938,10 @@ public:
         return to_object(this->create_function(tg)(shdr_type));
     }
 
+    auto create_object(texture_tag tg, texture_target tex_tgt) const noexcept {
+        return to_object(this->create_function(tg)(tex_tgt));
+    }
+
     auto create_buffer_object() const noexcept {
         return create_object(buffer_tag{});
     }
@@ -3945,8 +3974,8 @@ public:
         return create_object(shader_tag{}, shdr_type);
     }
 
-    auto create_texture_object() const noexcept {
-        return create_object(texture_tag{});
+    auto create_texture_object(texture_target tex_tgt) const noexcept {
+        return create_object(texture_tag{}, tex_tgt);
     }
 
     auto create_transform_feedback_object() const noexcept {
