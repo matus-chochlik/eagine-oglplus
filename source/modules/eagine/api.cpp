@@ -4390,6 +4390,33 @@ public:
               return this->set_uniform(prog, loc, value);
           });
     }
+
+    auto fence(sync_condition cond, c_api::enum_bitfield<sync_flag_bit> flags)
+      const noexcept -> owned_sync {
+        return owned_sync{this->fence_sync(cond, flags)};
+    }
+
+    auto fence() const noexcept -> owned_sync {
+        return owned_sync{this->fence_sync()};
+    }
+
+    auto client_fence_passed(owned_sync& sync, std::chrono::nanoseconds timeout)
+      const noexcept -> bool {
+        if(sync) {
+            if(operations()
+                 .client_wait_sync(sync.value_anyway(), timeout)
+                 .has_value(constants().timeout_expired)) {
+                return false;
+            }
+            operations().delete_sync(sync.value_anyway());
+            sync.reset();
+        }
+        return true;
+    }
+
+    auto client_fence_passed(owned_sync& sync) const noexcept {
+        return client_fence_passed(sync, std::chrono::nanoseconds{0});
+    }
 };
 
 export template <std::size_t I, typename ApiTraits>
