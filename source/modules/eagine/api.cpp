@@ -296,10 +296,61 @@ public:
         }
     };
 
-    simple_adapted_function<
-      &gl_api::FenceSync,
-      void(sync_condition, c_api::enum_bitfield<sync_flag_bit>)>
-      fence_sync{*this};
+    struct _fence_sync_func
+      : simple_adapted_function<
+          &gl_api::FenceSync,
+          sync_type(sync_condition, c_api::enum_bitfield<sync_flag_bit>)> {
+        using base = simple_adapted_function<
+          &gl_api::FenceSync,
+          sync_type(sync_condition, c_api::enum_bitfield<sync_flag_bit>)>;
+
+        using base::base;
+        using base::operator();
+
+        auto operator()(sync_condition cond) const noexcept {
+            return base::operator()(cond, {});
+        }
+
+        auto operator()() const noexcept {
+#if GL_SYNC_GPU_COMMANDS_COMPLETE
+            return base::operator()(
+              sync_condition{GL_SYNC_GPU_COMMANDS_COMPLETE}, {});
+#else
+            return base::operator()(sync_condition{0x9117}, {});
+#endif
+        }
+    };
+
+    _fence_sync_func fence_sync{*this};
+
+    struct _client_wait_sync_func
+      : simple_adapted_function<
+          &gl_api::ClientWaitSync,
+          sync_wait_result(sync_type, bitfield_type, uint64_type)> {
+        using base = simple_adapted_function<
+          &gl_api::ClientWaitSync,
+          sync_wait_result(sync_type, bitfield_type, uint64_type)>;
+
+        using base::base;
+
+        auto operator()(sync_type sync, std::chrono::nanoseconds timeout)
+          const noexcept {
+            return base::operator()(sync, 0U, timeout.count());
+        }
+
+        auto operator()(sync_type sync) const noexcept {
+            return base::operator()(sync, 0U, 0U);
+        }
+    };
+
+    _client_wait_sync_func client_wait_sync{*this};
+
+    simple_adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{
+      *this};
+
+    auto clean_up(sync_type obj) const noexcept {
+        return delete_sync(obj);
+    }
 
     template <auto Wrapper, typename ObjTag>
     struct make_object_func
@@ -450,14 +501,6 @@ public:
 
     auto create_function(path_nv_tag) const noexcept -> const auto& {
         return create_vertex_arrays;
-    }
-
-    // delete objects
-    simple_adapted_function<&gl_api::DeleteSync, void(sync_type)> delete_sync{
-      *this};
-
-    auto clean_up(sync_type obj) const noexcept {
-        return delete_sync(obj);
     }
 
     template <auto Wrapper, typename ObjTag>
@@ -4346,6 +4389,33 @@ public:
           .and_then([&, this](auto loc) {
               return this->set_uniform(prog, loc, value);
           });
+    }
+
+    auto fence(sync_condition cond, c_api::enum_bitfield<sync_flag_bit> flags)
+      const noexcept -> owned_sync {
+        return owned_sync{this->fence_sync(cond, flags)};
+    }
+
+    auto fence() const noexcept -> owned_sync {
+        return owned_sync{this->fence_sync()};
+    }
+
+    auto client_fence_passed(owned_sync& sync, std::chrono::nanoseconds timeout)
+      const noexcept -> bool {
+        if(sync) {
+            if(operations()
+                 .client_wait_sync(sync.value_anyway(), timeout)
+                 .has_value(constants().timeout_expired)) {
+                return false;
+            }
+            operations().delete_sync(sync.value_anyway());
+            sync.reset();
+        }
+        return true;
+    }
+
+    auto client_fence_passed(owned_sync& sync) const noexcept {
+        return client_fence_passed(sync, std::chrono::nanoseconds{0});
     }
 };
 

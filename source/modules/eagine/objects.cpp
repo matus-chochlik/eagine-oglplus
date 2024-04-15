@@ -290,6 +290,10 @@ export using owned_vertex_array_name = gl_owned_object_name<vertex_array_tag>;
 /// @see path_nv_name
 export using owned_path_nv_name = gl_owned_object_name<path_nv_tag>;
 //------------------------------------------------------------------------------
+/// Alias for owned GL sync object handle.
+/// @ingroup gl_api_wrap
+export using owned_sync = optionally_valid<gl_types::sync_type>;
+//------------------------------------------------------------------------------
 /// @brief Alias for array of N GL buffer object handles.
 /// @ingroup gl_api_wrap
 /// @see buffer_name
