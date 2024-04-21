@@ -18,7 +18,8 @@ import :objects;
 import :enum_types;
 import :api;
 
-namespace eagine::oglplus {
+namespace eagine {
+namespace oglplus {
 //------------------------------------------------------------------------------
 // texture build info
 //------------------------------------------------------------------------------
@@ -153,49 +154,6 @@ private:
       const basic_gl_api<T>& glapi,
       bool&) const noexcept;
 };
-//------------------------------------------------------------------------------
-export template <typename Selector>
-constexpr auto data_member_mapping(
-  const std::type_identity<texture_build_info>,
-  Selector) noexcept {
-    using S = texture_build_info;
-    return make_data_member_mapping<
-      S,
-      std::optional<gl_types::int_type>,
-      std::optional<gl_types::int_type>,
-      std::optional<gl_types::sizei_type>,
-      std::optional<gl_types::sizei_type>,
-      std::optional<gl_types::sizei_type>,
-      std::optional<pixel_data_type>,
-      std::optional<pixel_format>,
-      std::optional<pixel_internal_format>,
-      std::optional<texture_wrap_mode>,
-      std::optional<texture_wrap_mode>,
-      std::optional<texture_wrap_mode>,
-      std::optional<texture_swizzle_mode>,
-      std::optional<texture_swizzle_mode>,
-      std::optional<texture_swizzle_mode>,
-      std::optional<texture_swizzle_mode>,
-      std::optional<texture_min_filter>,
-      std::optional<texture_mag_filter>>(
-      {"levels", &S::levels},
-      {"channels", &S::channels},
-      {"width", &S::width},
-      {"height", &S::height},
-      {"depth", &S::depth},
-      {"data_type", &S::data_type},
-      {"format", &S::format},
-      {"iformat", &S::iformat},
-      {"wrap_s", &S::wrap_s},
-      {"wrap_t", &S::wrap_t},
-      {"wrap_r", &S::wrap_r},
-      {"swizzle_r", &S::swizzle_r},
-      {"swizzle_g", &S::swizzle_g},
-      {"swizzle_b", &S::swizzle_b},
-      {"swizzle_a", &S::swizzle_a},
-      {"min_filter", &S::min_filter},
-      {"mag_filter", &S::mag_filter});
-}
 //------------------------------------------------------------------------------
 template <typename T>
 auto texture_build_info::texture_storage1d(
@@ -455,37 +413,6 @@ export struct texture_image_build_info {
     std::optional<pixel_format> format;
     std::optional<pixel_internal_format> iformat;
 };
-
-export template <typename Selector>
-constexpr auto data_member_mapping(
-  const std::type_identity<texture_image_build_info>,
-  Selector) noexcept {
-    using S = texture_image_build_info;
-    return make_data_member_mapping<
-      S,
-      std::optional<gl_types::int_type>,
-      std::optional<gl_types::int_type>,
-      std::optional<gl_types::int_type>,
-      std::optional<gl_types::int_type>,
-      std::optional<gl_types::int_type>,
-      std::optional<gl_types::sizei_type>,
-      std::optional<gl_types::sizei_type>,
-      std::optional<gl_types::sizei_type>,
-      std::optional<pixel_data_type>,
-      std::optional<pixel_format>,
-      std::optional<pixel_internal_format>>(
-      {"level", &S::level},
-      {"channels", &S::channels},
-      {"x_offs", &S::x_offs},
-      {"y_offs", &S::y_offs},
-      {"z_offs", &S::z_offs},
-      {"width", &S::width},
-      {"height", &S::height},
-      {"depth", &S::depth},
-      {"data_type", &S::data_type},
-      {"format", &S::format},
-      {"iformat", &S::iformat});
-}
 //------------------------------------------------------------------------------
 export auto make_texture_builder(
   const gl_api& glapi,
@@ -504,5 +431,81 @@ auto build_from_resource(
       ctx, make_texture_builder(glapi, ctx.buffers(), tex, target));
 }
 //------------------------------------------------------------------------------
-} // namespace eagine::oglplus
-
+} // namespace oglplus
+export template <>
+struct data_member_traits<oglplus::texture_build_info> {
+    static constexpr auto mapping() noexcept {
+        using oglplus::gl_types;
+        using S = oglplus::texture_build_info;
+        return make_data_member_mapping<
+          S,
+          std::optional<gl_types::int_type>,
+          std::optional<gl_types::int_type>,
+          std::optional<gl_types::sizei_type>,
+          std::optional<gl_types::sizei_type>,
+          std::optional<gl_types::sizei_type>,
+          std::optional<oglplus::pixel_data_type>,
+          std::optional<oglplus::pixel_format>,
+          std::optional<oglplus::pixel_internal_format>,
+          std::optional<oglplus::texture_wrap_mode>,
+          std::optional<oglplus::texture_wrap_mode>,
+          std::optional<oglplus::texture_wrap_mode>,
+          std::optional<oglplus::texture_swizzle_mode>,
+          std::optional<oglplus::texture_swizzle_mode>,
+          std::optional<oglplus::texture_swizzle_mode>,
+          std::optional<oglplus::texture_swizzle_mode>,
+          std::optional<oglplus::texture_min_filter>,
+          std::optional<oglplus::texture_mag_filter>>(
+          {"levels", &S::levels},
+          {"channels", &S::channels},
+          {"width", &S::width},
+          {"height", &S::height},
+          {"depth", &S::depth},
+          {"data_type", &S::data_type},
+          {"format", &S::format},
+          {"iformat", &S::iformat},
+          {"wrap_s", &S::wrap_s},
+          {"wrap_t", &S::wrap_t},
+          {"wrap_r", &S::wrap_r},
+          {"swizzle_r", &S::swizzle_r},
+          {"swizzle_g", &S::swizzle_g},
+          {"swizzle_b", &S::swizzle_b},
+          {"swizzle_a", &S::swizzle_a},
+          {"min_filter", &S::min_filter},
+          {"mag_filter", &S::mag_filter});
+    }
+};
+//------------------------------------------------------------------------------
+export template <>
+struct data_member_traits<oglplus::texture_image_build_info> {
+    static constexpr auto mapping() noexcept {
+        using oglplus::gl_types;
+        using S = oglplus::texture_image_build_info;
+        return make_data_member_mapping<
+          S,
+          std::optional<gl_types::int_type>,
+          std::optional<gl_types::int_type>,
+          std::optional<gl_types::int_type>,
+          std::optional<gl_types::int_type>,
+          std::optional<gl_types::int_type>,
+          std::optional<gl_types::sizei_type>,
+          std::optional<gl_types::sizei_type>,
+          std::optional<gl_types::sizei_type>,
+          std::optional<oglplus::pixel_data_type>,
+          std::optional<oglplus::pixel_format>,
+          std::optional<oglplus::pixel_internal_format>>(
+          {"level", &S::level},
+          {"channels", &S::channels},
+          {"x_offs", &S::x_offs},
+          {"y_offs", &S::y_offs},
+          {"z_offs", &S::z_offs},
+          {"width", &S::width},
+          {"height", &S::height},
+          {"depth", &S::depth},
+          {"data_type", &S::data_type},
+          {"format", &S::format},
+          {"iformat", &S::iformat});
+    }
+};
+//------------------------------------------------------------------------------
+} // namespace eagine
