@@ -123,3 +123,12 @@ eagine_embed_target_resources(
 	ENABLE_SEARCH
 )
 
+install(
+	FILES
+		oglplus.eagitex	
+		pcb_tiles.eagitex	
+	COMPONENT oglplus-assets
+	PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+	DESTINATION share/eagine/assets)
+
+
