@@ -1,0 +1,5 @@
+eagine-oglplus-dev (0.125.0) unstable; urgency=medium
+
+  * Initial version with CPack-based packaging.
+
+ -- Matúš Chochlík <matus.chochlik@proton.me>  Tue, 16 Jun 2024 08:00:00 +0200
