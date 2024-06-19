@@ -296,3 +296,15 @@ eagine_add_module_tests(
 eagine_add_license(oglplus-dev)
 eagine_add_debian_changelog(oglplus-dev)
 
+eagine_add_package_property(
+	oglplus-dev
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_DEPENDS
+	VALUE "eagine-core-dev (>= @EAGINE_VERSION@),eagine-shapes-dev (>= @EAGINE_VERSION@)")
+
+eagine_add_package_property(
+	oglplus-dev
+	GENERATOR DEBIAN
+	VARIABLE DESCRIPTION
+	VALUE "C++ wrapper for OpenGL.")
+

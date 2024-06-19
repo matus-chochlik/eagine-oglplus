@@ -24,8 +24,8 @@ list(APPEND CMAKE_MODULE_PATH ${EAGINE_CORE_ROOT}/config)
 file(STRINGS "${EAGINE_CORE_ROOT}/VERSION" EAGINE_VERSION)
 
 add_subdirectory(submodules)
-
 include(EAGineCoreCommon)
+include(EAGinePackageOGLplus)
 find_package(EAGineGLEW)
 find_package(EAGineGLFW3)
 

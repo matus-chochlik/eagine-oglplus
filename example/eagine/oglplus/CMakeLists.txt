@@ -123,6 +123,18 @@ eagine_embed_target_resources(
 	ENABLE_SEARCH
 )
 
+eagine_add_package_property(
+	oglplus-examples
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_DEPENDS
+	VALUE "\${CXX_RUNTIME_PKGS},\${EAGINE_CORE_RUNTIME_PKGS},\${EAGINE_OGLPLUS_RUNTIME_PKGS}")
+
+eagine_add_package_property(
+	oglplus-examples
+	GENERATOR DEBIAN
+	VARIABLE DESCRIPTION
+	VALUE "EAGine OGLplus examples.")
+
 install(
 	FILES
 		oglplus.eagitex	
@@ -131,4 +143,15 @@ install(
 	PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
 	DESTINATION share/eagine/assets)
 
+eagine_add_package_property(
+	oglplus-assets
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_DEPENDS
+	VALUE "\${CXX_RUNTIME_PKGS},\${EAGINE_CORE_RUNTIME_PKGS},\${EAGINE_OGLPLUS_RUNTIME_PKGS}")
+
+eagine_add_package_property(
+	oglplus-assets
+	GENERATOR DEBIAN
+	VARIABLE DESCRIPTION
+	VALUE "EAGine OGLplus assets.")
 

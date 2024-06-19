@@ -31,3 +31,15 @@ endforeach()
 eagine_add_license(oglplus-apps)
 eagine_add_debian_changelog(oglplus-apps)
 
+eagine_add_package_property(
+	oglplus-apps
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_DEPENDS
+	VALUE "\${CXX_RUNTIME_PKGS},\${EAGINE_CORE_RUNTIME_PKGS},\${EAGINE_OGLPLUS_RUNTIME_PKGS},python3")
+
+eagine_add_package_property(
+	oglplus-apps
+	GENERATOR DEBIAN
+	VARIABLE DESCRIPTION
+	VALUE "EAGine OGLplus examples.")
+
