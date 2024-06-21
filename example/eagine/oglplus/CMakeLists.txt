@@ -143,6 +143,9 @@ install(
 	PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
 	DESTINATION share/eagine/assets)
 
+eagine_add_license(oglplus-examples)
+eagine_add_debian_changelog(oglplus-examples)
+
 eagine_add_package_property(
 	oglplus-assets
 	GENERATOR DEBIAN
