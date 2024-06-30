@@ -13,8 +13,8 @@ set_target_properties(
 function(eagine_install_example TARGET_NAME)
 	install(
 		TARGETS ${TARGET_NAME}
-		DESTINATION share/eagine/example/oglplus
-	)
+		COMPONENT oglplus-examples
+		DESTINATION share/eagine/example/oglplus)
 endfunction()
 
 function(eagine_example_common EXAMPLE_NAME)
@@ -122,4 +122,27 @@ eagine_embed_target_resources(
 		RectMskTex "round-rect-mask.eagitex"
 	ENABLE_SEARCH
 )
+
+eagine_add_package_property(
+	oglplus-examples
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_DEPENDS
+	VALUE "\${CXX_RUNTIME_PKGS},\${EAGINE_CORE_RUNTIME_PKGS},\${EAGINE_OGLPLUS_RUNTIME_PKGS}")
+
+eagine_add_package_property(
+	oglplus-examples
+	GENERATOR DEBIAN
+	VARIABLE DESCRIPTION
+	VALUE "EAGine OGLplus examples.")
+
+install(
+	FILES
+		oglplus.eagitex	
+		pcb_tiles.eagitex	
+	COMPONENT oglplus-assets
+	PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ
+	DESTINATION share/eagine/assets)
+
+eagine_add_license(oglplus-examples)
+eagine_add_debian_changelog(oglplus-examples)
 

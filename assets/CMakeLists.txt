@@ -5,3 +5,21 @@
 
 add_subdirectory(textures)
 
+eagine_add_package_property(
+	oglplus-assets
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_DEPENDS
+	VALUE "\${CXX_RUNTIME_PKGS},\${EAGINE_CORE_RUNTIME_PKGS},\${EAGINE_OGLPLUS_RUNTIME_PKGS}")
+
+eagine_add_package_property(
+	oglplus-assets
+	GENERATOR DEBIAN
+	VARIABLE DESCRIPTION
+	VALUE "EAGine OGLplus assets.")
+
+eagine_add_package_property(
+	oglplus-assets
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_ARCHITECTURE
+	VALUE "all")
+

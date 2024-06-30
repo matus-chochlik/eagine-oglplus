@@ -5,14 +5,18 @@
 configure_file(gl_def.hpp gl_def.hpp COPYONLY)
 
 eagine_add_module(
-	eagine.oglplus PARTITION config
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION config
 	IMPORTS
 		std
 		eagine.core.types
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION math
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION math
 	IMPORTS
 		std config
 		eagine.core.types
@@ -20,7 +24,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION camera
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION camera
 	IMPORTS
 		std config math
 		eagine.core.types
@@ -30,7 +36,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION extensions
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION extensions
 	IMPORTS
 		std
 		eagine.core.types
@@ -39,7 +47,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION enum_types
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION enum_types
 	IMPORTS
 		std config
 		eagine.core.types
@@ -48,7 +58,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION type_utils
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION type_utils
 	IMPORTS
 		std config enum_types math
 		eagine.core.types
@@ -57,7 +69,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION glsl_source
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION glsl_source
 	IMPORTS
 		std config
 		eagine.core.types
@@ -66,7 +80,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION result
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION result
 	IMPORTS
 		std config
 		eagine.core.types
@@ -75,7 +91,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION objects
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION objects
 	IMPORTS
 		std config
 		eagine.core.types
@@ -84,7 +102,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION prog_var_loc
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION prog_var_loc
 	IMPORTS
 		std config enum_types
 		eagine.core.types
@@ -94,7 +114,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION c_api
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION c_api
 	IMPORTS
 		std config result
 		eagine.core.types
@@ -103,7 +125,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION api_traits
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION api_traits
 	IMPORTS
 		std config result
 		eagine.core.types
@@ -112,7 +136,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION constants
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION constants
 	IMPORTS
 		std config enum_types
 		objects math c_api
@@ -123,7 +149,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION api
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION api
 	IMPORTS
 		std config enum_types
 		objects constants extensions
@@ -143,7 +171,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION from_string
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION from_string
 	IMPORTS
 		std enum_types constants
 		eagine.core.types
@@ -153,7 +183,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION gl_debug_logger
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION gl_debug_logger
 	IMPORTS
 		std config
 		eagine.core.types
@@ -162,7 +194,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION shapes
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION shapes
 	IMPORTS
 		std config enum_types
 		objects constants api
@@ -174,7 +208,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION gpu_program
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION gpu_program
 	IMPORTS
 		std config enum_types
 		shapes glsl_source
@@ -186,7 +222,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION resources
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION resources
 	IMPORTS
 		std config objects
 		enum_types api
@@ -199,7 +237,9 @@ eagine_add_module(
 )
 
 eagine_add_module(
-	eagine.oglplus PARTITION framebuffer
+	eagine.oglplus
+	COMPONENT oglplus-dev
+	PARTITION framebuffer
 	IMPORTS
 		std config enum_types
 		object constants
@@ -213,6 +253,7 @@ eagine_add_module(
 
 eagine_add_module(
 	eagine.oglplus
+	COMPONENT oglplus-dev
 	SOURCES
 		constants
 		api
@@ -251,3 +292,19 @@ eagine_add_module_tests(
 	IMPORTS
 		eagine.core
 )
+
+eagine_add_license(oglplus-dev)
+eagine_add_debian_changelog(oglplus-dev)
+
+eagine_add_package_property(
+	oglplus-dev
+	GENERATOR DEBIAN
+	VARIABLE PACKAGE_DEPENDS
+	VALUE "eagine-core-dev (>= ${EAGINE_VERSION}),eagine-shapes-dev (>= ${EAGINE_VERSION})")
+
+eagine_add_package_property(
+	oglplus-dev
+	GENERATOR DEBIAN
+	VARIABLE DESCRIPTION
+	VALUE "C++ wrapper for OpenGL.")
+

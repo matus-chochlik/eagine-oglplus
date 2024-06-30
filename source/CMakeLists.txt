@@ -6,17 +6,3 @@ add_subdirectory(modules)
 add_subdirectory(app)
 add_subdirectory(tools)
 
-set(
-	EAGINE_OGLPLUS_EXPORT_TARGETS
-)
-
-install(
-	TARGETS ${EAGINE_OGLPLUS_EXPORT_TARGETS}
-	EXPORT OGLplus
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
-	RUNTIME DESTINATION bin
-	INCLUDES DESTINATION include
-	PUBLIC_HEADER DESTINATION include
-)
-
