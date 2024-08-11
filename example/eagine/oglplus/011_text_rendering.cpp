@@ -24,8 +24,8 @@ static void run_loop(
     const gl_api glapi{ctx};
     const auto& [gl, GL] = glapi;
 
-    const bool has_requirements =
-      gl.clear and gl.create_paths_nv and gl.delete_paths_nv;
+    const bool has_requirements = gl.clear and gl.NV_path_rendering and
+                                  gl.create_paths_nv and gl.delete_paths_nv;
 
     if(has_requirements) {
         gl_debug_logger gdl{ctx, glapi};
