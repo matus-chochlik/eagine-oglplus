@@ -98,7 +98,7 @@ public:
         return (near() + far()) * 0.5F;
     }
 
-    /// @brief Returns the y-axis FOV angle
+    /// @brief Returns the y-axis field-of-view angle
     auto fov() const noexcept -> radians_t<float_type> {
         return _fov;
     }
@@ -112,7 +112,7 @@ public:
         return smooth_lerp(_orbit_min, _orbit_max, _orbit_factor);
     }
 
-    /// @brief Returns the prefered distance to the farthest part of a skybox.
+    /// @brief Returns the preferred distance to the farthest part of a skybox.
     /// @see near
     /// @see midpoint
     /// @see far
