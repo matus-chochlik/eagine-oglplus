@@ -185,6 +185,10 @@ public:
       "ARB_shading_language_include",
       *this};
 
+    /// @var NV_path_rendering
+    /// @glextwrap{NV_path_rendering}
+    extension NV_path_rendering{"NV_path_rendering", *this};
+
     // utilities
     static constexpr auto type_of(buffer_name) noexcept {
         return object_type(GL_BUFFER);

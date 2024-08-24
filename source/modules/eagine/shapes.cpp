@@ -1068,6 +1068,13 @@ public:
         return location({shapes::vertex_attrib_kind::vertex_pivot, idx});
     }
 
+    /// @brief Returns the index at which the pivot pivot variant is bound.
+    /// @see location
+    auto pivot_pivot_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::pivot_pivot, idx});
+    }
+
     /// @brief Returns the index at which the box_coord variant is bound.
     /// @see location
     auto box_coord_loc(span_size_t idx = 0) const noexcept
@@ -1096,11 +1103,25 @@ public:
         return location({shapes::vertex_attrib_kind::wrap_coord, idx});
     }
 
+    /// @brief Returns the index at which the tile_coord variant is bound.
+    /// @see location
+    auto tile_coord_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::tile_coord, idx});
+    }
+
     /// @brief Returns the index at which the color variant is bound.
     /// @see location
     auto color_loc(span_size_t idx = 0) const noexcept
       -> vertex_attrib_location {
         return location({shapes::vertex_attrib_kind::color, idx});
+    }
+
+    /// @brief Returns the index at which the emission variant is bound.
+    /// @see location
+    auto emission_loc(span_size_t idx = 0) const noexcept
+      -> vertex_attrib_location {
+        return location({shapes::vertex_attrib_kind::emission, idx});
     }
 
     /// @brief Returns the index at which the weight variant is bound.
