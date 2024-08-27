@@ -140,10 +140,10 @@ public:
         using Wrap::Wrap;
 
         template <typename... X>
-        auto operator()(X&&... x) const noexcept -> tvec<T, N>
+        auto operator()(X&&... x) const noexcept -> vector<T, N>
             requires((sizeof...(X) == N) and ... and std::is_convertible_v<X, T>)
         {
-            return tvec<T, N>(T(std::forward<X>(x))...);
+            return vector<T, N>(T(std::forward<X>(x))...);
         }
     };
 

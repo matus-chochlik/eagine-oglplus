@@ -50,34 +50,29 @@ export using triangle = math::triangle<gl_types::float_type, math_use_simd>;
 /// @ingroup gl_utils
 export using math::vector;
 
-/// @brief Template alias for math::tvec.
-/// @ingroup gl_utils
-export template <typename T, unsigned N, bool V = math_use_simd>
-using tvec = math::tvec<T, N, V>;
-
 /// @brief Alias for a floating-point 2D vector type.
 /// @ingroup gl_utils
-export using vec2 = tvec<gl_types::float_type, 2>;
+export using vec2 = vector<gl_types::float_type, 2>;
 
 /// @brief Alias for a floating-point 3D vector type.
 /// @ingroup gl_utils
-export using vec3 = tvec<gl_types::float_type, 3>;
+export using vec3 = vector<gl_types::float_type, 3>;
 
 /// @brief Alias for a floating-point 4D vector type.
 /// @ingroup gl_utils
-export using vec4 = tvec<gl_types::float_type, 4>;
+export using vec4 = vector<gl_types::float_type, 4>;
 
 /// @brief Alias for a integer 2D vector type.
 /// @ingroup gl_utils
-export using ivec2 = tvec<gl_types::int_type, 2>;
+export using ivec2 = vector<gl_types::int_type, 2>;
 
 /// @brief Alias for a integer 3D vector type.
 /// @ingroup gl_utils
-export using ivec3 = tvec<gl_types::int_type, 3>;
+export using ivec3 = vector<gl_types::int_type, 3>;
 
 /// @brief Alias for a integer 4D vector type.
 /// @ingroup gl_utils
-export using ivec4 = tvec<gl_types::int_type, 4>;
+export using ivec4 = vector<gl_types::int_type, 4>;
 //------------------------------------------------------------------------------
 /// @brief Alias for math::matrix.
 /// @ingroup gl_utils

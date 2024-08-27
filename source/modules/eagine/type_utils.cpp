@@ -122,11 +122,6 @@ constexpr auto data_type_of(const std::type_identity<vector<T, N, V>>) noexcept 
     return data_type_of(std::type_identity<T>{});
 }
 //------------------------------------------------------------------------------
-export template <typename T, int N, bool V>
-constexpr auto data_type_of(const std::type_identity<tvec<T, N, V>>) noexcept {
-    return data_type_of(std::type_identity<T>{});
-}
-//------------------------------------------------------------------------------
 /// @brief Returns a data type for the specified C++ type T.
 /// @ingroup gl_api_wrap
 /// @see sl_data_type_of
@@ -255,8 +250,8 @@ constexpr auto pixel_format_of(
 }
 //------------------------------------------------------------------------------
 export template <typename T, int N, bool V>
-constexpr auto pixel_format_of(const std::type_identity<tvec<T, N, V>>) noexcept
-  -> gl_types::enum_type
+constexpr auto pixel_format_of(
+  const std::type_identity<vector<T, N, V>>) noexcept -> gl_types::enum_type
     requires(is_gl_data_type_v<T>)
 {
     return pixel_format_of(std::type_identity<vector<T, N, V>>{});
@@ -532,7 +527,7 @@ constexpr auto internal_format_of(
 //------------------------------------------------------------------------------
 export template <typename T, int N, bool V>
 constexpr auto internal_format_of(
-  const std::type_identity<tvec<T, N, V>>) noexcept {
+  const std::type_identity<vector<T, N, V>>) noexcept {
     return internal_format_of(std::type_identity<vector<T, N, V>>{});
 }
 //------------------------------------------------------------------------------
