@@ -52,27 +52,27 @@ export using math::vector;
 
 /// @brief Alias for a floating-point 2D vector type.
 /// @ingroup gl_utils
-export using vec2 = vector<gl_types::float_type, 2>;
+export using vec2 = vector<gl_types::float_type, 2, math_use_simd>;
 
 /// @brief Alias for a floating-point 3D vector type.
 /// @ingroup gl_utils
-export using vec3 = vector<gl_types::float_type, 3>;
+export using vec3 = vector<gl_types::float_type, 3, math_use_simd>;
 
 /// @brief Alias for a floating-point 4D vector type.
 /// @ingroup gl_utils
-export using vec4 = vector<gl_types::float_type, 4>;
+export using vec4 = vector<gl_types::float_type, 4, math_use_simd>;
 
 /// @brief Alias for a integer 2D vector type.
 /// @ingroup gl_utils
-export using ivec2 = vector<gl_types::int_type, 2>;
+export using ivec2 = vector<gl_types::int_type, 2, math_use_simd>;
 
 /// @brief Alias for a integer 3D vector type.
 /// @ingroup gl_utils
-export using ivec3 = vector<gl_types::int_type, 3>;
+export using ivec3 = vector<gl_types::int_type, 3, math_use_simd>;
 
 /// @brief Alias for a integer 4D vector type.
 /// @ingroup gl_utils
-export using ivec4 = vector<gl_types::int_type, 4>;
+export using ivec4 = vector<gl_types::int_type, 4, math_use_simd>;
 //------------------------------------------------------------------------------
 /// @brief Alias for math::matrix.
 /// @ingroup gl_utils
