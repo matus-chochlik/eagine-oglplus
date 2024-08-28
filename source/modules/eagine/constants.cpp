@@ -152,11 +152,11 @@ public:
         using Wrap::Wrap;
 
         template <typename... X>
-        auto operator()(X&&... x) const noexcept -> tmat<T, C, R, true>
+        auto operator()(X&&... x) const noexcept -> matrix<T, C, R, true>
             requires(
               (sizeof...(X) == C * R) and ... and std::is_convertible_v<X, T>)
         {
-            return tmat<T, C, R, true>(T(std::forward<X>(x))...);
+            return {T(std::forward<X>(x))...};
         }
     };
 

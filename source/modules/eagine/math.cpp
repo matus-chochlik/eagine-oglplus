@@ -75,17 +75,12 @@ export using ivec4 = vector<gl_types::int_type, 4>;
 //------------------------------------------------------------------------------
 /// @brief Alias for math::matrix.
 /// @ingroup gl_utils
-using math::matrix;
-
-/// @brief Template alias for math::tmat.
-/// @ingroup gl_utils
-export template <typename T, unsigned C, unsigned R, bool RM, bool V = true>
-using tmat = math::tmat<T, C, R, RM, V>;
+export using math::matrix;
 
 /// @brief Template alias for float matrices.
 /// @ingroup gl_utils
 export template <unsigned C, unsigned R, bool RM>
-using tfmat = tmat<gl_types::float_type, C, R, RM>;
+using tfmat = matrix<gl_types::float_type, C, R, RM>;
 
 /// @brief Template alias for column-major float matrices.
 /// @ingroup gl_utils
