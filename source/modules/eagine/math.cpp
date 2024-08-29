@@ -45,6 +45,14 @@ export using sphere = math::sphere<gl_types::float_type>;
 /// @ingroup gl_utils
 export using triangle = math::triangle<gl_types::float_type>;
 //------------------------------------------------------------------------------
+/// @brief Alias for math::point.
+/// @ingroup gl_utils
+export using math::point;
+
+/// @brief Alias 3D point.
+/// @ingroup gl_utils
+export using point3 = point<gl_types::float_type, 3>;
+//------------------------------------------------------------------------------
 /// @brief Alias for math::vector.
 /// @ingroup gl_utils
 export using math::vector;

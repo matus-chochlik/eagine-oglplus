@@ -28,7 +28,7 @@ auto orbiting_camera::target_plane_point(
     const auto mat = matrix(aspect);
 
     if(auto inv = inverse_matrix(mat)) {
-        auto ndct = multiply(mat, vec4(target(), 1.F));
+        auto ndct = multiply(mat, vec4(vec3(target()), 1.F));
         auto ndc = vec4{ndcx * ndct.w(), ndcy * ndct.w(), ndct.z(), ndct.w()};
         return {vec3(math::multiply(inv.value(), ndc)), true};
     }
@@ -40,7 +40,7 @@ auto orbiting_camera::pointer_ray(
   const float_type ndcy,
   const float_type aspect) const noexcept -> optionally_valid<line> {
     if(const auto ptr{target_plane_point(ndcx, ndcy, aspect)}) {
-        return {line(position(), ptr.value_anyway() - position()), true};
+        return {line(position(), ptr.value_anyway() - vec3(position())), true};
     }
     return {};
 }
