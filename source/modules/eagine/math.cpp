@@ -33,6 +33,14 @@ export using unit_spherical_coordinate =
 export using math::to_cartesian;
 export using math::to_unit_spherical;
 //------------------------------------------------------------------------------
+/// @brief Alias for math::quaternion instantiation.
+/// @ingroup gl_utils
+export using quaternion = math::quaternion<gl_types::float_type>;
+
+/// @brief Alias for math::plane instantiation.
+/// @ingroup gl_utils
+export using plane = math::plane<gl_types::float_type>;
+
 /// @brief Alias for math::line instantiation.
 /// @ingroup gl_utils
 export using line = math::line<gl_types::float_type>;
