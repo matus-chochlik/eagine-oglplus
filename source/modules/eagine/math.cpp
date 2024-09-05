@@ -12,7 +12,6 @@ import :config;
 
 namespace eagine::oglplus {
 
-export constexpr const bool math_use_simd = true;
 //------------------------------------------------------------------------------
 /// @brief Alias for math::sign.
 /// @ingroup gl_utils
@@ -29,74 +28,75 @@ export using math::smooth_oscillate;
 /// @brief Alias for math::unit_spherical_coordinate instantiation.
 /// @ingroup gl_utils
 export using unit_spherical_coordinate =
-  math::unit_spherical_coordinate<gl_types::float_type, math_use_simd>;
+  math::unit_spherical_coordinate<gl_types::float_type>;
 
 export using math::to_cartesian;
 export using math::to_unit_spherical;
 //------------------------------------------------------------------------------
+/// @brief Alias for math::quaternion instantiation.
+/// @ingroup gl_utils
+export using quaternion = math::quaternion<gl_types::float_type>;
+
+/// @brief Alias for math::plane instantiation.
+/// @ingroup gl_utils
+export using plane = math::plane<gl_types::float_type>;
+
 /// @brief Alias for math::line instantiation.
 /// @ingroup gl_utils
-export using line = math::line<gl_types::float_type, math_use_simd>;
+export using line = math::line<gl_types::float_type>;
 
 /// @brief Alias for math::sphere instantiation.
 /// @ingroup gl_utils
-export using sphere = math::sphere<gl_types::float_type, math_use_simd>;
+export using sphere = math::sphere<gl_types::float_type>;
 
 /// @brief Alias for math::triangle instantiation.
 /// @ingroup gl_utils
-export using triangle = math::triangle<gl_types::float_type, math_use_simd>;
+export using triangle = math::triangle<gl_types::float_type>;
+//------------------------------------------------------------------------------
+/// @brief Alias for math::point.
+/// @ingroup gl_utils
+export using math::point;
+
+/// @brief Alias 3D point.
+/// @ingroup gl_utils
+export using point3 = point<gl_types::float_type, 3>;
 //------------------------------------------------------------------------------
 /// @brief Alias for math::vector.
 /// @ingroup gl_utils
 export using math::vector;
 
-/// @brief Template alias for math::tvec.
-/// @ingroup gl_utils
-export template <typename T, unsigned N, bool V = math_use_simd>
-using tvec = math::tvec<T, N, V>;
-
 /// @brief Alias for a floating-point 2D vector type.
 /// @ingroup gl_utils
-export using vec2 = tvec<gl_types::float_type, 2>;
+export using vec2 = vector<gl_types::float_type, 2>;
 
 /// @brief Alias for a floating-point 3D vector type.
 /// @ingroup gl_utils
-export using vec3 = tvec<gl_types::float_type, 3>;
+export using vec3 = vector<gl_types::float_type, 3>;
 
 /// @brief Alias for a floating-point 4D vector type.
 /// @ingroup gl_utils
-export using vec4 = tvec<gl_types::float_type, 4>;
+export using vec4 = vector<gl_types::float_type, 4>;
 
 /// @brief Alias for a integer 2D vector type.
 /// @ingroup gl_utils
-export using ivec2 = tvec<gl_types::int_type, 2>;
+export using ivec2 = vector<gl_types::int_type, 2>;
 
 /// @brief Alias for a integer 3D vector type.
 /// @ingroup gl_utils
-export using ivec3 = tvec<gl_types::int_type, 3>;
+export using ivec3 = vector<gl_types::int_type, 3>;
 
 /// @brief Alias for a integer 4D vector type.
 /// @ingroup gl_utils
-export using ivec4 = tvec<gl_types::int_type, 4>;
+export using ivec4 = vector<gl_types::int_type, 4>;
 //------------------------------------------------------------------------------
 /// @brief Alias for math::matrix.
 /// @ingroup gl_utils
-using math::matrix;
-
-/// @brief Template alias for math::tmat.
-/// @ingroup gl_utils
-export template <
-  typename T,
-  unsigned C,
-  unsigned R,
-  bool RM = false,
-  bool V = math_use_simd>
-using tmat = math::tmat<T, C, R, RM, V>;
+export using math::matrix;
 
 /// @brief Template alias for float matrices.
 /// @ingroup gl_utils
 export template <unsigned C, unsigned R, bool RM>
-using tfmat = tmat<gl_types::float_type, C, R, RM>;
+using tfmat = matrix<gl_types::float_type, C, R, RM>;
 
 /// @brief Template alias for column-major float matrices.
 /// @ingroup gl_utils
@@ -147,67 +147,62 @@ export using mat4 = tcfmat<4>;
 /// @brief Alias for math::matrix_uniform_scale instantiation.
 /// @ingroup gl_utils
 export using matrix_uniform_scale =
-  math::matrix_uniform_scale<gl_types::float_type, math_use_simd>;
+  math::matrix_uniform_scale<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_scale instantiation.
 /// @ingroup gl_utils
-export using matrix_scale =
-  math::matrix_scale<gl_types::float_type, math_use_simd>;
+export using matrix_scale = math::matrix_scale<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_rotation_x instantiation.
 /// @ingroup gl_utils
-export using matrix_rotation_x =
-  math::matrix_rotation_x<gl_types::float_type, math_use_simd>;
+export using matrix_rotation_x = math::matrix_rotation_x<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_rotation_y instantiation.
 /// @ingroup gl_utils
-export using matrix_rotation_y =
-  math::matrix_rotation_y<gl_types::float_type, math_use_simd>;
+export using matrix_rotation_y = math::matrix_rotation_y<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_rotation_z instantiation.
 /// @ingroup gl_utils
-export using matrix_rotation_z =
-  math::matrix_rotation_z<gl_types::float_type, math_use_simd>;
+export using matrix_rotation_z = math::matrix_rotation_z<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_translation instantiation.
 /// @ingroup gl_utils
 export using matrix_translation =
-  math::matrix_translation<gl_types::float_type, math_use_simd>;
+  math::matrix_translation<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_reflection_x instantiation.
 /// @ingroup gl_utils
 export using matrix_reflection_x =
-  math::matrix_reflection_x<gl_types::float_type, math_use_simd>;
+  math::matrix_reflection_x<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_reflection_y instantiation.
 /// @ingroup gl_utils
 export using matrix_reflection_y =
-  math::matrix_reflection_y<gl_types::float_type, math_use_simd>;
+  math::matrix_reflection_y<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_reflection_z instantiation.
 /// @ingroup gl_utils
 export using matrix_reflection_z =
-  math::matrix_reflection_z<gl_types::float_type, math_use_simd>;
+  math::matrix_reflection_z<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_orbiting_y_up instantiation.
 /// @ingroup gl_utils
 export using matrix_orbiting_y_up =
-  math::matrix_orbiting_y_up<gl_types::float_type, math_use_simd>;
+  math::matrix_orbiting_y_up<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_looking_at_y_up instantiation.
 /// @ingroup gl_utils
 export using matrix_looking_at_y_up =
-  math::matrix_looking_at_y_up<gl_types::float_type, math_use_simd>;
+  math::matrix_looking_at_y_up<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_ortho instantiation.
 /// @ingroup gl_utils
-export using matrix_ortho =
-  math::matrix_ortho<gl_types::float_type, math_use_simd>;
+export using matrix_ortho = math::matrix_ortho<gl_types::float_type>;
 
 /// @brief Alias for math::matrix_perspective instantiation.
 /// @ingroup gl_utils
 export using matrix_perspective =
-  math::matrix_perspective<gl_types::float_type, math_use_simd>;
+  math::matrix_perspective<gl_types::float_type>;
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

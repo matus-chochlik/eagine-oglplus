@@ -22,7 +22,7 @@ public:
     using float_type = gl_types::float_type;
 
     /// @brief Sets the target position.
-    auto set_target(const vec3 target) noexcept -> auto& {
+    auto set_target(const point3 target) noexcept -> auto& {
         _target = target;
         return *this;
     }
@@ -137,7 +137,7 @@ public:
 
     /// @brief Returns the target position.
     /// @see position
-    auto target() const noexcept -> vec3 {
+    auto target() const noexcept -> point3 {
         return _target;
     }
 
@@ -153,7 +153,7 @@ public:
 
     /// @brief Returns the position of the camera.
     /// @see target
-    auto position() const noexcept -> vec3 {
+    auto position() const noexcept -> point3 {
         return target() + target_to_camera_direction() * orbit();
     }
 
@@ -196,7 +196,7 @@ public:
     auto grab_sphere() const noexcept -> sphere;
 
 private:
-    vec3 _target{};
+    point3 _target{};
     radians_t<float_type> _fov{right_angle_()};
 
     float_type _near{0.5F};
