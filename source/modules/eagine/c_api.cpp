@@ -1415,6 +1415,27 @@ public:
       OGLPLUS_GL_STATIC_FUNC(GetCompressedTextureImage)>
       GetCompressedTextureImage{"GetCompressedTextureImage", *this};
 
+    /// @var GetTextureHandle
+    /// @glfuncwrap{GetTextureHandleARB}
+    gl_api_function<
+      uint64_type(uint_type),
+      OGLPLUS_GL_STATIC_FUNC(GetTextureHandleARB)>
+      GetTextureHandle{"GetTextureHandleARB", *this};
+
+    /// @var GetTextureSamplerHandle
+    /// @glfuncwrap{GetTextureSamplerHandleARB}
+    gl_api_function<
+      uint64_type(uint_type, uint_type),
+      OGLPLUS_GL_STATIC_FUNC(GetTextureSamplerHandleARB)>
+      GetTextureSamplerHandle{"GetTextureSamplerHandleARB", *this};
+
+    /// @var GetImageHandle
+    /// @glfuncwrap{GetImageHandleARB}
+    gl_api_function<
+      uint64_type(uint_type, int_type, bool_type, int_type, enum_type),
+      OGLPLUS_GL_STATIC_FUNC(GetImageHandleARB)>
+      GetImageHandle{"GetImageHandleARB", *this};
+
     /// @var GetCompressedTextureSubImage
     /// @glfuncwrap{GetCompressedTextureSubImage}
     gl_api_function<
@@ -1431,6 +1452,34 @@ public:
         void_ptr_type),
       OGLPLUS_GL_STATIC_FUNC(GetCompressedTextureSubImage)>
       GetCompressedTextureSubImage{"GetCompressedTextureSubImage", *this};
+
+    /// @var MakeTextureHandleResident
+    /// @glfuncwrap{MakeTextureHandleResidentARB}
+    gl_api_function<
+      void(uint64_type),
+      OGLPLUS_GL_STATIC_FUNC(MakeTextureHandleResidentARB)>
+      MakeTextureHandleResident{"MakeTextureHandleResidentARB", *this};
+
+    /// @var MakeTextureHandleNonResident
+    /// @glfuncwrap{MakeTextureHandleNonResidentARB}
+    gl_api_function<
+      void(uint64_type),
+      OGLPLUS_GL_STATIC_FUNC(MakeTextureHandleNonResidentARB)>
+      MakeTextureHandleNonResident{"MakeTextureHandleNonResidentARB", *this};
+
+    /// @var MakeImageHandleResident
+    /// @glfuncwrap{MakeImageHandleResidentARB}
+    gl_api_function<
+      void(uint64_type, enum_type),
+      OGLPLUS_GL_STATIC_FUNC(MakeImageHandleResidentARB)>
+      MakeImageHandleResident{"MakeImageHandleResidentARB", *this};
+
+    /// @var MakeImageHandleNonResident
+    /// @glfuncwrap{MakeImageHandleNonResidentARB}
+    gl_api_function<
+      void(uint64_type),
+      OGLPLUS_GL_STATIC_FUNC(MakeImageHandleNonResidentARB)>
+      MakeImageHandleNonResident{"MakeImageHandleNonResidentARB", *this};
 
     /// @var GenerateMipmap
     /// @glfuncwrap{GenerateMipmap}
@@ -2823,6 +2872,13 @@ public:
       OGLPLUS_GL_STATIC_FUNC(Uniform4ui)>
       Uniform4ui{"Uniform4ui", *this};
 
+    /// @var UniformHandleui64
+    /// @glfuncwrap{UniformHandleui64ARB}
+    gl_api_function<
+      void(int_type, const uint64_type),
+      OGLPLUS_GL_STATIC_FUNC(UniformHandleui64ARB)>
+      UniformHandleui64{"UniformHandleui64ARB", *this};
+
     /// @var Uniform1uiv
     /// @glfuncwrap{Uniform1uiv}
     gl_api_function<
@@ -2850,6 +2906,13 @@ public:
       void(int_type, sizei_type, const uint_type*),
       OGLPLUS_GL_STATIC_FUNC(Uniform4uiv)>
       Uniform4uiv{"Uniform4uiv", *this};
+
+    /// @var UniformHandleui64v
+    /// @glfuncwrap{UniformHandleui64vARB}
+    gl_api_function<
+      void(int_type, sizei_type, const uint64_type*),
+      OGLPLUS_GL_STATIC_FUNC(UniformHandleui64vARB)>
+      UniformHandleui64v{"UniformHandleui64vARB", *this};
 
     /// @var Uniform1f
     /// @glfuncwrap{Uniform1f}
@@ -3108,6 +3171,13 @@ public:
       OGLPLUS_GL_STATIC_FUNC(ProgramUniform4ui)>
       ProgramUniform4ui{"ProgramUniform4ui", *this};
 
+    /// @var ProgramUniformHandleui64ARB
+    /// @glfuncwrap{ProgramUniformHandleui64ARB}
+    gl_api_function<
+      void(uint_type, int_type, const uint64_type),
+      OGLPLUS_GL_STATIC_FUNC(ProgramUniformHandleui64ARB)>
+      ProgramUniformHandleui64{"ProgramUniformHandleui64ARB", *this};
+
     /// @var ProgramUniform1uiv
     /// @glfuncwrap{ProgramUniform1uiv}
     gl_api_function<
@@ -3135,6 +3205,13 @@ public:
       void(uint_type, int_type, sizei_type, const uint_type*),
       OGLPLUS_GL_STATIC_FUNC(ProgramUniform4uiv)>
       ProgramUniform4uiv{"ProgramUniform4uiv", *this};
+
+    /// @var ProgramUniformHandleui64vARB
+    /// @glfuncwrap{ProgramUniformHandleui64vARB}
+    gl_api_function<
+      void(uint_type, int_type, uint64_type*),
+      OGLPLUS_GL_STATIC_FUNC(ProgramUniformHandleui64vARB)>
+      ProgramUniformHandleui64v{"ProgramUniformHandleui64vARB", *this};
 
     /// @var ProgramUniform1f
     /// @glfuncwrap{ProgramUniform1f}
@@ -3660,6 +3737,20 @@ public:
       void(uint_type, const uint_type*),
       OGLPLUS_GL_STATIC_FUNC(VertexAttrib4Nuiv)>
       VertexAttrib4Nuiv{"VertexAttrib4Nuiv", *this};
+
+    /// @var VertexAttribL1ui64
+    /// @glfuncwrap{VertexAttribL1ui64ARB}
+    gl_api_function<
+      void(uint_type, const uint64_type),
+      OGLPLUS_GL_STATIC_FUNC(VertexAttribL1ui64ARB)>
+      VertexAttribL1ui64{"VertexAttribL1ui64ARB", *this};
+
+    /// @var VertexAttribL1ui64v
+    /// @glfuncwrap{VertexAttribL1ui64vARB}
+    gl_api_function<
+      void(uint_type, const uint64_type*),
+      OGLPLUS_GL_STATIC_FUNC(VertexAttribL1ui64vARB)>
+      VertexAttribL1ui64v{"VertexAttribL1ui64vARB", *this};
 
     /// @var VertexAttribL1d
     /// @glfuncwrap{VertexAttribL1d}
