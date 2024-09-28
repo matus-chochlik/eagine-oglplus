@@ -5285,7 +5285,7 @@ public:
 #ifdef GL_NUM_SPIR_V_EXTENSIONS
       enum_type_c<GL_NUM_SPIR_V_EXTENSIONS>>
 #else
-      enum_type_i>
+      enum_type_c<0x9554>>
 #endif
       num_spir_v_extensions;
 
@@ -6236,6 +6236,17 @@ public:
       enum_type_i>
 #endif
       extensions;
+
+    /// @var spir_v_extensions
+    /// @glconstwrap{SPIR_V_EXTENSIONS}
+    opt_constant<
+      mp_list<string_query>,
+#ifdef GL_SPIR_V_EXTENSIONS
+      enum_type_c<GL_SPIR_V_EXTENSIONS>>
+#else
+      enum_type_c<0x9553>>
+#endif
+      spir_v_extensions;
 
     /// @var named_string_length
     /// @glconstwrap{NAMED_STRING_LENGTH_ARB}
@@ -13677,6 +13688,7 @@ basic_gl_constants<ApiTraits>::basic_gl_constants(
   , version("VERSION", traits, api)
   , shading_language_version("SHADING_LANGUAGE_VERSION", traits, api)
   , extensions("EXTENSIONS", traits, api)
+  , spir_v_extensions("SPIR_V_EXTENSIONS", traits, api)
   , named_string_length("NAMED_STRING_LENGTH_ARB", traits, api)
   , named_string_type("NAMED_STRING_TYPE_ARB", traits, api)
   , color_buffer_bit("COLOR_BUFFER_BIT", traits, api)

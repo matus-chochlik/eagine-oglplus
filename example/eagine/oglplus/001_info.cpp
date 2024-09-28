@@ -49,6 +49,13 @@ static void run(main_ctx& ctx) {
     for(auto name : gl.get_extensions()) {
         ext_cio.print(name);
     }
+
+    const auto spirve_cio{
+      out.cio_print("SPIR-V Extensions:").to_be_continued()};
+
+    for(auto name : gl.get_spir_v_extensions()) {
+        spirve_cio.print(name);
+    }
 }
 
 static void init_and_run(main_ctx& ctx) {

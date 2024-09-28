@@ -3748,6 +3748,16 @@ public:
         return count;
     }
 
+    auto get_spir_v_extension_count() const noexcept -> int_type {
+        int_type count{0};
+#ifdef GL_NUM_SPIR_V_EXTENSIONS
+        this->GetIntegerv(GL_NUM_SPIR_V_EXTENSIONS, &count);
+#else
+        this->GetIntegerv(0x9554, &count);
+#endif
+        return count;
+    }
+
     auto get_extension(int_type i) const noexcept -> string_view {
 #ifdef GL_EXTENSIONS
         return string_view{
@@ -3758,6 +3768,16 @@ public:
 #endif
     }
 
+    auto get_spir_v_extension(int_type i) const noexcept -> string_view {
+#ifdef GL_SPIR_V_EXTENSIONS
+        return string_view{reinterpret_cast<const char*>(
+          this->GetStringi(GL_SPIR_V_EXTENSIONS, i))};
+#else
+        return string_view{
+          reinterpret_cast<const char*>(this->GetStringi(0x9553, i))};
+#endif
+    }
+
     // get_extensions
     auto get_extensions() const noexcept -> generator<string_view> {
         for(const auto i : integer_range(get_extension_count())) {
@@ -3765,10 +3785,27 @@ public:
         }
     }
 
+    // get_spir_v_extensions
+    auto get_spir_v_extensions() const noexcept -> generator<string_view> {
+        for(const auto i : integer_range(get_spir_v_extension_count())) {
+            co_yield get_spir_v_extension(i);
+        }
+    }
+
     // has_extension
     auto has_extension(string_view which) const noexcept {
         for(const auto i : integer_range(get_extension_count())) {
             if(ends_with(get_extension(i), which)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // has_spir_v_extension
+    auto has_spir_v_extension(string_view which) const noexcept {
+        for(const auto i : integer_range(get_spir_v_extension_count())) {
+            if(ends_with(get_spir_v_extension(i), which)) {
                 return true;
             }
         }
