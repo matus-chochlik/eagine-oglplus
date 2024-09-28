@@ -4588,6 +4588,17 @@ public:
 #endif
       debug_output_synchronous;
 
+    /// @var blackhole_render
+    /// @glconstwrap{BLACKHOLE_RENDER_INTEL}
+    opt_constant<
+      mp_list<capability>,
+#ifdef GL_BLACKHOLE_RENDER_INTEL
+      enum_type_c<GL_BLACKHOLE_RENDER_INTEL>>
+#else
+      enum_type_c<0x83FC>>
+#endif
+      blackhole_render;
+
     /// @var color_array
     /// @glconstwrap{COLOR_ARRAY}
     opt_constant<
@@ -13513,6 +13524,7 @@ basic_gl_constants<ApiTraits>::basic_gl_constants(
   , multisample("MULTISAMPLE", traits, api)
   , debug_output("DEBUG_OUTPUT", traits, api)
   , debug_output_synchronous("DEBUG_OUTPUT_SYNCHRONOUS", traits, api)
+  , blackhole_render("BLACKHOLE_RENDER_INTEL", traits, api)
   , color_array("COLOR_ARRAY", traits, api)
   , edge_flag_array("EDGE_FLAG_ARRAY", traits, api)
   , fog_coord_array("FOG_COORD_ARRAY", traits, api)
