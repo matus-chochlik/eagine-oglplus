@@ -1163,6 +1163,11 @@ public:
       uniform4i{*this};
 
     simple_adapted_function<
+      &gl_api::UniformHandleui64,
+      void(uniform_location, uint64_type)>
+      uniform_handle{*this};
+
+    simple_adapted_function<
       &gl_api::Uniform1iv,
       void(uniform_location, memory::chunk_span<const int_type, 1>)>
       uniform1iv{*this};
@@ -1181,6 +1186,11 @@ public:
       &gl_api::Uniform4iv,
       void(uniform_location, memory::chunk_span<const int_type, 4>)>
       uniform4iv{*this};
+
+    simple_adapted_function<
+      &gl_api::UniformHandleui64v,
+      void(uniform_location, memory::chunk_span<const uint64_type, 1>)>
+      uniform_handlev{*this};
 
     // float
     simple_adapted_function<
@@ -1372,6 +1382,11 @@ public:
       program_uniform4i{*this};
 
     simple_adapted_function<
+      &gl_api::ProgramUniformHandleui64,
+      void(program_name, uniform_location, uint64_type)>
+      program_uniform_handle{*this};
+
+    simple_adapted_function<
       &gl_api::ProgramUniform1iv,
       void(program_name, uniform_location, memory::chunk_span<const int_type, 1>)>
       program_uniform1iv{*this};
@@ -1390,6 +1405,14 @@ public:
       &gl_api::ProgramUniform4iv,
       void(program_name, uniform_location, memory::chunk_span<const int_type, 4>)>
       program_uniform4iv{*this};
+
+    simple_adapted_function<
+      &gl_api::ProgramUniformHandleui64v,
+      void(
+        program_name,
+        uniform_location,
+        memory::chunk_span<const uint64_type, 1>)>
+      program_uniform_handlev{*this};
 
     // float
     simple_adapted_function<
@@ -1953,6 +1976,15 @@ public:
         &gl_api::VertexAttribI4i,
         void(vertex_attrib_location, int_type, int_type, int_type, int_type)>>
       vertex_attrib_i{*this};
+
+    c_api::combined<
+      simple_adapted_function<
+        &gl_api::VertexAttribL1ui64,
+        void(vertex_attrib_location, uint64_type)>,
+      simple_adapted_function<
+        &gl_api::VertexAttribL1ui64v,
+        void(vertex_attrib_location, memory::chunk_span<const uint64_type, 1>)>>
+      vertex_attrib_ui64{*this};
 
     c_api::combined<
       simple_adapted_function<
@@ -2759,6 +2791,36 @@ public:
       generate_mipmap{*this};
     simple_adapted_function<&gl_api::GenerateTextureMipmap, void(texture_name)>
       generate_texture_mipmap{*this};
+
+    simple_adapted_function<
+      &gl_api::GetTextureSamplerHandle,
+      texture_handle(texture_name, sampler_name)>
+      get_texture_sampler_handle{*this};
+
+    simple_adapted_function<
+      &gl_api::GetTextureHandle,
+      texture_handle(texture_name)>
+      get_texture_handle{*this};
+
+    simple_adapted_function<
+      &gl_api::GetImageHandle,
+      texture_handle(
+        texture_name,
+        int_type,
+        bool_type,
+        int_type,
+        pixel_internal_format)>
+      get_image_handle{*this};
+
+    simple_adapted_function<
+      &gl_api::MakeTextureHandleResident,
+      void(texture_handle)>
+      make_texture_handle_resident{*this};
+
+    simple_adapted_function<
+      &gl_api::MakeTextureHandleNonResident,
+      void(texture_handle)>
+      make_texture_handle_non_resident{*this};
 
     // sampler ops
     simple_adapted_function<&gl_api::BindSampler, void(uint_type, sampler_name)>
@@ -3686,6 +3748,16 @@ public:
         return count;
     }
 
+    auto get_spir_v_extension_count() const noexcept -> int_type {
+        int_type count{0};
+#ifdef GL_NUM_SPIR_V_EXTENSIONS
+        this->GetIntegerv(GL_NUM_SPIR_V_EXTENSIONS, &count);
+#else
+        this->GetIntegerv(0x9554, &count);
+#endif
+        return count;
+    }
+
     auto get_extension(int_type i) const noexcept -> string_view {
 #ifdef GL_EXTENSIONS
         return string_view{
@@ -3696,6 +3768,16 @@ public:
 #endif
     }
 
+    auto get_spir_v_extension(int_type i) const noexcept -> string_view {
+#ifdef GL_SPIR_V_EXTENSIONS
+        return string_view{reinterpret_cast<const char*>(
+          this->GetStringi(GL_SPIR_V_EXTENSIONS, i))};
+#else
+        return string_view{
+          reinterpret_cast<const char*>(this->GetStringi(0x9553, i))};
+#endif
+    }
+
     // get_extensions
     auto get_extensions() const noexcept -> generator<string_view> {
         for(const auto i : integer_range(get_extension_count())) {
@@ -3703,10 +3785,27 @@ public:
         }
     }
 
+    // get_spir_v_extensions
+    auto get_spir_v_extensions() const noexcept -> generator<string_view> {
+        for(const auto i : integer_range(get_spir_v_extension_count())) {
+            co_yield get_spir_v_extension(i);
+        }
+    }
+
     // has_extension
     auto has_extension(string_view which) const noexcept {
         for(const auto i : integer_range(get_extension_count())) {
             if(ends_with(get_extension(i), which)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // has_spir_v_extension
+    auto has_spir_v_extension(string_view which) const noexcept {
+        for(const auto i : integer_range(get_spir_v_extension_count())) {
+            if(ends_with(get_spir_v_extension(i), which)) {
                 return true;
             }
         }

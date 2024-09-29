@@ -4588,6 +4588,17 @@ public:
 #endif
       debug_output_synchronous;
 
+    /// @var blackhole_render
+    /// @glconstwrap{BLACKHOLE_RENDER_INTEL}
+    opt_constant<
+      mp_list<capability>,
+#ifdef GL_BLACKHOLE_RENDER_INTEL
+      enum_type_c<GL_BLACKHOLE_RENDER_INTEL>>
+#else
+      enum_type_c<0x83FC>>
+#endif
+      blackhole_render;
+
     /// @var color_array
     /// @glconstwrap{COLOR_ARRAY}
     opt_constant<
@@ -5285,7 +5296,7 @@ public:
 #ifdef GL_NUM_SPIR_V_EXTENSIONS
       enum_type_c<GL_NUM_SPIR_V_EXTENSIONS>>
 #else
-      enum_type_i>
+      enum_type_c<0x9554>>
 #endif
       num_spir_v_extensions;
 
@@ -6236,6 +6247,17 @@ public:
       enum_type_i>
 #endif
       extensions;
+
+    /// @var spir_v_extensions
+    /// @glconstwrap{SPIR_V_EXTENSIONS}
+    opt_constant<
+      mp_list<string_query>,
+#ifdef GL_SPIR_V_EXTENSIONS
+      enum_type_c<GL_SPIR_V_EXTENSIONS>>
+#else
+      enum_type_c<0x9553>>
+#endif
+      spir_v_extensions;
 
     /// @var named_string_length
     /// @glconstwrap{NAMED_STRING_LENGTH_ARB}
@@ -13502,6 +13524,7 @@ basic_gl_constants<ApiTraits>::basic_gl_constants(
   , multisample("MULTISAMPLE", traits, api)
   , debug_output("DEBUG_OUTPUT", traits, api)
   , debug_output_synchronous("DEBUG_OUTPUT_SYNCHRONOUS", traits, api)
+  , blackhole_render("BLACKHOLE_RENDER_INTEL", traits, api)
   , color_array("COLOR_ARRAY", traits, api)
   , edge_flag_array("EDGE_FLAG_ARRAY", traits, api)
   , fog_coord_array("FOG_COORD_ARRAY", traits, api)
@@ -13677,6 +13700,7 @@ basic_gl_constants<ApiTraits>::basic_gl_constants(
   , version("VERSION", traits, api)
   , shading_language_version("SHADING_LANGUAGE_VERSION", traits, api)
   , extensions("EXTENSIONS", traits, api)
+  , spir_v_extensions("SPIR_V_EXTENSIONS", traits, api)
   , named_string_length("NAMED_STRING_LENGTH_ARB", traits, api)
   , named_string_type("NAMED_STRING_TYPE_ARB", traits, api)
   , color_buffer_bit("COLOR_BUFFER_BIT", traits, api)

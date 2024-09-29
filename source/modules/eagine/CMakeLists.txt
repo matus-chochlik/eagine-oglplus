@@ -10,8 +10,7 @@ eagine_add_module(
 	PARTITION config
 	IMPORTS
 		std
-		eagine.core.types
-)
+		eagine.core.types)
 
 eagine_add_module(
 	eagine.oglplus
@@ -20,8 +19,7 @@ eagine_add_module(
 	IMPORTS
 		std config
 		eagine.core.types
-		eagine.core.math
-)
+		eagine.core.math)
 
 eagine_add_module(
 	eagine.oglplus
@@ -32,8 +30,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.math
 		eagine.core.valid_if
-		eagine.core.units
-)
+		eagine.core.units)
 
 eagine_add_module(
 	eagine.oglplus
@@ -43,8 +40,7 @@ eagine_add_module(
 		std
 		eagine.core.types
 		eagine.core.memory
-		eagine.core.math
-)
+		eagine.core.math)
 
 eagine_add_module(
 	eagine.oglplus
@@ -54,8 +50,7 @@ eagine_add_module(
 		std config
 		eagine.core.types
 		eagine.core.identifier
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -65,8 +60,7 @@ eagine_add_module(
 		std config enum_types math
 		eagine.core.types
 		eagine.core.memory
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -76,8 +70,7 @@ eagine_add_module(
 		std config
 		eagine.core.types
 		eagine.core.memory
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -87,8 +80,7 @@ eagine_add_module(
 		std config
 		eagine.core.types
 		eagine.core.memory
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -98,8 +90,7 @@ eagine_add_module(
 		std config
 		eagine.core.types
 		eagine.core.identifier
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -110,8 +101,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.identifier
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -121,8 +111,7 @@ eagine_add_module(
 		std config result
 		eagine.core.types
 		eagine.core.memory
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -132,8 +121,7 @@ eagine_add_module(
 		std config result
 		eagine.core.types
 		eagine.core.memory
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -145,8 +133,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.valid_if
-		eagine.core.c_api
-)
+		eagine.core.c_api)
 
 eagine_add_module(
 	eagine.oglplus
@@ -167,8 +154,7 @@ eagine_add_module(
 		eagine.core.identifier
 		eagine.core.c_api
 		eagine.core.main_ctx
-		eagine.core.resource
-)
+		eagine.core.resource)
 
 eagine_add_module(
 	eagine.oglplus
@@ -179,8 +165,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.string
-		eagine.core.valid_if
-)
+		eagine.core.valid_if)
 
 eagine_add_module(
 	eagine.oglplus
@@ -190,8 +175,7 @@ eagine_add_module(
 		std config
 		eagine.core.types
 		eagine.core.memory
-		eagine.core.main_ctx
-)
+		eagine.core.main_ctx)
 
 eagine_add_module(
 	eagine.oglplus
@@ -204,8 +188,7 @@ eagine_add_module(
 		eagine.core.memory
 		eagine.core.utility
 		eagine.core.valid_if
-		eagine.shapes
-)
+		eagine.shapes)
 
 eagine_add_module(
 	eagine.oglplus
@@ -218,8 +201,7 @@ eagine_add_module(
 		eagine.core.types
 		eagine.core.memory
 		eagine.core.valid_if
-		eagine.shapes
-)
+		eagine.shapes)
 
 eagine_add_module(
 	eagine.oglplus
@@ -233,8 +215,7 @@ eagine_add_module(
 		eagine.core.reflection
 		eagine.core.value_tree
 		eagine.core.resource
-		eagine.core.main_ctx
-)
+		eagine.core.main_ctx)
 
 eagine_add_module(
 	eagine.oglplus
@@ -248,8 +229,7 @@ eagine_add_module(
 		eagine.core.memory
 		eagine.core.c_api
 		eagine.core.utility
-		eagine.core.valid_if
-)
+		eagine.core.valid_if)
 
 eagine_add_module(
 	eagine.oglplus
@@ -277,21 +257,19 @@ eagine_add_module(
 		eagine.core.utility
 		eagine.core.valid_if
 		eagine.core.value_tree
-		eagine.shapes
-)
+		eagine.shapes)
+
 target_link_libraries(
 	eagine.oglplus
 	PUBLIC
-		EAGine::Deps::GLEW
-)
+		EAGine::Deps::GLEW)
 
 eagine_add_module_tests(
 	eagine.oglplus
 	UNITS
 		constants
 	IMPORTS
-		eagine.core
-)
+		eagine.core)
 
 eagine_add_license(oglplus-dev)
 eagine_add_debian_changelog(oglplus-dev)

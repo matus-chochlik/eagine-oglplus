@@ -41,5 +41,5 @@ eagine_add_package_property(
 	oglplus-apps
 	GENERATOR DEBIAN
 	VARIABLE DESCRIPTION
-	VALUE "EAGine OGLplus examples.")
+	VALUE "EAGine OGLplus utility applications.")
 

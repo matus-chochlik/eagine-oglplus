@@ -362,5 +362,20 @@ using transform_feedback_name_array =
 export template <std::size_t N>
 using vertex_array_name_array = gl_object_name_array<vertex_array_tag, N>;
 //------------------------------------------------------------------------------
+/// @brief Alias for bind-less texture handle.
+/// @ingroup gl_api_wrap
+export using texture_handle =
+  c_api::basic_handle<gl_lib_tag<"TexHandle">, gl_types::uint64_type>;
+
+/// @brief Alias for bind-less texture sampler handle.
+/// @ingroup gl_api_wrap
+export using texture_sampler_handle =
+  c_api::basic_handle<gl_lib_tag<"SamHandle">, gl_types::uint64_type>;
+
+/// @brief Alias for bind-less texture image handle.
+/// @ingroup gl_api_wrap
+export using image_handle =
+  c_api::basic_handle<gl_lib_tag<"ImgHandle">, gl_types::uint64_type>;
+//------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 
