@@ -4134,6 +4134,25 @@ public:
         return create_object(vertex_array_tag{});
     }
 
+    /// @brief Adds a shader include string with the specified path.
+    /// @pre not path.empty() and path.front() == '/';
+    auto add_shader_include(std::string path, string_view source) const noexcept
+      -> oglplus::shader_include {
+        if(oglplus::shader_include include{std::move(path)}) {
+            if(named_string(this->shader_include, include.path(), source)) {
+                return include;
+            }
+        }
+        return {};
+    }
+
+    using basic_gl_operations<ApiTraits>::clean_up;
+
+    /// @brief Cleans up shader include named string.
+    auto clean_up(oglplus::shader_include&& obj) const noexcept {
+        return this->delete_named_string(this->shader_include, obj.path());
+    }
+
     /// @brief Adds shader source from embedded_resource.
     auto shader_resource(
       const shader_name shdr,

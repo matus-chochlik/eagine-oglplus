@@ -89,6 +89,7 @@ eagine_add_module(
 	IMPORTS
 		std config
 		eagine.core.types
+		eagine.core.memory
 		eagine.core.identifier
 		eagine.core.c_api)
 
