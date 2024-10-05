@@ -1,4 +1,4 @@
-/// @example oglplus/005_cartoon_sun.cpp
+/// @example oglplus/005_mandelbrot.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -14,36 +14,62 @@ import eagine.shapes;
 import eagine.oglplus;
 
 static const eagine::string_view vs_source{R"(
-#version 140
-in vec2 Position;
-out vec2 vertCoord;
+#version 120
+attribute vec2 Position;
+attribute vec2 Coord;
+varying vec2 vertCoord;
 void main() {
+	vertCoord = Position.xy * 1.41 - vec2(0.6, 0.0);
 	gl_Position = vec4(Position, 0.0, 1.0);
-	vertCoord = gl_Position.xy;
 }
 )"};
 
-static const eagine::string_view fs_source{R"(
-#version 140
-uniform float time;
-uniform vec2 sunPos;
-const vec3 sun1 = vec3(0.95, 0.85, 0.60);
-const vec3 sun2 = vec3(0.90, 0.80, 0.20);
-const vec3 sky1 = vec3(0.90, 0.80, 0.50);
-const vec3 sky2 = vec3(0.80, 0.60, 0.40);
+static const eagine::string_view fs_mandelbrot{R"(
+float mandelbrot(vec2 c) {
+	vec2 z = vec2(0.0, 0.0);
+	int i = 0, max = 128;
+	while((i != max) && (distance(z, c) < 2.0)) {
+		vec2 zn = vec2(
+			z.x * z.x - z.y * z.y + c.x,
+			2.0 * z.x * z.y + c.y);
+		z = zn;
+		++i;
+	}
+	return sqrt(float(i) / float(max));
+}
+)"};
 
-in vec2 vertCoord;
-out vec3 fragColor;
+static const eagine::string_view fs_version{R"(
+#version 120
+)"};
+
+static const eagine::string_view fs_include{R"(
+#extension GL_ARB_shading_language_include : enable
+#include </mandelbrot>
+)"};
+
+static const eagine::string_view fs_main{R"(
+
+varying vec2 vertCoord;
+const int nclr = 5;
+uniform vec4 clrs[5] = vec4[5](
+  vec4(0.4, 0.2, 1.0f, 0.00),
+  vec4(1.0, 0.2, 0.2f, 0.30),
+  vec4(1.0, 1.0, 1.0f, 0.95),
+  vec4(1.0, 1.0, 1.0f, 0.98),
+  vec4(0.1, 0.1, 0.1f, 1.00)
+);
+
 void main() {
-	vec2 v = vertCoord - sunPos;
-	float l = length(v);
-	float a = (sin(l)+atan(v.y, v.x)) / 3.1415;
-	if(l < 0.1) {
-		fragColor = sun1;
-	} else if(int(18 * (time * 0.1 + 1.0 + a)) % 2 == 0) {
-		fragColor = mix(sun1, sun2, l);
-	} else {
-		fragColor = mix(sky1, sky2, l);
+	float a = mandelbrot(vertCoord);
+	for(int i = 0; i != (nclr - 1); ++i) {
+		if(a > clrs[i].a && a <= clrs[i+1].a) {
+			float m = (a - clrs[i].a) / (clrs[i+1].a - clrs[i].a);
+			gl_FragColor = vec4(
+				mix(clrs[i].rgb, clrs[i+1].rgb, m),
+				1.0);
+			break;
+		}
 	}
 }
 )"};
@@ -64,51 +90,72 @@ static void run_loop(
         gl.debug_message_control(
           GL.dont_care, GL.dont_care, GL.dont_care, GL.true_);
 
-        memory::buffer temp;
-        // geometry
-        shape_generator shape(
-          glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
+        memory::buffer buf;
 
-        geometry_and_bindings screen{glapi, shape, temp};
+        if(glapi.ARB_shading_language_include) {
+            gl.named_string(GL.shader_include, "/mandelbrot", fs_mandelbrot);
+        }
 
         // vertex shader
         const auto vs{glapi.create_shader_object(GL.vertex_shader)};
+        gl.object_label(vs, "mandelbrot vertex shader");
         gl.shader_source(vs, glsl_string_ref(vs_source));
         gl.compile_shader(vs);
 
         // fragment shader
         const auto fs{glapi.create_shader_object(GL.fragment_shader)};
-        gl.shader_source(fs, glsl_string_ref(fs_source));
+        gl.object_label(fs, "mandelbrot fragment shader");
+        if(glapi.ARB_shading_language_include) {
+            gl.shader_source(
+              fs, glsl_strings_ref(fs_version, fs_include, fs_main));
+        } else {
+            gl.shader_source(
+              fs, glsl_strings_ref(fs_version, fs_mandelbrot, fs_main));
+        }
         gl.compile_shader(fs);
 
         // program
         const auto prog{glapi.create_program_object()};
+        gl.object_label(prog, "mandelbrot program");
         gl.attach_shader(prog, vs);
         gl.attach_shader(prog, fs);
         gl.link_program(prog);
         gl.use_program(prog);
 
-        gl.bind_attrib_location(prog, screen.position_loc(), "Position");
+        // geometry
+        shape_generator shape(
+          glapi, shapes::unit_screen(shapes::vertex_attrib_kind::position));
 
-        // uniforms
-        auto update_uniforms = [&glapi, &prog]() {
-            uniform_location sun_pos_loc;
-            glapi.get_uniform_location(prog, "sunPos") >> sun_pos_loc;
+        std::vector<shape_draw_operation> _ops;
+        _ops.resize(std_size(shape.operation_count()));
+        shape.instructions(glapi, cover(_ops));
 
-            uniform_location time_loc;
-            glapi.get_uniform_location(prog, "time") >> time_loc;
+        // vao
+        owned_vertex_array_name vao;
+        gl.gen_vertex_arrays() >> vao;
+        const auto cleanup_vao = gl.delete_vertex_arrays.raii(vao);
+        gl.bind_vertex_array(vao);
+        gl.object_label(vao, "screen VAO");
 
-            return [&glapi, &prog, sun_pos_loc, time_loc, time{0.F}](
-                     float a) mutable {
-                const float d = 0.5F;
-                glapi.set_uniform(prog, time_loc, time);
-                glapi.set_uniform(
-                  prog,
-                  sun_pos_loc,
-                  oglplus::vec2(-a * d * std::cos(time), d * std::sin(time)));
-                time += 0.01F;
-            };
-        }();
+        // positions
+        vertex_attrib_location position_loc{0};
+        owned_buffer_name positions;
+        gl.gen_buffers() >> positions;
+        const auto cleanup_positions = gl.delete_buffers.raii(positions);
+        shape.attrib_setup(
+          glapi,
+          vao,
+          positions,
+          position_loc,
+          shapes::vertex_attrib_kind::position,
+          buf);
+        gl.bind_attrib_location(prog, position_loc, "Position");
+
+        // indices
+        owned_buffer_name indices;
+        gl.gen_buffers() >> indices;
+        const auto cleanup_indices = gl.delete_buffers.raii(indices);
+        shape.index_setup(glapi, indices, buf);
 
         gl.disable(GL.depth_test);
 
@@ -133,13 +180,10 @@ static void run_loop(
 
             gl.viewport(width, height);
 
-            update_uniforms(float(width) / float(height));
-            screen.use(glapi);
-            screen.draw(glapi);
+            draw_using_instructions(glapi, view(_ops));
 
             glfwSwapBuffers(window);
         }
-        screen.clean_up(glapi);
     } else {
         std::cout << "missing required API" << std::endl;
     }
