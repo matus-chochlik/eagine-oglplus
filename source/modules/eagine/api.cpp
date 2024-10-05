@@ -3818,7 +3818,9 @@ public:
       void(named_string_kind, string_view, string_view)>
       named_string{*this};
 
-    simple_adapted_function<&gl_api::DeleteNamedString, void(string_view)>
+    simple_adapted_function<
+      &gl_api::DeleteNamedString,
+      void(named_string_kind, string_view)>
       delete_named_string{*this};
 
     simple_adapted_function<&gl_api::IsNamedString, true_false(string_view)>
