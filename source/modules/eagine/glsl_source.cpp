@@ -97,6 +97,46 @@ private:
     const int_type* _lengths{nullptr};
 };
 //------------------------------------------------------------------------------
+/// @brief Reference to a set of GLSL source code strings.
+/// @ingroup glsl_utils
+export template <std::size_t Count>
+class glsl_strings_ref
+  : private std::array<const gl_types::char_type*, Count>
+  , private std::array<const gl_types::int_type, Count>
+  , public glsl_source_ref {
+
+    static constexpr auto _to_chars(const string_view s) noexcept {
+        return static_cast<const gl_types::char_type*>(s.data());
+    }
+
+    static constexpr auto _to_length(const string_view s) noexcept {
+        return static_cast<const gl_types::int_type>(s.size());
+    }
+
+    constexpr auto _strings() noexcept
+      -> std::array<const gl_types::char_type*, Count>& {
+        return *this;
+    }
+
+    constexpr auto _lengths() noexcept
+      -> std::array<const gl_types::int_type, Count>& {
+        return *this;
+    }
+
+public:
+    /// @brief Constructions from a pack of string_views
+    template <std::convertible_to<string_view>... Strings>
+        requires(sizeof...(Strings) == Count)
+    glsl_strings_ref(Strings&&... strings) noexcept
+      : std::array<const gl_types::char_type*, Count>{_to_chars(strings)...}
+      , std::array<const gl_types::int_type, Count>{_to_length(strings)...}
+      , glsl_source_ref{span_size(Count), _strings().data(), _lengths().data()} {
+    }
+};
+
+export template <std::convertible_to<string_view>... Strings>
+glsl_strings_ref(Strings&&...) noexcept -> glsl_strings_ref<sizeof...(Strings)>;
+//------------------------------------------------------------------------------
 /// @brief Reference to a GLSL source code string.
 /// @ingroup glsl_utils
 export class glsl_string_ref {

@@ -1,4 +1,4 @@
-/// @example oglplus/004_mandelbrot.cpp
+/// @example oglplus/005_mandelbrot.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
@@ -24,8 +24,32 @@ void main() {
 }
 )"};
 
-static const eagine::string_view fs_source{R"(
+static const eagine::string_view fs_mandelbrot{R"(
+float mandelbrot(vec2 c) {
+	vec2 z = vec2(0.0, 0.0);
+	int i = 0, max = 128;
+	while((i != max) && (distance(z, c) < 2.0)) {
+		vec2 zn = vec2(
+			z.x * z.x - z.y * z.y + c.x,
+			2.0 * z.x * z.y + c.y);
+		z = zn;
+		++i;
+	}
+	return sqrt(float(i) / float(max));
+}
+)"};
+
+static const eagine::string_view fs_version{R"(
 #version 120
+)"};
+
+static const eagine::string_view fs_include{R"(
+#extension GL_ARB_shading_language_include : enable
+#include </mandelbrot>
+)"};
+
+static const eagine::string_view fs_main{R"(
+
 varying vec2 vertCoord;
 const int nclr = 5;
 uniform vec4 clrs[5] = vec4[5](
@@ -35,26 +59,15 @@ uniform vec4 clrs[5] = vec4[5](
   vec4(1.0, 1.0, 1.0f, 0.98),
   vec4(0.1, 0.1, 0.1f, 1.00)
 );
+
 void main() {
-	vec2 z = vec2(0.0, 0.0);
-	vec2 c = vertCoord;
-	int i = 0, max = 128;
-	while((i != max) && (distance(z, c) < 2.0)) {
-		vec2 zn = vec2(
-			z.x * z.x - z.y * z.y + c.x,
-			2.0 * z.x * z.y + c.y
-		);
-		z = zn;
-		++i;
-	}
-	float a = sqrt(float(i) / float(max));
-	for(i = 0; i != (nclr - 1); ++i) {
+	float a = mandelbrot(vertCoord);
+	for(int i = 0; i != (nclr - 1); ++i) {
 		if(a > clrs[i].a && a <= clrs[i+1].a) {
 			float m = (a - clrs[i].a) / (clrs[i+1].a - clrs[i].a);
 			gl_FragColor = vec4(
 				mix(clrs[i].rgb, clrs[i+1].rgb, m),
-				1.0
-			);
+				1.0);
 			break;
 		}
 	}
@@ -79,6 +92,10 @@ static void run_loop(
 
         memory::buffer buf;
 
+        if(glapi.ARB_shading_language_include) {
+            gl.named_string(GL.shader_include, "/mandelbrot", fs_mandelbrot);
+        }
+
         // vertex shader
         const auto vs{glapi.create_shader_object(GL.vertex_shader)};
         gl.object_label(vs, "mandelbrot vertex shader");
@@ -88,7 +105,13 @@ static void run_loop(
         // fragment shader
         const auto fs{glapi.create_shader_object(GL.fragment_shader)};
         gl.object_label(fs, "mandelbrot fragment shader");
-        gl.shader_source(fs, glsl_string_ref(fs_source));
+        if(glapi.ARB_shading_language_include) {
+            gl.shader_source(
+              fs, glsl_strings_ref(fs_version, fs_include, fs_main));
+        } else {
+            gl.shader_source(
+              fs, glsl_strings_ref(fs_version, fs_mandelbrot, fs_main));
+        }
         gl.compile_shader(fs);
 
         // program

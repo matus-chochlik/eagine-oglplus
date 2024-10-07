@@ -3818,7 +3818,9 @@ public:
       void(named_string_kind, string_view, string_view)>
       named_string{*this};
 
-    simple_adapted_function<&gl_api::DeleteNamedString, void(string_view)>
+    simple_adapted_function<
+      &gl_api::DeleteNamedString,
+      void(named_string_kind, string_view)>
       delete_named_string{*this};
 
     simple_adapted_function<&gl_api::IsNamedString, true_false(string_view)>
@@ -4130,6 +4132,25 @@ public:
 
     auto create_vertex_array_object() const noexcept {
         return create_object(vertex_array_tag{});
+    }
+
+    /// @brief Adds a shader include string with the specified path.
+    /// @pre not path.empty() and path.front() == '/';
+    auto add_shader_include(std::string path, string_view source) const noexcept
+      -> oglplus::shader_include {
+        if(oglplus::shader_include include{std::move(path)}) {
+            if(named_string(this->shader_include, include.path(), source)) {
+                return include;
+            }
+        }
+        return {};
+    }
+
+    using basic_gl_operations<ApiTraits>::clean_up;
+
+    /// @brief Cleans up shader include named string.
+    auto clean_up(oglplus::shader_include&& obj) const noexcept {
+        return this->delete_named_string(this->shader_include, obj.path());
     }
 
     /// @brief Adds shader source from embedded_resource.

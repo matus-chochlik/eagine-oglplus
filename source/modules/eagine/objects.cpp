@@ -8,6 +8,7 @@
 export module eagine.oglplus:objects;
 import std;
 import eagine.core.types;
+import eagine.core.memory;
 import eagine.core.identifier;
 import eagine.core.c_api;
 import :config;
@@ -376,6 +377,43 @@ export using texture_sampler_handle =
 /// @ingroup gl_api_wrap
 export using image_handle =
   c_api::basic_handle<gl_lib_tag<"ImgHandle">, gl_types::uint64_type>;
+//------------------------------------------------------------------------------
+///@brief Class representing a shader include named string.
+/// @ingroup gl_api_wrap
+export class shader_include {
+public:
+    /// @brief Construction from a path string.
+    shader_include(std::string path) noexcept
+      : _path{std::move(path)} {}
+
+    /// @brief Default constructor
+    /// @post not has_value()
+    shader_include() noexcept = default;
+
+    shader_include(shader_include&&) noexcept = default;
+    shader_include(const shader_include&) = delete;
+    auto operator=(shader_include&&) noexcept -> shader_include& = default;
+    auto operator=(const shader_include&) = delete;
+    ~shader_include() noexcept = default;
+
+    /// @brief Indicates it this object represents a valid shader include path.
+    auto has_value() const noexcept -> bool {
+        return not _path.empty() and (_path.front() == '/');
+    }
+
+    /// @brief Indicates it this object represents a valid shader include path.
+    explicit operator bool() const noexcept {
+        return has_value();
+    }
+
+    /// @brief Returns the path of this include.
+    auto path() const noexcept -> string_view {
+        return has_value() ? string_view{_path} : string_view{};
+    }
+
+private:
+    std::string _path;
+};
 //------------------------------------------------------------------------------
 } // namespace eagine::oglplus
 

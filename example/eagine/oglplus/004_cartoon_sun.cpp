@@ -1,4 +1,4 @@
-/// @example oglplus/005_cartoon_sun.cpp
+/// @example oglplus/004_cartoon_sun.cpp
 ///
 /// Copyright Matus Chochlik.
 /// Distributed under the Boost Software License, Version 1.0.
